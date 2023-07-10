@@ -1,0 +1,6 @@
+# bga-gamename
+
+# RULES
+
+# COPYRIGHT
+

@@ -1,0 +1,33 @@
+/**
+ *------
+ * BGA framework: © Gregory Isabelli <gisabelli@boardgamearena.com> & Emmanuel Colin <ecolin@boardgamearena.com>
+ * Gamename implementation : © Jordi Jansen <jordi@itbyjj.com>
+ *
+ * This code has been produced on the BGA studio platform for use on http://boardgamearena.com.
+ * See http://en.boardgamearena.com/#!doc/Studio for more information.
+ * -----
+ *
+ */
+@use 'sass:math';
+
+//@import '../node_modules/bga-zoom/bga-zoom';
+//@import '../node_modules/bga-cards/bga-cards';
+//@import 'LoadingIndicator';
+
+@mixin selectable {
+  &.bga-cards_selectable-card {
+    .card-side {
+      outline: 8px rgba(80, 200, 255, 0.75) solid;
+      cursor: pointer;
+    }
+  }
+}
+
+@mixin selected {
+  &.bga-cards_selected-card {
+    .card-side {
+      outline: 8px rgba(124, 252, 0, 0.75) solid;
+      cursor: pointer;
+    }
+  }
+}
