@@ -1,6 +1,7 @@
-# bga-gamename
+# bga-dogpark
 
 # RULES
 
 # COPYRIGHT
 
+ 

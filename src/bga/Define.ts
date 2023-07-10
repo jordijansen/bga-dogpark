@@ -7,5 +7,5 @@ define([
     "ebg/stock"
 ],
 function (dojo, declare) {
-    return declare("bgagame.gamename", ebg.core.gamegui, new Gamename());
+    return declare("bgagame.dogpark", ebg.core.gamegui, new DogPark());
 });

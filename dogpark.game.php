@@ -2,7 +2,7 @@
  /**
   *------
   * BGA framework: © Gregory Isabelli <gisabelli@boardgamearena.com> & Emmanuel Colin <ecolin@boardgamearena.com>
-  * gamename implementation : © Jordi Jansen <jordi@itbyjj.com>
+  * DogPark implementation : © Jordi Jansen <jordi@itbyjj.com>
   * 
   * This code has been produced on the BGA studio platform for use on http://boardgamearena.com.
   * See http://en.boardgamearena.com/#!doc/Studio for more information.
@@ -23,7 +23,14 @@ use traits\UtilsTrait;
 require_once( APP_GAMEMODULE_PATH.'module/table/table.game.php' );
 
 require_once('modules/php/Constants.inc.php');
-class Gamename extends Table
+
+require_once('modules/php/traits/UtilsTrait.php');
+require_once('modules/php/traits/ActionTrait.php');
+require_once('modules/php/traits/StateTrait.php');
+require_once('modules/php/traits/ArgsTrait.php');
+require_once('modules/php/traits/DebugTrait.php');
+
+class DogPark extends Table
 {
     use ActionTrait;
     use StateTrait;
@@ -49,7 +56,7 @@ class Gamename extends Table
     protected function getGameName( )
     {
 		// Used for translations and stuff. Please do not modify.
-        return "gamename";
+        return "dogpark";
     }	
 
     /*

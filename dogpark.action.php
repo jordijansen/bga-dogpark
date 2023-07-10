@@ -2,7 +2,7 @@
 /**
  *------
  * BGA framework: © Gregory Isabelli <gisabelli@boardgamearena.com> & Emmanuel Colin <ecolin@boardgamearena.com>
- * gamename implementation : © Jordi Jansen <jordi@itbyjj.com>
+ * DogPark implementation : © Jordi Jansen <jordi@itbyjj.com>
  *
  * This code has been produced on the BGA studio platform for use on https://boardgamearena.com.
  * See http://en.doc.boardgamearena.com/Studio for more information.
@@ -12,7 +12,7 @@
  * user interface logic (javascript).
  *
  */
-class action_gamename extends APP_GameAction
+class action_dogpark extends APP_GameAction
 {
     // Constructor: please do not modify
     public function __default()
@@ -21,7 +21,7 @@ class action_gamename extends APP_GameAction
             $this->view = "common_notifwindow";
             $this->viewArgs['table'] = self::getArg("table", AT_posint, true);
         } else {
-            $this->view = "gamename_gamename";
+            $this->view = "dogpark_dogpark";
             self::trace("Complete reinitialization of board game");
         }
     }

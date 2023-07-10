@@ -12,9 +12,9 @@ const ZOOM_LEVELS = [0.25, 0.375, 0.5, 0.625, 0.75, 0.875, 1]
 const BOARD_WIDTH = 2000;
 const ANIMATION_MS = 800;
 const TOOLTIP_DELAY = document.body.classList.contains('touch-device') ? 1500 : undefined;
-const LOCAL_STORAGE_ZOOM_KEY = 'gamename-zoom';
+const LOCAL_STORAGE_ZOOM_KEY = 'dogpark-zoom';
 
-class Gamename implements Game {
+class DogPark implements Game {
 
     instantaneousMode: boolean;
     notifqueue: {};
@@ -108,11 +108,11 @@ class Gamename implements Game {
     public takeAction(action: string, data?: any, onComplete: () => void = () => {}) {
         data = data || {};
         data.lock = true;
-        (this as any).ajaxcall(`/gamename/gamename/${action}.html`, data, this, onComplete);
+        (this as any).ajaxcall(`/dogpark/dogpark/${action}.html`, data, this, onComplete);
     }
     public takeNoLockAction(action: string, data?: any, onComplete: () => void = () => {}) {
         data = data || {};
-        (this as any).ajaxcall(`/gamename/gamename/${action}.html`, data, this, onComplete);
+        (this as any).ajaxcall(`/dogpark/dogpark/${action}.html`, data, this, onComplete);
     }
 
     public setTooltip(id: string, html: string) {
