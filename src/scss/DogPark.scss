@@ -10,9 +10,15 @@
  */
 @use 'sass:math';
 
-//@import '../node_modules/bga-zoom/bga-zoom';
-//@import '../node_modules/bga-cards/bga-cards';
+$player-colors: '#c45f5f', '#d2ce74', '#90beac', '#8b91ba', '#000000';
+
+@import '../../node_modules/bga-zoom/bga-zoom';
+@import '../../node_modules/bga-cards/bga-cards';
 //@import 'LoadingIndicator';
+@import 'Boards';
+@import 'Tokens';
+@import 'Cards';
+@import 'Dials';
 
 @mixin selectable {
   &.bga-cards_selectable-card {
@@ -31,3 +37,5 @@
     }
   }
 }
+
+

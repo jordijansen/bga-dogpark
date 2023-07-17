@@ -1,0 +1,42 @@
+@use 'sass:math';
+
+$blackjack-size-height: 266px;
+$blackjack-size-width: 195px;
+
+.dog-card-art {
+  &[data-set="BASE_GAME"] {
+    @for $row from 0 through 3 {
+      @for $column from 0 through 4 {
+        $id: ($row * 5) + ($column + 1);
+        @if $id <= 18 {
+          &.dog-card-art-#{$id} {
+            background-image: url("img/dogpark-dog-cards-base-toy.jpg");
+            background-size: 500% auto;
+            background-position: #{$column * math.div(100%, 4)} #{$row * math.div(100%, 3)};
+          }
+        }
+      }
+    }
+  }
+}
+
+.dp-dog-card {
+  display: inline-block;
+  position: relative;
+  border-radius: 5px;
+  width: $blackjack-size-width;
+  height: $blackjack-size-height;
+
+  .card-sides {
+    .card-side {
+      border-radius: 5px;
+      width: $blackjack-size-width;
+      height: $blackjack-size-height;
+
+      &>* {
+        pointer-events: none;
+        user-select: none;
+      }
+    }
+  }
+}

@@ -1,0 +1,44 @@
+@use "sass:list";
+
+.dp-token {
+  filter: drop-shadow(1px 1px 1px black);
+  -webkit-filter: drop-shadow(1px 1px 1px black);
+}
+
+.dp-round-marker {
+  background-image: url('img/dogpark-round-marker.png');
+  background-size: cover;
+  width: 45px;
+  height: 45px;
+}
+
+.dp-dog-walker {
+  background-image: url('img/dogpark-walkers.png');
+  background-size: 500% auto;
+
+  @each $player-color in $player-colors {
+    &[data-color="#{$player-color}"] {
+      background-position: (list.index($player-colors, $player-color) - 1) * 25% 0;
+    }
+  }
+}
+
+.dp-dog-walker-token {
+  display: inline-block;
+  position: relative;
+  width: 45px;
+  height: 65px;
+
+  .card-sides {
+    .card-side {
+      width: 45px;
+      height: 65px;
+      box-shadow: none;
+
+      &>* {
+        pointer-events: none;
+        user-select: none;
+      }
+    }
+  }
+}

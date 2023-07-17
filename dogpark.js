@@ -222,16 +222,6 @@ var ZoomManager = /** @class */ (function () {
     };
     return ZoomManager;
 }());
-var BgaAnimation = /** @class */ (function () {
-    function BgaAnimation(animationFunction, settings) {
-        this.animationFunction = animationFunction;
-        this.settings = settings;
-        this.played = null;
-        this.result = null;
-        this.playWhenNoAnimation = false;
-    }
-    return BgaAnimation;
-}());
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -247,6 +237,72 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
+var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
+    if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
+        if (ar || !(i in from)) {
+            if (!ar) ar = Array.prototype.slice.call(from, 0, i);
+            ar[i] = from[i];
+        }
+    }
+    return to.concat(ar || Array.prototype.slice.call(from));
+};
+var determineBoardWidth = function () {
+    var BOARD_WIDTH = 1000 + 330;
+    var BOARD_WIDTH_SLIDING_SIDE_BAR = 1000;
+    if (window.getComputedStyle(document.getElementById('dp-game-board-side')).getPropertyValue('position') === 'absolute') {
+        return BOARD_WIDTH_SLIDING_SIDE_BAR;
+    }
+    return BOARD_WIDTH;
+};
+var determineMaxZoomLevel = function () {
+    var bodycoords = dojo.marginBox("zoom-overall");
+    var contentWidth = bodycoords.w;
+    var rowWidth = determineBoardWidth();
+    return contentWidth / rowWidth;
+};
+var getZoomLevels = function (maxZoomLevels) {
+    var zoomLevels = [];
+    if (maxZoomLevels > 1) {
+        var maxZoomLevelsAbove1 = maxZoomLevels - 1;
+        var increments = (maxZoomLevelsAbove1 / 3);
+        zoomLevels = [(increments) + 1, increments + increments + 1, increments + increments + increments + 1];
+    }
+    zoomLevels = __spreadArray(__spreadArray([], zoomLevels, true), [1, 0.8, 0.6], false);
+    return zoomLevels.sort();
+};
+var AutoZoomManager = /** @class */ (function (_super) {
+    __extends(AutoZoomManager, _super);
+    function AutoZoomManager(elementId, localStorageKey) {
+        var storedZoomLevel = localStorage.getItem(localStorageKey);
+        var maxZoomLevel = determineMaxZoomLevel();
+        if (storedZoomLevel && Number(storedZoomLevel) > maxZoomLevel) {
+            localStorage.removeItem(localStorageKey);
+        }
+        var zoomLevels = getZoomLevels(determineMaxZoomLevel());
+        return _super.call(this, {
+            element: document.getElementById(elementId),
+            smooth: true,
+            zoomLevels: zoomLevels,
+            defaultZoom: 1,
+            localStorageZoomKey: localStorageKey,
+            zoomControls: {
+                color: 'black',
+                position: 'top-right'
+            }
+        }) || this;
+    }
+    return AutoZoomManager;
+}(ZoomManager));
+var BgaAnimation = /** @class */ (function () {
+    function BgaAnimation(animationFunction, settings) {
+        this.animationFunction = animationFunction;
+        this.settings = settings;
+        this.played = null;
+        this.result = null;
+        this.playWhenNoAnimation = false;
+    }
+    return BgaAnimation;
+}());
 /**
  * Just use playSequence from animationManager
  *
@@ -536,15 +592,6 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
-};
-var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
-    if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
-        if (ar || !(i in from)) {
-            if (!ar) ar = Array.prototype.slice.call(from, 0, i);
-            ar[i] = from[i];
-        }
-    }
-    return to.concat(ar || Array.prototype.slice.call(from));
 };
 var AnimationManager = /** @class */ (function () {
     /**
@@ -2002,53 +2049,126 @@ function sortFunction() {
         return 0;
     };
 }
-var determineMaxZoomLevel = function () {
-    var bodycoords = dojo.marginBox("zoom-overall");
-    var contentWidth = bodycoords.w;
-    var rowWidth = BOARD_WIDTH;
-    if (contentWidth >= rowWidth) {
-        return 1;
-    }
-    return contentWidth / rowWidth;
-};
-var getZoomLevels = function (maxZoomLevels) {
-    var increments = maxZoomLevels / 5;
-    return [increments, increments * 2, increments * 3, increments * 4, maxZoomLevels];
-};
-var AutoZoomManager = /** @class */ (function (_super) {
-    __extends(AutoZoomManager, _super);
-    function AutoZoomManager(elementId) {
-        var _this = this;
-        var zoomLevels = getZoomLevels(determineMaxZoomLevel());
-        _this = _super.call(this, {
-            element: document.getElementById(elementId),
-            smooth: true,
-            zoomLevels: zoomLevels,
-            defaultZoom: zoomLevels[zoomLevels.length - 1],
-            zoomControls: {
-                color: 'black',
+var DogCardManager = /** @class */ (function (_super) {
+    __extends(DogCardManager, _super);
+    function DogCardManager(dogParkGame) {
+        var _this = _super.call(this, dogParkGame, {
+            getId: function (card) { return "dp-dog-card-".concat(card.id); },
+            setupDiv: function (card, div) {
+                div.classList.add('dp-dog-card');
+                div.dataset.id = "".concat(card.id);
+                div.dataset.type = 'dog';
             },
-            onDimensionsChange: function (zoom) {
-                if (_this) {
-                    var newMaxZoomLevel = determineMaxZoomLevel();
-                    var currentMaxZoomLevel = _this.zoomLevels[_this.zoomLevels.length - 1];
-                    if (newMaxZoomLevel != currentMaxZoomLevel) {
-                        _this.setZoomLevels(getZoomLevels(newMaxZoomLevel), newMaxZoomLevel);
-                    }
-                }
+            setupFrontDiv: function (card, div) {
+                div.id = "".concat(_this.getId(card), "-front");
+                div.classList.add("dog-card-art");
+                div.classList.add("dog-card-art-".concat(card.typeArg));
+                div.dataset.set = card.type;
             },
+            isCardVisible: function (card) { return !!card.typeArg; },
+            cardWidth: DogCardManager.CARD_WIDTH,
+            cardHeight: DogCardManager.CARD_HEIGHT,
         }) || this;
+        _this.dogParkGame = dogParkGame;
         return _this;
     }
-    return AutoZoomManager;
-}(ZoomManager));
+    DogCardManager.CARD_WIDTH = 195;
+    DogCardManager.CARD_HEIGHT = 266;
+    return DogCardManager;
+}(CardManager));
+var DogWalkerManager = /** @class */ (function (_super) {
+    __extends(DogWalkerManager, _super);
+    function DogWalkerManager(dogParkGame) {
+        var _this = _super.call(this, dogParkGame, {
+            getId: function (walker) { return "dp-dog-walker-".concat(walker.id); },
+            setupDiv: function (walker, div) {
+                div.classList.add('dp-dog-walker-token');
+                div.classList.add('dp-token');
+                div.dataset.id = "".concat(walker.id);
+                div.dataset.type = 'walker';
+            },
+            setupFrontDiv: function (walker, div) {
+                div.id = "".concat(_this.getId(walker), "-front");
+                div.classList.add("dp-dog-walker");
+                div.dataset.color = "#".concat(walker.type);
+            },
+            cardWidth: DogWalkerManager.WIDTH,
+            cardHeight: DogWalkerManager.HEIGHT,
+        }) || this;
+        _this.dogParkGame = dogParkGame;
+        return _this;
+    }
+    DogWalkerManager.WIDTH = 45;
+    DogWalkerManager.HEIGHT = 65;
+    return DogWalkerManager;
+}(CardManager));
+var DogField = /** @class */ (function () {
+    function DogField(game) {
+        this.game = game;
+        this.dogStocks = {};
+    }
+    DogField.prototype.setUp = function (gameData) {
+        for (var i = 1; i <= gameData.field.nrOfFields; i++) {
+            dojo.place(this.createFieldSlot(i), 'dp-game-board-field');
+            this.dogStocks[i] = new LineStock(this.game.dogCardManager, $("dp-field-slot-".concat(i, "-dog")), {});
+        }
+        this.addDogCardsToField(gameData.field.dogs);
+    };
+    DogField.prototype.addDogCardsToField = function (dogs) {
+        var _this = this;
+        return dogs.filter(function (dog) { return dog.location === 'field'; })
+            .map(function (dog) { return _this.dogStocks[dog.locationArg].addCard(dog); });
+    };
+    DogField.prototype.createFieldSlot = function (id) {
+        return "<div id=\"dp-field-slot-".concat(id, "\" class=\"dp-field-slot\">\n                    <div id=\"dp-field-slot-").concat(id, "-dog\" class=\"dp-field-slot-card\">\n                    </div>\n                    <div id=\"dp-field-slot-").concat(id, "-walkers\" class=\"dp-field-slot-walkers\">\n                    </div>\n                </div>");
+    };
+    return DogField;
+}());
+var PlayerArea = /** @class */ (function () {
+    function PlayerArea(game) {
+        this.game = game;
+        this.walkerStocks = {};
+    }
+    PlayerArea.prototype.setUp = function (gameData) {
+        var playerAreas = [];
+        for (var playerId in gameData.players) {
+            var player = gameData.players[playerId];
+            var playerArea = this.createPlayerArea(player);
+            if (Number(player.id) === this.game.getPlayerId()) {
+                playerAreas.unshift(playerArea);
+            }
+            else {
+                playerAreas.push(playerArea);
+            }
+        }
+        playerAreas.forEach(function (playerArea) { return dojo.place(playerArea, "dp-player-areas"); });
+        for (var playerId in gameData.players) {
+            var player = gameData.players[playerId];
+            var stockId = "dp-player-area-".concat(player.id, "-dog-walker");
+            this.walkerStocks[Number(player.id)] = new LineStock(this.game.dogWalkerManager, $(stockId), {});
+            this.moveWalkerToPlayer(Number(player.id), player.walker);
+        }
+    };
+    PlayerArea.prototype.moveWalkerToPlayer = function (playerId, walker) {
+        return this.walkerStocks[playerId].addCard(walker);
+    };
+    PlayerArea.prototype.createPlayerArea = function (player) {
+        return "<div id=\"dp-player-area-".concat(player.id, "\">\n                    <h2>").concat(player.name, "</h2>\n                    <div class=\"dp-lead-board dp-board\" data-color=\"#").concat(player.color, "\">\n                        <div id=\"dp-player-area-").concat(player.id, "-dog-walker\"></div>\n                    </div>\n                </div>");
+    };
+    return PlayerArea;
+}());
 var ZOOM_LEVELS = [0.25, 0.375, 0.5, 0.625, 0.75, 0.875, 1];
-var BOARD_WIDTH = 2000;
 var ANIMATION_MS = 800;
 var TOOLTIP_DELAY = document.body.classList.contains('touch-device') ? 1500 : undefined;
 var LOCAL_STORAGE_ZOOM_KEY = 'dogpark-zoom';
 var DogPark = /** @class */ (function () {
     function DogPark() {
+        // Init Managers
+        this.dogCardManager = new DogCardManager(this);
+        this.dogWalkerManager = new DogWalkerManager(this);
+        // Init Modules
+        this.dogField = new DogField(this);
+        this.playerArea = new PlayerArea(this);
     }
     /*
         setup:
@@ -2065,6 +2185,11 @@ var DogPark = /** @class */ (function () {
     DogPark.prototype.setup = function (gamedatas) {
         log("Starting game setup");
         log('gamedatas', gamedatas);
+        // Setup modules
+        this.dogField.setUp(gamedatas);
+        this.playerArea.setUp(gamedatas);
+        this.zoomManager = new AutoZoomManager('dp-game-board-wrapper', 'dp-zoom-level');
+        dojo.connect($('dp-game-board-side-toggle-button'), 'onclick', function () { return dojo.toggleClass('dp-game-board-side', 'hide-side-bar'); });
         this.setupNotifications();
         log("Ending game setup");
     };

@@ -1,0 +1,55 @@
+@use "sass:list";
+
+.dp-dial {
+  width: 300px;
+  height: 300px;
+
+  @for $i from 1 through 5 {
+    &[data-value="#{$i}"] {
+      .side-front-numbers {
+        transform: rotate(360deg - ($i * 60deg));
+      }
+    }
+  }
+
+  &.side-front {
+    background-image: url("img/dogpark-dial-numbers.png");
+    background-size: cover;
+
+    .side-front-numbers {
+      position: absolute;
+      width: 300px;
+      height: 300px;
+      background-image: url("img/dogpark-dial-numbers.png");
+      background-size: cover;
+      transition: transform 700ms;
+    }
+
+    .side-front-overlay {
+      position: absolute;
+      width: 300px;
+      height: 300px;
+      background-image: url("img/dogpark-dials-front.png");
+      background-size: 500% auto;
+    }
+  }
+
+
+
+  &.side-back {
+    background-image: url("img/dogpark-dials-back.png");
+    background-size: 500% auto;
+  }
+
+  @each $player-color in $player-colors {
+    &[data-color="#{$player-color}"] {
+     .side-front-overlay {
+       background-position: (list.index($player-colors, $player-color) - 1) * 25% 0;
+     }
+
+      &.side-back {
+        background-position: (list.index($player-colors, $player-color) - 1) * 25% 0;
+      }
+    }
+  }
+}

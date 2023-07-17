@@ -9,5 +9,714 @@
  * -----
  *
  */
+#bga-zoom-wrapper {
+  position: relative;
+}
+
+#bga-zoom-wrapper .bga-zoom-inner {
+  transform-origin: left top;
+}
+
+#bga-zoom-wrapper .bga-zoom-inner[data-smooth=true] {
+  transition: transform 0.5s;
+}
+
+#bga-zoom-wrapper #bga-zoom-controls {
+  position: absolute;
+  top: 0;
+}
+
+#bga-zoom-wrapper #bga-zoom-controls[data-position=top-left] {
+  left: 0;
+}
+
+#bga-zoom-wrapper #bga-zoom-controls[data-position=top-right] {
+  right: 0;
+}
+
+#bga-zoom-wrapper #bga-zoom-controls button {
+  border: 0;
+}
+
+#bga-zoom-wrapper #bga-zoom-controls button:not(.disabled) {
+  cursor: pointer;
+}
+
+#bga-zoom-wrapper #bga-zoom-controls button.disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+#bga-zoom-wrapper #bga-zoom-controls .bga-zoom-out-icon {
+  width: 40px;
+  height: 40px;
+  background: url('data:image/svg+xml;utf8,<svg width="100%" height="100%" viewBox="65 0 70 70" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;"><g><g transform="matrix(1,0,0,1,-4.97116,-76.2244)"><path d="M118,118C122.1,113.8 124.3,108.7 124.3,102.8C124.3,96.8 122.1,91.8 118,87.6C113.8,83.4 108.7,81.3 102.8,81.3C96.8,81.3 91.8,83.4 87.6,87.6C83.3,91.8 81.3,96.8 81.3,102.8C81.3,108.7 83.3,113.8 87.6,118C91.8,122.2 96.8,124.3 102.8,124.3C108.7,124.3 113.8,122.2 118,118" style="fill:none;fill-rule:nonzero;stroke:black;stroke-width:7px;"/></g><g transform="matrix(1,0,0,1,-4.97116,-76.2244)"><path d="M118,118L132.3,132.3" style="fill:none;fill-rule:nonzero;stroke:black;stroke-width:7px;"/></g><g transform="matrix(1,0,0,1,-4.97116,-76.2244)"><path d="M114.5,102.1L90.8,102.1" style="fill:none;fill-rule:nonzero;stroke:black;stroke-width:7px;"/></g></g></svg>');
+}
+
+#bga-zoom-wrapper #bga-zoom-controls .bga-zoom-in-icon {
+  width: 40px;
+  height: 40px;
+  background: url('data:image/svg+xml;utf8,<svg width="100%" height="100%" viewBox="0 0 70 70" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;"><g><g transform="matrix(1,0,0,1,-7.91703,-76.2244)"><path d="M23.8,102.1L35.7,102.1" style="fill:none;fill-rule:nonzero;stroke:black;stroke-width:7px;"/></g><g transform="matrix(1,0,0,1,-7.91703,-76.2244)"><path d="M35.7,102.1L47.5,102.1" style="fill:none;fill-rule:nonzero;stroke:black;stroke-width:7px;"/></g><g transform="matrix(1,0,0,1,-7.91703,-76.2244)"><path d="M35.7,102.1L35.7,90.3" style="fill:none;fill-rule:nonzero;stroke:black;stroke-width:7px;"/></g><g transform="matrix(1,0,0,1,-7.91703,-76.2244)"><path d="M51,118C55.2,113.8 57.3,108.7 57.3,102.8C57.3,96.8 55.2,91.8 51,87.6C46.8,83.4 41.7,81.3 35.8,81.3C29.9,81.3 24.8,83.4 20.6,87.6C16.4,91.8 14.3,96.8 14.3,102.8C14.3,108.7 16.4,113.8 20.6,118C24.8,122.2 29.9,124.3 35.8,124.3C41.7,124.3 46.8,122.2 51,118" style="fill:none;fill-rule:nonzero;stroke:black;stroke-width:7px;"/></g><g transform="matrix(1,0,0,1,-7.91703,-76.2244)"><path d="M35.7,113.9L35.7,102.1" style="fill:none;fill-rule:nonzero;stroke:black;stroke-width:7px;"/></g><g transform="matrix(1,0,0,1,-7.91703,-76.2244)"><path d="M65.3,132.3L51,118" style="fill:none;fill-rule:nonzero;stroke:black;stroke-width:7px;"/></g></g></svg>');
+}
+
+#bga-zoom-wrapper #bga-zoom-controls[data-color=white] .bga-zoom-out-icon {
+  width: 40px;
+  height: 40px;
+  background: url('data:image/svg+xml;utf8,<svg width="100%" height="100%" viewBox="65 0 70 70" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;"><g><g transform="matrix(1,0,0,1,-4.97116,-76.2244)"><path d="M118,118C122.1,113.8 124.3,108.7 124.3,102.8C124.3,96.8 122.1,91.8 118,87.6C113.8,83.4 108.7,81.3 102.8,81.3C96.8,81.3 91.8,83.4 87.6,87.6C83.3,91.8 81.3,96.8 81.3,102.8C81.3,108.7 83.3,113.8 87.6,118C91.8,122.2 96.8,124.3 102.8,124.3C108.7,124.3 113.8,122.2 118,118" style="fill:none;fill-rule:nonzero;stroke:white;stroke-width:7px;"/></g><g transform="matrix(1,0,0,1,-4.97116,-76.2244)"><path d="M118,118L132.3,132.3" style="fill:none;fill-rule:nonzero;stroke:white;stroke-width:7px;"/></g><g transform="matrix(1,0,0,1,-4.97116,-76.2244)"><path d="M114.5,102.1L90.8,102.1" style="fill:none;fill-rule:nonzero;stroke:white;stroke-width:7px;"/></g></g></svg>');
+}
+
+#bga-zoom-wrapper #bga-zoom-controls[data-color=white] .bga-zoom-in-icon {
+  width: 40px;
+  height: 40px;
+  background: url('data:image/svg+xml;utf8,<svg width="100%" height="100%" viewBox="0 0 70 70" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;"><g><g transform="matrix(1,0,0,1,-7.91703,-76.2244)"><path d="M23.8,102.1L35.7,102.1" style="fill:none;fill-rule:nonzero;stroke:white;stroke-width:7px;"/></g><g transform="matrix(1,0,0,1,-7.91703,-76.2244)"><path d="M35.7,102.1L47.5,102.1" style="fill:none;fill-rule:nonzero;stroke:white;stroke-width:7px;"/></g><g transform="matrix(1,0,0,1,-7.91703,-76.2244)"><path d="M35.7,102.1L35.7,90.3" style="fill:none;fill-rule:nonzero;stroke:white;stroke-width:7px;"/></g><g transform="matrix(1,0,0,1,-7.91703,-76.2244)"><path d="M51,118C55.2,113.8 57.3,108.7 57.3,102.8C57.3,96.8 55.2,91.8 51,87.6C46.8,83.4 41.7,81.3 35.8,81.3C29.9,81.3 24.8,83.4 20.6,87.6C16.4,91.8 14.3,96.8 14.3,102.8C14.3,108.7 16.4,113.8 20.6,118C24.8,122.2 29.9,124.3 35.8,124.3C41.7,124.3 46.8,122.2 51,118" style="fill:none;fill-rule:nonzero;stroke:white;stroke-width:7px;"/></g><g transform="matrix(1,0,0,1,-7.91703,-76.2244)"><path d="M35.7,113.9L35.7,102.1" style="fill:none;fill-rule:nonzero;stroke:white;stroke-width:7px;"/></g><g transform="matrix(1,0,0,1,-7.91703,-76.2244)"><path d="M65.3,132.3L51,118" style="fill:none;fill-rule:nonzero;stroke:white;stroke-width:7px;"/></g></g></svg>');
+}
+
+body > .card {
+  position: absolute;
+  left: -9999px;
+  top: -9999px;
+}
+
+.card {
+  flex-shrink: 0;
+}
+
+.card[data-side=back] .card-sides {
+  transform: rotateY(180deg);
+}
+
+.card .card-sides {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  transform-style: preserve-3d;
+  transition: transform 0.5s;
+}
+
+.card .card-sides .card-side {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  transform-style: preserve-3d;
+  -webkit-backface-visibility: hidden; /* Safari */
+  backface-visibility: hidden;
+  transform-origin: center center;
+  box-shadow: 1px 1px 2px 1px rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+}
+
+.card .card-sides .card-side.front > * {
+  pointer-events: none;
+  user-select: none;
+}
+
+.card .card-sides .card-side.back {
+  transform: rotateY(180deg);
+}
+
+.card .card-sides .card-side.back > * {
+  pointer-events: none;
+  user-select: none;
+}
+
+.card-stock .card.bga-cards_selectable-card:not(.bga-cards_disabled-card) {
+  cursor: pointer;
+}
+
+.card-stock .card.bga-cards_disabled-card {
+  cursor: not-allowed;
+  filter: contrast(0.6);
+}
+
+.card-stock.line-stock {
+  display: flex;
+  gap: var(--gap);
+  flex-wrap: var(--wrap);
+  flex-direction: var(--direction);
+}
+
+.card-stock.line-stock[data-center=true] {
+  justify-content: center;
+}
+
+.card-stock.slot-stock {
+  display: flex;
+  gap: var(--gap);
+  flex-wrap: var(--wrap);
+  flex-direction: var(--direction);
+}
+
+.card-stock.slot-stock[data-center=true] {
+  justify-content: center;
+}
+
+.card-stock.scrollable-stock {
+  display: flex;
+  gap: var(--button-gap);
+}
+
+.card-stock.scrollable-stock[data-scrollbar-visible=false] {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.card-stock.scrollable-stock[data-scrollbar-visible=false]::-webkit-scrollbar {
+  display: none;
+}
+
+.card-stock.scrollable-stock .scrollable-stock-inner {
+  display: flex;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  gap: var(--gap);
+}
+
+.card-stock.scrollable-stock .scrollable-stock-inner[data-center=true] {
+  justify-content: center;
+}
+
+.card-stock.hand-stock {
+  display: flex;
+  justify-content: center;
+}
+
+.card-stock.hand-stock .card {
+  transform: translateY(calc(var(--card-shift) * var(--hand-stock-middle-index-abs))) rotate(calc(var(--hand-stock-middle-index) * var(--card-inclination)));
+}
+
+.card-stock.hand-stock .card:not(:first-child) {
+  margin-left: calc(-1 * var(--card-overlap));
+}
+
+.card-stock.manual-position-stock {
+  position: relative;
+}
+
+.card-stock.manual-position-stock .card {
+  position: absolute;
+}
+
+.card-stock.void-stock {
+  position: relative;
+}
+
+.card-stock.void-stock .card {
+  position: absolute;
+}
+
+.card-stock.deck {
+  position: relative;
+  width: var(--width);
+  height: var(--height);
+}
+
+.card-stock.deck > .card {
+  position: absolute;
+  top: calc(var(--thickness) * var(--xShadowShift) * -1);
+  left: calc(var(--thickness) * var(--yShadowShift) * -1);
+}
+
+.card-stock.deck > .card:first-child {
+  box-shadow: calc(var(--thickness) * var(--xShadowShift)) calc(var(--thickness) * var(--yShadowShift)) 0px 0px #111, calc(var(--thickness) * var(--xShadowShift)) calc(var(--thickness) * var(--yShadowShift)) 2px 1px rgba(0, 0, 0, 0.5);
+}
+
+.card-stock.deck[data-empty=true] > .card {
+  visibility: hidden;
+}
+
+.card-stock.deck[data-empty=true] .bga-cards_deck-counter.hide-when-empty {
+  display: none;
+}
+
+.bga-cards_deck-counter {
+  --bga-cards-deck-counter-size: 20px;
+  position: absolute;
+  z-index: 1;
+  width: var(--bga-cards-deck-counter-size);
+  height: var(--bga-cards-deck-counter-size);
+  left: calc(var(--bga-cards-deck-left) - var(--bga-cards-deck-counter-size) / 2);
+  top: calc(var(--bga-cards-deck-top) - var(--bga-cards-deck-counter-size) / 2);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  user-select: none;
+  pointer-events: none;
+}
+
+.bga-cards_deck-counter.round {
+  color: black;
+  background: white;
+  border-radius: 50%;
+  box-shadow: 0 0 2px 1px black;
+  font-size: 14px;
+}
+
+.bga-cards_deck-counter.text-shadow {
+  color: white;
+  text-shadow: 0 0 1px black, 0 0 2px black, 0 0 3px black, 0 0 4px black;
+  font-size: 20px;
+}
+
+.bga-cards_deck-counter.hidden {
+  display: none;
+}
+
+.card-stock.all-visible-deck {
+  position: absolute;
+  --tile-count: 1;
+  width: calc(var(--width) + var(--tile-count) * var(--shift));
+  transition: height 0.5s ease-in-out, background-color 0.5s ease-in-out, box-shadow 0.5s ease-in-out;
+  opacity: var(--tile-count);
+}
+
+.card-stock.all-visible-deck > * {
+  position: absolute;
+  margin: 0;
+  transition: left 0.5s ease-in-out, top 0.5s ease-in-out;
+  top: calc(var(--shift) * var(--order));
+  left: calc(var(--shift) * var(--order));
+}
+
+.card-stock.all-visible-deck:hover, .card-stock.all-visible-deck:active, .card-stock.all-visible-deck.opened {
+  height: calc((var(--height) + var(--shift)) * var(--tile-count) - var(--shift));
+  z-index: 1;
+}
+
+.card-stock.all-visible-deck:hover > *, .card-stock.all-visible-deck:active > *, .card-stock.all-visible-deck.opened > * {
+  top: calc((var(--height) + var(--shift)) * var(--order));
+}
+
+.dp-board {
+  filter: drop-shadow(1px 1px 1px black);
+  -webkit-filter: drop-shadow(1px 1px 1px black);
+  border-radius: 10px;
+}
+
+#dp-game-board-wrapper {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+}
+#dp-game-board-wrapper #dp-game-board-main {
+  width: 1000px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+#dp-game-board-wrapper #dp-game-board-main #dp-game-board-round-tracker {
+  width: 1000px;
+  height: 247px;
+  background-image: url("img/dogpark-board-round-tracker.jpg");
+  background-size: cover;
+  display: flex;
+  flex-direction: column;
+}
+#dp-game-board-wrapper #dp-game-board-main #dp-game-board-round-tracker #dp-round-tracker-track-labels {
+  height: 42px;
+}
+#dp-game-board-wrapper #dp-game-board-main #dp-game-board-round-tracker #dp-round-tracker-track {
+  padding-left: 40px;
+}
+#dp-game-board-wrapper #dp-game-board-main #dp-game-board-round-tracker #dp-round-tracker-track #dp-round-tracker {
+  transition: margin-left 700ms;
+}
+#dp-game-board-wrapper #dp-game-board-main #dp-game-board-round-tracker #dp-round-tracker-track #dp-round-tracker[data-round="1"][data-phase="1"] {
+  margin-left: 0px;
+}
+#dp-game-board-wrapper #dp-game-board-main #dp-game-board-round-tracker #dp-round-tracker-track #dp-round-tracker[data-round="1"][data-phase="2"] {
+  margin-left: 63px;
+}
+#dp-game-board-wrapper #dp-game-board-main #dp-game-board-round-tracker #dp-round-tracker-track #dp-round-tracker[data-round="1"][data-phase="3"] {
+  margin-left: 126px;
+}
+#dp-game-board-wrapper #dp-game-board-main #dp-game-board-round-tracker #dp-round-tracker-track #dp-round-tracker[data-round="1"][data-phase="4"] {
+  margin-left: 189px;
+}
+#dp-game-board-wrapper #dp-game-board-main #dp-game-board-round-tracker #dp-round-tracker-track #dp-round-tracker[data-round="2"][data-phase="1"] {
+  margin-left: 240px;
+}
+#dp-game-board-wrapper #dp-game-board-main #dp-game-board-round-tracker #dp-round-tracker-track #dp-round-tracker[data-round="2"][data-phase="2"] {
+  margin-left: 303px;
+}
+#dp-game-board-wrapper #dp-game-board-main #dp-game-board-round-tracker #dp-round-tracker-track #dp-round-tracker[data-round="2"][data-phase="3"] {
+  margin-left: 366px;
+}
+#dp-game-board-wrapper #dp-game-board-main #dp-game-board-round-tracker #dp-round-tracker-track #dp-round-tracker[data-round="2"][data-phase="4"] {
+  margin-left: 429px;
+}
+#dp-game-board-wrapper #dp-game-board-main #dp-game-board-round-tracker #dp-round-tracker-track #dp-round-tracker[data-round="3"][data-phase="1"] {
+  margin-left: 480px;
+}
+#dp-game-board-wrapper #dp-game-board-main #dp-game-board-round-tracker #dp-round-tracker-track #dp-round-tracker[data-round="3"][data-phase="2"] {
+  margin-left: 543px;
+}
+#dp-game-board-wrapper #dp-game-board-main #dp-game-board-round-tracker #dp-round-tracker-track #dp-round-tracker[data-round="3"][data-phase="3"] {
+  margin-left: 606px;
+}
+#dp-game-board-wrapper #dp-game-board-main #dp-game-board-round-tracker #dp-round-tracker-track #dp-round-tracker[data-round="3"][data-phase="4"] {
+  margin-left: 669px;
+}
+#dp-game-board-wrapper #dp-game-board-main #dp-game-board-round-tracker #dp-round-tracker-track #dp-round-tracker[data-round="4"][data-phase="1"] {
+  margin-left: 720px;
+}
+#dp-game-board-wrapper #dp-game-board-main #dp-game-board-round-tracker #dp-round-tracker-track #dp-round-tracker[data-round="4"][data-phase="2"] {
+  margin-left: 783px;
+}
+#dp-game-board-wrapper #dp-game-board-main #dp-game-board-round-tracker #dp-round-tracker-track #dp-round-tracker[data-round="4"][data-phase="3"] {
+  margin-left: 846px;
+}
+#dp-game-board-wrapper #dp-game-board-main #dp-game-board-round-tracker #dp-round-tracker-track #dp-round-tracker[data-round="4"][data-phase="4"] {
+  margin-left: 909px;
+}
+#dp-game-board-wrapper #dp-game-board-main #dp-game-board-park {
+  width: 1000px;
+  height: 521px;
+  background-image: url("img/dogpark-board-park.jpg");
+  background-size: cover;
+}
+#dp-game-board-wrapper #dp-game-board-main #dp-game-board-field {
+  width: 1000px;
+  height: 465px;
+  background-image: url("img/dogpark-board-field.jpg");
+  background-size: cover;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: flex-end;
+  overflow: hidden;
+}
+#dp-game-board-wrapper #dp-game-board-main #dp-game-board-field .dp-field-slot {
+  background-image: url("img/dogpark-field-slot.png");
+  background-size: cover;
+  height: 460px;
+  width: 252px;
+}
+#dp-game-board-wrapper #dp-game-board-main #dp-game-board-field .dp-field-slot .card[data-type=dog] {
+  margin-left: 60px;
+  margin-top: 3px;
+}
+#dp-game-board-wrapper #dp-game-board-main #dp-game-board-field .dp-field-slot:nth-child(1) {
+  border-radius: 10px;
+  margin-left: -55px;
+}
+#dp-game-board-wrapper #dp-game-board-main #dp-game-board-field .dp-field-slot:nth-child(2), #dp-game-board-wrapper #dp-game-board-main #dp-game-board-field .dp-field-slot:nth-child(3), #dp-game-board-wrapper #dp-game-board-main #dp-game-board-field .dp-field-slot:nth-child(4), #dp-game-board-wrapper #dp-game-board-main #dp-game-board-field .dp-field-slot:nth-child(5) {
+  margin-left: -55px;
+}
+#dp-game-board-wrapper #dp-game-board-main #dp-game-board-field .dp-field-slot .dp-field-slot-walkers {
+  position: relative;
+}
+#dp-game-board-wrapper #dp-game-board-main #dp-game-board-field .dp-field-slot .dp-field-slot-walkers .dp-dog-walker-token {
+  position: absolute;
+}
+#dp-game-board-wrapper #dp-game-board-main #dp-game-board-field .dp-field-slot .dp-field-slot-walkers .dp-dog-walker-token:nth-child(1) {
+  top: 0px;
+  left: 130px;
+}
+#dp-game-board-wrapper #dp-game-board-main #dp-game-board-field .dp-field-slot .dp-field-slot-walkers .dp-dog-walker-token:nth-child(2) {
+  top: 28px;
+  left: 118px;
+}
+#dp-game-board-wrapper #dp-game-board-main #dp-game-board-field .dp-field-slot .dp-field-slot-walkers .dp-dog-walker-token:nth-child(3) {
+  top: 56px;
+  left: 106px;
+}
+#dp-game-board-wrapper #dp-game-board-main #dp-game-board-field .dp-field-slot .dp-field-slot-walkers .dp-dog-walker-token:nth-child(4) {
+  top: 84px;
+  left: 94px;
+}
+#dp-game-board-wrapper #dp-game-board-main #dp-game-board-field .dp-field-slot .dp-field-slot-walkers .dp-dog-walker-token:nth-child(5) {
+  top: 112px;
+  left: 82px;
+}
+#dp-game-board-wrapper #dp-game-board-side {
+  display: flex;
+  align-items: center;
+}
+@media only screen and (max-width: 1614px) {
+  #dp-game-board-wrapper #dp-game-board-side {
+    position: absolute;
+    top: 25px;
+    left: -10px;
+    transition: left 0.5s ease-in-out;
+  }
+  #dp-game-board-wrapper #dp-game-board-side.hide-side-bar {
+    left: -327px;
+  }
+  #dp-game-board-wrapper #dp-game-board-side #dp-game-board-side-toggle-button {
+    display: block !important;
+    background: black;
+    color: white;
+    font-size: large;
+    text-align: center;
+    cursor: pointer;
+    writing-mode: vertical-rl;
+    text-orientation: upright;
+    text-transform: uppercase;
+    padding: 5px;
+  }
+}
+#dp-game-board-wrapper #dp-game-board-side #dp-game-board-side-toggle-button {
+  display: none;
+}
+#dp-game-board-wrapper #dp-game-board-side #dp-game-board-objectives {
+  width: 322px;
+  height: 1202px;
+  background-image: url("img/dogpark-board-objectives.jpg");
+  background-size: cover;
+}
+
+.dp-lead-board {
+  background-image: url("img/dogpark-leadboards.jpg");
+  background-size: auto 500%;
+  width: 800px;
+  height: 306px;
+}
+.dp-lead-board[data-color="#c45f5f"] {
+  background-position: 0 0%;
+}
+.dp-lead-board[data-color="#d2ce74"] {
+  background-position: 0 25%;
+}
+.dp-lead-board[data-color="#90beac"] {
+  background-position: 0 50%;
+}
+.dp-lead-board[data-color="#8b91ba"] {
+  background-position: 0 75%;
+}
+.dp-lead-board[data-color="#000000"] {
+  background-position: 0 100%;
+}
+
+.dp-token {
+  filter: drop-shadow(1px 1px 1px black);
+  -webkit-filter: drop-shadow(1px 1px 1px black);
+}
+
+.dp-round-marker {
+  background-image: url("img/dogpark-round-marker.png");
+  background-size: cover;
+  width: 45px;
+  height: 45px;
+}
+
+.dp-dog-walker {
+  background-image: url("img/dogpark-walkers.png");
+  background-size: 500% auto;
+}
+.dp-dog-walker[data-color="#c45f5f"] {
+  background-position: 0% 0;
+}
+.dp-dog-walker[data-color="#d2ce74"] {
+  background-position: 25% 0;
+}
+.dp-dog-walker[data-color="#90beac"] {
+  background-position: 50% 0;
+}
+.dp-dog-walker[data-color="#8b91ba"] {
+  background-position: 75% 0;
+}
+.dp-dog-walker[data-color="#000000"] {
+  background-position: 100% 0;
+}
+
+.dp-dog-walker-token {
+  display: inline-block;
+  position: relative;
+  width: 45px;
+  height: 65px;
+}
+.dp-dog-walker-token .card-sides .card-side {
+  width: 45px;
+  height: 65px;
+  box-shadow: none;
+}
+.dp-dog-walker-token .card-sides .card-side > * {
+  pointer-events: none;
+  user-select: none;
+}
+
+.dog-card-art[data-set=BASE_GAME].dog-card-art-1 {
+  background-image: url("img/dogpark-dog-cards-base-toy.jpg");
+  background-size: 500% auto;
+  background-position: 0% 0%;
+}
+.dog-card-art[data-set=BASE_GAME].dog-card-art-2 {
+  background-image: url("img/dogpark-dog-cards-base-toy.jpg");
+  background-size: 500% auto;
+  background-position: 25% 0%;
+}
+.dog-card-art[data-set=BASE_GAME].dog-card-art-3 {
+  background-image: url("img/dogpark-dog-cards-base-toy.jpg");
+  background-size: 500% auto;
+  background-position: 50% 0%;
+}
+.dog-card-art[data-set=BASE_GAME].dog-card-art-4 {
+  background-image: url("img/dogpark-dog-cards-base-toy.jpg");
+  background-size: 500% auto;
+  background-position: 75% 0%;
+}
+.dog-card-art[data-set=BASE_GAME].dog-card-art-5 {
+  background-image: url("img/dogpark-dog-cards-base-toy.jpg");
+  background-size: 500% auto;
+  background-position: 100% 0%;
+}
+.dog-card-art[data-set=BASE_GAME].dog-card-art-6 {
+  background-image: url("img/dogpark-dog-cards-base-toy.jpg");
+  background-size: 500% auto;
+  background-position: 0% 33.3333333333%;
+}
+.dog-card-art[data-set=BASE_GAME].dog-card-art-7 {
+  background-image: url("img/dogpark-dog-cards-base-toy.jpg");
+  background-size: 500% auto;
+  background-position: 25% 33.3333333333%;
+}
+.dog-card-art[data-set=BASE_GAME].dog-card-art-8 {
+  background-image: url("img/dogpark-dog-cards-base-toy.jpg");
+  background-size: 500% auto;
+  background-position: 50% 33.3333333333%;
+}
+.dog-card-art[data-set=BASE_GAME].dog-card-art-9 {
+  background-image: url("img/dogpark-dog-cards-base-toy.jpg");
+  background-size: 500% auto;
+  background-position: 75% 33.3333333333%;
+}
+.dog-card-art[data-set=BASE_GAME].dog-card-art-10 {
+  background-image: url("img/dogpark-dog-cards-base-toy.jpg");
+  background-size: 500% auto;
+  background-position: 100% 33.3333333333%;
+}
+.dog-card-art[data-set=BASE_GAME].dog-card-art-11 {
+  background-image: url("img/dogpark-dog-cards-base-toy.jpg");
+  background-size: 500% auto;
+  background-position: 0% 66.6666666667%;
+}
+.dog-card-art[data-set=BASE_GAME].dog-card-art-12 {
+  background-image: url("img/dogpark-dog-cards-base-toy.jpg");
+  background-size: 500% auto;
+  background-position: 25% 66.6666666667%;
+}
+.dog-card-art[data-set=BASE_GAME].dog-card-art-13 {
+  background-image: url("img/dogpark-dog-cards-base-toy.jpg");
+  background-size: 500% auto;
+  background-position: 50% 66.6666666667%;
+}
+.dog-card-art[data-set=BASE_GAME].dog-card-art-14 {
+  background-image: url("img/dogpark-dog-cards-base-toy.jpg");
+  background-size: 500% auto;
+  background-position: 75% 66.6666666667%;
+}
+.dog-card-art[data-set=BASE_GAME].dog-card-art-15 {
+  background-image: url("img/dogpark-dog-cards-base-toy.jpg");
+  background-size: 500% auto;
+  background-position: 100% 66.6666666667%;
+}
+.dog-card-art[data-set=BASE_GAME].dog-card-art-16 {
+  background-image: url("img/dogpark-dog-cards-base-toy.jpg");
+  background-size: 500% auto;
+  background-position: 0% 100%;
+}
+.dog-card-art[data-set=BASE_GAME].dog-card-art-17 {
+  background-image: url("img/dogpark-dog-cards-base-toy.jpg");
+  background-size: 500% auto;
+  background-position: 25% 100%;
+}
+.dog-card-art[data-set=BASE_GAME].dog-card-art-18 {
+  background-image: url("img/dogpark-dog-cards-base-toy.jpg");
+  background-size: 500% auto;
+  background-position: 50% 100%;
+}
+
+.dp-dog-card {
+  display: inline-block;
+  position: relative;
+  border-radius: 5px;
+  width: 195px;
+  height: 266px;
+}
+.dp-dog-card .card-sides .card-side {
+  border-radius: 5px;
+  width: 195px;
+  height: 266px;
+}
+.dp-dog-card .card-sides .card-side > * {
+  pointer-events: none;
+  user-select: none;
+}
+
+.dp-dial {
+  width: 300px;
+  height: 300px;
+}
+.dp-dial[data-value="1"] .side-front-numbers {
+  transform: rotate(300deg);
+}
+.dp-dial[data-value="2"] .side-front-numbers {
+  transform: rotate(240deg);
+}
+.dp-dial[data-value="3"] .side-front-numbers {
+  transform: rotate(180deg);
+}
+.dp-dial[data-value="4"] .side-front-numbers {
+  transform: rotate(120deg);
+}
+.dp-dial[data-value="5"] .side-front-numbers {
+  transform: rotate(60deg);
+}
+.dp-dial.side-front {
+  background-image: url("img/dogpark-dial-numbers.png");
+  background-size: cover;
+}
+.dp-dial.side-front .side-front-numbers {
+  position: absolute;
+  width: 300px;
+  height: 300px;
+  background-image: url("img/dogpark-dial-numbers.png");
+  background-size: cover;
+  transition: transform 700ms;
+}
+.dp-dial.side-front .side-front-overlay {
+  position: absolute;
+  width: 300px;
+  height: 300px;
+  background-image: url("img/dogpark-dials-front.png");
+  background-size: 500% auto;
+}
+.dp-dial.side-back {
+  background-image: url("img/dogpark-dials-back.png");
+  background-size: 500% auto;
+}
+.dp-dial[data-color="#c45f5f"] .side-front-overlay {
+  background-position: 0% 0;
+}
+.dp-dial[data-color="#c45f5f"].side-back {
+  background-position: 0% 0;
+}
+.dp-dial[data-color="#d2ce74"] .side-front-overlay {
+  background-position: 25% 0;
+}
+.dp-dial[data-color="#d2ce74"].side-back {
+  background-position: 25% 0;
+}
+.dp-dial[data-color="#90beac"] .side-front-overlay {
+  background-position: 50% 0;
+}
+.dp-dial[data-color="#90beac"].side-back {
+  background-position: 50% 0;
+}
+.dp-dial[data-color="#8b91ba"] .side-front-overlay {
+  background-position: 75% 0;
+}
+.dp-dial[data-color="#8b91ba"].side-back {
+  background-position: 75% 0;
+}
+.dp-dial[data-color="#000000"] .side-front-overlay {
+  background-position: 100% 0;
+}
+.dp-dial[data-color="#000000"].side-back {
+  background-position: 100% 0;
+}
 
 /*# sourceMappingURL=dogpark.css.map */

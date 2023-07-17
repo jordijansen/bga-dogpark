@@ -1,0 +1,158 @@
+@use "sass:list";
+
+.dp-board {
+  filter: drop-shadow(1px 1px 1px black);
+  -webkit-filter: drop-shadow(1px 1px 1px black);
+  border-radius: 10px;
+}
+
+#dp-game-board-wrapper {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+
+  #dp-game-board-main {
+    width: 1000px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    #dp-game-board-round-tracker {
+      width: 1000px;
+      height: 247px;
+
+      background-image: url("img/dogpark-board-round-tracker.jpg");
+      background-size: cover;
+
+      display: flex;
+      flex-direction: column;
+      #dp-round-tracker-track-labels {
+        height: 42px;
+      }
+
+      #dp-round-tracker-track {
+        padding-left: 40px;
+
+        #dp-round-tracker {
+          transition: margin-left 700ms;
+          @for $round from 1 through 4 {
+            @for $phase from 1 through 4 {
+              $roundOffset: ($round - 1) * 240px;
+              $phaseOffset: ($phase - 1) * 63px;
+              &[data-round="#{$round}"] {
+                &[data-phase="#{$phase}"] {
+                  margin-left: $roundOffset + $phaseOffset;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
+    #dp-game-board-park {
+      width: 1000px;
+      height: 521px;
+      background-image: url("img/dogpark-board-park.jpg");
+      background-size: cover;
+    }
+
+    #dp-game-board-field {
+      width: 1000px;
+      height: 465px;
+      background-image: url("img/dogpark-board-field.jpg");
+      background-size: cover;
+
+      display: flex;
+      justify-content: space-evenly;
+      align-items: flex-end;
+      overflow: hidden;
+
+      .dp-field-slot {
+        background-image: url("img/dogpark-field-slot.png");
+        background-size: cover;
+        height: 460px;
+        width: 252px;
+
+        .card[data-type="dog"] {
+          margin-left: 60px;
+          margin-top: 3px;
+        }
+
+        &:nth-child(1) {
+          border-radius: 10px;
+          margin-left: -55px;
+        }
+
+        &:nth-child(2),&:nth-child(3),&:nth-child(4),&:nth-child(5){
+          margin-left: -55px;
+        }
+
+        .dp-field-slot-walkers {
+          position: relative;
+
+          .dp-dog-walker-token {
+            position: absolute;
+            @for $i from 1 through 5 {
+              &:nth-child(#{$i}) {
+                top: ($i - 1) * 28px;
+                left: 130px - (($i - 1) * 12px);
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  #dp-game-board-side {
+    @media only screen and (max-width: calc(1330px + 284px))  {
+      position: absolute;
+      top: 25px;
+      left: -10px;
+      transition: left 0.5s ease-in-out;
+      &.hide-side-bar {
+        left: -327px;
+      }
+
+      #dp-game-board-side-toggle-button {
+        display: block !important;
+        background: black;
+        color: white;
+        font-size: large;
+        text-align: center;
+        cursor: pointer;
+        writing-mode: vertical-rl;
+        text-orientation: upright;
+        text-transform: uppercase;
+        padding: 5px;
+      }
+    }
+
+    display: flex;
+    align-items: center;
+
+    #dp-game-board-side-toggle-button {
+      display: none;
+    }
+    #dp-game-board-objectives {
+      width: 322px;
+      height: 1202px;
+      background-image: url("img/dogpark-board-objectives.jpg");
+      background-size: cover;
+    }
+
+  }
+}
+
+.dp-lead-board {
+  background-image: url("img/dogpark-leadboards.jpg");
+  background-size: auto 500%;
+  width: 800px;
+  height: 306px;
+
+  @each $player-color in $player-colors {
+    &[data-color="#{$player-color}"] {
+      background-position: 0 (list.index($player-colors, $player-color) - 1) * 25%;
+    }
+  }
+}

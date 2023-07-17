@@ -9,20 +9,34 @@ declare const g_archive_mode;
 
 const ZOOM_LEVELS = [0.25, 0.375, 0.5, 0.625, 0.75, 0.875, 1]
 
-const BOARD_WIDTH = 2000;
 const ANIMATION_MS = 800;
 const TOOLTIP_DELAY = document.body.classList.contains('touch-device') ? 1500 : undefined;
 const LOCAL_STORAGE_ZOOM_KEY = 'dogpark-zoom';
 
-class DogPark implements Game {
+class DogPark implements DogParkGame {
 
     instantaneousMode: boolean;
     notifqueue: {};
 
-    public gamedatas: GameData;
+    public gamedatas: DogParkGameData;
+    private zoomManager: ZoomManager;
+
+    // Managers
+    public dogCardManager: DogCardManager;
+    public dogWalkerManager: DogWalkerManager;
+
+    // Modules
+    private dogField: DogField;
+    private playerArea: PlayerArea;
 
     constructor() {
+        // Init Managers
+        this.dogCardManager = new DogCardManager(this);
+        this.dogWalkerManager = new DogWalkerManager(this);
 
+        // Init Modules
+        this.dogField = new DogField(this);
+        this.playerArea = new PlayerArea(this);
     }
 
     /*
@@ -38,9 +52,17 @@ class DogPark implements Game {
         "gamedatas" argument contains all datas retrieved by your "getAllDatas" PHP method.
     */
 
-    public setup(gamedatas: GameData) {
+    public setup(gamedatas: DogParkGameData) {
         log( "Starting game setup" );
         log('gamedatas', gamedatas);
+
+        // Setup modules
+        this.dogField.setUp(gamedatas);
+        this.playerArea.setUp(gamedatas);
+
+        this.zoomManager = new AutoZoomManager('dp-game-board-wrapper', 'dp-zoom-level')
+
+        dojo.connect($('dp-game-board-side-toggle-button'), 'onclick', () => dojo.toggleClass('dp-game-board-side', 'hide-side-bar'));
 
         this.setupNotifications();
         log( "Ending game setup" );
@@ -101,7 +123,7 @@ class DogPark implements Game {
         return Number((this as any).player_id);
     }
 
-    public getPlayer(playerId: number): Player {
+    public getPlayer(playerId: number): DogParkPlayer {
         return Object.values(this.gamedatas.players).find(player => Number(player.id) == playerId);
     }
 

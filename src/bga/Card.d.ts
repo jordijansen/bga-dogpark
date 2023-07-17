@@ -1,7 +1,7 @@
 interface Card {
     id: number,
-    type?: number,
-    type_arg?: number,
+    type?: string,
+    typeArg?: number,
     location?: string,
-    location_arg?: number
+    locationArg?: number
 }

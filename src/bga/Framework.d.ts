@@ -30,7 +30,7 @@ interface GameData {
     neutralized_player_id: string;
     notifications: {last_packet_id: string, move_nbr: string}
     playerorder: (string | number)[];
-    players: { [playerId: number]: Player };
+    players: { [playerId: number]: DogParkPlayer };
     tablespeed: string
     instantaneousMode: boolean
 }

@@ -32,6 +32,28 @@ $this->card_types = array(
 
 */
 
+$this->DOG_CARDS = [
+    BASE_GAME => [
+        1 => [ 'breed' => [DOG_TYPE_TOY] ],
+        2 => [ 'breed' => [DOG_TYPE_TOY] ],
+        3 => [ 'breed' => [DOG_TYPE_TOY] ],
+        4 => [ 'breed' => [DOG_TYPE_TOY] ],
+        5 => [ 'breed' => [DOG_TYPE_TOY] ],
+        6 => [ 'breed' => [DOG_TYPE_TOY] ],
+        7 => [ 'breed' => [DOG_TYPE_TOY] ],
+        8 => [ 'breed' => [DOG_TYPE_TOY] ],
+        9 => [ 'breed' => [DOG_TYPE_TOY] ],
+        10 => [ 'breed' => [DOG_TYPE_TOY] ],
+        11 => [ 'breed' => [DOG_TYPE_TOY] ],
+        12 => [ 'breed' => [DOG_TYPE_TOY] ],
+        13 => [ 'breed' => [DOG_TYPE_TOY] ],
+        14 => [ 'breed' => [DOG_TYPE_TOY] ],
+        15 => [ 'breed' => [DOG_TYPE_TOY] ],
+        16 => [ 'breed' => [DOG_TYPE_TOY] ],
+        17 => [ 'breed' => [DOG_TYPE_TOY] ],
+        18 => [ 'breed' => [DOG_TYPE_TOY] ],
+    ]
+];
 
 
 

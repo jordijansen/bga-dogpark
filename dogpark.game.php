@@ -14,9 +14,12 @@
   *
   */
 
+use managers\DogField;
+use objects\DogWalker;
 use traits\ActionTrait;
 use traits\ArgsTrait;
 use traits\DebugTrait;
+use traits\SetupTrait;
 use traits\StateTrait;
 use traits\UtilsTrait;
 
@@ -24,19 +27,36 @@ require_once( APP_GAMEMODULE_PATH.'module/table/table.game.php' );
 
 require_once('modules/php/Constants.inc.php');
 
+require_once('modules/php/objects/Card.php');
+require_once('modules/php/objects/DogCard.php');
+require_once('modules/php/objects/DogWalker.php');
+
 require_once('modules/php/traits/UtilsTrait.php');
 require_once('modules/php/traits/ActionTrait.php');
 require_once('modules/php/traits/StateTrait.php');
 require_once('modules/php/traits/ArgsTrait.php');
 require_once('modules/php/traits/DebugTrait.php');
+require_once('modules/php/traits/SetupTrait.php');
+
+require_once('modules/php/DogField.php');
 
 class DogPark extends Table
 {
+    use SetupTrait;
     use ActionTrait;
     use StateTrait;
     use ArgsTrait;
     use UtilsTrait;
     use DebugTrait;
+
+    public static $instance = null;
+
+    // CARDS & TOKENS
+    public Deck $dogCards;
+    public Deck $dogWalkers;
+
+    // MANAGERS
+    public DogField $dogField;
 
     function __construct( )
 	{
@@ -51,49 +71,22 @@ class DogPark extends Table
         self::initGameStateLabels([
 
         ]);
+
+        self::$instance = $this;
+
+        $this->dogCards = self::getNew("module.common.deck");
+        $this->dogCards->init('dog');
+
+        $this->dogWalkers = self::getNew("module.common.deck");
+        $this->dogWalkers->init('walker');
+
+        $this->dogField = new DogField($this);
     }
 	
     protected function getGameName( )
     {
 		// Used for translations and stuff. Please do not modify.
         return "dogpark";
-    }	
-
-    /*
-        setupNewGame:
-        
-        This method is called only once, when a new game is launched.
-        In this method, you must setup the game according to the game rules, so that
-        the game is ready to be played.
-    */
-    protected function setupNewGame( $players, $options = array() )
-    {    
-        // Set the colors of the players with HTML color code
-        // The default below is red/green/blue/orange/brown
-        // The number of colors defined here must correspond to the maximum number of players allowed for the gams
-        $gameinfos = self::getGameinfos();
-        $default_colors = $gameinfos['player_colors'];
- 
-        // Create players
-        // Note: if you added some extra field on "player" table in the database (dbmodel.sql), you can initialize it there.
-        $sql = "INSERT INTO player (player_id, player_color, player_canal, player_name, player_avatar) VALUES ";
-        $values = array();
-        foreach( $players as $player_id => $player )
-        {
-            $color = array_shift( $default_colors );
-            $values[] = "('".$player_id."','$color','".$player['player_canal']."','".addslashes( $player['player_name'] )."','".addslashes( $player['player_avatar'] )."')";
-        }
-        $sql .= implode( ',', $values );
-        self::DbQuery( $sql );
-        self::reattributeColorsBasedOnPreferences( $players, $gameinfos['player_colors'] );
-        self::reloadPlayersBasicInfos();
-        
-        /************ Start the game initialization *****/
-
-        // Activate first player (which is in general a good idea :) )
-        $this->activeNextPlayer();
-
-        /************ End of the game initialization *****/
     }
 
     /*
@@ -116,6 +109,14 @@ class DogPark extends Table
         $sql = "SELECT player_id id, player_score score, player_no playerNo FROM player ";
         $result['players'] = self::getCollectionFromDb( $sql );
 
+        foreach($result['players'] as $playerId => &$player) {
+            $player['walker'] = current(DogWalker::fromArray($this->dogWalkers->getCardsInLocation(LOCATION_PLAYER, $playerId)));
+        }
+
+        $result['field'] = [
+            'nrOfFields' => $this->dogField->getNumberOfFields(),
+            'dogs' => $this->dogField->getDogCards()
+        ];
         return $result;
     }
 
