@@ -2106,28 +2106,119 @@ var DogField = /** @class */ (function () {
     function DogField(game) {
         this.game = game;
         this.dogStocks = {};
+        this.walkerStocks = {};
     }
     DogField.prototype.setUp = function (gameData) {
         for (var i = 1; i <= gameData.field.nrOfFields; i++) {
             dojo.place(this.createFieldSlot(i), 'dp-game-board-field');
             this.dogStocks[i] = new LineStock(this.game.dogCardManager, $("dp-field-slot-".concat(i, "-dog")), {});
+            this.walkerStocks[i] = new LineStock(this.game.dogWalkerManager, $("dp-field-slot-".concat(i, "-walkers")), {});
         }
         this.addDogCardsToField(gameData.field.dogs);
+        this.addWalkersToField(gameData.field.walkers);
     };
     DogField.prototype.addDogCardsToField = function (dogs) {
         var _this = this;
         return dogs.filter(function (dog) { return dog.location === 'field'; })
             .map(function (dog) { return _this.dogStocks[dog.locationArg].addCard(dog); });
     };
+    DogField.prototype.addWalkersToField = function (walkers) {
+        var _this = this;
+        return walkers.filter(function (walker) { return walker.location.startsWith('field_'); })
+            .map(function (walker) { return _this.walkerStocks[Number(walker.location.replace('field_', ''))].addCard(walker); });
+    };
+    DogField.prototype.setDogSelectionMode = function (selectionMode) {
+        var _this = this;
+        var _loop_3 = function (slotId) {
+            this_1.dogStocks[slotId].onSelectionChange = selectionMode === 'none' ? undefined : function () {
+                for (var otherSlotId in _this.dogStocks) {
+                    if (slotId !== otherSlotId) {
+                        _this.dogStocks[otherSlotId].unselectAll(true);
+                    }
+                }
+            };
+            this_1.dogStocks[slotId].setSelectionMode(selectionMode);
+        };
+        var this_1 = this;
+        for (var slotId in this.dogStocks) {
+            _loop_3(slotId);
+        }
+    };
+    DogField.prototype.getSelectedDog = function () {
+        for (var slotId in this.dogStocks) {
+            if (this.dogStocks[slotId].getSelection() && this.dogStocks[slotId].getSelection().length === 1) {
+                return this.dogStocks[slotId].getSelection()[0];
+            }
+        }
+        return null;
+    };
+    DogField.prototype.setFocusToField = function () {
+        $('dp-game-board-field-wrapper').style.order = 1;
+    };
+    DogField.prototype.removeFocusToField = function () {
+        $('dp-game-board-field-wrapper').style.order = 12;
+    };
     DogField.prototype.createFieldSlot = function (id) {
         return "<div id=\"dp-field-slot-".concat(id, "\" class=\"dp-field-slot\">\n                    <div id=\"dp-field-slot-").concat(id, "-dog\" class=\"dp-field-slot-card\">\n                    </div>\n                    <div id=\"dp-field-slot-").concat(id, "-walkers\" class=\"dp-field-slot-walkers\">\n                    </div>\n                </div>");
     };
     return DogField;
 }());
+var DogOfferDial = /** @class */ (function () {
+    function DogOfferDial(settings) {
+        var _this = this;
+        this.settings = settings;
+        this._currentValue = 1;
+        dojo.place(this.createDial(), settings.parentId);
+        this.currentValue = settings.initialValue;
+        if (!this.settings.readOnly) {
+            this.increaseButton = $('dp-dial-button-increase');
+            this.decreaseButton = $('dp-dial-button-decrease');
+            this.updateDial(settings.initialValue);
+            dojo.connect(this.increaseButton, 'onclick', function () { return _this.updateDial(_this._currentValue + 1); });
+            dojo.connect(this.decreaseButton, 'onclick', function () { return _this.updateDial(_this._currentValue - 1); });
+        }
+    }
+    DogOfferDial.prototype.updateDial = function (newValue) {
+        this.currentValue = newValue;
+        this.increaseButton.classList.remove('disabled');
+        this.decreaseButton.classList.remove('disabled');
+        if (this._currentValue === 1) {
+            this.decreaseButton.classList.add('disabled');
+        }
+        if (this._currentValue === this.settings.maxOfferValue) {
+            this.increaseButton.classList.add('disabled');
+        }
+    };
+    DogOfferDial.prototype.createDial = function () {
+        var result = '';
+        if (!this.settings.readOnly) {
+            result += "<a id=\"dp-dial-button-decrease\" class=\"bgabutton bgabutton_blue\"><i class=\"fa fa-minus\" aria-hidden=\"true\"></i></a>";
+        }
+        result += "<div id=\"".concat(this.settings.elementId, "\" class=\"dp-dial side-front\" data-color=\"#").concat(this.settings.player.color, "\" data-value=\"").concat(this._currentValue, "\">\n                    <div class=\"side-front-numbers\"></div>\n                    <div class=\"side-front-overlay\">").concat(this.settings.readOnly ? this.settings.player.name : '', "</div>\n                </div>");
+        if (!this.settings.readOnly) {
+            result += "<a id=\"dp-dial-button-increase\" class=\"bgabutton bgabutton_blue\"><i class=\"fa fa-plus\" aria-hidden=\"true\"></i></a>";
+        }
+        return result;
+    };
+    Object.defineProperty(DogOfferDial.prototype, "currentValue", {
+        get: function () {
+            return this._currentValue;
+        },
+        set: function (value) {
+            this._currentValue = value;
+            $(this.settings.elementId).dataset.value = value;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    return DogOfferDial;
+}());
 var PlayerArea = /** @class */ (function () {
     function PlayerArea(game) {
         this.game = game;
         this.walkerStocks = {};
+        this.kennelStocks = {};
+        this.playerDials = {};
     }
     PlayerArea.prototype.setUp = function (gameData) {
         var playerAreas = [];
@@ -2144,18 +2235,72 @@ var PlayerArea = /** @class */ (function () {
         playerAreas.forEach(function (playerArea) { return dojo.place(playerArea, "dp-player-areas"); });
         for (var playerId in gameData.players) {
             var player = gameData.players[playerId];
-            var stockId = "dp-player-area-".concat(player.id, "-dog-walker");
-            this.walkerStocks[Number(player.id)] = new LineStock(this.game.dogWalkerManager, $(stockId), {});
+            var dogWalkerStockId = "dp-player-area-".concat(player.id, "-dog-walker");
+            this.walkerStocks[Number(player.id)] = new LineStock(this.game.dogWalkerManager, $(dogWalkerStockId), { center: false });
             this.moveWalkerToPlayer(Number(player.id), player.walker);
+            var kennelStockId = "dp-player-area-".concat(player.id, "-kennel");
+            this.kennelStocks[Number(player.id)] = new LineStock(this.game.dogCardManager, $(kennelStockId), { center: false });
+            this.moveDogsToKennel(Number(player.id), player.kennelDogs);
+            this.playerDials[Number(player.id)] = new DogOfferDial({
+                elementId: "dp-game-board-offer-dial-".concat(player.id),
+                parentId: 'dp-game-board-offer-dials',
+                player: player,
+                readOnly: true,
+                initialValue: player.offerValue
+            });
         }
     };
     PlayerArea.prototype.moveWalkerToPlayer = function (playerId, walker) {
-        return this.walkerStocks[playerId].addCard(walker);
+        if (walker) {
+            return this.walkerStocks[playerId].addCard(walker);
+        }
+        return Promise.resolve(true);
+    };
+    PlayerArea.prototype.moveDogsToKennel = function (playerId, dogs) {
+        return this.kennelStocks[playerId].addCards(dogs);
+    };
+    PlayerArea.prototype.setPlayerOfferValue = function (playerId, offerValue) {
+        this.playerDials[playerId].currentValue = offerValue;
+    };
+    PlayerArea.prototype.resetAllOfferValues = function () {
+        for (var playerId in this.playerDials) {
+            this.playerDials[playerId].currentValue = null;
+        }
     };
     PlayerArea.prototype.createPlayerArea = function (player) {
-        return "<div id=\"dp-player-area-".concat(player.id, "\">\n                    <h2>").concat(player.name, "</h2>\n                    <div class=\"dp-lead-board dp-board\" data-color=\"#").concat(player.color, "\">\n                        <div id=\"dp-player-area-").concat(player.id, "-dog-walker\"></div>\n                    </div>\n                </div>");
+        return "<div id=\"dp-player-area-".concat(player.id, "\" class=\"whiteblock\">\n                    <h2>").concat(player.name, "</h2>\n                    <div class=\"dp-lead-board dp-board\" data-color=\"#").concat(player.color, "\">\n                        <div id=\"dp-player-area-").concat(player.id, "-dog-walker\"></div>\n                    </div>\n                    <div id=\"dp-player-area-").concat(player.id, "-kennel\">\n                    \n                    </div>\n                </div>");
     };
     return PlayerArea;
+}());
+var RoundTracker = /** @class */ (function () {
+    function RoundTracker(game) {
+        this.game = game;
+    }
+    RoundTracker.prototype.setUp = function (gameData) {
+        this.updateRound(gameData.currentRound);
+        this.updatePhase(gameData.currentPhase);
+    };
+    RoundTracker.prototype.updateRound = function (round) {
+        $(RoundTracker.elementId).dataset.round = round;
+    };
+    RoundTracker.prototype.updatePhase = function (phase) {
+        $(RoundTracker.elementId).dataset.phase = this.toPhaseId(phase);
+    };
+    RoundTracker.prototype.toPhaseId = function (phase) {
+        switch (phase) {
+            case 'PHASE_RECRUITMENT_1':
+            case 'PHASE_RECRUITMENT_2':
+                return 1;
+            case 'PHASE_SELECTION':
+                return 2;
+            case 'PHASE_WALKING':
+                return 3;
+            case 'PHASE_HOME_TIME':
+                return 4;
+        }
+    };
+    RoundTracker.elementId = 'dp-round-tracker';
+    return RoundTracker;
 }());
 var ZOOM_LEVELS = [0.25, 0.375, 0.5, 0.625, 0.75, 0.875, 1];
 var ANIMATION_MS = 800;
@@ -2169,6 +2314,7 @@ var DogPark = /** @class */ (function () {
         // Init Modules
         this.dogField = new DogField(this);
         this.playerArea = new PlayerArea(this);
+        this.roundTracker = new RoundTracker(this);
     }
     /*
         setup:
@@ -2188,6 +2334,7 @@ var DogPark = /** @class */ (function () {
         // Setup modules
         this.dogField.setUp(gamedatas);
         this.playerArea.setUp(gamedatas);
+        this.roundTracker.setUp(gamedatas);
         this.zoomManager = new AutoZoomManager('dp-game-board-wrapper', 'dp-zoom-level');
         dojo.connect($('dp-game-board-side-toggle-button'), 'onclick', function () { return dojo.toggleClass('dp-game-board-side', 'hide-side-bar'); });
         this.setupNotifications();
@@ -2201,11 +2348,51 @@ var DogPark = /** @class */ (function () {
     DogPark.prototype.onEnteringState = function (stateName, args) {
         log('Entering state: ' + stateName, args.args);
         switch (stateName) {
+            case 'recruitmentOffer':
+                this.enteringRecruitmentOffer(args.args);
+                break;
+            case 'recruitmentTakeDog':
+                this.enteringRecruitmentTakeDog();
+                break;
+        }
+    };
+    DogPark.prototype.enteringRecruitmentOffer = function (args) {
+        if (this.isCurrentPlayerActive()) {
+            if (args.maxOfferValue > 0) {
+                this.dogField.setDogSelectionMode('single');
+                this.gamedatas.gamestate.descriptionmyturn = this.gamedatas.gamestate.descriptionmyturn + '<br />' + _('Select a dog and offer value (reputation cost)') + '<br />';
+                this.gamedatas.gamestate.descriptionmyturn = this.gamedatas.gamestate.descriptionmyturn + '<div id="dp-offer-dial-controls-wrapper"></div>';
+                this.updatePageTitle();
+                this.currentPlayerOfferDial = new DogOfferDial({
+                    elementId: 'dp-current-player-offer-dial',
+                    parentId: 'dp-offer-dial-controls-wrapper',
+                    player: this.getPlayer(this.getPlayerId()),
+                    initialValue: 1,
+                    maxOfferValue: args.maxOfferValue,
+                    readOnly: false
+                });
+            }
+            else {
+                this.gamedatas.gamestate.descriptionmyturn = this.gamedatas.gamestate.descriptionmyturn + '<br />' + _('Insufficient reputation to place an offer') + '<br />';
+                this.updatePageTitle();
+            }
+        }
+    };
+    DogPark.prototype.enteringRecruitmentTakeDog = function () {
+        if (this.isCurrentPlayerActive()) {
+            this.dogField.setDogSelectionMode('single');
         }
     };
     DogPark.prototype.onLeavingState = function (stateName) {
         log('Leaving state: ' + stateName);
         switch (stateName) {
+            case 'recruitmentOffer':
+            case 'recruitmentTakeDog':
+                this.dogField.setDogSelectionMode('none');
+                break;
+            case 'recruitmentEnd':
+                this.dogField.removeFocusToField();
+                break;
         }
     };
     // onUpdateActionButtons: in this method you can manage "action buttons" that are displayed in the
@@ -2215,11 +2402,33 @@ var DogPark = /** @class */ (function () {
         var _this = this;
         if (this.isCurrentPlayerActive()) {
             switch (stateName) {
+                case 'recruitmentOffer':
+                    if (args.maxOfferValue > 0) {
+                        this.addActionButton('placeOfferOnDog', _("Confirm"), function () { return _this.placeOfferOnDog(); });
+                    }
+                    else {
+                        this.addActionButton('skipPlaceOfferOnDog', _("Skip"), function () { return _this.skipPlaceOfferOnDog(); });
+                    }
+                    break;
+                case 'recruitmentTakeDog':
+                    this.addActionButton('takeDog', _("Confirm"), function () { return _this.recruitDog(); });
             }
             if ([].includes(stateName) && args.canCancelMoves) {
                 this.addActionButton('undoLastMoves', _("Undo last moves"), function () { return _this.undoLastMoves(); }, null, null, 'gray');
             }
         }
+    };
+    DogPark.prototype.recruitDog = function () {
+        var selectedDog = this.dogField.getSelectedDog();
+        this.takeAction('recruitDog', { dogId: selectedDog === null || selectedDog === void 0 ? void 0 : selectedDog.id });
+    };
+    DogPark.prototype.skipPlaceOfferOnDog = function () {
+        this.takeAction('skipPlaceOfferOnDog');
+    };
+    DogPark.prototype.placeOfferOnDog = function () {
+        var selectedDog = this.dogField.getSelectedDog();
+        var offerValue = this.currentPlayerOfferDial.currentValue;
+        this.takeAction('placeOfferOnDog', { dogId: selectedDog === null || selectedDog === void 0 ? void 0 : selectedDog.id, offerValue: offerValue });
     };
     DogPark.prototype.undoLastMoves = function () {
         this.takeAction('undoLastMoves');
@@ -2285,9 +2494,14 @@ var DogPark = /** @class */ (function () {
         var _this = this;
         log('notifications subscriptions setup');
         var notifs = [
-        // ['untilFinishedReturnPromise', undefined],
-        // ['shortTime', 1],
-        // ['fixedTime', 1000]
+            ['dogRecruited', undefined],
+            ['dogOfferPlaced', undefined],
+            ['offerValueRevealed', ANIMATION_MS],
+            ['resetAllOfferValues', ANIMATION_MS],
+            ['fieldRefilled', undefined],
+            ['newPhase', ANIMATION_MS]
+            // ['shortTime', 1],
+            // ['fixedTime', 1000]
         ];
         notifs.forEach(function (notif) {
             dojo.subscribe(notif[0], _this, function (notifDetails) {
@@ -2299,6 +2513,30 @@ var DogPark = /** @class */ (function () {
             // make all notif as synchronous
             _this.notifqueue.setSynchronous(notif[0], notif[1]);
         });
+    };
+    DogPark.prototype.notif_dogRecruited = function (args) {
+        var _this = this;
+        this.setScore(args.playerId, args.score);
+        return this.playerArea.moveDogsToKennel(args.playerId, [args.dog])
+            .then(function () { return _this.playerArea.moveWalkerToPlayer(args.playerId, args.walker); });
+    };
+    DogPark.prototype.notif_dogOfferPlaced = function (args) {
+        if (Number(args.playerId) === Number(this.getPlayerId())) {
+            this.playerArea.setPlayerOfferValue(this.getPlayerId(), this.currentPlayerOfferDial.currentValue);
+        }
+        return Promise.all(this.dogField.addWalkersToField([args.walker]));
+    };
+    DogPark.prototype.notif_offerValueRevealed = function (args) {
+        this.playerArea.setPlayerOfferValue(args.playerId, args.offerValue);
+    };
+    DogPark.prototype.notif_resetAllOfferValues = function () {
+        this.playerArea.resetAllOfferValues();
+    };
+    DogPark.prototype.notif_fieldRefilled = function (args) {
+        return Promise.all(this.dogField.addDogCardsToField(args.dogs));
+    };
+    DogPark.prototype.notif_newPhase = function (args) {
+        this.roundTracker.updatePhase(args.newPhase);
     };
     DogPark.prototype.format_string_recursive = function (log, args) {
         try {

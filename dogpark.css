@@ -378,7 +378,7 @@ body > .card {
   background-image: url("img/dogpark-board-park.jpg");
   background-size: cover;
 }
-#dp-game-board-wrapper #dp-game-board-main #dp-game-board-field {
+#dp-game-board-wrapper #dp-game-board-main #dp-game-board-field-wrapper #dp-game-board-field {
   width: 1000px;
   height: 465px;
   background-image: url("img/dogpark-board-field.jpg");
@@ -388,48 +388,54 @@ body > .card {
   align-items: flex-end;
   overflow: hidden;
 }
-#dp-game-board-wrapper #dp-game-board-main #dp-game-board-field .dp-field-slot {
+#dp-game-board-wrapper #dp-game-board-main #dp-game-board-field-wrapper #dp-game-board-field .dp-field-slot {
   background-image: url("img/dogpark-field-slot.png");
   background-size: cover;
   height: 460px;
   width: 252px;
 }
-#dp-game-board-wrapper #dp-game-board-main #dp-game-board-field .dp-field-slot .card[data-type=dog] {
-  margin-left: 60px;
-  margin-top: 3px;
+#dp-game-board-wrapper #dp-game-board-main #dp-game-board-field-wrapper #dp-game-board-field .dp-field-slot .dp-field-slot-card {
+  height: 266px;
 }
-#dp-game-board-wrapper #dp-game-board-main #dp-game-board-field .dp-field-slot:nth-child(1) {
+#dp-game-board-wrapper #dp-game-board-main #dp-game-board-field-wrapper #dp-game-board-field .dp-field-slot .card[data-type=dog] {
+  margin-left: 60px;
+}
+#dp-game-board-wrapper #dp-game-board-main #dp-game-board-field-wrapper #dp-game-board-field .dp-field-slot:nth-child(1) {
   border-radius: 10px;
   margin-left: -55px;
 }
-#dp-game-board-wrapper #dp-game-board-main #dp-game-board-field .dp-field-slot:nth-child(2), #dp-game-board-wrapper #dp-game-board-main #dp-game-board-field .dp-field-slot:nth-child(3), #dp-game-board-wrapper #dp-game-board-main #dp-game-board-field .dp-field-slot:nth-child(4), #dp-game-board-wrapper #dp-game-board-main #dp-game-board-field .dp-field-slot:nth-child(5) {
+#dp-game-board-wrapper #dp-game-board-main #dp-game-board-field-wrapper #dp-game-board-field .dp-field-slot:nth-child(2), #dp-game-board-wrapper #dp-game-board-main #dp-game-board-field-wrapper #dp-game-board-field .dp-field-slot:nth-child(3), #dp-game-board-wrapper #dp-game-board-main #dp-game-board-field-wrapper #dp-game-board-field .dp-field-slot:nth-child(4), #dp-game-board-wrapper #dp-game-board-main #dp-game-board-field-wrapper #dp-game-board-field .dp-field-slot:nth-child(5) {
   margin-left: -55px;
 }
-#dp-game-board-wrapper #dp-game-board-main #dp-game-board-field .dp-field-slot .dp-field-slot-walkers {
+#dp-game-board-wrapper #dp-game-board-main #dp-game-board-field-wrapper #dp-game-board-field .dp-field-slot .dp-field-slot-walkers {
   position: relative;
 }
-#dp-game-board-wrapper #dp-game-board-main #dp-game-board-field .dp-field-slot .dp-field-slot-walkers .dp-dog-walker-token {
+#dp-game-board-wrapper #dp-game-board-main #dp-game-board-field-wrapper #dp-game-board-field .dp-field-slot .dp-field-slot-walkers .dp-dog-walker-token {
   position: absolute;
 }
-#dp-game-board-wrapper #dp-game-board-main #dp-game-board-field .dp-field-slot .dp-field-slot-walkers .dp-dog-walker-token:nth-child(1) {
+#dp-game-board-wrapper #dp-game-board-main #dp-game-board-field-wrapper #dp-game-board-field .dp-field-slot .dp-field-slot-walkers .dp-dog-walker-token:nth-child(1) {
   top: 0px;
   left: 130px;
 }
-#dp-game-board-wrapper #dp-game-board-main #dp-game-board-field .dp-field-slot .dp-field-slot-walkers .dp-dog-walker-token:nth-child(2) {
+#dp-game-board-wrapper #dp-game-board-main #dp-game-board-field-wrapper #dp-game-board-field .dp-field-slot .dp-field-slot-walkers .dp-dog-walker-token:nth-child(2) {
   top: 28px;
   left: 118px;
 }
-#dp-game-board-wrapper #dp-game-board-main #dp-game-board-field .dp-field-slot .dp-field-slot-walkers .dp-dog-walker-token:nth-child(3) {
+#dp-game-board-wrapper #dp-game-board-main #dp-game-board-field-wrapper #dp-game-board-field .dp-field-slot .dp-field-slot-walkers .dp-dog-walker-token:nth-child(3) {
   top: 56px;
   left: 106px;
 }
-#dp-game-board-wrapper #dp-game-board-main #dp-game-board-field .dp-field-slot .dp-field-slot-walkers .dp-dog-walker-token:nth-child(4) {
+#dp-game-board-wrapper #dp-game-board-main #dp-game-board-field-wrapper #dp-game-board-field .dp-field-slot .dp-field-slot-walkers .dp-dog-walker-token:nth-child(4) {
   top: 84px;
   left: 94px;
 }
-#dp-game-board-wrapper #dp-game-board-main #dp-game-board-field .dp-field-slot .dp-field-slot-walkers .dp-dog-walker-token:nth-child(5) {
+#dp-game-board-wrapper #dp-game-board-main #dp-game-board-field-wrapper #dp-game-board-field .dp-field-slot .dp-field-slot-walkers .dp-dog-walker-token:nth-child(5) {
   top: 112px;
   left: 82px;
+}
+#dp-game-board-wrapper #dp-game-board-main #dp-game-board-field-wrapper #dp-game-board-offer-dials {
+  display: flex;
+  justify-content: space-evenly;
 }
 #dp-game-board-wrapper #dp-game-board-side {
   display: flex;
@@ -477,13 +483,13 @@ body > .card {
 .dp-lead-board[data-color="#c45f5f"] {
   background-position: 0 0%;
 }
-.dp-lead-board[data-color="#d2ce74"] {
+.dp-lead-board[data-color="#8b91ba"] {
   background-position: 0 25%;
 }
-.dp-lead-board[data-color="#90beac"] {
+.dp-lead-board[data-color="#d2ce74"] {
   background-position: 0 50%;
 }
-.dp-lead-board[data-color="#8b91ba"] {
+.dp-lead-board[data-color="#90beac"] {
   background-position: 0 75%;
 }
 .dp-lead-board[data-color="#000000"] {
@@ -509,13 +515,13 @@ body > .card {
 .dp-dog-walker[data-color="#c45f5f"] {
   background-position: 0% 0;
 }
-.dp-dog-walker[data-color="#d2ce74"] {
+.dp-dog-walker[data-color="#8b91ba"] {
   background-position: 25% 0;
 }
-.dp-dog-walker[data-color="#90beac"] {
+.dp-dog-walker[data-color="#d2ce74"] {
   background-position: 50% 0;
 }
-.dp-dog-walker[data-color="#8b91ba"] {
+.dp-dog-walker[data-color="#90beac"] {
   background-position: 75% 0;
 }
 .dp-dog-walker[data-color="#000000"] {
@@ -646,9 +652,22 @@ body > .card {
   user-select: none;
 }
 
+#dp-offer-dial-controls-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+#dp-offer-dial-controls-wrapper .bgabutton {
+  text-align: center;
+  width: 100px;
+  font-size: 30px;
+}
+
 .dp-dial {
-  width: 300px;
-  height: 300px;
+  width: 150px;
+  height: 150px;
 }
 .dp-dial[data-value="1"] .side-front-numbers {
   transform: rotate(300deg);
@@ -671,18 +690,21 @@ body > .card {
 }
 .dp-dial.side-front .side-front-numbers {
   position: absolute;
-  width: 300px;
-  height: 300px;
+  width: 150px;
+  height: 150px;
   background-image: url("img/dogpark-dial-numbers.png");
   background-size: cover;
   transition: transform 700ms;
 }
 .dp-dial.side-front .side-front-overlay {
   position: absolute;
-  width: 300px;
-  height: 300px;
+  width: 150px;
+  height: 150px;
   background-image: url("img/dogpark-dials-front.png");
   background-size: 500% auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .dp-dial.side-back {
   background-image: url("img/dogpark-dials-back.png");
@@ -694,22 +716,22 @@ body > .card {
 .dp-dial[data-color="#c45f5f"].side-back {
   background-position: 0% 0;
 }
-.dp-dial[data-color="#d2ce74"] .side-front-overlay {
-  background-position: 25% 0;
-}
-.dp-dial[data-color="#d2ce74"].side-back {
-  background-position: 25% 0;
-}
-.dp-dial[data-color="#90beac"] .side-front-overlay {
-  background-position: 50% 0;
-}
-.dp-dial[data-color="#90beac"].side-back {
-  background-position: 50% 0;
-}
 .dp-dial[data-color="#8b91ba"] .side-front-overlay {
-  background-position: 75% 0;
+  background-position: 25% 0;
 }
 .dp-dial[data-color="#8b91ba"].side-back {
+  background-position: 25% 0;
+}
+.dp-dial[data-color="#d2ce74"] .side-front-overlay {
+  background-position: 50% 0;
+}
+.dp-dial[data-color="#d2ce74"].side-back {
+  background-position: 50% 0;
+}
+.dp-dial[data-color="#90beac"] .side-front-overlay {
+  background-position: 75% 0;
+}
+.dp-dial[data-color="#90beac"].side-back {
   background-position: 75% 0;
 }
 .dp-dial[data-color="#000000"] .side-front-overlay {
@@ -717,6 +739,23 @@ body > .card {
 }
 .dp-dial[data-color="#000000"].side-back {
   background-position: 100% 0;
+}
+
+.bga-cards_selectable-card .card-side {
+  outline: 6px rgba(80, 200, 255, 0.75) solid;
+  cursor: pointer;
+}
+
+.bga-cards_selected-card .card-side {
+  outline: 6px rgba(124, 252, 0, 0.75) solid;
+  cursor: pointer;
+}
+
+html, .mode_3d #game_play_area_background {
+  background-image: url("img/dogpark-bg.jpg");
+}
+html .whiteblock, .mode_3d #game_play_area_background .whiteblock {
+  border-radius: 10px;
 }
 
 /*# sourceMappingURL=dogpark.css.map */

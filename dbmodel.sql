@@ -33,6 +33,12 @@
 -- Example 2: add a custom field to the standard "player" table
 -- ALTER TABLE `player` ADD `player_my_custom_field` INT UNSIGNED NOT NULL DEFAULT '0';
 
+CREATE TABLE IF NOT EXISTS `global_variables` (
+  `name` varchar(200) NOT NULL,
+  `value` json,
+  PRIMARY KEY (`name`)
+  ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 CREATE TABLE IF NOT EXISTS `dog` (
   `card_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `card_type` varchar(16) NOT NULL,
@@ -50,3 +56,6 @@ CREATE TABLE IF NOT EXISTS `walker` (
   `card_location_arg` int(16) NOT NULL,
   PRIMARY KEY (`card_id`)
   ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
+
+ALTER TABLE `player` ADD `player_offer_value` INT UNSIGNED NULL;
+ALTER TABLE `player` ADD `player_custom_order` INT UNSIGNED NOT NULL DEFAULT '0';

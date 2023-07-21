@@ -51,18 +51,18 @@ require_once("modules/php/Constants.inc.php");
 $basicGameStates = [
 
     // The initial state. Please do not modify.
-    ST_GAME_SETUP_ID => [
-        "name" => ST_GAME_SETUP,
+    ST_GAME_SETUP => [
+        "name" => 'gameSetup',
         "description" => clienttranslate("Game setup"),
         "type" => "manager",
         "action" => "stGameSetup",
-        "transitions" => [ "" => ST_PLAYER_TURN_ID ]
+        "transitions" => [ "" => ST_RECRUITMENT_START ]
     ],
 
     // Final state.
     // Please do not modify.
-    ST_GAME_END_ID => [
-        "name" => ST_GAME_END,
+    ST_GAME_END => [
+        "name" => 'gameEnd',
         "description" => clienttranslate("End of game"),
         "type" => "manager",
         "action" => "stGameEnd",
@@ -70,36 +70,125 @@ $basicGameStates = [
     ],
 ];
 
-$playerActionsGameStates = [
-    ST_PLAYER_TURN_ID => [
-        "name" => ST_PLAYER_TURN,
-        "description" => clienttranslate('${actplayer} must choose an action'),
-        "descriptionmyturn" => clienttranslate('${you} must choose an action: '),
+//////////////////////////////////
+// RECRUITMENT
+//////////////////////////////////
+$recruitmentStates = [
+    ST_RECRUITMENT_START => [
+        "name" => "recruitmentStart",
+        "description" => "",
+        "type" => "game",
+        "action" => "stRecruitmentStart",
+        "transitions" => [
+            "recruitmentOffer" => ST_RECRUITMENT_OFFER
+        ]
+    ],
+    ST_RECRUITMENT_OFFER => [
+        "name" => "recruitmentOffer",
+        "description" => clienttranslate('Recruitment: ${actplayer} must place an offer'),
+        "descriptionmyturn" => clienttranslate('Recruitment: ${you} must place an offer'),
+        "args" => "argRecruitmentOffer",
         "type" => "activeplayer",
         "possibleactions" => [
-            // TODO
+            ACT_PLACE_OFFER_ON_DOG,
+            ACT_SKIP_PLACE_OFFER_ON_DOG
         ],
         "transitions" => [
-            // TODO
+            "" => ST_RECRUITMENT_OFFER_NEXT
+        ],
+    ],
+    ST_RECRUITMENT_OFFER_NEXT => [
+        "name" => "recruitmentOfferNext",
+        "description" => "",
+        "type" => "game",
+        "action" => "stRecruitmentOfferNext",
+        "transitions" => [
+            "nextPlayer" => ST_RECRUITMENT_OFFER,
+            "resolveOffers" => ST_RECRUITMENT_RESOLVE_OFFERS
+        ]
+    ],
+    ST_RECRUITMENT_RESOLVE_OFFERS => [
+        "name" => "recruitmentResolveOffers",
+        "description" => "",
+        "type" => "game",
+        "action" => "stRecruitmentResolveOffers",
+        "transitions" => [
+            '' => ST_RECRUITMENT_TAKE_DOG_NEXT
+        ]
+    ],
+    ST_RECRUITMENT_TAKE_DOG => [
+        "name" => "recruitmentTakeDog",
+        "description" => clienttranslate('Recruitment: ${actplayer} must choose one of the remaining dogs'),
+        "descriptionmyturn" => clienttranslate('Recruitment: ${you} must choose one of the remaining dogs'),
+        "type" => "activeplayer",
+        "possibleactions" => [
+            ACT_RECRUIT_DOG
+        ],
+        "transitions" => [
+            "" => ST_RECRUITMENT_TAKE_DOG_NEXT
+        ],
+    ],
+    ST_RECRUITMENT_TAKE_DOG_NEXT => [
+        "name" => "recruitmentTakeDogNext",
+        "description" => "",
+        "type" => "game",
+        "action" => "stRecruitmentTakeDogNext",
+        "transitions" => [
+            "nextPlayer" => ST_RECRUITMENT_TAKE_DOG,
+            "endRecruitment" => ST_RECRUITMENT_END
+        ]
+    ],
+    ST_RECRUITMENT_END => [
+        "name" => "recruitmentEnd",
+        "description" => "",
+        "type" => "game",
+        "action" => "stRecruitmentEnd",
+        "transitions" => [
+            'recruitmentStart' => ST_RECRUITMENT_START,
+            'recruitmentEnd' => ST_SELECTION_START
         ]
     ]
 ];
 
-$gameGameStates = [
-    ST_NEXT_PLAYER_ID => [
-        "name" => ST_NEXT_PLAYER,
+//////////////////////////////////
+// SELECTION
+//////////////////////////////////
+$selectionStates = [
+    ST_SELECTION_START => [
+        "name" => "selectionStart",
         "description" => "",
         "type" => "game",
-        "action" => "stNextPlayer",
+        "action" => "stSelectionStart",
         "transitions" => [
-            ST_PLAYER_TURN => ST_PLAYER_TURN_ID,
-            ST_GAME_END => ST_GAME_END_ID
+            'playerTurns' => ST_SELECTION_ACTIONS,
+        ]
+    ],
+    ST_SELECTION_ACTIONS => [
+        "name" => "selectionActions",
+        "description" => clienttranslate('Selection: all players must select dog(s) to walk'),
+        "descriptionmyturn" => clienttranslate('Selection: ${you} must select dog(s) to walk'),
+        "action" => "stSelectionActions",
+        "args" => "argSelectionActions",
+        "type" => "multipleactiveplayer",
+        "possibleactions" => [
+            ACT_PLACE_DOG_ON_LEAD,
+            ACT_CONFIRM_SELECTION
         ],
-        "updateGameProgression" => true
+        "transitions" => [
+            "next" => ST_SELECTION_END
+        ],
+    ],
+    ST_SELECTION_END => [
+        "name" => "selectionEnd",
+        "description" => "",
+        "type" => "game",
+        "action" => "stSelectionEnd",
+        "transitions" => [
+        ]
     ],
 ];
 
-$machinestates = $basicGameStates + $playerActionsGameStates + $gameGameStates;
+$machinestates = $basicGameStates + $recruitmentStates + $selectionStates;
 
 
 

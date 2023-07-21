@@ -25,17 +25,24 @@ trait SetupTrait
 
         // Create players
         // Note: if you added some extra field on "player" table in the database (dbmodel.sql), you can initialize it there.
-        $sql = "INSERT INTO player (player_id, player_color, player_canal, player_name, player_avatar) VALUES ";
+        $sql = "INSERT INTO player (player_id, player_color, player_canal, player_name, player_avatar, player_score) VALUES ";
         $values = array();
         foreach( $players as $player_id => $player )
         {
             $color = array_shift( $default_colors );
-            $values[] = "('".$player_id."','$color','".$player['player_canal']."','".addslashes( $player['player_name'] )."','".addslashes( $player['player_avatar'] )."')";
+            $values[] = "('".$player_id."','$color','".$player['player_canal']."','".addslashes( $player['player_name'] )."','".addslashes( $player['player_avatar'] )."', 5)";
         }
         $sql .= implode( ',', $values );
         self::DbQuery( $sql );
         self::reattributeColorsBasedOnPreferences( $players, $gameinfos['player_colors'] );
         self::reloadPlayersBasicInfos();
+
+        $this->playerManager->setInitialPlayerOder();
+
+        /************ Init Global Variables *************/
+        $this->setGlobalVariable(CURRENT_ROUND, 1);
+        $this->setGlobalVariable(CURRENT_PHASE, PHASE_SET_UP);
+        $this->setGlobalVariable(OFFER_VALUE_REVEALED, false);
 
         /************ Create Card Decks *****************/
 
@@ -45,10 +52,6 @@ trait SetupTrait
         /************ Start the game initialization *****/
         // Fill the field with dogs
         $this->dogField->fillField();
-
-        // Activate first player (which is in general a good idea :) )
-        $this->activeNextPlayer();
-
         /************ End of the game initialization *****/
     }
 

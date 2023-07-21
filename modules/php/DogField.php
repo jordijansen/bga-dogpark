@@ -4,25 +4,28 @@ namespace managers;
 
 use DogPark;
 use objects\DogCard;
+use objects\DogWalker;
 
 class DogField
 {
-    private DogPark $game;
 
-    public function __construct(DogPark $game)
+    public function __construct() {}
+
+    /**
+     * @return DogCard[]
+     */
+    public function fillField(): array
     {
-        $this->game = $game;
-    }
-
-    public function fillField() {
+        $cards = [];
         for ($i = 1; $i <= $this->getNumberOfFields(); $i++) {
-            $this->game->dogCards->pickCardsForLocation(1, LOCATION_DECK, LOCATION_FIELD, $i);
+            $cards = [...$cards, ...DogCard::fromArray(DogPark::$instance->dogCards->pickCardsForLocation(1, LOCATION_DECK, LOCATION_FIELD, $i))];
         }
+        return $cards;
     }
 
     public function getNumberOfFields(): int
     {
-        switch ($this->game->getPlayersNumber()) {
+        switch (DogPark::$instance->getPlayersNumber()) {
             case(4):
                 return 4;
             case(5):
@@ -35,9 +38,34 @@ class DogField
         }
     }
 
+    /**
+     * @return DogCard[]
+     */
     public function getDogCards(): array
     {
-        return DogCard::fromArray($this->game->dogCards->getCardsInLocation(LOCATION_FIELD));
+        return DogCard::fromArray(DogPark::$instance->dogCards->getCardsInLocation(LOCATION_FIELD));
+    }
+
+    /**
+     * @return DogWalker[]
+     */
+    public function getWalkers(): array
+    {
+        return [
+            ...DogWalker::fromArray(DogPark::$instance->dogWalkers->getCardsInLocation(LOCATION_FIELD_1)),
+            ...DogWalker::fromArray(DogPark::$instance->dogWalkers->getCardsInLocation(LOCATION_FIELD_2)),
+            ...DogWalker::fromArray(DogPark::$instance->dogWalkers->getCardsInLocation(LOCATION_FIELD_3)),
+            ...DogWalker::fromArray(DogPark::$instance->dogWalkers->getCardsInLocation(LOCATION_FIELD_4)),
+            ...DogWalker::fromArray(DogPark::$instance->dogWalkers->getCardsInLocation(LOCATION_FIELD_5))
+        ];
+    }
+
+    /**
+     * @return DogWalker[]
+     */
+    public function getWalkersInField(string $location): array
+    {
+        return DogWalker::fromArray(DogPark::$instance->dogWalkers->getCardsInLocation($location));
     }
 
 }

@@ -42,7 +42,9 @@
     "src/managers/DogCardManager.ts",
     "src/managers/DogWalkerManager.ts",
     "src/DogField.ts",
+    "src/DogOfferDial.ts",
     "src/PlayerArea.ts",
+    "src/RoundTracker.ts",
     "src/DogPark.ts"
   ]
 }

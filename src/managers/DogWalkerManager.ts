@@ -1,4 +1,4 @@
-class DogWalkerManager extends CardManager<Walker> {
+class DogWalkerManager extends CardManager<DogWalker> {
 
     public static WIDTH = 45;
     public static HEIGHT = 65;
@@ -6,13 +6,13 @@ class DogWalkerManager extends CardManager<Walker> {
     constructor(private dogParkGame: DogParkGame) {
         super(dogParkGame, {
             getId: (walker) => `dp-dog-walker-${walker.id}`,
-            setupDiv: (walker: Walker, div: HTMLElement) => {
+            setupDiv: (walker: DogWalker, div: HTMLElement) => {
                 div.classList.add('dp-dog-walker-token')
                 div.classList.add('dp-token')
                 div.dataset.id = `${walker.id}`
                 div.dataset.type = 'walker'
             },
-            setupFrontDiv: (walker: Walker, div: HTMLElement) => {
+            setupFrontDiv: (walker: DogWalker, div: HTMLElement) => {
                 div.id = `${this.getId(walker)}-front`;
                 div.classList.add(`dp-dog-walker`)
                 div.dataset.color = `#${walker.type}`;

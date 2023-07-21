@@ -26,6 +26,36 @@ class action_dogpark extends APP_GameAction
         }
     }
 
+    public function skipPlaceOfferOnDog()
+    {
+        self::setAjaxMode();
+
+        $this->game->skipPlaceOfferOnDog();
+
+        self::ajaxResponse();
+    }
+
+    public function recruitDog()
+    {
+        self::setAjaxMode();
+
+        $dogId = self::getArg("dogId", AT_posint, false);
+        $this->game->recruitDog($dogId, false);
+
+        self::ajaxResponse();
+    }
+
+    public function placeOfferOnDog()
+    {
+        self::setAjaxMode();
+
+        $dogId = self::getArg("dogId", AT_posint, false);
+        $offerValue = self::getArg("offerValue", AT_posint, true);
+        $this->game->placeOfferOnDog($dogId, $offerValue);
+
+        self::ajaxResponse();
+    }
+
     private function validateJSonAlphaNum($value, $argName = 'unknown')
     {
         if (is_array($value)) {

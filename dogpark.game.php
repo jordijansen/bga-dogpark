@@ -15,6 +15,9 @@
   */
 
 use managers\DogField;
+use managers\DogManager;
+use managers\PlayerManager;
+use objects\DogCard;
 use objects\DogWalker;
 use traits\ActionTrait;
 use traits\ArgsTrait;
@@ -39,6 +42,8 @@ require_once('modules/php/traits/DebugTrait.php');
 require_once('modules/php/traits/SetupTrait.php');
 
 require_once('modules/php/DogField.php');
+require_once('modules/php/DogManager.php');
+require_once('modules/php/PlayerManager.php');
 
 class DogPark extends Table
 {
@@ -56,7 +61,9 @@ class DogPark extends Table
     public Deck $dogWalkers;
 
     // MANAGERS
+    public PlayerManager $playerManager;
     public DogField $dogField;
+    public DogManager $dogManager;
 
     function __construct( )
 	{
@@ -80,7 +87,10 @@ class DogPark extends Table
         $this->dogWalkers = self::getNew("module.common.deck");
         $this->dogWalkers->init('walker');
 
-        $this->dogField = new DogField($this);
+        $this->playerManager = new PlayerManager();
+        $this->dogField = new DogField();
+        $this->dogManager = new DogManager();
+
     }
 	
     protected function getGameName( )
@@ -109,14 +119,21 @@ class DogPark extends Table
         $sql = "SELECT player_id id, player_score score, player_no playerNo FROM player ";
         $result['players'] = self::getCollectionFromDb( $sql );
 
+        $offerValueRevealed = $this->getGlobalVariable(OFFER_VALUE_REVEALED);
         foreach($result['players'] as $playerId => &$player) {
             $player['walker'] = current(DogWalker::fromArray($this->dogWalkers->getCardsInLocation(LOCATION_PLAYER, $playerId)));
+            $player['kennelDogs'] = DogCard::fromArray($this->dogCards->getCardsInLocation(LOCATION_PLAYER, $playerId));
+            $player['offerValue'] = $current_player_id == $playerId || $offerValueRevealed ? $this->getPlayerOfferValue($playerId) : 0;
         }
 
         $result['field'] = [
             'nrOfFields' => $this->dogField->getNumberOfFields(),
-            'dogs' => $this->dogField->getDogCards()
+            'dogs' => $this->dogField->getDogCards(),
+            'walkers' => $this->dogField->getWalkers()
         ];
+
+        $result['currentRound'] = $this->getGlobalVariable(CURRENT_ROUND);
+        $result['currentPhase'] = $this->getGlobalVariable(CURRENT_PHASE);
         return $result;
     }
 
@@ -257,7 +274,6 @@ class DogPark extends Table
         if ($state['type'] === "activeplayer") {
             switch ($statename) {
                 default:
-                    $this->gamestate->jumpToState(ST_NEXT_PLAYER_ID);
                     break;
             }
 

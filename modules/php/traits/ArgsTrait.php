@@ -13,5 +13,15 @@ trait ArgsTrait
         game state.
     */
 
+    function argRecruitmentOffer(): array
+    {
+        return [
+            'maxOfferValue' => min($this->getPlayerScore($this->getActivePlayerId()), 5)
+        ];
+    }
 
+    function argSelectionActions(): array
+    {
+        return [];
+    }
 }

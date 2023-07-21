@@ -1,7 +1,6 @@
 @use 'sass:math';
 
-$blackjack-size-height: 266px;
-$blackjack-size-width: 195px;
+@import 'Variables';
 
 .dog-card-art {
   &[data-set="BASE_GAME"] {

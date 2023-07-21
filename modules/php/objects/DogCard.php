@@ -3,7 +3,7 @@ namespace objects;
 use DogPark;
 
 class DogCard extends Card {
-    public function __construct($dbCard, $DOG_CARDS)
+    public function __construct($dbCard)
     {
         parent::__construct($dbCard);
     }
@@ -15,6 +15,6 @@ class DogCard extends Card {
 
     public static function from($dbCard): DogCard
     {
-        return new DogCard($dbCard, DogPark::$instance->DOG_CARDS);
+        return new DogCard($dbCard);
     }
 }

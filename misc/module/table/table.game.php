@@ -369,7 +369,7 @@ class Deck {
     public function init(string $tableName) {}
     public function shuffle(string $location) {}
 
-    public function createCards(array $cards, string $location) {}
+    public function createCards(array $cards, string $location, int $location_arg = null) {}
 
     public function getCardsInLocation(string $location, int $location_arg = null, string $order_by = null): array {
         return [];
@@ -395,7 +395,7 @@ class Deck {
         return [];
     }
 
-    public function getCardsOfTypeInLocation(string $type, int $type_arg = null, string $ZONE_PLAYER_HAND, int $activePlayerId): array
+    public function getCardsOfTypeInLocation(string $type, int $type_arg = null, string $location, int $location_arg = 0): array
     {
         return [];
     }
@@ -403,6 +403,10 @@ class Deck {
     public function getCard(int $cardId) : object
     {
 
+    }
+
+    public function moveAllCardsInLocation($from_location, $to_location, $from_location_arg=null, $to_location_arg=0)
+    {
     }
 
 }
