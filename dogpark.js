@@ -2415,8 +2415,8 @@ var DogPayCosts = /** @class */ (function () {
         this.onCancel = onCancel;
         this.onConfirm = onConfirm;
         this.remainingResources = { stick: 0, ball: 0, treat: 0, toy: 0 };
-        this.selectedPayment = {};
-        this.needsSelection = false;
+        this.selectedPayment = [];
+        this.initiallyMissingResources = false;
         dojo.place('<div id="dp-dog-cost-pay-wrapper"></div>', $(this.elementId));
         this.resetSelection();
         this.updateUi();
@@ -2424,15 +2424,18 @@ var DogPayCosts = /** @class */ (function () {
     DogPayCosts.prototype.resetSelection = function () {
         var _this = this;
         this.remainingResources = __assign({}, this.resources);
+        this.selectedPayment = [];
         Object.entries(this.dog.costs).forEach(function (_a) {
             var resource = _a[0], cost = _a[1];
-            if (_this.remainingResources[resource] >= _this.dog.costs[resource]) {
-                _this.remainingResources[resource] -= 1;
-                _this.selectedPayment[resource] = [resource];
-            }
-            else {
-                _this.needsSelection = true;
-                _this.selectedPayment[resource] = ["placeholder", "placeholder"];
+            for (var i = 0; i < cost; i++) {
+                if (_this.remainingResources[resource] >= _this.dog.costs[resource]) {
+                    _this.remainingResources[resource] -= 1;
+                    _this.selectedPayment.push({ resource: resource, payUsing: [resource] });
+                }
+                else {
+                    _this.initiallyMissingResources = true;
+                    _this.selectedPayment.push({ resource: resource, payUsing: ["placeholder", "placeholder"] });
+                }
             }
         });
     };
@@ -2440,10 +2443,12 @@ var DogPayCosts = /** @class */ (function () {
         var _this = this;
         var wrapperElement = $('dp-dog-cost-pay-wrapper');
         dojo.empty(wrapperElement);
-        dojo.place(this.createMainButtons(), wrapperElement);
+        if (this.initiallyMissingResources) {
+            dojo.place(this.createResourceButtons(), wrapperElement);
+        }
         dojo.place(this.createCostRows(), wrapperElement);
-        dojo.place(this.createResourceButtons(), wrapperElement);
-        if (this.needsSelection) {
+        dojo.place(this.createMainButtons(), wrapperElement);
+        if (this.initiallyMissingResources) {
             dojo.connect($("dp-dog-cost-pay-reset-button"), 'onclick', function () {
                 _this.resetSelection();
                 _this.updateUi();
@@ -2454,15 +2459,14 @@ var DogPayCosts = /** @class */ (function () {
                 return dojo.connect($("dp-dog-cost-pay-".concat(resource, "-button")), 'onclick', function () { return _this.useResource(resource); });
             });
         }
-        dojo.connect($("dp-dog-cost-pay-cancel-button"), 'onclick', function () { return _this.onCancel(); });
-        dojo.connect($("dp-dog-cost-pay-confirm-button"), 'onclick', function () { return _this.onConfirm(Object.values(_this.selectedPayment).flat()); });
+        dojo.connect($("dp-dog-cost-pay-cancel-button"), 'onclick', function () { _this.onCancel(); });
+        dojo.connect($("dp-dog-cost-pay-confirm-button"), 'onclick', function () { _this.onConfirm(_this.selectedPayment.map(function (costRow) { return costRow.payUsing; }).flat()); });
     };
     DogPayCosts.prototype.createCostRows = function () {
         var result = "<div class=\"dp-dog-cost-pay-row\">".concat(_('Cost'), "<i class=\"fa fa-long-arrow-right\" aria-hidden=\"true\"></i>").concat(_('Pay using'), "</div>");
-        Object.entries(this.selectedPayment).forEach(function (_a) {
-            var resource = _a[0], selectedResources = _a[1];
-            result += "<div class=\"dp-dog-cost-pay-row\"><span class=\"dp-token-token\" data-type=\"".concat(resource, "\"></span><i class=\"fa fa-long-arrow-right\" aria-hidden=\"true\"></i>");
-            selectedResources.forEach(function (selectedResource) {
+        this.selectedPayment.forEach(function (costRow) {
+            result += "<div class=\"dp-dog-cost-pay-row\"><span class=\"dp-token-token\" data-type=\"".concat(costRow.resource, "\"></span><i class=\"fa fa-long-arrow-right\" aria-hidden=\"true\"></i>");
+            costRow.payUsing.forEach(function (selectedResource) {
                 result += "<span class=\"dp-token-token\" data-type=\"".concat(selectedResource, "\"></span>");
             });
             result += '</div>';
@@ -2472,30 +2476,26 @@ var DogPayCosts = /** @class */ (function () {
     DogPayCosts.prototype.createResourceButtons = function () {
         var _this = this;
         var stillNeedResources = false;
-        for (var costResource in this.selectedPayment) {
-            var indexOf = this.selectedPayment[costResource].indexOf('placeholder');
-            if (indexOf >= 0) {
+        this.selectedPayment.forEach(function (costRow) {
+            if (costRow.payUsing.includes('placeholder')) {
                 stillNeedResources = true;
-                break;
             }
-        }
+        });
         var result = "<div class=\"dp-dog-cost-pay-row\">";
-        if (stillNeedResources) {
-            Object.entries(this.remainingResources)
-                .forEach(function (_a) {
-                var resource = _a[0], nr = _a[1];
-                var disabled = _this.remainingResources[resource] <= 0;
-                result += "<a id=\"dp-dog-cost-pay-".concat(resource, "-button\" class=\"bgabutton bgabutton_blue ").concat(disabled ? 'disabled' : '', "\"><span class=\"dp-token-token\" data-type=\"").concat(resource, "\"></span></a>");
-            });
-        }
+        Object.entries(this.remainingResources)
+            .forEach(function (_a) {
+            var resource = _a[0], nr = _a[1];
+            var disabled = _this.remainingResources[resource] <= 0 || _this.selectedPayment.map(function (costRow) { return costRow.payUsing; }).filter(function (payment) { return payment.includes('placeholder'); }).length == 0;
+            result += "<a id=\"dp-dog-cost-pay-".concat(resource, "-button\" class=\"bgabutton bgabutton_blue ").concat(disabled ? 'disabled' : '', "\"><span class=\"dp-token-token\" data-type=\"").concat(resource, "\"></span></a>");
+        });
         result += '</div>';
         return result;
     };
     DogPayCosts.prototype.createMainButtons = function () {
         var result = "<div class=\"dp-dog-cost-pay-row\">";
-        var disabled = false;
+        var disabled = this.selectedPayment.map(function (costRow) { return costRow.payUsing; }).filter(function (payment) { return payment.includes('placeholder'); }).length > 0;
         result += "<a id=\"dp-dog-cost-pay-confirm-button\" class=\"bgabutton bgabutton_blue ".concat(disabled ? 'disabled' : '', "\">").concat(_('Confirm'), "</a>");
-        if (this.needsSelection) {
+        if (this.initiallyMissingResources) {
             result += "<a id=\"dp-dog-cost-pay-reset-button\" class=\"bgabutton bgabutton_gray\">".concat(_('Reset'), "</a>");
         }
         result += "<a id=\"dp-dog-cost-pay-cancel-button\" class=\"bgabutton bgabutton_gray\">".concat(_('Cancel'), "</a>");
@@ -2503,14 +2503,17 @@ var DogPayCosts = /** @class */ (function () {
         return result;
     };
     DogPayCosts.prototype.useResource = function (resource) {
-        for (var costResource in this.selectedPayment) {
-            var indexOf = this.selectedPayment[costResource].indexOf('placeholder');
+        var _this = this;
+        console.log('useResource');
+        this.selectedPayment.forEach(function (costRow) {
+            var indexOf = costRow.payUsing.indexOf('placeholder');
             if (indexOf >= 0) {
-                this.remainingResources[resource] -= 1;
-                this.selectedPayment[costResource][indexOf] = resource;
+                _this.remainingResources[resource] -= 1;
+                costRow.payUsing[indexOf] = resource;
+                _this.updateUi();
+                return;
             }
-        }
-        this.updateUi();
+        });
     };
     return DogPayCosts;
 }());

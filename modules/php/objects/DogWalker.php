@@ -8,7 +8,7 @@ class DogWalker extends Card {
 
     public static function fromArray($dbCards): array
     {
-        return array_map(fn($dbCard) => DogCard::from($dbCard), array_values($dbCards));
+        return array_map(fn($dbCard) => DogWalker::from($dbCard), array_values($dbCards));
     }
 
     public static function from($dbCard): DogWalker

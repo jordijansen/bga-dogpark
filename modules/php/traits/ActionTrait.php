@@ -30,20 +30,22 @@ trait ActionTrait
         if (!isset($dogId)) {
             throw new BgaUserException(clienttranslate("You must select a Dog Card to take"));
         }
-        $dogCard = DogCard::from($this->dogCards->getCard($dogId));
-        if ($dogCard->location != LOCATION_FIELD) {
+        $dog = DogCard::from($this->dogCards->getCard($dogId));
+        if ($dog->location != LOCATION_FIELD) {
             throw new BgaUserException('Dog not in field');
         }
 
-        $locationArgForWalker = sizeof($this->dogWalkers->getCardsInLocation('field_'.$dogCard->locationArg)) + 1;
-        $this->dogWalkers->moveAllCardsInLocation(LOCATION_PLAYER, 'field_'.$dogCard->locationArg, $activePlayerId, $locationArgForWalker);
+        $locationArgForWalker = sizeof($this->dogWalkers->getCardsInLocation('field_'.$dog->locationArg)) + 1;
+        $this->dogWalkers->moveAllCardsInLocation(LOCATION_PLAYER, 'field_'.$dog->locationArg, $activePlayerId, $locationArgForWalker);
         $this->updatePlayerOfferValue($activePlayerId, $offerValue);
 
-        $this->notifyAllPlayers('dogOfferPlaced', '${player_name} places an offer on doggo',[
+        $this->notifyAllPlayers('dogOfferPlaced', '${player_name} places an offer on <b>${dogName}</b>',[
+            'i18n' => ['dogName'],
             'playerId' => $activePlayerId,
             'player_name' => $this->getPlayerName($activePlayerId),
-            'dog' => $dogCard,
-            'walker' => DogWalker::from(current($this->dogWalkers->getCardsInLocation('field_'.$dogCard->locationArg, $locationArgForWalker)))
+            'dog' => $dog,
+            'dogName' => $dog->name,
+            'walker' => DogWalker::from(current($this->dogWalkers->getCardsInLocation('field_'.$dog->locationArg, $locationArgForWalker)))
         ]);
         $this->gamestate->nextState('');
     }
@@ -62,7 +64,7 @@ trait ActionTrait
 
         $this->updatePlayerOfferValue($activePlayerId, 0);
 
-        $this->notifyAllPlayers(ACT_SKIP_PLACE_OFFER_ON_DOG, '${player_name} can not place an offer (insufficient reputation)',[
+        $this->notifyAllPlayers('skipPlaceOfferOnDog', '${player_name} can not place an offer (insufficient reputation)',[
             'playerId' => $activePlayerId,
             'player_name' => $this->getPlayerName($activePlayerId),
         ]);

@@ -16,11 +16,13 @@ class DogManager
         $this->moveDogToKennel($playerId, $dogId);
 
         $dogCard = DogCard::from(DogPark::$instance->dogCards->getCard($dogId));
-        DogPark::$instance->notifyAllPlayers('dogRecruited', clienttranslate('${player_name} pays ${reputationCost} and recruits Doggo'),[
+        DogPark::$instance->notifyAllPlayers('dogRecruited', clienttranslate('${player_name} pays ${reputationCost} and recruits <b>${dogName}</b>'),[
+            'i18n' => ['dogName'],
             'playerId' => $playerId,
             'player_name' => DogPark::$instance->getPlayerName($playerId),
             'reputationCost' => $reputationCost,
             'dog' => $dogCard,
+            'dogName' => $dogCard->name,
             'score' => $newScore,
             'walker' => DogWalker::from(DogPark::$instance->dogWalkers->getCard($dogWalkerId))
         ]);

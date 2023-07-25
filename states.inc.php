@@ -85,8 +85,8 @@ $recruitmentStates = [
     ],
     ST_RECRUITMENT_OFFER => [
         "name" => "recruitmentOffer",
-        "description" => clienttranslate('Recruitment (${recruitmentRound}/2): ${actplayer} must place an offer'),
-        "descriptionmyturn" => clienttranslate('Recruitment (${recruitmentRound}/2): ${you} must place an offer'),
+        "description" => clienttranslate('Recruit (${recruitmentRound}/2): ${actplayer} must place an offer'),
+        "descriptionmyturn" => clienttranslate('Recruit (${recruitmentRound}/2): ${you} must place an offer'),
         "args" => "argRecruitmentOffer",
         "type" => "activeplayer",
         "possibleactions" => [
@@ -109,7 +109,7 @@ $recruitmentStates = [
     ],
     ST_RECRUITMENT_RESOLVE_OFFERS => [
         "name" => "recruitmentResolveOffers",
-        "description" => clienttranslate('Recruitment (${recruitmentRound}/2): resolving offers'),
+        "description" => clienttranslate('Recruit (${recruitmentRound}/2): resolving offers'),
         "args" => "argRecruitmentResolveOffers",
         "type" => "game",
         "action" => "stRecruitmentResolveOffers",
@@ -119,8 +119,8 @@ $recruitmentStates = [
     ],
     ST_RECRUITMENT_TAKE_DOG => [
         "name" => "recruitmentTakeDog",
-        "description" => clienttranslate('Recruitment (${recruitmentRound}/2): ${actplayer} must choose one of the remaining dogs'),
-        "descriptionmyturn" => clienttranslate('Recruitment (${recruitmentRound}/2): ${you} must choose one of the remaining dogs'),
+        "description" => clienttranslate('Recruit (${recruitmentRound}/2): ${actplayer} must choose one of the remaining dogs'),
+        "descriptionmyturn" => clienttranslate('Recruit (${recruitmentRound}/2): ${you} must choose one of the remaining dogs'),
         "args" => "argRecruitmentTakeDog",
         "type" => "activeplayer",
         "possibleactions" => [
@@ -167,7 +167,7 @@ $selectionStates = [
     ],
     ST_SELECTION_ACTIONS => [
         "name" => "selectionActions",
-        "description" => clienttranslate('Selection: waiting for players to finish selection'),
+        "description" => clienttranslate('Select: waiting for players to finish selection'),
         "descriptionmyturn" => '',
         "initialprivate" => ST_SELECTION_PLACE_DOG_ON_LEAD,
         "type" => "multipleactiveplayer",
@@ -181,7 +181,7 @@ $selectionStates = [
     ],
     ST_SELECTION_PLACE_DOG_ON_LEAD => [
         "name" => "selectionPlaceDogOnLead",
-        "descriptionmyturn" => clienttranslate('${you} may place a dog on the lead'),
+        "descriptionmyturn" => clienttranslate('Select: ${you} may place a dog on the lead'),
         "type" => "private",
         "args" => "argSelectionPlaceDogOnLead",
         "possibleactions" => [
@@ -195,7 +195,7 @@ $selectionStates = [
     ],
     ST_SELECTION_PLACE_DOG_ON_LEAD_SELECT_RESOURCES => [
         "name" => "selectionPlaceDogOnLeadSelectResources",
-        "descriptionmyturn" => clienttranslate('${you} must pay for ${dogName}'),
+        "descriptionmyturn" => clienttranslate('Select: ${you} must pay for ${dogName}'),
         "type" => "private",
         "args" => "argSelectionPlaceDogOnLeadSelectResources",
         "possibleactions" => [
@@ -208,7 +208,7 @@ $selectionStates = [
     ],
     ST_SELECTION_PLACE_DOG_ON_LEAD_AFTER => [
         "name" => "selectionPlaceDogOnLeadAfter",
-        "descriptionmyturn" => clienttranslate('${you} may perform additional abilities'),
+        "descriptionmyturn" => clienttranslate('Select: ${you} may perform additional abilities'),
         "type" => "private",
         "action" => "stSelectionPlaceDogOnLeadAfter",
         "args" => "argSelectionPlaceDogOnLeadAfter",
