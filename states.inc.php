@@ -85,8 +85,8 @@ $recruitmentStates = [
     ],
     ST_RECRUITMENT_OFFER => [
         "name" => "recruitmentOffer",
-        "description" => clienttranslate('Recruitment: ${actplayer} must place an offer'),
-        "descriptionmyturn" => clienttranslate('Recruitment: ${you} must place an offer'),
+        "description" => clienttranslate('Recruitment (${recruitmentRound}/2): ${actplayer} must place an offer'),
+        "descriptionmyturn" => clienttranslate('Recruitment (${recruitmentRound}/2): ${you} must place an offer'),
         "args" => "argRecruitmentOffer",
         "type" => "activeplayer",
         "possibleactions" => [
@@ -109,7 +109,8 @@ $recruitmentStates = [
     ],
     ST_RECRUITMENT_RESOLVE_OFFERS => [
         "name" => "recruitmentResolveOffers",
-        "description" => "",
+        "description" => clienttranslate('Recruitment (${recruitmentRound}/2): resolving offers'),
+        "args" => "argRecruitmentResolveOffers",
         "type" => "game",
         "action" => "stRecruitmentResolveOffers",
         "transitions" => [
@@ -118,8 +119,9 @@ $recruitmentStates = [
     ],
     ST_RECRUITMENT_TAKE_DOG => [
         "name" => "recruitmentTakeDog",
-        "description" => clienttranslate('Recruitment: ${actplayer} must choose one of the remaining dogs'),
-        "descriptionmyturn" => clienttranslate('Recruitment: ${you} must choose one of the remaining dogs'),
+        "description" => clienttranslate('Recruitment (${recruitmentRound}/2): ${actplayer} must choose one of the remaining dogs'),
+        "descriptionmyturn" => clienttranslate('Recruitment (${recruitmentRound}/2): ${you} must choose one of the remaining dogs'),
+        "args" => "argRecruitmentTakeDog",
         "type" => "activeplayer",
         "possibleactions" => [
             ACT_RECRUIT_DOG
@@ -165,18 +167,57 @@ $selectionStates = [
     ],
     ST_SELECTION_ACTIONS => [
         "name" => "selectionActions",
-        "description" => clienttranslate('Selection: all players must select dog(s) to walk'),
-        "descriptionmyturn" => clienttranslate('Selection: ${you} must select dog(s) to walk'),
-        "action" => "stSelectionActions",
-        "args" => "argSelectionActions",
+        "description" => clienttranslate('Selection: waiting for players to finish selection'),
+        "descriptionmyturn" => '',
+        "initialprivate" => ST_SELECTION_PLACE_DOG_ON_LEAD,
         "type" => "multipleactiveplayer",
+        "action" => "stSelectionActions",
         "possibleactions" => [
-            ACT_PLACE_DOG_ON_LEAD,
-            ACT_CONFIRM_SELECTION
+            // Actions when inactive 'change my mind'
         ],
         "transitions" => [
-            "next" => ST_SELECTION_END
+            "end" => ST_SELECTION_END
         ],
+    ],
+    ST_SELECTION_PLACE_DOG_ON_LEAD => [
+        "name" => "selectionPlaceDogOnLead",
+        "descriptionmyturn" => clienttranslate('${you} may place a dog on the lead'),
+        "type" => "private",
+        "args" => "argSelectionPlaceDogOnLead",
+        "possibleactions" => [
+            ACT_PLACE_DOG_ON_LEAD,
+            ACT_CONFIRM_SELECTION,
+            ACT_UNDO
+        ],
+        "transitions" => [
+            'placeDogOnLeadSelectResources' => ST_SELECTION_PLACE_DOG_ON_LEAD_SELECT_RESOURCES,
+        ]
+    ],
+    ST_SELECTION_PLACE_DOG_ON_LEAD_SELECT_RESOURCES => [
+        "name" => "selectionPlaceDogOnLeadSelectResources",
+        "descriptionmyturn" => clienttranslate('${you} must pay for ${dogName}'),
+        "type" => "private",
+        "args" => "argSelectionPlaceDogOnLeadSelectResources",
+        "possibleactions" => [
+            ACT_PLACE_DOG_ON_LEAD_PAY_RESOURCES,
+            ACT_PLACE_DOG_ON_LEAD_CANCEL,
+        ],
+        "transitions" => [
+            'placeDogOnLeadAfter' => ST_SELECTION_PLACE_DOG_ON_LEAD_AFTER,
+        ]
+    ],
+    ST_SELECTION_PLACE_DOG_ON_LEAD_AFTER => [
+        "name" => "selectionPlaceDogOnLeadAfter",
+        "descriptionmyturn" => clienttranslate('${you} may perform additional abilities'),
+        "type" => "private",
+        "action" => "stSelectionPlaceDogOnLeadAfter",
+        "args" => "argSelectionPlaceDogOnLeadAfter",
+        "possibleactions" => [
+            ACT_CONFIRM_SELECTION,
+            ACT_UNDO
+        ],
+        "transitions" => [
+        ]
     ],
     ST_SELECTION_END => [
         "name" => "selectionEnd",

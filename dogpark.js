@@ -222,6 +222,16 @@ var ZoomManager = /** @class */ (function () {
     };
     return ZoomManager;
 }());
+var BgaAnimation = /** @class */ (function () {
+    function BgaAnimation(animationFunction, settings) {
+        this.animationFunction = animationFunction;
+        this.settings = settings;
+        this.played = null;
+        this.result = null;
+        this.playWhenNoAnimation = false;
+    }
+    return BgaAnimation;
+}());
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = function (d, b) {
         extendStatics = Object.setPrototypeOf ||
@@ -237,72 +247,6 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
-    if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
-        if (ar || !(i in from)) {
-            if (!ar) ar = Array.prototype.slice.call(from, 0, i);
-            ar[i] = from[i];
-        }
-    }
-    return to.concat(ar || Array.prototype.slice.call(from));
-};
-var determineBoardWidth = function () {
-    var BOARD_WIDTH = 1000 + 330;
-    var BOARD_WIDTH_SLIDING_SIDE_BAR = 1000;
-    if (window.getComputedStyle(document.getElementById('dp-game-board-side')).getPropertyValue('position') === 'absolute') {
-        return BOARD_WIDTH_SLIDING_SIDE_BAR;
-    }
-    return BOARD_WIDTH;
-};
-var determineMaxZoomLevel = function () {
-    var bodycoords = dojo.marginBox("zoom-overall");
-    var contentWidth = bodycoords.w;
-    var rowWidth = determineBoardWidth();
-    return contentWidth / rowWidth;
-};
-var getZoomLevels = function (maxZoomLevels) {
-    var zoomLevels = [];
-    if (maxZoomLevels > 1) {
-        var maxZoomLevelsAbove1 = maxZoomLevels - 1;
-        var increments = (maxZoomLevelsAbove1 / 3);
-        zoomLevels = [(increments) + 1, increments + increments + 1, increments + increments + increments + 1];
-    }
-    zoomLevels = __spreadArray(__spreadArray([], zoomLevels, true), [1, 0.8, 0.6], false);
-    return zoomLevels.sort();
-};
-var AutoZoomManager = /** @class */ (function (_super) {
-    __extends(AutoZoomManager, _super);
-    function AutoZoomManager(elementId, localStorageKey) {
-        var storedZoomLevel = localStorage.getItem(localStorageKey);
-        var maxZoomLevel = determineMaxZoomLevel();
-        if (storedZoomLevel && Number(storedZoomLevel) > maxZoomLevel) {
-            localStorage.removeItem(localStorageKey);
-        }
-        var zoomLevels = getZoomLevels(determineMaxZoomLevel());
-        return _super.call(this, {
-            element: document.getElementById(elementId),
-            smooth: true,
-            zoomLevels: zoomLevels,
-            defaultZoom: 1,
-            localStorageZoomKey: localStorageKey,
-            zoomControls: {
-                color: 'black',
-                position: 'top-right'
-            }
-        }) || this;
-    }
-    return AutoZoomManager;
-}(ZoomManager));
-var BgaAnimation = /** @class */ (function () {
-    function BgaAnimation(animationFunction, settings) {
-        this.animationFunction = animationFunction;
-        this.settings = settings;
-        this.played = null;
-        this.result = null;
-        this.playWhenNoAnimation = false;
-    }
-    return BgaAnimation;
-}());
 /**
  * Just use playSequence from animationManager
  *
@@ -592,6 +536,15 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
+};
+var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
+    if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
+        if (ar || !(i in from)) {
+            if (!ar) ar = Array.prototype.slice.call(from, 0, i);
+            ar[i] = from[i];
+        }
+    }
+    return to.concat(ar || Array.prototype.slice.call(from));
 };
 var AnimationManager = /** @class */ (function () {
     /**
@@ -2049,6 +2002,277 @@ function sortFunction() {
         return 0;
     };
 }
+var determineBoardWidth = function () {
+    var BOARD_WIDTH = 1000 + 330;
+    var BOARD_WIDTH_SLIDING_SIDE_BAR = 1000;
+    if (window.getComputedStyle(document.getElementById('dp-game-board-side')).getPropertyValue('position') === 'absolute') {
+        return BOARD_WIDTH_SLIDING_SIDE_BAR;
+    }
+    return BOARD_WIDTH;
+};
+var determineMaxZoomLevel = function () {
+    var bodycoords = dojo.marginBox("zoom-overall");
+    var contentWidth = bodycoords.w;
+    var rowWidth = determineBoardWidth();
+    return contentWidth / rowWidth;
+};
+var getZoomLevels = function (maxZoomLevels) {
+    var zoomLevels = [];
+    if (maxZoomLevels > 1) {
+        var maxZoomLevelsAbove1 = maxZoomLevels - 1;
+        var increments = (maxZoomLevelsAbove1 / 3);
+        zoomLevels = [(increments) + 1, increments + increments + 1, increments + increments + increments + 1];
+    }
+    zoomLevels = __spreadArray(__spreadArray([], zoomLevels, true), [1, 0.8, 0.6], false);
+    return zoomLevels.sort();
+};
+var AutoZoomManager = /** @class */ (function (_super) {
+    __extends(AutoZoomManager, _super);
+    function AutoZoomManager(elementId, localStorageKey) {
+        var storedZoomLevel = localStorage.getItem(localStorageKey);
+        var maxZoomLevel = determineMaxZoomLevel();
+        if (storedZoomLevel && Number(storedZoomLevel) > maxZoomLevel) {
+            localStorage.removeItem(localStorageKey);
+        }
+        var zoomLevels = getZoomLevels(determineMaxZoomLevel());
+        return _super.call(this, {
+            element: document.getElementById(elementId),
+            smooth: true,
+            zoomLevels: zoomLevels,
+            defaultZoom: 1,
+            localStorageZoomKey: localStorageKey,
+            zoomControls: {
+                color: 'black',
+                position: 'top-right'
+            }
+        }) || this;
+    }
+    return AutoZoomManager;
+}(ZoomManager));
+/**
+ *------
+ * BGA framework: © Gregory Isabelli <gisabelli@boardgamearena.com> & Emmanuel Colin <ecolin@boardgamearena.com>
+ * earth implementation : © Guillaume Benny bennygui@gmail.com
+ *
+ * This code has been produced on the BGA studio platform for use on http://boardgamearena.com.
+ * See http://en.boardgamearena.com/#!doc/Studio for more information.
+ * -----
+ */
+var Numbers = /** @class */ (function () {
+    function Numbers(game, initialValue, targetIdsOrElements) {
+        if (initialValue === void 0) { initialValue = 0; }
+        if (targetIdsOrElements === void 0) { targetIdsOrElements = []; }
+        this.game = game;
+        this.targetIdsOrElements = targetIdsOrElements;
+        this.currentValue = initialValue;
+        this.targetValue = initialValue;
+        this.onFinishStepValues = [];
+        this.ensureNumbers();
+        this.update();
+    }
+    Numbers.prototype.addTarget = function (targetIdOrElement) {
+        if (this.targetIdsOrElements instanceof Array) {
+            this.targetIdsOrElements.push(targetIdOrElement);
+        }
+        else {
+            this.targetIdsOrElements = [this.targetIdsOrElements, targetIdOrElement];
+        }
+        this.update();
+    };
+    Numbers.prototype.registerOnFinishStepValues = function (callback) {
+        this.onFinishStepValues.push(callback);
+    };
+    Numbers.prototype.getValue = function () {
+        return this.currentValue;
+    };
+    Numbers.prototype.setValue = function (value) {
+        this.currentValue = value;
+        this.targetValue = value;
+        this.ensureNumbers();
+        this.update();
+    };
+    Numbers.prototype.toValue = function (value, isInstantaneous) {
+        if (isInstantaneous === void 0) { isInstantaneous = false; }
+        if (isInstantaneous || this.game.instantaneousMode) {
+            this.setValue(value);
+        }
+        else {
+            this.targetValue = value;
+            this.ensureNumbers();
+            this.stepValues(true);
+        }
+    };
+    Numbers.prototype.stepValues = function (firstCall) {
+        var _this = this;
+        if (firstCall === void 0) { firstCall = false; }
+        if (this.currentAtTarget()) {
+            this.update();
+            if (!firstCall) {
+                for (var _i = 0, _a = this.onFinishStepValues; _i < _a.length; _i++) {
+                    var callback = _a[_i];
+                    callback(this);
+                }
+            }
+            return;
+        }
+        if (this.currentValue instanceof Array) {
+            var newValues = [];
+            for (var i = 0; i < this.currentValue.length; ++i) {
+                newValues.push(this.stepOneValue(this.currentValue[i], this.targetValue[i]));
+            }
+            this.currentValue = newValues;
+        }
+        else {
+            this.currentValue = this.stepOneValue(this.currentValue, this.targetValue);
+        }
+        this.update();
+        setTimeout(function () { return _this.stepValues(); }, this.DELAY);
+    };
+    Numbers.prototype.stepOneValue = function (current, target) {
+        if (current === null) {
+            current = 0;
+        }
+        if (target === null) {
+            return null;
+        }
+        var step = Math.ceil(Math.abs(current - target) / this.STEPS);
+        return (current + (current < target ? 1 : -1) * step);
+    };
+    Numbers.prototype.update = function () {
+        if (this.targetIdsOrElements instanceof Array) {
+            for (var _i = 0, _a = this.targetIdsOrElements; _i < _a.length; _i++) {
+                var target = _a[_i];
+                this.updateOne(target);
+            }
+        }
+        else {
+            this.updateOne(this.targetIdsOrElements);
+        }
+    };
+    Numbers.prototype.updateOne = function (targetIdOrElement) {
+        var elem = this.getElement(targetIdOrElement);
+        elem.innerHTML = this.format();
+    };
+    Numbers.prototype.getTargetElements = function () {
+        var _this = this;
+        if (this.targetIdsOrElements instanceof Array) {
+            return this.targetIdsOrElements.map(function (id) { return _this.getElement(id); });
+        }
+        else {
+            return [this.getElement(this.targetIdsOrElements)];
+        }
+    };
+    Numbers.prototype.getTargetElement = function () {
+        var elems = this.getTargetElements();
+        if (elems.length == 0) {
+            return null;
+        }
+        return elems[0];
+    };
+    Numbers.prototype.format = function () {
+        if (this.currentValue instanceof Array) {
+            var formatted = [];
+            for (var i = 0; i < this.currentValue.length; ++i) {
+                formatted.push(this.formatOne(this.currentValue[i], this.targetValue[i]));
+            }
+            return this.formatMultiple(formatted);
+        }
+        else {
+            return this.formatOne(this.currentValue, this.targetValue);
+        }
+    };
+    Numbers.prototype.formatOne = function (currentValue, targetValue) {
+        var span = document.createElement('span');
+        if (currentValue != targetValue) {
+            span.classList.add('bx-counter-in-progress');
+        }
+        span.innerText = (currentValue === null ? '-' : currentValue);
+        return span.outerHTML;
+    };
+    Numbers.prototype.formatMultiple = function (formattedValues) {
+        return formattedValues.join('/');
+    };
+    Numbers.prototype.ensureNumbers = function () {
+        var _this = this;
+        if (this.currentValue instanceof Array) {
+            this.currentValue = this.currentValue.map(function (v) { return _this.ensureOneNumber(v); });
+            this.targetValue = this.targetValue.map(function (v) { return _this.ensureOneNumber(v); });
+        }
+        else {
+            this.currentValue = this.ensureOneNumber(this.currentValue);
+            this.targetValue = this.ensureOneNumber(this.targetValue);
+        }
+    };
+    Numbers.prototype.ensureOneNumber = function (value) {
+        return (value === null ? null : parseInt(value));
+    };
+    Numbers.prototype.currentAtTarget = function () {
+        var _this = this;
+        if (this.currentValue instanceof Array) {
+            return this.currentValue.every(function (v, i) { return v == _this.targetValue[i]; });
+        }
+        else {
+            return (this.currentValue == this.targetValue);
+        }
+    };
+    Numbers.prototype.getElement = function (targetIdOrElement) {
+        if (typeof targetIdOrElement == "string") {
+            return document.getElementById(targetIdOrElement);
+        }
+        return targetIdOrElement;
+    };
+    return Numbers;
+}());
+var CounterVoidStock = /** @class */ (function (_super) {
+    __extends(CounterVoidStock, _super);
+    function CounterVoidStock(game, manager, setting) {
+        var _this = _super.call(this, manager, document.createElement("div")) || this;
+        _this.game = game;
+        _this.manager = manager;
+        _this.setting = setting;
+        var targetElement = document.getElementById(setting.targetElement);
+        if (!targetElement) {
+            console.warn('targetElement not found');
+            return _this;
+        }
+        var wrapperElement = document.createElement("div");
+        wrapperElement.classList.add("counter-void-stock-wrapper");
+        if (setting.setupWrapper) {
+            setting.setupWrapper(wrapperElement);
+        }
+        var iconElement = document.createElement("div");
+        iconElement.classList.add("counter-void-stock-icon");
+        if (setting.setupIcon) {
+            setting.setupIcon(iconElement);
+        }
+        wrapperElement.appendChild(iconElement);
+        var counterElement = document.createElement("div");
+        counterElement.classList.add("counter-void-stock-counter");
+        counterElement.id = setting.counterId;
+        if (setting.setupCounter) {
+            setting.setupCounter(counterElement);
+        }
+        wrapperElement.appendChild(counterElement);
+        _this.element.classList.add("counter-void-stock-stock");
+        if (setting.setupStock) {
+            setting.setupStock(_this.element);
+        }
+        wrapperElement.appendChild(_this.element);
+        targetElement.appendChild(wrapperElement);
+        _this.counter = new Numbers(game);
+        _this.counter.addTarget(setting.counterId);
+        _this.counter.setValue(setting.initialCounterValue);
+        return _this;
+    }
+    CounterVoidStock.prototype.create = function (nodeId) { };
+    CounterVoidStock.prototype.getValue = function () { return this.counter.getValue(); };
+    CounterVoidStock.prototype.incValue = function (by) { this.counter.setValue(this.counter.getValue() + by); };
+    CounterVoidStock.prototype.decValue = function (by) { this.counter.setValue(this.counter.getValue() - by); };
+    CounterVoidStock.prototype.setValue = function (value) { this.counter.setValue(value); };
+    CounterVoidStock.prototype.toValue = function (value) { this.counter.toValue(value); };
+    CounterVoidStock.prototype.disable = function () { };
+    return CounterVoidStock;
+}(VoidStock));
 var DogCardManager = /** @class */ (function (_super) {
     __extends(DogCardManager, _super);
     function DogCardManager(dogParkGame) {
@@ -2058,6 +2282,10 @@ var DogCardManager = /** @class */ (function (_super) {
                 div.classList.add('dp-dog-card');
                 div.dataset.id = "".concat(card.id);
                 div.dataset.type = 'dog';
+                var cardTokenVoidStockElement = document.createElement("div");
+                cardTokenVoidStockElement.id = "dp-dog-card-token-void-stock-".concat(card.id);
+                div.appendChild(cardTokenVoidStockElement);
+                _this.cardTokenVoidStocks[card.id] = new VoidStock(dogParkGame.tokenManager, $(cardTokenVoidStockElement.id));
             },
             setupFrontDiv: function (card, div) {
                 div.id = "".concat(_this.getId(card), "-front");
@@ -2070,6 +2298,7 @@ var DogCardManager = /** @class */ (function (_super) {
             cardHeight: DogCardManager.CARD_HEIGHT,
         }) || this;
         _this.dogParkGame = dogParkGame;
+        _this.cardTokenVoidStocks = {};
         return _this;
     }
     DogCardManager.CARD_WIDTH = 195;
@@ -2102,6 +2331,189 @@ var DogWalkerManager = /** @class */ (function (_super) {
     DogWalkerManager.HEIGHT = 65;
     return DogWalkerManager;
 }(CardManager));
+var TokenManager = /** @class */ (function (_super) {
+    __extends(TokenManager, _super);
+    function TokenManager(dogParkGame) {
+        var _this = _super.call(this, dogParkGame, {
+            getId: function (token) { return "dp-token-".concat(token.id); },
+            setupDiv: function (token, div) {
+                div.classList.add('dp-card-token');
+                div.classList.add('dp-token-token');
+                div.classList.add('small');
+                div.dataset.type = token.type;
+            },
+            setupFrontDiv: function (token, div) {
+            },
+            cardWidth: TokenManager.TOKEN_WIDTH,
+            cardHeight: TokenManager.TOKEN_HEIGHT
+        }) || this;
+        _this.dogParkGame = dogParkGame;
+        _this.idSequence = 0;
+        return _this;
+    }
+    TokenManager.prototype.createToken = function (type) {
+        return { id: this.idSequence++, type: type };
+    };
+    TokenManager.TOKEN_WIDTH = 39.375;
+    return TokenManager;
+}(CardManager));
+var DogOfferDial = /** @class */ (function () {
+    function DogOfferDial(settings) {
+        var _this = this;
+        this.settings = settings;
+        this._currentValue = 1;
+        dojo.place(this.createDial(), settings.parentId);
+        this.currentValue = settings.initialValue;
+        if (!this.settings.readOnly) {
+            this.increaseButton = $('dp-dial-button-increase');
+            this.decreaseButton = $('dp-dial-button-decrease');
+            this.updateDial(settings.initialValue);
+            dojo.connect(this.increaseButton, 'onclick', function () { return _this.updateDial(_this._currentValue + 1); });
+            dojo.connect(this.decreaseButton, 'onclick', function () { return _this.updateDial(_this._currentValue - 1); });
+        }
+    }
+    DogOfferDial.prototype.updateDial = function (newValue) {
+        this.currentValue = newValue;
+        this.increaseButton.classList.remove('disabled');
+        this.decreaseButton.classList.remove('disabled');
+        if (this._currentValue === 1) {
+            this.decreaseButton.classList.add('disabled');
+        }
+        if (this._currentValue === this.settings.maxOfferValue) {
+            this.increaseButton.classList.add('disabled');
+        }
+    };
+    DogOfferDial.prototype.createDial = function () {
+        var result = '';
+        if (!this.settings.readOnly) {
+            result += "<a id=\"dp-dial-button-decrease\" class=\"bgabutton bgabutton_blue\"><i class=\"fa fa-minus\" aria-hidden=\"true\"></i></a>";
+        }
+        result += "<div id=\"".concat(this.settings.elementId, "\" class=\"dp-dial side-front\" data-color=\"#").concat(this.settings.player.color, "\" data-value=\"").concat(this._currentValue, "\">\n                    <div class=\"side-front-numbers\"></div>\n                    <div class=\"side-front-overlay\">").concat(this.settings.readOnly ? this.settings.player.name : '', "</div>\n                </div>");
+        if (!this.settings.readOnly) {
+            result += "<a id=\"dp-dial-button-increase\" class=\"bgabutton bgabutton_blue\"><i class=\"fa fa-plus\" aria-hidden=\"true\"></i></a>";
+        }
+        return result;
+    };
+    Object.defineProperty(DogOfferDial.prototype, "currentValue", {
+        get: function () {
+            return this._currentValue;
+        },
+        set: function (value) {
+            this._currentValue = value;
+            $(this.settings.elementId).dataset.value = value;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    return DogOfferDial;
+}());
+var DogPayCosts = /** @class */ (function () {
+    function DogPayCosts(elementId, resources, dog, onCancel, onConfirm) {
+        this.elementId = elementId;
+        this.resources = resources;
+        this.dog = dog;
+        this.onCancel = onCancel;
+        this.onConfirm = onConfirm;
+        this.remainingResources = { stick: 0, ball: 0, treat: 0, toy: 0 };
+        this.selectedPayment = {};
+        this.needsSelection = false;
+        dojo.place('<div id="dp-dog-cost-pay-wrapper"></div>', $(this.elementId));
+        this.resetSelection();
+        this.updateUi();
+    }
+    DogPayCosts.prototype.resetSelection = function () {
+        var _this = this;
+        this.remainingResources = __assign({}, this.resources);
+        Object.entries(this.dog.costs).forEach(function (_a) {
+            var resource = _a[0], cost = _a[1];
+            if (_this.remainingResources[resource] >= _this.dog.costs[resource]) {
+                _this.remainingResources[resource] -= 1;
+                _this.selectedPayment[resource] = [resource];
+            }
+            else {
+                _this.needsSelection = true;
+                _this.selectedPayment[resource] = ["placeholder", "placeholder"];
+            }
+        });
+    };
+    DogPayCosts.prototype.updateUi = function () {
+        var _this = this;
+        var wrapperElement = $('dp-dog-cost-pay-wrapper');
+        dojo.empty(wrapperElement);
+        dojo.place(this.createMainButtons(), wrapperElement);
+        dojo.place(this.createCostRows(), wrapperElement);
+        dojo.place(this.createResourceButtons(), wrapperElement);
+        if (this.needsSelection) {
+            dojo.connect($("dp-dog-cost-pay-reset-button"), 'onclick', function () {
+                _this.resetSelection();
+                _this.updateUi();
+            });
+            Object.entries(this.remainingResources)
+                .forEach(function (_a) {
+                var resource = _a[0], nr = _a[1];
+                return dojo.connect($("dp-dog-cost-pay-".concat(resource, "-button")), 'onclick', function () { return _this.useResource(resource); });
+            });
+        }
+        dojo.connect($("dp-dog-cost-pay-cancel-button"), 'onclick', function () { return _this.onCancel(); });
+        dojo.connect($("dp-dog-cost-pay-confirm-button"), 'onclick', function () { return _this.onConfirm(Object.values(_this.selectedPayment).flat()); });
+    };
+    DogPayCosts.prototype.createCostRows = function () {
+        var result = "<div class=\"dp-dog-cost-pay-row\">".concat(_('Cost'), "<i class=\"fa fa-long-arrow-right\" aria-hidden=\"true\"></i>").concat(_('Pay using'), "</div>");
+        Object.entries(this.selectedPayment).forEach(function (_a) {
+            var resource = _a[0], selectedResources = _a[1];
+            result += "<div class=\"dp-dog-cost-pay-row\"><span class=\"dp-token-token\" data-type=\"".concat(resource, "\"></span><i class=\"fa fa-long-arrow-right\" aria-hidden=\"true\"></i>");
+            selectedResources.forEach(function (selectedResource) {
+                result += "<span class=\"dp-token-token\" data-type=\"".concat(selectedResource, "\"></span>");
+            });
+            result += '</div>';
+        });
+        return result;
+    };
+    DogPayCosts.prototype.createResourceButtons = function () {
+        var _this = this;
+        var stillNeedResources = false;
+        for (var costResource in this.selectedPayment) {
+            var indexOf = this.selectedPayment[costResource].indexOf('placeholder');
+            if (indexOf >= 0) {
+                stillNeedResources = true;
+                break;
+            }
+        }
+        var result = "<div class=\"dp-dog-cost-pay-row\">";
+        if (stillNeedResources) {
+            Object.entries(this.remainingResources)
+                .forEach(function (_a) {
+                var resource = _a[0], nr = _a[1];
+                var disabled = _this.remainingResources[resource] <= 0;
+                result += "<a id=\"dp-dog-cost-pay-".concat(resource, "-button\" class=\"bgabutton bgabutton_blue ").concat(disabled ? 'disabled' : '', "\"><span class=\"dp-token-token\" data-type=\"").concat(resource, "\"></span></a>");
+            });
+        }
+        result += '</div>';
+        return result;
+    };
+    DogPayCosts.prototype.createMainButtons = function () {
+        var result = "<div class=\"dp-dog-cost-pay-row\">";
+        var disabled = false;
+        result += "<a id=\"dp-dog-cost-pay-confirm-button\" class=\"bgabutton bgabutton_blue ".concat(disabled ? 'disabled' : '', "\">").concat(_('Confirm'), "</a>");
+        if (this.needsSelection) {
+            result += "<a id=\"dp-dog-cost-pay-reset-button\" class=\"bgabutton bgabutton_gray\">".concat(_('Reset'), "</a>");
+        }
+        result += "<a id=\"dp-dog-cost-pay-cancel-button\" class=\"bgabutton bgabutton_gray\">".concat(_('Cancel'), "</a>");
+        result += '</div>';
+        return result;
+    };
+    DogPayCosts.prototype.useResource = function (resource) {
+        for (var costResource in this.selectedPayment) {
+            var indexOf = this.selectedPayment[costResource].indexOf('placeholder');
+            if (indexOf >= 0) {
+                this.remainingResources[resource] -= 1;
+                this.selectedPayment[costResource][indexOf] = resource;
+            }
+        }
+        this.updateUi();
+    };
+    return DogPayCosts;
+}());
 var DogField = /** @class */ (function () {
     function DogField(game) {
         this.game = game;
@@ -2163,67 +2575,19 @@ var DogField = /** @class */ (function () {
     };
     return DogField;
 }());
-var DogOfferDial = /** @class */ (function () {
-    function DogOfferDial(settings) {
-        var _this = this;
-        this.settings = settings;
-        this._currentValue = 1;
-        dojo.place(this.createDial(), settings.parentId);
-        this.currentValue = settings.initialValue;
-        if (!this.settings.readOnly) {
-            this.increaseButton = $('dp-dial-button-increase');
-            this.decreaseButton = $('dp-dial-button-decrease');
-            this.updateDial(settings.initialValue);
-            dojo.connect(this.increaseButton, 'onclick', function () { return _this.updateDial(_this._currentValue + 1); });
-            dojo.connect(this.decreaseButton, 'onclick', function () { return _this.updateDial(_this._currentValue - 1); });
-        }
-    }
-    DogOfferDial.prototype.updateDial = function (newValue) {
-        this.currentValue = newValue;
-        this.increaseButton.classList.remove('disabled');
-        this.decreaseButton.classList.remove('disabled');
-        if (this._currentValue === 1) {
-            this.decreaseButton.classList.add('disabled');
-        }
-        if (this._currentValue === this.settings.maxOfferValue) {
-            this.increaseButton.classList.add('disabled');
-        }
-    };
-    DogOfferDial.prototype.createDial = function () {
-        var result = '';
-        if (!this.settings.readOnly) {
-            result += "<a id=\"dp-dial-button-decrease\" class=\"bgabutton bgabutton_blue\"><i class=\"fa fa-minus\" aria-hidden=\"true\"></i></a>";
-        }
-        result += "<div id=\"".concat(this.settings.elementId, "\" class=\"dp-dial side-front\" data-color=\"#").concat(this.settings.player.color, "\" data-value=\"").concat(this._currentValue, "\">\n                    <div class=\"side-front-numbers\"></div>\n                    <div class=\"side-front-overlay\">").concat(this.settings.readOnly ? this.settings.player.name : '', "</div>\n                </div>");
-        if (!this.settings.readOnly) {
-            result += "<a id=\"dp-dial-button-increase\" class=\"bgabutton bgabutton_blue\"><i class=\"fa fa-plus\" aria-hidden=\"true\"></i></a>";
-        }
-        return result;
-    };
-    Object.defineProperty(DogOfferDial.prototype, "currentValue", {
-        get: function () {
-            return this._currentValue;
-        },
-        set: function (value) {
-            this._currentValue = value;
-            $(this.settings.elementId).dataset.value = value;
-        },
-        enumerable: false,
-        configurable: true
-    });
-    return DogOfferDial;
-}());
 var PlayerArea = /** @class */ (function () {
     function PlayerArea(game) {
         this.game = game;
         this.walkerStocks = {};
         this.kennelStocks = {};
+        this.leadStocks = {};
         this.playerDials = {};
     }
     PlayerArea.prototype.setUp = function (gameData) {
         var playerAreas = [];
         for (var playerId in gameData.players) {
             var player = gameData.players[playerId];
+            this.createPlayerPanels(player);
             var playerArea = this.createPlayerArea(player);
             if (Number(player.id) === this.game.getPlayerId()) {
                 playerAreas.unshift(playerArea);
@@ -2241,6 +2605,9 @@ var PlayerArea = /** @class */ (function () {
             var kennelStockId = "dp-player-area-".concat(player.id, "-kennel");
             this.kennelStocks[Number(player.id)] = new LineStock(this.game.dogCardManager, $(kennelStockId), { center: false });
             this.moveDogsToKennel(Number(player.id), player.kennelDogs);
+            var leadStockId = "dp-player-area-".concat(player.id, "-lead");
+            this.leadStocks[Number(player.id)] = new LineStock(this.game.dogCardManager, $(leadStockId), { center: false });
+            this.moveDogsToLead(Number(player.id), player.leadDogs);
             this.playerDials[Number(player.id)] = new DogOfferDial({
                 elementId: "dp-game-board-offer-dial-".concat(player.id),
                 parentId: 'dp-game-board-offer-dials',
@@ -2259,6 +2626,9 @@ var PlayerArea = /** @class */ (function () {
     PlayerArea.prototype.moveDogsToKennel = function (playerId, dogs) {
         return this.kennelStocks[playerId].addCards(dogs);
     };
+    PlayerArea.prototype.moveDogsToLead = function (playerId, dogs) {
+        return this.leadStocks[playerId].addCards(dogs);
+    };
     PlayerArea.prototype.setPlayerOfferValue = function (playerId, offerValue) {
         this.playerDials[playerId].currentValue = offerValue;
     };
@@ -2267,10 +2637,118 @@ var PlayerArea = /** @class */ (function () {
             this.playerDials[playerId].currentValue = null;
         }
     };
+    PlayerArea.prototype.setSelectionModeForKennel = function (selectionMode, playerId, selectableDogs, onSelect) {
+        this.kennelStocks[playerId].setSelectionMode(selectionMode);
+        if (selectionMode != 'none') {
+            this.kennelStocks[playerId].setSelectableCards(selectableDogs);
+            this.kennelStocks[playerId].onSelectionChange = onSelect;
+        }
+        else {
+            this.kennelStocks[playerId].onSelectionChange = undefined;
+        }
+    };
     PlayerArea.prototype.createPlayerArea = function (player) {
-        return "<div id=\"dp-player-area-".concat(player.id, "\" class=\"whiteblock\">\n                    <h2>").concat(player.name, "</h2>\n                    <div class=\"dp-lead-board dp-board\" data-color=\"#").concat(player.color, "\">\n                        <div id=\"dp-player-area-").concat(player.id, "-dog-walker\"></div>\n                    </div>\n                    <div id=\"dp-player-area-").concat(player.id, "-kennel\">\n                    \n                    </div>\n                </div>");
+        return "<div id=\"dp-player-area-".concat(player.id, "\" class=\"whiteblock\">\n                    <h2>").concat(player.name, "</h2>\n                    <div class=\"dp-lead-board dp-board\" data-color=\"#").concat(player.color, "\">\n                        <div id=\"dp-player-area-").concat(player.id, "-dog-walker\" class=\"dp-lead-board-walker\"></div>\n                        <div id=\"dp-player-area-").concat(player.id, "-lead\" class=\"dp-lead-board-lead\"></div>\n                    </div>\n                    <div id=\"dp-player-area-").concat(player.id, "-kennel\">\n                    \n                    </div>\n                </div>");
+    };
+    PlayerArea.prototype.createPlayerPanels = function (player) {
+        dojo.place("<div id=\"dp-player-resources-".concat(player.id, "\" class=\"dp-player-resources\"><div id=\"dp-player-dummy-resources-").concat(player.id, "\" style=\"height: 0; width: 0; overflow: hidden;\"></div></div>"), "player_board_".concat(player.id));
     };
     return PlayerArea;
+}());
+var PlayerResources = /** @class */ (function () {
+    function PlayerResources(game) {
+        this.game = game;
+        this.playerResourceStocks = {};
+    }
+    PlayerResources.prototype.setUp = function (gameData) {
+        for (var playerId in gameData.players) {
+            var player = gameData.players[playerId];
+            var resources = player.resources;
+            this.playerResourceStocks[playerId] = {};
+            var _loop_4 = function (resource) {
+                this_2.playerResourceStocks[playerId][resource] = new CounterVoidStock(this_2.game, this_2.game.tokenManager, {
+                    counter: new ebg.counter(),
+                    targetElement: "dp-player-resources-".concat(player.id),
+                    counterId: "dp-player-".concat(resource, "-counter-").concat(player.id),
+                    initialCounterValue: resources[resource],
+                    setupIcon: function (element) {
+                        element.classList.add("dp-token-token");
+                        element.classList.add("small");
+                        element.dataset.type = resource;
+                    }
+                });
+            };
+            var this_2 = this;
+            for (var resource in resources) {
+                _loop_4(resource);
+            }
+        }
+    };
+    PlayerResources.prototype.payResourcesForDog = function (playerId, dog, resources) {
+        return __awaiter(this, void 0, void 0, function () {
+            var _a, _b, _c, _i, index, resource, token;
+            return __generator(this, function (_d) {
+                switch (_d.label) {
+                    case 0:
+                        _a = resources;
+                        _b = [];
+                        for (_c in _a)
+                            _b.push(_c);
+                        _i = 0;
+                        _d.label = 1;
+                    case 1:
+                        if (!(_i < _b.length)) return [3 /*break*/, 4];
+                        _c = _b[_i];
+                        if (!(_c in _a)) return [3 /*break*/, 3];
+                        index = _c;
+                        resource = resources[index];
+                        this.playerResourceStocks[playerId][resource].decValue(1);
+                        token = this.game.tokenManager.createToken(resource);
+                        return [4 /*yield*/, this.game.dogCardManager.cardTokenVoidStocks[dog.id].addCard(token, { fromStock: this.playerResourceStocks[playerId][resource] })];
+                    case 2:
+                        _d.sent();
+                        _d.label = 3;
+                    case 3:
+                        _i++;
+                        return [3 /*break*/, 1];
+                    case 4: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    PlayerResources.prototype.gainResourcesFromDog = function (playerId, dog, resources) {
+        return __awaiter(this, void 0, void 0, function () {
+            var _a, _b, _c, _i, index, resource, token;
+            return __generator(this, function (_d) {
+                switch (_d.label) {
+                    case 0:
+                        _a = resources;
+                        _b = [];
+                        for (_c in _a)
+                            _b.push(_c);
+                        _i = 0;
+                        _d.label = 1;
+                    case 1:
+                        if (!(_i < _b.length)) return [3 /*break*/, 4];
+                        _c = _b[_i];
+                        if (!(_c in _a)) return [3 /*break*/, 3];
+                        index = _c;
+                        resource = resources[index];
+                        this.playerResourceStocks[playerId][resource].incValue(1);
+                        token = this.game.tokenManager.createToken(resource);
+                        return [4 /*yield*/, this.playerResourceStocks[playerId][resource].addCard(token, { fromStock: this.game.dogCardManager.cardTokenVoidStocks[dog.id] })];
+                    case 2:
+                        _d.sent();
+                        _d.label = 3;
+                    case 3:
+                        _i++;
+                        return [3 /*break*/, 1];
+                    case 4: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    return PlayerResources;
 }());
 var RoundTracker = /** @class */ (function () {
     function RoundTracker(game) {
@@ -2311,9 +2789,11 @@ var DogPark = /** @class */ (function () {
         // Init Managers
         this.dogCardManager = new DogCardManager(this);
         this.dogWalkerManager = new DogWalkerManager(this);
+        this.tokenManager = new TokenManager(this);
         // Init Modules
         this.dogField = new DogField(this);
         this.playerArea = new PlayerArea(this);
+        this.playerResources = new PlayerResources(this);
         this.roundTracker = new RoundTracker(this);
     }
     /*
@@ -2335,7 +2815,9 @@ var DogPark = /** @class */ (function () {
         this.dogField.setUp(gamedatas);
         this.playerArea.setUp(gamedatas);
         this.roundTracker.setUp(gamedatas);
-        this.zoomManager = new AutoZoomManager('dp-game-board-wrapper', 'dp-zoom-level');
+        this.playerResources.setUp(gamedatas);
+        this.zoomManager = new AutoZoomManager('dp-game', 'dp-zoom-level');
+        this.animationManager = new AnimationManager(this, { duration: ANIMATION_MS });
         dojo.connect($('dp-game-board-side-toggle-button'), 'onclick', function () { return dojo.toggleClass('dp-game-board-side', 'hide-side-bar'); });
         this.setupNotifications();
         log("Ending game setup");
@@ -2353,6 +2835,12 @@ var DogPark = /** @class */ (function () {
                 break;
             case 'recruitmentTakeDog':
                 this.enteringRecruitmentTakeDog();
+                break;
+            case 'selectionPlaceDogOnLead':
+                this.enteringSelectionPlaceDogOnLead(args.args);
+                break;
+            case 'selectionPlaceDogOnLeadSelectResources':
+                this.enteringSelectionPlaceDogOnLeadSelectResources(args.args);
                 break;
         }
     };
@@ -2383,6 +2871,30 @@ var DogPark = /** @class */ (function () {
             this.dogField.setDogSelectionMode('single');
         }
     };
+    DogPark.prototype.enteringSelectionPlaceDogOnLead = function (args) {
+        var _this = this;
+        if (this.isCurrentPlayerActive()) {
+            this.playerArea.setSelectionModeForKennel('single', this.getPlayerId(), Object.values(args.dogs), function (selection) {
+                if (selection.length === 1) {
+                    _this.playerArea.setSelectionModeForKennel('none', _this.getPlayerId());
+                    _this.takeNoLockAction("placeDogOnLead", { dogId: selection[0].id });
+                }
+            });
+        }
+    };
+    DogPark.prototype.enteringSelectionPlaceDogOnLeadSelectResources = function (args) {
+        var _this = this;
+        this.gamedatas.gamestate.descriptionmyturn = dojo.string.substitute(_('Select resources for ${dogName}'), { dogName: args.dog.name });
+        this.gamedatas.gamestate.descriptionmyturn = this.gamedatas.gamestate.descriptionmyturn + '<br /><div id="dp-pay-costs"></div><br />';
+        this.updatePageTitle();
+        this.currentPlayerPayCosts = new DogPayCosts("dp-pay-costs", args.resources, args.dog, function () {
+            dojo.destroy('dp-pay-costs');
+            _this.takeNoLockAction('placeDogOnLeadCancel');
+        }, function (resources) {
+            dojo.destroy('dp-pay-costs');
+            _this.takeNoLockAction('placeDogOnLeadPayResources', { dogId: args.dog.id, resources: JSON.stringify(resources) });
+        });
+    };
     DogPark.prototype.onLeavingState = function (stateName) {
         log('Leaving state: ' + stateName);
         switch (stateName) {
@@ -2393,6 +2905,14 @@ var DogPark = /** @class */ (function () {
             case 'recruitmentEnd':
                 this.dogField.removeFocusToField();
                 break;
+            case 'selectionPlaceDogOnLead':
+                this.leavingSelectionPlaceDogOnLead();
+                break;
+        }
+    };
+    DogPark.prototype.leavingSelectionPlaceDogOnLead = function () {
+        if (this.isCurrentPlayerActive()) {
+            this.playerArea.setSelectionModeForKennel('none', this.getPlayerId());
         }
     };
     // onUpdateActionButtons: in this method you can manage "action buttons" that are displayed in the
@@ -2412,9 +2932,12 @@ var DogPark = /** @class */ (function () {
                     break;
                 case 'recruitmentTakeDog':
                     this.addActionButton('takeDog', _("Confirm"), function () { return _this.recruitDog(); });
+                    break;
             }
-            if ([].includes(stateName) && args.canCancelMoves) {
-                this.addActionButton('undoLastMoves', _("Undo last moves"), function () { return _this.undoLastMoves(); }, null, null, 'gray');
+            console.log(args);
+            if (args === null || args === void 0 ? void 0 : args.canCancelMoves) {
+                this.addActionButton('undoLast', _("Undo last action"), function () { return _this.undoLast(); }, null, null, 'gray');
+                this.addActionButton('undoAll', _("Restart turn"), function () { return _this.undoAll(); }, null, null, 'red');
             }
         }
     };
@@ -2430,12 +2953,23 @@ var DogPark = /** @class */ (function () {
         var offerValue = this.currentPlayerOfferDial.currentValue;
         this.takeAction('placeOfferOnDog', { dogId: selectedDog === null || selectedDog === void 0 ? void 0 : selectedDog.id, offerValue: offerValue });
     };
-    DogPark.prototype.undoLastMoves = function () {
-        this.takeAction('undoLastMoves');
+    DogPark.prototype.undoLast = function () {
+        this.disableActionButtons();
+        this.takeNoLockAction('undoLast');
+    };
+    DogPark.prototype.undoAll = function () {
+        this.disableActionButtons();
+        this.takeNoLockAction('undoAll');
     };
     ///////////////////////////////////////////////////
     //// Utility methods
     ///////////////////////////////////////////////////
+    DogPark.prototype.disableActionButtons = function () {
+        var buttons = document.querySelectorAll('.action-button');
+        buttons.forEach(function (button) {
+            button.classList.add('disabled');
+        });
+    };
     DogPark.prototype.isReadOnly = function () {
         return this.isSpectator || typeof g_replayFrom != 'undefined' || g_archive_mode;
     };
@@ -2499,7 +3033,9 @@ var DogPark = /** @class */ (function () {
             ['offerValueRevealed', ANIMATION_MS],
             ['resetAllOfferValues', ANIMATION_MS],
             ['fieldRefilled', undefined],
-            ['newPhase', ANIMATION_MS]
+            ['newPhase', ANIMATION_MS],
+            ['dogPlacedOnLead', undefined],
+            ['undoDogPlacedOnLead', undefined]
             // ['shortTime', 1],
             // ['fixedTime', 1000]
         ];
@@ -2515,10 +3051,9 @@ var DogPark = /** @class */ (function () {
         });
     };
     DogPark.prototype.notif_dogRecruited = function (args) {
-        var _this = this;
         this.setScore(args.playerId, args.score);
-        return this.playerArea.moveDogsToKennel(args.playerId, [args.dog])
-            .then(function () { return _this.playerArea.moveWalkerToPlayer(args.playerId, args.walker); });
+        this.playerArea.moveWalkerToPlayer(args.playerId, args.walker);
+        return this.playerArea.moveDogsToKennel(args.playerId, [args.dog]);
     };
     DogPark.prototype.notif_dogOfferPlaced = function (args) {
         if (Number(args.playerId) === Number(this.getPlayerId())) {
@@ -2537,6 +3072,16 @@ var DogPark = /** @class */ (function () {
     };
     DogPark.prototype.notif_newPhase = function (args) {
         this.roundTracker.updatePhase(args.newPhase);
+    };
+    DogPark.prototype.notif_dogPlacedOnLead = function (args) {
+        var _this = this;
+        return this.playerArea.moveDogsToLead(args.playerId, [args.dog])
+            .then(function () { return _this.playerResources.payResourcesForDog(args.playerId, args.dog, args.resources); });
+    };
+    DogPark.prototype.notif_undoDogPlacedOnLead = function (args) {
+        var _this = this;
+        return this.playerResources.gainResourcesFromDog(args.playerId, args.dog, args.resources)
+            .then(function () { return _this.playerArea.moveDogsToKennel(args.playerId, [args.dog]); });
     };
     DogPark.prototype.format_string_recursive = function (log, args) {
         try {

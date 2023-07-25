@@ -56,6 +56,56 @@ class action_dogpark extends APP_GameAction
         self::ajaxResponse();
     }
 
+    public function placeDogOnLead()
+    {
+        self::setAjaxMode();
+
+        $dogId = self::getArg("dogId", AT_posint, true);
+        $this->game->placeDogOnLead($dogId);
+
+        self::ajaxResponse();
+    }
+
+    public function placeDogOnLeadPayResources()
+    {
+        self::setAjaxMode();
+
+        $dogId = self::getArg("dogId", AT_posint, true);
+        $resources = self::getArg('resources', AT_json, true);
+        $this->validateJSonAlphaNum($resources, 'resources');
+
+        $this->game->placeDogOnLeadPayResources($dogId, $resources);
+
+        self::ajaxResponse();
+    }
+
+    public function placeDogOnLeadCancel()
+    {
+        self::setAjaxMode();
+
+        $this->game->placeDogOnLeadCancel();
+
+        self::ajaxResponse();
+    }
+
+    public function undoLast()
+    {
+        self::setAjaxMode();
+
+        $this->game->undoLast();
+
+        self::ajaxResponse();
+    }
+
+    public function undoAll()
+    {
+        self::setAjaxMode();
+
+        $this->game->undoAll();
+
+        self::ajaxResponse();
+    }
+
     private function validateJSonAlphaNum($value, $argName = 'unknown')
     {
         if (is_array($value)) {

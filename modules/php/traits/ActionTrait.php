@@ -2,6 +2,7 @@
 
 namespace traits;
 use BgaUserException;
+use commands\PlaceDogOnLeadCommand;
 use objects\DogCard;
 use objects\DogWalker;
 
@@ -93,5 +94,62 @@ trait ActionTrait
         $this->gamestate->nextState('');
     }
 
+    function placeDogOnLead($dogId) {
+        $this->checkAction(ACT_PLACE_DOG_ON_LEAD);
 
+        $playerId = $this->getCurrentPlayerId();
+
+        $dogsForSelection = $this->dogManager->getDogsForSelection($playerId);
+        if (!array_key_exists($dogId, $dogsForSelection)) {
+            throw new BgaUserException("This dog is not available for selection");
+        }
+
+        $this->setGlobalVariable(SELECTION_DOG_ID_ . $playerId, $dogId);
+
+        $this->gamestate->setPrivateState($playerId, ST_SELECTION_PLACE_DOG_ON_LEAD_SELECT_RESOURCES);
+    }
+
+    function placeDogOnLeadCancel() {
+        $playerId = $this->getCurrentPlayerId();
+        $this->deleteGlobalVariable(SELECTION_DOG_ID_ . $playerId);
+
+        $this->gamestate->setPrivateState($playerId, ST_SELECTION_PLACE_DOG_ON_LEAD);
+    }
+
+    function placeDogOnLeadPayResources($dogId, $resources) {
+        $playerId = $this->getCurrentPlayerId();
+
+        $dogsForSelection = $this->dogManager->getDogsForSelection($playerId);
+        if (!array_key_exists($dogId, $dogsForSelection)) {
+            throw new BgaUserException("This dog is not available for selection");
+        }
+
+        $command = new PlaceDogOnLeadCommand($playerId, $dogId, $resources);
+        $this->commandManager->addCommand($playerId, $command);
+
+        $dogHasSelectionAbility = false;
+        if ($dogHasSelectionAbility) {
+            $this->gamestate->setPrivateState($playerId, ST_SELECTION_PLACE_DOG_ON_LEAD_AFTER);
+        } else {
+            $this->gamestate->setPrivateState($playerId, ST_SELECTION_PLACE_DOG_ON_LEAD);
+        }
+    }
+
+    function undoLast() {
+        $this->checkAction(ACT_UNDO);
+
+        $playerId = $this->getCurrentPlayerId();
+        $this->commandManager->removeLastCommand($playerId);
+
+        $this->gamestate->setPrivateState($playerId, ST_SELECTION_PLACE_DOG_ON_LEAD);
+    }
+
+    function undoAll() {
+        $this->checkAction(ACT_UNDO);
+
+        $playerId = $this->getCurrentPlayerId();
+        $this->commandManager->removeAllCommands($playerId);
+
+        $this->gamestate->setPrivateState($playerId, ST_SELECTION_PLACE_DOG_ON_LEAD);
+    }
 }

@@ -16,7 +16,6 @@
     "src/DogPark.d.ts",
 
     "node_modules/bga-zoom/src/zoom-manager.ts",
-    "src/bga/AutoZoomManager.ts",
 
     "node_modules/bga-animations/src/animations.ts",
     "node_modules/bga-animations/src/animations/attach-with-animation.ts",
@@ -39,11 +38,18 @@
     "node_modules/bga-cards/src/card-manager.ts",
     "node_modules/bga-cards/src/sort.ts",
 
+    "src/bga/AutoZoomManager.ts",
+    "src/bga/Numbers.ts",
+    "src/bga/CounterVoidStock.ts",
+
     "src/managers/DogCardManager.ts",
     "src/managers/DogWalkerManager.ts",
+    "src/managers/TokenManager.ts",
+    "src/ui/DogOfferDial.ts",
+    "src/ui/DogPayCosts.ts",
     "src/DogField.ts",
-    "src/DogOfferDial.ts",
     "src/PlayerArea.ts",
+    "src/PlayerResources.ts",
     "src/RoundTracker.ts",
     "src/DogPark.ts"
   ]

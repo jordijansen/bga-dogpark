@@ -5,6 +5,26 @@
   -webkit-filter: drop-shadow(1px 1px 1px black);
 }
 
+.dp-card-token {
+  display: inline-block;
+  position: relative;
+  width: 39.375px;
+  height: 33.75px;
+
+  .card-sides {
+    .card-side {
+      box-shadow: none;
+      width: 39.375px;
+      height: 33.75px;
+
+      & > * {
+        pointer-events: none;
+        user-select: none;
+      }
+    }
+  }
+}
+
 .dp-round-marker {
   background-image: url('img/dogpark-round-marker.png');
   background-size: cover;
@@ -40,5 +60,41 @@
         user-select: none;
       }
     }
+  }
+}
+.dp-token-token {
+  background-image: url('img/dogpark-tokens.png');
+  background-size: 1000% auto;
+  width: 52.5px;
+  height: 45px;
+  display: inline-block;
+
+  &.small {
+    width: 39.375px;
+    height: 33.75px;
+  }
+
+  &[data-type="walked"] { background-position: 0 0;}
+  &[data-type="reputation"] { background-position: 11.1111111111% 0;}
+  &[data-type="toy"] { background-position: 22.2222222222% 0;}
+  &[data-type="ball"] { background-position: 33.3333333333% 0;}
+  &[data-type="treat"] { background-position: 44.4444444444% 0;}
+  &[data-type="stick"] { background-position: 55.5555555556% 0;}
+  &[data-type="scout"] { background-position: 66.6666666667% 0;}
+  &[data-type="swap"] { background-position: 77.7777777778% 0;}
+  &[data-type="block"] { background-position: 88.8888888889% 0;}
+  &[data-type="placeholder"] { background-position: 100% 0;}
+
+}
+
+.fa.fa-star {
+  vertical-align: bottom;
+  background-image: url('img/dogpark-tokens.png');
+  background-size: 1000% auto;
+  width: 22.16px;
+  height: 19px;
+  background-position: 12.5% 0;
+  &:before {
+    content: unset;
   }
 }

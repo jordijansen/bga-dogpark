@@ -38,6 +38,7 @@ trait SetupTrait
         self::reloadPlayersBasicInfos();
 
         $this->playerManager->setInitialPlayerOder();
+        $this->playerManager->setInitialResources();
 
         /************ Init Global Variables *************/
         $this->setGlobalVariable(CURRENT_ROUND, 1);
@@ -45,7 +46,6 @@ trait SetupTrait
         $this->setGlobalVariable(OFFER_VALUE_REVEALED, false);
 
         /************ Create Card Decks *****************/
-
         $this->createDogCards();
         $this->createWalkers();
 

@@ -53,7 +53,7 @@
 
     #dp-game-board-park {
       width: 1000px;
-      height: 521px;
+      height: 570px;
       background-image: url("img/dogpark-board-park.jpg");
       background-size: cover;
     }
@@ -152,19 +152,38 @@
       background-image: url("img/dogpark-board-objectives.jpg");
       background-size: cover;
     }
-
   }
 }
 
-.dp-lead-board {
-  background-image: url("img/dogpark-leadboards.jpg");
-  background-size: auto 500%;
-  width: 800px;
-  height: 306px;
+#dp-player-areas {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  .dp-lead-board {
+    background-image: url("img/dogpark-leadboards.jpg");
+    background-size: auto 500%;
+    width: 850px;
+    height: 325px;
+    display: flex;
+    flex-direction: row;
 
-  @each $player-color in $player-colors {
-    &[data-color="#{$player-color}"] {
-      background-position: 0 (list.index($player-colors, $player-color) - 1) * 25%;
+    .dp-lead-board-walker {
+      flex: 1;
+      max-width: 224px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .dp-lead-board-lead {
+      margin-top: 27px;
+      flex: 1;
+    }
+
+    @each $player-color in $player-colors {
+      &[data-color="#{$player-color}"] {
+        background-position: 0 (list.index($player-colors, $player-color) - 1) * 25%;
+      }
     }
   }
 }

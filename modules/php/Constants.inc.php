@@ -5,7 +5,14 @@
  */
 
 const BASE_GAME = 'BASE_GAME';
-const DOG_TYPE_TOY = 'TOY';
+const BREED_TOY = 'toy';
+
+const RESOURCE_STICK = 'stick';
+const RESOURCE_BALL = 'ball';
+const RESOURCE_TREAT = 'treat';
+const RESOURCE_TOY = 'toy';
+const RESOURCES = [RESOURCE_STICK, RESOURCE_BALL, RESOURCE_TREAT, RESOURCE_TOY];
+
 
 // PHASES
 const PHASE_SET_UP = 'PHASE_SET_UP';
@@ -35,6 +42,9 @@ const ST_RECRUITMENT_END = 20;
 
 const ST_SELECTION_START = 30;
 const ST_SELECTION_ACTIONS = 31;
+const ST_SELECTION_PLACE_DOG_ON_LEAD = 32;
+const ST_SELECTION_PLACE_DOG_ON_LEAD_SELECT_RESOURCES = 33;
+const ST_SELECTION_PLACE_DOG_ON_LEAD_AFTER = 35;
 const ST_SELECTION_END = 40;
 
 const ST_GAME_END = 99;
@@ -46,7 +56,10 @@ const ACT_PLACE_OFFER_ON_DOG = 'placeOfferOnDog';
 const ACT_SKIP_PLACE_OFFER_ON_DOG = 'skipPlaceOfferOnDog';
 const ACT_RECRUIT_DOG = 'recruitDog';
 const ACT_PLACE_DOG_ON_LEAD = 'placeDogOnLead';
+const ACT_PLACE_DOG_ON_LEAD_CANCEL = 'placeDogOnLeadCancel';
+const ACT_PLACE_DOG_ON_LEAD_PAY_RESOURCES = 'placeDogOnLeadPayResources';
 const ACT_CONFIRM_SELECTION = 'confirmSelection';
+const ACT_UNDO = 'undo';
 
 /**
  * Locations
@@ -63,7 +76,7 @@ const LOCATION_FIELDS = [LOCATION_FIELD_1, LOCATION_FIELD_2, LOCATION_FIELD_3, L
 
 const LOCATION_DISCARD = 'discard';
 const LOCATION_PLAYER = 'player';
-
+const LOCATION_LEAD = 'lead';
 
 /**
  * Global variables
@@ -72,6 +85,7 @@ const CURRENT_ROUND = 'CURRENT_ROUND';
 const CURRENT_PHASE = 'CURRENT_PHASE';
 const OFFER_VALUE_REVEALED = 'OFFER_VALUE_REVEALED';
 
+const SELECTION_DOG_ID_ = 'SELECTION_DOG_ID_';
 
 /**
  * Stats

@@ -2,6 +2,7 @@
 
 namespace traits;
 use objects\DogWalker;
+use objects\SelectionUndo;
 
 trait StateTrait
 {
@@ -154,11 +155,18 @@ trait StateTrait
         $this->notifyAllPlayers('newPhase', clienttranslate('Entering new Phase: Selection'), [
             'newPhase' => PHASE_SELECTION
         ]);
+
         $this->gamestate->nextState("playerTurns");
     }
 
     function stSelectionActions()
     {
         $this->gamestate->setAllPlayersMultiactive();
+
+        //this is needed when starting private parallel states; players will be transitioned to initialprivate state defined in master state
+        $this->gamestate->initializePrivateStateForAllActivePlayers();
+    }
+
+    function stSelectionPlaceDogOnLeadAfter($playerId) {
     }
 }

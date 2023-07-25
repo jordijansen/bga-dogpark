@@ -14,11 +14,15 @@
   *
   */
 
+use commands\CommandManager;
+
 use managers\DogField;
 use managers\DogManager;
 use managers\PlayerManager;
+
 use objects\DogCard;
 use objects\DogWalker;
+
 use traits\ActionTrait;
 use traits\ArgsTrait;
 use traits\DebugTrait;
@@ -29,6 +33,10 @@ use traits\UtilsTrait;
 require_once( APP_GAMEMODULE_PATH.'module/table/table.game.php' );
 
 require_once('modules/php/Constants.inc.php');
+
+require_once('modules/php/commands/CommandManager.php');
+require_once('modules/php/commands/BaseCommand.php');
+require_once('modules/php/commands/PlaceDogOnLeadCommand.php');
 
 require_once('modules/php/objects/Card.php');
 require_once('modules/php/objects/DogCard.php');
@@ -61,6 +69,7 @@ class DogPark extends Table
     public Deck $dogWalkers;
 
     // MANAGERS
+    public CommandManager $commandManager;
     public PlayerManager $playerManager;
     public DogField $dogField;
     public DogManager $dogManager;
@@ -87,10 +96,10 @@ class DogPark extends Table
         $this->dogWalkers = self::getNew("module.common.deck");
         $this->dogWalkers->init('walker');
 
+        $this->commandManager = new CommandManager();
         $this->playerManager = new PlayerManager();
         $this->dogField = new DogField();
         $this->dogManager = new DogManager();
-
     }
 	
     protected function getGameName( )
@@ -123,7 +132,9 @@ class DogPark extends Table
         foreach($result['players'] as $playerId => &$player) {
             $player['walker'] = current(DogWalker::fromArray($this->dogWalkers->getCardsInLocation(LOCATION_PLAYER, $playerId)));
             $player['kennelDogs'] = DogCard::fromArray($this->dogCards->getCardsInLocation(LOCATION_PLAYER, $playerId));
+            $player['leadDogs'] = DogCard::fromArray($this->dogCards->getCardsInLocation(LOCATION_LEAD, $playerId));
             $player['offerValue'] = $current_player_id == $playerId || $offerValueRevealed ? $this->getPlayerOfferValue($playerId) : 0;
+            $player['resources'] = $this->playerManager->getResources($playerId);
         }
 
         $result['field'] = [

@@ -39,6 +39,14 @@ CREATE TABLE IF NOT EXISTS `global_variables` (
   PRIMARY KEY (`name`)
   ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+CREATE TABLE IF NOT EXISTS `command_log` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `player_id` int(11) NOT NULL,
+  `name` varchar(200) NOT NULL,
+  `value` json,
+  PRIMARY KEY (`id`)
+  ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 CREATE TABLE IF NOT EXISTS `dog` (
   `card_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `card_type` varchar(16) NOT NULL,
@@ -59,3 +67,7 @@ CREATE TABLE IF NOT EXISTS `walker` (
 
 ALTER TABLE `player` ADD `player_offer_value` INT UNSIGNED NULL;
 ALTER TABLE `player` ADD `player_custom_order` INT UNSIGNED NOT NULL DEFAULT '0';
+ALTER TABLE `player` ADD `player_sticks` INT UNSIGNED NOT NULL DEFAULT '0';
+ALTER TABLE `player` ADD `player_treats` INT UNSIGNED NOT NULL DEFAULT '0';
+ALTER TABLE `player` ADD `player_balls` INT UNSIGNED NOT NULL DEFAULT '0';
+ALTER TABLE `player` ADD `player_toys` INT UNSIGNED NOT NULL DEFAULT '0';
