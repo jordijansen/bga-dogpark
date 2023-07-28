@@ -19,7 +19,67 @@
   }
 }
 
-.dp-dog-card {
+.location-bonus-art {
+  background-image: url("img/dogpark-location-cards.jpg");
+  background-size: 400% auto;
+
+  &.location-bonus-art-background {
+    background-position: 0 0;
+  }
+
+  @for $row from 0 through 4 {
+    @for $column from 0 through 3 {
+      $id: ($row * 4) + ($column + 1);
+      @if $id > 1 {
+        &.location-bonus-art-#{$id} {
+          background-position: #{$column * math.div(100%, 3)} #{$row * math.div(100%, 4)};
+        }
+      }
+    }
+  }
+}
+
+.breed-expert-art {
+  background-image: url("img/dogpark-breed-expert.jpg");
+  background-size: 400% auto;
+
+  &.breed-expert-art-background {
+    background-position: 0 0;
+  }
+
+  @for $row from 0 through 1 {
+    @for $column from 0 through 3 {
+      $id: ($row * 4) + ($column + 1) - 1;
+      @if $id > 0 {
+        &.breed-expert-art-#{$id} {
+          background-position: #{$column * math.div(100%, 3)} #{$row * math.div(100%, 1)};
+        }
+      }
+    }
+  }
+}
+
+.forecast-art {
+  background-image: url("img/dogpark-forecast-cards.jpg");
+  background-size: 400% auto;
+
+  &.forecast-art-background {
+    background-position: 0 0;
+  }
+
+  @for $row from 0 through 2 {
+    @for $column from 0 through 3 {
+      $id: ($row * 4) + ($column + 1) - 1;
+      @if $id > 0 {
+        &.forecast-art-#{$id} {
+          background-position: #{$column * math.div(100%, 3)} #{$row * math.div(100%, 2)};
+        }
+      }
+    }
+  }
+}
+
+.blackjack-size-portrait {
   display: inline-block;
   position: relative;
   border-radius: 5px;
@@ -38,4 +98,34 @@
       }
     }
   }
+}
+
+.mini-size-landscape {
+  display: inline-block;
+  position: relative;
+  border-radius: 5px;
+  width: $mini-size-landscape-width;
+  height: $mini-size-landscape-height;
+
+  .card-sides {
+    .card-side {
+      border-radius: 5px;
+      width: $mini-size-landscape-width;
+      height: $mini-size-landscape-height;
+
+      &>* {
+        pointer-events: none;
+        user-select: none;
+      }
+    }
+  }
+}
+
+.dp-dog-card-token-stock {
+    width: 160px;
+    height: 190px;
+    float: right;
+    align-items: center;
+
+
 }

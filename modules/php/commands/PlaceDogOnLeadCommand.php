@@ -25,6 +25,7 @@ class PlaceDogOnLeadCommand extends BaseCommand
     {
         DogPark::$instance->playerManager->payResources($this->playerId, $this->resources);
         DogPark::$instance->dogCards->moveCard($this->dogId, LOCATION_LEAD, $this->playerId);
+        DogPark::$instance->dogManager->addResource($this->dogId, WALKED);
 
         $dog = DogCard::from(DogPark::$instance->dogCards->getCard($this->dogId));
         DogPark::$instance->notifyAllPlayers('dogPlacedOnLead', clienttranslate('${player_name} places <b>${dogName}</b> on lead'),[
@@ -41,6 +42,7 @@ class PlaceDogOnLeadCommand extends BaseCommand
     {
         DogPark::$instance->playerManager->gainResources($this->playerId, $this->resources);
         DogPark::$instance->dogCards->moveCard($this->dogId, LOCATION_PLAYER, $this->playerId);
+        DogPark::$instance->dogManager->removeResource($this->dogId, WALKED);
 
         $dog = DogCard::from(DogPark::$instance->dogCards->getCard($this->dogId));
         DogPark::$instance->notifyAllPlayers('undoDogPlacedOnLead',clienttranslate('Undo: ${player_name} places <b>${dogName}</b> back in their kennel'),[

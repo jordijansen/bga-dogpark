@@ -2,11 +2,12 @@
 
 namespace managers;
 
+use APP_DbObject;
 use DogPark;
 use objects\DogCard;
 use objects\DogWalker;
 
-class DogManager
+class DogManager extends APP_DbObject
 {
     function recruitDog($playerId, $dogId, $reputationCost, $dogWalkerId) {
         $playerScore = DogPark::$instance->getPlayerScore($playerId);
@@ -50,6 +51,22 @@ class DogManager
             }
         }
         return $dogsForSelection;
+    }
+
+    public function getDogResources($dogId) {
+        return current($this->getCollectionFromDB("SELECT dog_walked as walked, dog_stick as stick, dog_ball as ball, dog_treat as treat, dog_toy as toy FROM dog WHERE card_id = ". $dogId));
+    }
+
+    public function addResource(int $dogId, string $resource)
+    {
+        $columnName = 'dog_' .$resource;
+        self::DbQuery("UPDATE dog SET $columnName = $columnName + 1 WHERE card_id = ".$dogId);
+    }
+
+    public function removeResource(int $dogId, string $resource)
+    {
+        $columnName = 'dog_' .$resource;
+        self::DbQuery("UPDATE dog SET $columnName = $columnName - 1 WHERE card_id = ".$dogId);
     }
 
 }

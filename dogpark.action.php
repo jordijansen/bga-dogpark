@@ -88,6 +88,24 @@ class action_dogpark extends APP_GameAction
         self::ajaxResponse();
     }
 
+    public function confirmSelection()
+    {
+        self::setAjaxMode();
+
+        $this->game->confirmSelection();
+
+        self::ajaxResponse();
+    }
+
+    public function changeSelection()
+    {
+        self::setAjaxMode();
+
+        $this->game->changeSelection();
+
+        self::ajaxResponse();
+    }
+
     public function undoLast()
     {
         self::setAjaxMode();

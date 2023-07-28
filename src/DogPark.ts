@@ -31,6 +31,8 @@ class DogPark implements DogParkGame {
     public dogCardManager: DogCardManager;
     public dogWalkerManager: DogWalkerManager;
     public tokenManager: TokenManager;
+    public breedExpertAwardManager: BreedExpertAwardManager;
+    public forecastManager: ForecastManager;
 
     // Modules
     private dogField: DogField;
@@ -43,6 +45,8 @@ class DogPark implements DogParkGame {
         this.dogCardManager = new DogCardManager(this);
         this.dogWalkerManager = new DogWalkerManager(this);
         this.tokenManager = new TokenManager(this);
+        this.breedExpertAwardManager = new BreedExpertAwardManager(this);
+        this.forecastManager = new ForecastManager(this);
 
         // Init Modules
         this.dogField = new DogField(this);
@@ -73,6 +77,8 @@ class DogPark implements DogParkGame {
         this.playerArea.setUp(gamedatas);
         this.roundTracker.setUp(gamedatas);
         this.playerResources.setUp(gamedatas);
+        this.breedExpertAwardManager.setUp(gamedatas);
+        this.forecastManager.setUp(gamedatas);
 
         this.zoomManager = new AutoZoomManager('dp-game', 'dp-zoom-level')
         this.animationManager = new AnimationManager(this, {duration: ANIMATION_MS})
@@ -200,12 +206,23 @@ class DogPark implements DogParkGame {
                 case 'recruitmentTakeDog':
                     (this as any).addActionButton('takeDog', _("Confirm"), () => this.recruitDog());
                     break;
+                case 'selectionPlaceDogOnLead':
+                    (this as any).addActionButton('confirmSelection', _("Confirm Selection"), () => this.confirmSelection(args as SelectionPlaceDogOnLeadArgs));
+                    break;
             }
 
             console.log(args);
             if (args?.canCancelMoves) {
                 (this as any).addActionButton('undoLast', _("Undo last action"), () => this.undoLast(), null, null, 'gray');
                 (this as any).addActionButton('undoAll', _("Restart turn"), () => this.undoAll(), null, null, 'red');
+            }
+        } else {
+            if (!this.isReadOnly()) {
+                switch (stateName) {
+                    case 'selectionActions':
+                        (this as any).addActionButton('changeSelection', _("Change Selection"), () => this.changeSelection());
+                        break;
+                }
             }
         }
     }
@@ -226,13 +243,23 @@ class DogPark implements DogParkGame {
         this.takeAction('placeOfferOnDog', {dogId: selectedDog?.id, offerValue});
     }
 
+    private confirmSelection(args: SelectionPlaceDogOnLeadArgs) {
+        if (args.numberOfDogsOnlead < args.maxNumberOfDogs && Object.keys(args.dogs).length > 0) {
+            this.wrapInConfirm(() => this.takeNoLockAction('confirmSelection'), _('You can still place dogs on your lead, are you sure you want confirm your selection?'));
+        } else {
+            this.takeNoLockAction('confirmSelection');
+        }
+    }
+
+    private changeSelection() {
+        this.takeNoLockAction('changeSelection')
+    }
+
     private undoLast() {
-        this.disableActionButtons();
         this.takeNoLockAction('undoLast');
     }
 
     private undoAll() {
-        this.disableActionButtons();
         this.takeNoLockAction('undoAll');
     }
 
@@ -265,6 +292,7 @@ class DogPark implements DogParkGame {
         (this as any).ajaxcall(`/dogpark/dogpark/${action}.html`, data, this, onComplete);
     }
     public takeNoLockAction(action: string, data?: any, onComplete: () => void = () => {}) {
+        this.disableActionButtons();
         data = data || {};
         (this as any).ajaxcall(`/dogpark/dogpark/${action}.html`, data, this, onComplete);
     }
@@ -284,9 +312,9 @@ class DogPark implements DogParkGame {
         return true; // For now always ask for confirmation, might make this a preference later on.
     }
 
-    private wrapInConfirm(runnable: () => void) {
+    private wrapInConfirm(runnable: () => void, message: string = _("This action can not be undone. Are you sure?")) {
         if (this.isAskForConfirmation()) {
-            (this as any).confirmationDialog(_("This action can not be undone. Are you sure?"), () => {
+            (this as any).confirmationDialog(message, () => {
                 runnable();
             });
         } else {
@@ -317,7 +345,7 @@ class DogPark implements DogParkGame {
             ['fieldRefilled', undefined],
             ['newPhase', ANIMATION_MS],
             ['dogPlacedOnLead', undefined],
-            ['undoDogPlacedOnLead', undefined]
+            ['undoDogPlacedOnLead', 1]
             // ['shortTime', 1],
             // ['fixedTime', 1000]
         ];
@@ -367,11 +395,13 @@ class DogPark implements DogParkGame {
 
     private notif_dogPlacedOnLead(args: NotifDogPlacedOnLead) {
         return this.playerArea.moveDogsToLead(args.playerId, [args.dog])
-            .then(() => this.playerResources.payResourcesForDog(args.playerId, args.dog, args.resources));
+            .then(() => this.playerResources.payResourcesForDog(args.playerId, args.dog, args.resources))
+            .then(() => this.dogCardManager.addResourceToDog(args.dog.id, 'walked'));
     }
     private notif_undoDogPlacedOnLead(args: NotifDogPlacedOnLead) {
-        return this.playerResources.gainResourcesFromDog(args.playerId, args.dog, args.resources)
-            .then(() => this.playerArea.moveDogsToKennel(args.playerId, [args.dog]))
+        this.playerResources.gainResourcesFromDog(args.playerId, args.dog, args.resources);
+        this.playerArea.moveDogsToKennel(args.playerId, [args.dog]);
+        this.dogCardManager.removeResourceFromDog(args.dog.id, 'walked');
     }
 
     public format_string_recursive(log: string, args: any) {

@@ -43,6 +43,8 @@
     "src/bga/CounterVoidStock.ts",
 
     "src/managers/DogCardManager.ts",
+    "src/managers/BreedExpertAwardManager.ts",
+    "src/managers/ForecastManager.ts",
     "src/managers/DogWalkerManager.ts",
     "src/managers/TokenManager.ts",
     "src/ui/DogOfferDial.ts",

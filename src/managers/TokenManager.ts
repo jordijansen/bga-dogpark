@@ -1,6 +1,6 @@
 interface Token {
     id: number,
-    type: 'reputation'|'stick'|'toy'|'treat'|'ball'
+    type: 'reputation'|'stick'|'toy'|'treat'|'ball'|'walked'
 }
 
 class TokenManager extends CardManager<Token> {

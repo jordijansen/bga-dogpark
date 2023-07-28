@@ -35,14 +35,69 @@ $this->card_types = array(
 require_once(__DIR__.'/modules/php/Constants.inc.php');
 
 $this->BREEDS = [
-  BREED_TOY => clienttranslate('toy')
+    BREED_GUNDOG     => clienttranslate('gundog'),
+    BREED_HOUND      => clienttranslate('hound'),
+    BREED_PASTORAL   => clienttranslate('pastoral'),
+    BREED_TERRIER    => clienttranslate('terrier'),
+    BREED_TOY        => clienttranslate('toy'),
+    BREED_UTILITY    => clienttranslate('utility'),
+    BREED_WORKING    => clienttranslate('working')
 ];
 
 $this->RESOURCES = [
-    RESOURCE_STICK => clienttranslate('stick'),
-    RESOURCE_BALL => clienttranslate('ball'),
-    RESOURCE_TREAT => clienttranslate('treat'),
-    RESOURCE_TOY => clienttranslate('toy'),
+    RESOURCE_STICK  => clienttranslate('stick'),
+    RESOURCE_BALL   => clienttranslate('ball'),
+    RESOURCE_TREAT  => clienttranslate('treat'),
+    RESOURCE_TOY    => clienttranslate('toy'),
+];
+
+$this->BREED_EXPERT_CARDS = [
+    1 => BREED_GUNDOG   ,
+    2 => BREED_HOUND    ,
+    3 => BREED_PASTORAL ,
+    4 => BREED_TERRIER  ,
+    5 => BREED_TOY      ,
+    6 => BREED_UTILITY  ,
+    7 => BREED_WORKING  ,
+];
+
+$this->FORECAST_CARDS = [
+    BASE_GAME => [
+        1 => [],
+        2 => [],
+        3 => [],
+        4 => [],
+        5 => [],
+        6 => [],
+        7 => [],
+        8 => [],
+        9 => [],
+        10 => [],
+        11 => [],
+    ]
+];
+
+$this->LOCATION_BONUS_CARDS = [
+    LOCATION_BONUS_PLENTIFUL => [
+        1 => [],
+        2 => [],
+        3 => [],
+        4 => [],
+        5 => [],
+        6 => [],
+        7 => [],
+        8 => [],
+    ],
+    LOCATION_BONUS_REROUTED => [
+        9 => [],
+        10 => [],
+        11 => [],
+        12 => [],
+        13 => [],
+        14 => [],
+        15 => [],
+        16 => [],
+    ]
 ];
 
 $this->DOG_CARDS = [

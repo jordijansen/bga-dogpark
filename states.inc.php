@@ -173,7 +173,7 @@ $selectionStates = [
         "type" => "multipleactiveplayer",
         "action" => "stSelectionActions",
         "possibleactions" => [
-            // Actions when inactive 'change my mind'
+            ACT_CHANGE_SELECTION
         ],
         "transitions" => [
             "end" => ST_SELECTION_END
@@ -181,7 +181,7 @@ $selectionStates = [
     ],
     ST_SELECTION_PLACE_DOG_ON_LEAD => [
         "name" => "selectionPlaceDogOnLead",
-        "descriptionmyturn" => clienttranslate('Select: ${you} may place a dog on the lead'),
+        "descriptionmyturn" => clienttranslate('Select (${numberOfDogsOnlead}/${maxNumberOfDogs}): ${you} may place a dog on the lead'),
         "type" => "private",
         "args" => "argSelectionPlaceDogOnLead",
         "possibleactions" => [
@@ -195,7 +195,7 @@ $selectionStates = [
     ],
     ST_SELECTION_PLACE_DOG_ON_LEAD_SELECT_RESOURCES => [
         "name" => "selectionPlaceDogOnLeadSelectResources",
-        "descriptionmyturn" => clienttranslate('Select: ${you} must pay for ${dogName}'),
+        "descriptionmyturn" => clienttranslate('Select (${numberOfDogsOnlead}/${maxNumberOfDogs}): ${you} must pay for ${dogName}'),
         "type" => "private",
         "args" => "argSelectionPlaceDogOnLeadSelectResources",
         "possibleactions" => [
@@ -208,7 +208,7 @@ $selectionStates = [
     ],
     ST_SELECTION_PLACE_DOG_ON_LEAD_AFTER => [
         "name" => "selectionPlaceDogOnLeadAfter",
-        "descriptionmyturn" => clienttranslate('Select: ${you} may perform additional abilities'),
+        "descriptionmyturn" => clienttranslate('Select (${numberOfDogsOnlead}/${maxNumberOfDogs}): ${you} may perform additional abilities'),
         "type" => "private",
         "action" => "stSelectionPlaceDogOnLeadAfter",
         "args" => "argSelectionPlaceDogOnLeadAfter",
@@ -229,7 +229,14 @@ $selectionStates = [
     ],
 ];
 
-$machinestates = $basicGameStates + $recruitmentStates + $selectionStates;
+//////////////////////////////////
+// WALK
+//////////////////////////////////
+$walkingStates = [
+
+];
+
+$machinestates = $basicGameStates + $recruitmentStates + $selectionStates + $walkingStates;
 
 
 

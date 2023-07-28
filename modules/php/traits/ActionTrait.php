@@ -64,7 +64,7 @@ trait ActionTrait
 
         $this->updatePlayerOfferValue($activePlayerId, 0);
 
-        $this->notifyAllPlayers('skipPlaceOfferOnDog', '${player_name} can not place an offer (insufficient reputation)',[
+        $this->notifyAllPlayers('gameLog', '${player_name} can not place an offer (insufficient reputation)',[
             'playerId' => $activePlayerId,
             'player_name' => $this->getPlayerName($activePlayerId),
         ]);
@@ -125,6 +125,11 @@ trait ActionTrait
         if (!array_key_exists($dogId, $dogsForSelection)) {
             throw new BgaUserException("This dog is not available for selection");
         }
+        $maxNumberOfDogsOnLead = $this->forecastManager->getCurrentRoundMaxNumberOfDogsForSelection();
+        $dogsAlreadyOnLead = sizeof($this->dogCards->getCardsInLocation(LOCATION_LEAD, $playerId));
+        if ($dogsAlreadyOnLead >= $maxNumberOfDogsOnLead) {
+            throw new BgaUserException("You can't add any more dogs");
+        }
 
         $command = new PlaceDogOnLeadCommand($playerId, $dogId, $resources);
         $this->commandManager->addCommand($playerId, $command);
@@ -135,6 +140,28 @@ trait ActionTrait
         } else {
             $this->gamestate->setPrivateState($playerId, ST_SELECTION_PLACE_DOG_ON_LEAD);
         }
+    }
+
+    function confirmSelection() {
+        $this->checkAction(ACT_CONFIRM_SELECTION);
+
+        $this->notifyAllPlayers('gameLog', '${player_name} confirms selection',[
+            'playerId' => $this->getCurrentPlayerId(),
+            'player_name' => $this->getPlayerName($this->getCurrentPlayerId()),
+        ]);
+
+        $this->gamestate->setPlayerNonMultiactive( $this->getCurrentPlayerId(), "end");
+        $this->gamestate->unsetPrivateState($this->getCurrentPlayerId());
+    }
+
+    function changeSelection() {
+        $this->notifyAllPlayers('gameLog', '${player_name} wants to change the selection',[
+            'playerId' => $this->getCurrentPlayerId(),
+            'player_name' => $this->getPlayerName($this->getCurrentPlayerId()),
+        ]);
+
+        $this->gamestate->setPlayersMultiactive([$this->getCurrentPlayerId()], "");
+        $this->gamestate->initializePrivateState($this->getCurrentPlayerId());
     }
 
     function undoLast() {

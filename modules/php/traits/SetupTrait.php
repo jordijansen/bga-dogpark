@@ -48,10 +48,15 @@ trait SetupTrait
         /************ Create Card Decks *****************/
         $this->createDogCards();
         $this->createWalkers();
+        $this->createBreedCards();
+        $this->createForecastCards();
+        $this->createLocationBonusCards();
 
         /************ Start the game initialization *****/
         // Fill the field with dogs
         $this->dogField->fillField();
+        $this->breedExpertAwardManager->fillExpertAwards();
+        $this->forecastManager->fillForecast();
         /************ End of the game initialization *****/
     }
 
@@ -62,8 +67,8 @@ trait SetupTrait
             $cards[] = array( 'type' => BASE_GAME, 'type_arg' => $id, 'nbr' => 1);
         }
 
-        $this->dogCards->createCards($cards, 'deck');
-        $this->dogCards->shuffle('deck');
+        $this->dogCards->createCards($cards, LOCATION_DECK);
+        $this->dogCards->shuffle(LOCATION_DECK);
     }
 
     private function createWalkers() {
@@ -74,5 +79,36 @@ trait SetupTrait
             $cards[] = array( 'type' => $player['player_color'], 'type_arg' => $playerId, 'nbr' => 1);
             $this->dogWalkers->createCards($cards, LOCATION_PLAYER, $playerId);
         }
+    }
+    private function createBreedCards() {
+        $cards = array();
+        foreach ($this->BREED_EXPERT_CARDS as $id => $breed) {
+            $cards[] = array( 'type' => $breed, 'type_arg' => $id, 'nbr' => 1);
+        }
+
+        $this->breedCards->createCards($cards, LOCATION_DECK);
+        $this->breedCards->shuffle(LOCATION_DECK);
+    }
+
+    private function createForecastCards() {
+        $cards = array();
+        foreach ($this->FORECAST_CARDS[BASE_GAME] as $id => $foreCastCard) {
+            $cards[] = array( 'type' => BASE_GAME, 'type_arg' => $id, 'nbr' => 1);
+        }
+
+        $this->forecastCards->createCards($cards, LOCATION_DECK);
+        $this->forecastCards->shuffle(LOCATION_DECK);
+    }
+
+    private function createLocationBonusCards() {
+        $cards = array();
+        foreach ($this->LOCATION_BONUS_CARDS as $locationBonusType => $locationBonusCards) {
+            foreach ($locationBonusCards as $id => $locationBonusCard) {
+                $cards[] = array( 'type' => $locationBonusType, 'type_arg' => $id, 'nbr' => 1);
+            }
+        }
+
+        $this->locationBonusCards->createCards($cards, LOCATION_DECK);
+        $this->locationBonusCards->shuffle(LOCATION_DECK);
     }
 }

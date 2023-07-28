@@ -3,6 +3,7 @@ interface DogCard extends Card {
     name: string,
     breeds: string[],
     costs: {stick: number, ball: number, treat: number, toy: number}
+    resourcesOnCard: {stick: string, ball: string, treat: string, toy: string, walked: string}
 
 }
 
@@ -32,6 +33,8 @@ interface DogParkPlayer extends Player {
 interface DogParkGameData extends GameData {
     currentRound: number,
     currentPhase: string,
+    breedExpertAwards: Card[],
+    forecastCards: Card[],
     field: { nrOfFields: number, dogs: DogCard[], walkers: DogWalker[] }
 }
 
@@ -42,8 +45,8 @@ interface RecruitmentOfferArgs {
 
 interface SelectionPlaceDogOnLeadArgs {
     maxNumberOfDogs: number
+    numberOfDogsOnlead: number,
     dogs: {[dogId: number]: DogCard},
-    resources: {stick: number, ball: number, treat: number, toy: number}
 }
 
 interface SelectionPlaceDogOnLeadSelectResourcesArgs {

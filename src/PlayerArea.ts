@@ -25,8 +25,9 @@ class PlayerArea {
 
         for (const playerId in gameData.players) {
             const player = gameData.players[playerId];
-            const dogWalkerStockId = `dp-player-area-${player.id}-dog-walker`;
+            const dogWalkerStockId = `dp-player-walker-area-${player.id}`;
 
+            dojo.place(`<div id="${dogWalkerStockId}" class="dp-player-walker-area"></div>`, $('dp-game-board-offer-dials'))
             this.walkerStocks[Number(player.id)] = new LineStock<DogWalker>(this.game.dogWalkerManager, $(dogWalkerStockId), {center: false})
             this.moveWalkerToPlayer(Number(player.id), player.walker);
 
@@ -45,6 +46,7 @@ class PlayerArea {
                 readOnly: true,
                 initialValue: player.offerValue
             });
+
         }
     }
 
@@ -84,10 +86,9 @@ class PlayerArea {
     }
 
     private createPlayerArea(player: DogParkPlayer) {
-        return `<div id="dp-player-area-${player.id}" class="whiteblock">
+        return `<div id="dp-player-area-${player.id}" class="whiteblock dp-player-area">
                     <h2>${player.name}</h2>
                     <div class="dp-lead-board dp-board" data-color="#${player.color}">
-                        <div id="dp-player-area-${player.id}-dog-walker" class="dp-lead-board-walker"></div>
                         <div id="dp-player-area-${player.id}-lead" class="dp-lead-board-lead"></div>
                     </div>
                     <div id="dp-player-area-${player.id}-kennel">

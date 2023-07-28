@@ -315,10 +315,9 @@ body > .card {
   display: flex;
   flex-direction: column;
 }
-#dp-game-board-wrapper #dp-game-board-main #dp-game-board-round-tracker #dp-round-tracker-track-labels {
-  height: 42px;
-}
 #dp-game-board-wrapper #dp-game-board-main #dp-game-board-round-tracker #dp-round-tracker-track {
+  margin-top: 42px;
+  margin-bottom: 15px;
   padding-left: 40px;
 }
 #dp-game-board-wrapper #dp-game-board-main #dp-game-board-round-tracker #dp-round-tracker-track #dp-round-tracker {
@@ -371,6 +370,9 @@ body > .card {
 }
 #dp-game-board-wrapper #dp-game-board-main #dp-game-board-round-tracker #dp-round-tracker-track #dp-round-tracker[data-round="4"][data-phase="4"] {
   margin-left: 909px;
+}
+#dp-game-board-wrapper #dp-game-board-main #dp-game-board-round-tracker #dp-round-tracker-forecast-stock {
+  margin-left: 35px;
 }
 #dp-game-board-wrapper #dp-game-board-main #dp-game-board-park {
   width: 1000px;
@@ -436,6 +438,10 @@ body > .card {
 #dp-game-board-wrapper #dp-game-board-main #dp-game-board-field-wrapper #dp-game-board-offer-dials {
   display: flex;
   justify-content: space-evenly;
+  align-items: center;
+}
+#dp-game-board-wrapper #dp-game-board-main #dp-game-board-field-wrapper #dp-game-board-offer-dials .dp-player-walker-area {
+  width: 52px;
 }
 #dp-game-board-wrapper #dp-game-board-side {
   display: flex;
@@ -467,11 +473,18 @@ body > .card {
 #dp-game-board-wrapper #dp-game-board-side #dp-game-board-side-toggle-button {
   display: none;
 }
-#dp-game-board-wrapper #dp-game-board-side #dp-game-board-objectives {
+#dp-game-board-wrapper #dp-game-board-side #dp-game-board-breed-expert-awards {
   width: 322px;
   height: 1202px;
   background-image: url("img/dogpark-board-objectives.jpg");
   background-size: cover;
+}
+#dp-game-board-wrapper #dp-game-board-side #dp-game-board-breed-expert-awards #dp-game-board-breed-expert-awards-stock {
+  padding-top: 120px;
+  padding-right: 50px;
+}
+#dp-game-board-wrapper #dp-game-board-side #dp-game-board-breed-expert-awards #dp-game-board-breed-expert-awards-stock .slot {
+  height: 142px;
 }
 
 #dp-player-areas {
@@ -480,7 +493,12 @@ body > .card {
   flex-wrap: wrap;
   gap: 10px;
 }
-#dp-player-areas .dp-lead-board {
+#dp-player-areas .dp-player-area {
+  gap: 10px;
+  display: flex;
+  flex-direction: column;
+}
+#dp-player-areas .dp-player-area .dp-lead-board {
   background-image: url("img/dogpark-leadboards.jpg");
   background-size: auto 500%;
   width: 850px;
@@ -488,30 +506,31 @@ body > .card {
   display: flex;
   flex-direction: row;
 }
-#dp-player-areas .dp-lead-board .dp-lead-board-walker {
+#dp-player-areas .dp-player-area .dp-lead-board .dp-lead-board-walker {
   flex: 1;
   max-width: 224px;
   display: flex;
   align-items: center;
   justify-content: center;
 }
-#dp-player-areas .dp-lead-board .dp-lead-board-lead {
-  margin-top: 27px;
+#dp-player-areas .dp-player-area .dp-lead-board .dp-lead-board-lead {
+  margin: 27px 23px;
   flex: 1;
+  justify-content: right;
 }
-#dp-player-areas .dp-lead-board[data-color="#c45f5f"] {
+#dp-player-areas .dp-player-area .dp-lead-board[data-color="#c45f5f"] {
   background-position: 0 0%;
 }
-#dp-player-areas .dp-lead-board[data-color="#8b91ba"] {
+#dp-player-areas .dp-player-area .dp-lead-board[data-color="#8b91ba"] {
   background-position: 0 25%;
 }
-#dp-player-areas .dp-lead-board[data-color="#d2ce74"] {
+#dp-player-areas .dp-player-area .dp-lead-board[data-color="#d2ce74"] {
   background-position: 0 50%;
 }
-#dp-player-areas .dp-lead-board[data-color="#90beac"] {
+#dp-player-areas .dp-player-area .dp-lead-board[data-color="#90beac"] {
   background-position: 0 75%;
 }
-#dp-player-areas .dp-lead-board[data-color="#000000"] {
+#dp-player-areas .dp-player-area .dp-lead-board[data-color="#000000"] {
   background-position: 0 100%;
 }
 
@@ -523,13 +542,13 @@ body > .card {
 .dp-card-token {
   display: inline-block;
   position: relative;
-  width: 39.375px;
-  height: 33.75px;
+  width: 39.375px !important;
+  height: 33.75px !important;
 }
 .dp-card-token .card-sides .card-side {
   box-shadow: none;
-  width: 39.375px;
-  height: 33.75px;
+  width: 39.375px !important;
+  height: 33.75px !important;
 }
 .dp-card-token .card-sides .card-side > * {
   pointer-events: none;
@@ -724,21 +743,180 @@ body > .card {
   background-position: 50% 100%;
 }
 
-.dp-dog-card {
+.location-bonus-art {
+  background-image: url("img/dogpark-location-cards.jpg");
+  background-size: 400% auto;
+}
+.location-bonus-art.location-bonus-art-background {
+  background-position: 0 0;
+}
+.location-bonus-art.location-bonus-art-2 {
+  background-position: 33.3333333333% 0%;
+}
+.location-bonus-art.location-bonus-art-3 {
+  background-position: 66.6666666667% 0%;
+}
+.location-bonus-art.location-bonus-art-4 {
+  background-position: 100% 0%;
+}
+.location-bonus-art.location-bonus-art-5 {
+  background-position: 0% 25%;
+}
+.location-bonus-art.location-bonus-art-6 {
+  background-position: 33.3333333333% 25%;
+}
+.location-bonus-art.location-bonus-art-7 {
+  background-position: 66.6666666667% 25%;
+}
+.location-bonus-art.location-bonus-art-8 {
+  background-position: 100% 25%;
+}
+.location-bonus-art.location-bonus-art-9 {
+  background-position: 0% 50%;
+}
+.location-bonus-art.location-bonus-art-10 {
+  background-position: 33.3333333333% 50%;
+}
+.location-bonus-art.location-bonus-art-11 {
+  background-position: 66.6666666667% 50%;
+}
+.location-bonus-art.location-bonus-art-12 {
+  background-position: 100% 50%;
+}
+.location-bonus-art.location-bonus-art-13 {
+  background-position: 0% 75%;
+}
+.location-bonus-art.location-bonus-art-14 {
+  background-position: 33.3333333333% 75%;
+}
+.location-bonus-art.location-bonus-art-15 {
+  background-position: 66.6666666667% 75%;
+}
+.location-bonus-art.location-bonus-art-16 {
+  background-position: 100% 75%;
+}
+.location-bonus-art.location-bonus-art-17 {
+  background-position: 0% 100%;
+}
+.location-bonus-art.location-bonus-art-18 {
+  background-position: 33.3333333333% 100%;
+}
+.location-bonus-art.location-bonus-art-19 {
+  background-position: 66.6666666667% 100%;
+}
+.location-bonus-art.location-bonus-art-20 {
+  background-position: 100% 100%;
+}
+
+.breed-expert-art {
+  background-image: url("img/dogpark-breed-expert.jpg");
+  background-size: 400% auto;
+}
+.breed-expert-art.breed-expert-art-background {
+  background-position: 0 0;
+}
+.breed-expert-art.breed-expert-art-1 {
+  background-position: 33.3333333333% 0%;
+}
+.breed-expert-art.breed-expert-art-2 {
+  background-position: 66.6666666667% 0%;
+}
+.breed-expert-art.breed-expert-art-3 {
+  background-position: 100% 0%;
+}
+.breed-expert-art.breed-expert-art-4 {
+  background-position: 0% 100%;
+}
+.breed-expert-art.breed-expert-art-5 {
+  background-position: 33.3333333333% 100%;
+}
+.breed-expert-art.breed-expert-art-6 {
+  background-position: 66.6666666667% 100%;
+}
+.breed-expert-art.breed-expert-art-7 {
+  background-position: 100% 100%;
+}
+
+.forecast-art {
+  background-image: url("img/dogpark-forecast-cards.jpg");
+  background-size: 400% auto;
+}
+.forecast-art.forecast-art-background {
+  background-position: 0 0;
+}
+.forecast-art.forecast-art-1 {
+  background-position: 33.3333333333% 0%;
+}
+.forecast-art.forecast-art-2 {
+  background-position: 66.6666666667% 0%;
+}
+.forecast-art.forecast-art-3 {
+  background-position: 100% 0%;
+}
+.forecast-art.forecast-art-4 {
+  background-position: 0% 50%;
+}
+.forecast-art.forecast-art-5 {
+  background-position: 33.3333333333% 50%;
+}
+.forecast-art.forecast-art-6 {
+  background-position: 66.6666666667% 50%;
+}
+.forecast-art.forecast-art-7 {
+  background-position: 100% 50%;
+}
+.forecast-art.forecast-art-8 {
+  background-position: 0% 100%;
+}
+.forecast-art.forecast-art-9 {
+  background-position: 33.3333333333% 100%;
+}
+.forecast-art.forecast-art-10 {
+  background-position: 66.6666666667% 100%;
+}
+.forecast-art.forecast-art-11 {
+  background-position: 100% 100%;
+}
+
+.blackjack-size-portrait {
   display: inline-block;
   position: relative;
   border-radius: 5px;
   width: 195px;
   height: 266px;
 }
-.dp-dog-card .card-sides .card-side {
+.blackjack-size-portrait .card-sides .card-side {
   border-radius: 5px;
   width: 195px;
   height: 266px;
 }
-.dp-dog-card .card-sides .card-side > * {
+.blackjack-size-portrait .card-sides .card-side > * {
   pointer-events: none;
   user-select: none;
+}
+
+.mini-size-landscape {
+  display: inline-block;
+  position: relative;
+  border-radius: 5px;
+  width: 195px;
+  height: 142px;
+}
+.mini-size-landscape .card-sides .card-side {
+  border-radius: 5px;
+  width: 195px;
+  height: 142px;
+}
+.mini-size-landscape .card-sides .card-side > * {
+  pointer-events: none;
+  user-select: none;
+}
+
+.dp-dog-card-token-stock {
+  width: 160px;
+  height: 190px;
+  float: right;
+  align-items: center;
 }
 
 #dp-offer-dial-controls-wrapper {
@@ -755,8 +933,8 @@ body > .card {
 }
 
 .dp-dial {
-  width: 150px;
-  height: 150px;
+  width: 145px;
+  height: 145px;
 }
 .dp-dial[data-value="1"] .side-front-numbers {
   transform: rotate(300deg);
@@ -779,16 +957,16 @@ body > .card {
 }
 .dp-dial.side-front .side-front-numbers {
   position: absolute;
-  width: 150px;
-  height: 150px;
+  width: 145px;
+  height: 145px;
   background-image: url("img/dogpark-dial-numbers.png");
   background-size: cover;
   transition: transform 700ms;
 }
 .dp-dial.side-front .side-front-overlay {
   position: absolute;
-  width: 150px;
-  height: 150px;
+  width: 145px;
+  height: 145px;
   background-image: url("img/dogpark-dials-front.png");
   background-size: 500% auto;
   display: flex;

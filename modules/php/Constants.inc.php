@@ -5,13 +5,23 @@
  */
 
 const BASE_GAME = 'BASE_GAME';
-const BREED_TOY = 'toy';
 
+const BREED_GUNDOG      = 'gundog';
+const BREED_HOUND       = 'hound';
+const BREED_PASTORAL    = 'pastoral';
+const BREED_TERRIER     = 'terrier';
+const BREED_TOY         = 'toy';
+const BREED_UTILITY     = 'utility';
+const BREED_WORKING     = 'working';
+
+const WALKED = 'walked';
 const RESOURCE_STICK = 'stick';
 const RESOURCE_BALL = 'ball';
 const RESOURCE_TREAT = 'treat';
 const RESOURCE_TOY = 'toy';
-const RESOURCES = [RESOURCE_STICK, RESOURCE_BALL, RESOURCE_TREAT, RESOURCE_TOY];
+
+const LOCATION_BONUS_PLENTIFUL = 'plentiful';
+const LOCATION_BONUS_REROUTED = 'rerouted';
 
 
 // PHASES
@@ -59,6 +69,7 @@ const ACT_PLACE_DOG_ON_LEAD = 'placeDogOnLead';
 const ACT_PLACE_DOG_ON_LEAD_CANCEL = 'placeDogOnLeadCancel';
 const ACT_PLACE_DOG_ON_LEAD_PAY_RESOURCES = 'placeDogOnLeadPayResources';
 const ACT_CONFIRM_SELECTION = 'confirmSelection';
+const ACT_CHANGE_SELECTION = 'changeSelection';
 const ACT_UNDO = 'undo';
 
 /**
@@ -72,11 +83,12 @@ const LOCATION_FIELD_3 = 'field_3';
 const LOCATION_FIELD_4 = 'field_4';
 const LOCATION_FIELD_5 = 'field_5';
 
-const LOCATION_FIELDS = [LOCATION_FIELD_1, LOCATION_FIELD_2, LOCATION_FIELD_3, LOCATION_FIELD_4, LOCATION_FIELD_5];
-
 const LOCATION_DISCARD = 'discard';
 const LOCATION_PLAYER = 'player';
 const LOCATION_LEAD = 'lead';
+
+const LOCATION_BREED_EXPERT_AWARDS = 'breed_expert';
+const LOCATION_FORECAST = 'forecast';
 
 /**
  * Global variables

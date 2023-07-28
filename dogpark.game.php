@@ -39,6 +39,8 @@ require_once('modules/php/commands/BaseCommand.php');
 require_once('modules/php/commands/PlaceDogOnLeadCommand.php');
 
 require_once('modules/php/objects/Card.php');
+require_once('modules/php/objects/BreedExpertCard.php');
+require_once('modules/php/objects/ForecastCard.php');
 require_once('modules/php/objects/DogCard.php');
 require_once('modules/php/objects/DogWalker.php');
 
@@ -52,6 +54,8 @@ require_once('modules/php/traits/SetupTrait.php');
 require_once('modules/php/DogField.php');
 require_once('modules/php/DogManager.php');
 require_once('modules/php/PlayerManager.php');
+require_once('modules/php/DogBreedExpertAwardManager.php');
+require_once('modules/php/ForecastManager.php');
 
 class DogPark extends Table
 {
@@ -67,12 +71,17 @@ class DogPark extends Table
     // CARDS & TOKENS
     public Deck $dogCards;
     public Deck $dogWalkers;
+    public Deck $breedCards;
+    public Deck $forecastCards;
+    public Deck $locationBonusCards;
 
     // MANAGERS
     public CommandManager $commandManager;
     public PlayerManager $playerManager;
     public DogField $dogField;
     public DogManager $dogManager;
+    public DogBreedExpertAwardManager $breedExpertAwardManager;
+    public ForecastManager $forecastManager;
 
     function __construct( )
 	{
@@ -96,10 +105,21 @@ class DogPark extends Table
         $this->dogWalkers = self::getNew("module.common.deck");
         $this->dogWalkers->init('walker');
 
+        $this->breedCards = self::getNew("module.common.deck");
+        $this->breedCards->init('breed');
+
+        $this->forecastCards = self::getNew("module.common.deck");
+        $this->forecastCards->init('forecast');
+
+        $this->locationBonusCards = self::getNew("module.common.deck");
+        $this->locationBonusCards->init('location_bonus');
+
         $this->commandManager = new CommandManager();
         $this->playerManager = new PlayerManager();
         $this->dogField = new DogField();
         $this->dogManager = new DogManager();
+        $this->breedExpertAwardManager = new DogBreedExpertAwardManager();
+        $this->forecastManager = new ForecastManager();
     }
 	
     protected function getGameName( )
@@ -142,6 +162,8 @@ class DogPark extends Table
             'dogs' => $this->dogField->getDogCards(),
             'walkers' => $this->dogField->getWalkers()
         ];
+        $result['breedExpertAwards'] = $this->breedExpertAwardManager->getExpertAwards();
+        $result['forecastCards'] = $this->forecastManager->getForeCastCards();
 
         $result['currentRound'] = $this->getGlobalVariable(CURRENT_ROUND);
         $result['currentPhase'] = $this->getGlobalVariable(CURRENT_PHASE);

@@ -8,14 +8,14 @@
 .dp-card-token {
   display: inline-block;
   position: relative;
-  width: 39.375px;
-  height: 33.75px;
+  width: 39.375px !important;
+  height: 33.75px !important;
 
   .card-sides {
     .card-side {
       box-shadow: none;
-      width: 39.375px;
-      height: 33.75px;
+      width: 39.375px !important;
+      height: 33.75px !important;
 
       & > * {
         pointer-events: none;

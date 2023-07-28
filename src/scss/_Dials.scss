@@ -1,5 +1,7 @@
 @use "sass:list";
 
+@import 'Variables';
+
 #dp-offer-dial-controls-wrapper {
   display: flex;
   justify-content: center;
@@ -14,8 +16,8 @@
 }
 
 .dp-dial {
-  width: 150px;
-  height: 150px;
+  width: $offer-dial-size;
+  height: $offer-dial-size;
 
   @for $i from 1 through 5 {
     &[data-value="#{$i}"] {
@@ -31,8 +33,8 @@
 
     .side-front-numbers {
       position: absolute;
-      width: 150px;
-      height: 150px;
+      width: $offer-dial-size;
+      height: $offer-dial-size;
       background-image: url("img/dogpark-dial-numbers.png");
       background-size: cover;
       transition: transform 700ms;
@@ -40,8 +42,8 @@
 
     .side-front-overlay {
       position: absolute;
-      width: 150px;
-      height: 150px;
+      width: $offer-dial-size;
+      height: $offer-dial-size;
       background-image: url("img/dogpark-dials-front.png");
       background-size: 500% auto;
 

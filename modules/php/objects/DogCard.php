@@ -16,10 +16,14 @@ class DogCard extends Card {
     public array $breeds;
     public array $costs;
 
+    public array $resourcesOnCard;
+
     public function __construct($dbCard)
     {
         parent::__construct($dbCard);
         $this->name = DogPark::$instance->DOG_CARDS[$this->type][intval($this->typeArg)]['name'];
+
+        $this->resourcesOnCard = DogPark::$instance->dogManager->getDogResources($this->id);
     }
 
     /**

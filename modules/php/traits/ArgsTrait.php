@@ -40,12 +40,11 @@ trait ArgsTrait
 
     function argSelectionPlaceDogOnLead($playerId): array
     {
-        $maxNumberOfDogs = 4; // TODO can sometimes be 4 (forecast cards)
-
         return [
             "canCancelMoves" => DogPark::$instance->commandManager->hasCommands($playerId),
             "playerId" => $playerId,
-            "maxNumberOfDogs" => $maxNumberOfDogs,
+            "maxNumberOfDogs" => DogPark::$instance->forecastManager->getCurrentRoundMaxNumberOfDogsForSelection(),
+            "numberOfDogsOnlead" => sizeof(DogPark::$instance->dogCards->getCardsInLocation(LOCATION_LEAD, $playerId)),
             "dogs" => DogPark::$instance->dogManager->getDogsForSelection($playerId)
         ];
     }
@@ -59,6 +58,8 @@ trait ArgsTrait
             "playerId" => $playerId,
             "dog" => $dog,
             "dogName" => $dog->name,
+            "maxNumberOfDogs" => DogPark::$instance->forecastManager->getCurrentRoundMaxNumberOfDogsForSelection(),
+            "numberOfDogsOnlead" => sizeof(DogPark::$instance->dogCards->getCardsInLocation(LOCATION_LEAD, $playerId)),
             "resources" => DogPark::$instance->playerManager->getResources($playerId)
         ];
     }
@@ -68,6 +69,8 @@ trait ArgsTrait
         return [
             "canCancelMoves" => DogPark::$instance->commandManager->hasCommands($playerId),
             "playerId" => $playerId,
+            "maxNumberOfDogs" => DogPark::$instance->forecastManager->getCurrentRoundMaxNumberOfDogsForSelection(),
+            "numberOfDogsOnlead" => sizeof(DogPark::$instance->dogCards->getCardsInLocation(LOCATION_LEAD, $playerId)),
         ];
     }
 
