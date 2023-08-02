@@ -29,7 +29,7 @@
 
   @for $row from 0 through 4 {
     @for $column from 0 through 3 {
-      $id: ($row * 4) + ($column + 1);
+      $id: ($row * 4) + ($column + 1) - 1;
       @if $id > 1 {
         &.location-bonus-art-#{$id} {
           background-position: #{$column * math.div(100%, 3)} #{$row * math.div(100%, 4)};

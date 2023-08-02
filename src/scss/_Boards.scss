@@ -60,17 +60,25 @@
       background-image: url("img/dogpark-board-park.jpg");
       background-size: cover;
 
+      #dp-game-board-park-location-card-deck {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+      }
+
 
       #dp-game-board-park {
         display: flex;
+        align-items: end;
 
         .dp-walk-trail {
           display: flex;
           gap: 16px;
+          height: 570px;
 
           &.start {
             width: 75px;
-            height: 570px;
+            height: 355px;
             flex-direction: column;
             justify-content: center;
             align-items: center;
@@ -85,14 +93,57 @@
             .dp-walk-spot {
               border-radius: 15px;
               width: 70px;
-              height: 275px;
+              height: 225px;
+              display: flex;
+              justify-content: end;
+              flex-direction: column;
+              align-items: center;
+              position: relative;
+
+              .dp-resource-spot {
+                position: absolute;
+                bottom: 65px;
+              }
+
+              .spot-label {
+                position: absolute;
+                bottom: 0;
+              }
+
+              .dp-walker-spot {
+                padding-left: 5px;
+                padding-bottom: 65px;
+                height: 175px;
+                .dp-dog-walker-token {
+                  position: relative;
+                  height: 35px;
+                  .card-sides {
+                    .card-side {
+                      top: unset;
+                    }
+                  }
+                }
+              }
+
               &[data-spot-id="5"],&[data-spot-id="7"],&[data-spot-id="9"],&[data-spot-id="11"], &[data-spot-id="13"] {
-                height: 200px;
-                margin-bottom: 75px;
+                height: 150px;
+                margin-bottom: 125px;
+                .dp-walker-spot {
+                  height: 100px;
+                  .dp-dog-walker-token {
+                    height: 20px;
+                  }
+                }
               }
 
               &[data-spot-id="15"] {
                 height: 190px;
+                .dp-walker-spot {
+                  height: 100px;
+                  .dp-dog-walker-token {
+                    height: 20px;
+                  }
+                }
               }
 
               &.selectable {

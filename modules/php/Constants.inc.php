@@ -14,11 +14,16 @@ const BREED_TOY         = 'toy';
 const BREED_UTILITY     = 'utility';
 const BREED_WORKING     = 'working';
 
-const WALKED = 'walked';
 const RESOURCE_STICK = 'stick';
 const RESOURCE_BALL = 'ball';
 const RESOURCE_TREAT = 'treat';
 const RESOURCE_TOY = 'toy';
+
+const WALKED = 'walked';
+const BLOCK = 'block';
+const REPUTATION = 'reputation';
+const SWAP = 'swap';
+const SCOUT = 'scout';
 
 const LOCATION_BONUS_PLENTIFUL = 'plentiful';
 const LOCATION_BONUS_REROUTED = 'rerouted';

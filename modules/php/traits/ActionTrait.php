@@ -64,7 +64,7 @@ trait ActionTrait
         $this->dogWalkers->moveAllCardsInLocation(LOCATION_PLAYER, 'field_'.$dog->locationArg, $activePlayerId, $locationArgForWalker);
         $this->updatePlayerOfferValue($activePlayerId, $offerValue);
 
-        $this->notifyAllPlayers('dogOfferPlaced', '${player_name} places an offer on <b>${dogName}</b>',[
+        $this->notifyAllPlayers('dogOfferPlaced', clienttranslate('${player_name} places an offer on <b>${dogName}</b>'),[
             'i18n' => ['dogName'],
             'playerId' => $activePlayerId,
             'player_name' => $this->getPlayerName($activePlayerId),
@@ -89,7 +89,7 @@ trait ActionTrait
 
         $this->updatePlayerOfferValue($activePlayerId, 0);
 
-        $this->notifyAllPlayers('gameLog', '${player_name} can not place an offer (insufficient reputation)',[
+        $this->notifyAllPlayers('gameLog', clienttranslate('${player_name} can not place an offer (insufficient reputation)'),[
             'playerId' => $activePlayerId,
             'player_name' => $this->getPlayerName($activePlayerId),
         ]);
@@ -178,7 +178,7 @@ trait ActionTrait
             }
         }
 
-        $this->notifyAllPlayers('gameLog', '${player_name} confirms selection',[
+        $this->notifyAllPlayers('gameLog', clienttranslate('${player_name} confirms selection'),[
             'playerId' => $this->getCurrentPlayerId(),
             'player_name' => $this->getPlayerName($this->getCurrentPlayerId()),
         ]);
@@ -188,7 +188,7 @@ trait ActionTrait
     }
 
     function changeSelection() {
-        $this->notifyAllPlayers('gameLog', '${player_name} wants to change the selection',[
+        $this->notifyAllPlayers('gameLog', clienttranslate('${player_name} wants to change the selection'),[
             'playerId' => $this->getCurrentPlayerId(),
             'player_name' => $this->getPlayerName($this->getCurrentPlayerId()),
         ]);

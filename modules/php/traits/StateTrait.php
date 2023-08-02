@@ -27,7 +27,7 @@ trait StateTrait
             $chosenObjectiveCards[] = ['playerId' => $playerId, 'cardId' => intval($objectiveCardId)];
         }
 
-        $this->notifyAllPlayers('objectivesChosen', 'All players have chosen an objective card',[
+        $this->notifyAllPlayers('objectivesChosen', clienttranslate('All players have chosen an objective card'),[
             'chosenObjectiveCards' => $chosenObjectiveCards
         ]);
         $this->gamestate->nextState("");

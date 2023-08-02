@@ -37,7 +37,10 @@
                 </div>
             </div>
             <div id="dp-game-board-park-wrapper" class="dp-board" style="order: 11;" >
-                <div id="dp-game-board-park"></div>
+                <div id="dp-game-board-park">
+
+                </div>
+                <div id="dp-game-board-park-location-card-deck"></div>
             </div>
             <div id="dp-game-board-field-wrapper" style="order: 12;">
                 <div id="dp-game-board-field" class="dp-board"></div>

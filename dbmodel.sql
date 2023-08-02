@@ -106,6 +106,14 @@ CREATE TABLE IF NOT EXISTS `walker` (
   PRIMARY KEY (`card_id`)
   ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
 
+
+CREATE TABLE IF NOT EXISTS `extra_location_bonus` (
+    `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+    `location_id` int(10) unsigned NOT NULL,
+    `bonus` varchar(16) NOT NULL,
+    PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
+
 ALTER TABLE `player` ADD `player_offer_value` INT UNSIGNED NULL;
 ALTER TABLE `player` ADD `player_custom_order` INT UNSIGNED NOT NULL DEFAULT '0';
 ALTER TABLE `player` ADD `player_sticks` INT UNSIGNED NOT NULL DEFAULT '0';

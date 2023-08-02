@@ -55,6 +55,7 @@ trait SetupTrait
 
         /************ Start the game initialization *****/
         $this->dogField->fillField();
+        $this->dogWalkPark->drawLocationBonusCardAndFillPark();
         $this->breedExpertAwardManager->fillExpertAwards();
         $this->forecastManager->fillForecast();
         $this->playerManager->dealObjectiveCardsToPlayers();
@@ -105,10 +106,9 @@ trait SetupTrait
 
     private function createLocationBonusCards() {
         $cards = array();
-        foreach ($this->LOCATION_BONUS_CARDS as $locationBonusType => $locationBonusCards) {
-            foreach ($locationBonusCards as $id => $locationBonusCard) {
-                $cards[] = array( 'type' => $locationBonusType, 'type_arg' => $id, 'nbr' => 1);
-            }
+        $locationBonusType = $this->determineLocationBonusCardsToUse();
+        foreach ($this->LOCATION_BONUS_CARDS[$locationBonusType] as $id => $locationBonusCard) {
+            $cards[] = array( 'type' => $locationBonusType, 'type_arg' => $id, 'nbr' => 1);
         }
 
         $this->locationBonusCards->createCards($cards, LOCATION_DECK);
@@ -125,5 +125,13 @@ trait SetupTrait
 
         $this->objectiveCards->createCards($cards, LOCATION_DECK);
         $this->objectiveCards->shuffle(LOCATION_DECK);
+    }
+
+    private function determineLocationBonusCardsToUse() {
+        if ($this->getPlayersNumber() === 4) {
+            return LOCATION_BONUS_PLENTIFUL;
+        } else {
+            return LOCATION_BONUS_REROUTED;
+        }
     }
 }

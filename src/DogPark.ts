@@ -35,6 +35,7 @@ class DogPark implements DogParkGame {
     public breedExpertAwardManager: BreedExpertAwardManager;
     public forecastManager: ForecastManager;
     public objectiveCardManager: ObjectiveCardManager;
+    public locationBonusCardManager: LocationBonusCardManager;
 
     // Modules
     private dogField: DogField;
@@ -51,6 +52,7 @@ class DogPark implements DogParkGame {
         this.breedExpertAwardManager = new BreedExpertAwardManager(this);
         this.forecastManager = new ForecastManager(this);
         this.objectiveCardManager = new ObjectiveCardManager(this);
+        this.locationBonusCardManager = new LocationBonusCardManager(this);
 
         // Init Modules
         this.dogField = new DogField(this);

@@ -77,7 +77,8 @@ trait ArgsTrait
 
     function argWalkingMoveWalker(): array
     {
-        return [];
+        return [
+        ];
     }
 
     function getRecruitmentRoundArg() {

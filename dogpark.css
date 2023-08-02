@@ -380,16 +380,23 @@ body > .card {
   background-image: url("img/dogpark-board-park.jpg");
   background-size: cover;
 }
+#dp-game-board-wrapper #dp-game-board-main #dp-game-board-park-wrapper #dp-game-board-park-location-card-deck {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+}
 #dp-game-board-wrapper #dp-game-board-main #dp-game-board-park-wrapper #dp-game-board-park {
   display: flex;
+  align-items: end;
 }
 #dp-game-board-wrapper #dp-game-board-main #dp-game-board-park-wrapper #dp-game-board-park .dp-walk-trail {
   display: flex;
   gap: 16px;
+  height: 570px;
 }
 #dp-game-board-wrapper #dp-game-board-main #dp-game-board-park-wrapper #dp-game-board-park .dp-walk-trail.start {
   width: 75px;
-  height: 570px;
+  height: 355px;
   flex-direction: column;
   justify-content: center;
   align-items: center;
@@ -404,14 +411,51 @@ body > .card {
 #dp-game-board-wrapper #dp-game-board-main #dp-game-board-park-wrapper #dp-game-board-park .dp-walk-trail .dp-park-column .dp-walk-spot {
   border-radius: 15px;
   width: 70px;
-  height: 275px;
+  height: 225px;
+  display: flex;
+  justify-content: end;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+#dp-game-board-wrapper #dp-game-board-main #dp-game-board-park-wrapper #dp-game-board-park .dp-walk-trail .dp-park-column .dp-walk-spot .dp-resource-spot {
+  position: absolute;
+  bottom: 65px;
+}
+#dp-game-board-wrapper #dp-game-board-main #dp-game-board-park-wrapper #dp-game-board-park .dp-walk-trail .dp-park-column .dp-walk-spot .spot-label {
+  position: absolute;
+  bottom: 0;
+}
+#dp-game-board-wrapper #dp-game-board-main #dp-game-board-park-wrapper #dp-game-board-park .dp-walk-trail .dp-park-column .dp-walk-spot .dp-walker-spot {
+  padding-left: 5px;
+  padding-bottom: 65px;
+  height: 175px;
+}
+#dp-game-board-wrapper #dp-game-board-main #dp-game-board-park-wrapper #dp-game-board-park .dp-walk-trail .dp-park-column .dp-walk-spot .dp-walker-spot .dp-dog-walker-token {
+  position: relative;
+  height: 35px;
+}
+#dp-game-board-wrapper #dp-game-board-main #dp-game-board-park-wrapper #dp-game-board-park .dp-walk-trail .dp-park-column .dp-walk-spot .dp-walker-spot .dp-dog-walker-token .card-sides .card-side {
+  top: unset;
 }
 #dp-game-board-wrapper #dp-game-board-main #dp-game-board-park-wrapper #dp-game-board-park .dp-walk-trail .dp-park-column .dp-walk-spot[data-spot-id="5"], #dp-game-board-wrapper #dp-game-board-main #dp-game-board-park-wrapper #dp-game-board-park .dp-walk-trail .dp-park-column .dp-walk-spot[data-spot-id="7"], #dp-game-board-wrapper #dp-game-board-main #dp-game-board-park-wrapper #dp-game-board-park .dp-walk-trail .dp-park-column .dp-walk-spot[data-spot-id="9"], #dp-game-board-wrapper #dp-game-board-main #dp-game-board-park-wrapper #dp-game-board-park .dp-walk-trail .dp-park-column .dp-walk-spot[data-spot-id="11"], #dp-game-board-wrapper #dp-game-board-main #dp-game-board-park-wrapper #dp-game-board-park .dp-walk-trail .dp-park-column .dp-walk-spot[data-spot-id="13"] {
-  height: 200px;
-  margin-bottom: 75px;
+  height: 150px;
+  margin-bottom: 125px;
+}
+#dp-game-board-wrapper #dp-game-board-main #dp-game-board-park-wrapper #dp-game-board-park .dp-walk-trail .dp-park-column .dp-walk-spot[data-spot-id="5"] .dp-walker-spot, #dp-game-board-wrapper #dp-game-board-main #dp-game-board-park-wrapper #dp-game-board-park .dp-walk-trail .dp-park-column .dp-walk-spot[data-spot-id="7"] .dp-walker-spot, #dp-game-board-wrapper #dp-game-board-main #dp-game-board-park-wrapper #dp-game-board-park .dp-walk-trail .dp-park-column .dp-walk-spot[data-spot-id="9"] .dp-walker-spot, #dp-game-board-wrapper #dp-game-board-main #dp-game-board-park-wrapper #dp-game-board-park .dp-walk-trail .dp-park-column .dp-walk-spot[data-spot-id="11"] .dp-walker-spot, #dp-game-board-wrapper #dp-game-board-main #dp-game-board-park-wrapper #dp-game-board-park .dp-walk-trail .dp-park-column .dp-walk-spot[data-spot-id="13"] .dp-walker-spot {
+  height: 100px;
+}
+#dp-game-board-wrapper #dp-game-board-main #dp-game-board-park-wrapper #dp-game-board-park .dp-walk-trail .dp-park-column .dp-walk-spot[data-spot-id="5"] .dp-walker-spot .dp-dog-walker-token, #dp-game-board-wrapper #dp-game-board-main #dp-game-board-park-wrapper #dp-game-board-park .dp-walk-trail .dp-park-column .dp-walk-spot[data-spot-id="7"] .dp-walker-spot .dp-dog-walker-token, #dp-game-board-wrapper #dp-game-board-main #dp-game-board-park-wrapper #dp-game-board-park .dp-walk-trail .dp-park-column .dp-walk-spot[data-spot-id="9"] .dp-walker-spot .dp-dog-walker-token, #dp-game-board-wrapper #dp-game-board-main #dp-game-board-park-wrapper #dp-game-board-park .dp-walk-trail .dp-park-column .dp-walk-spot[data-spot-id="11"] .dp-walker-spot .dp-dog-walker-token, #dp-game-board-wrapper #dp-game-board-main #dp-game-board-park-wrapper #dp-game-board-park .dp-walk-trail .dp-park-column .dp-walk-spot[data-spot-id="13"] .dp-walker-spot .dp-dog-walker-token {
+  height: 20px;
 }
 #dp-game-board-wrapper #dp-game-board-main #dp-game-board-park-wrapper #dp-game-board-park .dp-walk-trail .dp-park-column .dp-walk-spot[data-spot-id="15"] {
   height: 190px;
+}
+#dp-game-board-wrapper #dp-game-board-main #dp-game-board-park-wrapper #dp-game-board-park .dp-walk-trail .dp-park-column .dp-walk-spot[data-spot-id="15"] .dp-walker-spot {
+  height: 100px;
+}
+#dp-game-board-wrapper #dp-game-board-main #dp-game-board-park-wrapper #dp-game-board-park .dp-walk-trail .dp-park-column .dp-walk-spot[data-spot-id="15"] .dp-walker-spot .dp-dog-walker-token {
+  height: 20px;
 }
 #dp-game-board-wrapper #dp-game-board-main #dp-game-board-park-wrapper #dp-game-board-park .dp-walk-trail .dp-park-column .dp-walk-spot.selectable {
   outline: 4px rgba(80, 200, 255, 0.75) solid;
@@ -792,60 +836,57 @@ body > .card {
   background-position: 0 0;
 }
 .location-bonus-art.location-bonus-art-2 {
-  background-position: 33.3333333333% 0%;
-}
-.location-bonus-art.location-bonus-art-3 {
   background-position: 66.6666666667% 0%;
 }
-.location-bonus-art.location-bonus-art-4 {
+.location-bonus-art.location-bonus-art-3 {
   background-position: 100% 0%;
 }
-.location-bonus-art.location-bonus-art-5 {
+.location-bonus-art.location-bonus-art-4 {
   background-position: 0% 25%;
 }
-.location-bonus-art.location-bonus-art-6 {
+.location-bonus-art.location-bonus-art-5 {
   background-position: 33.3333333333% 25%;
 }
-.location-bonus-art.location-bonus-art-7 {
+.location-bonus-art.location-bonus-art-6 {
   background-position: 66.6666666667% 25%;
 }
-.location-bonus-art.location-bonus-art-8 {
+.location-bonus-art.location-bonus-art-7 {
   background-position: 100% 25%;
 }
-.location-bonus-art.location-bonus-art-9 {
+.location-bonus-art.location-bonus-art-8 {
   background-position: 0% 50%;
 }
-.location-bonus-art.location-bonus-art-10 {
+.location-bonus-art.location-bonus-art-9 {
   background-position: 33.3333333333% 50%;
 }
-.location-bonus-art.location-bonus-art-11 {
+.location-bonus-art.location-bonus-art-10 {
   background-position: 66.6666666667% 50%;
 }
-.location-bonus-art.location-bonus-art-12 {
+.location-bonus-art.location-bonus-art-11 {
   background-position: 100% 50%;
 }
-.location-bonus-art.location-bonus-art-13 {
+.location-bonus-art.location-bonus-art-12 {
   background-position: 0% 75%;
 }
-.location-bonus-art.location-bonus-art-14 {
+.location-bonus-art.location-bonus-art-13 {
   background-position: 33.3333333333% 75%;
 }
-.location-bonus-art.location-bonus-art-15 {
+.location-bonus-art.location-bonus-art-14 {
   background-position: 66.6666666667% 75%;
 }
-.location-bonus-art.location-bonus-art-16 {
+.location-bonus-art.location-bonus-art-15 {
   background-position: 100% 75%;
 }
-.location-bonus-art.location-bonus-art-17 {
+.location-bonus-art.location-bonus-art-16 {
   background-position: 0% 100%;
 }
-.location-bonus-art.location-bonus-art-18 {
+.location-bonus-art.location-bonus-art-17 {
   background-position: 33.3333333333% 100%;
 }
-.location-bonus-art.location-bonus-art-19 {
+.location-bonus-art.location-bonus-art-18 {
   background-position: 66.6666666667% 100%;
 }
-.location-bonus-art.location-bonus-art-20 {
+.location-bonus-art.location-bonus-art-19 {
   background-position: 100% 100%;
 }
 

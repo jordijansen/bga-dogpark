@@ -43,6 +43,8 @@ require_once('modules/php/objects/Card.php');
 require_once('modules/php/objects/BreedExpertCard.php');
 require_once('modules/php/objects/ForecastCard.php');
 require_once('modules/php/objects/ObjectiveCard.php');
+require_once('modules/php/objects/LocationBonusCard.php');
+require_once('modules/php/objects/LocationBonus.php');
 require_once('modules/php/objects/DogCard.php');
 require_once('modules/php/objects/DogWalker.php');
 
@@ -176,7 +178,9 @@ class DogPark extends Table
         ];
 
         $result['park'] = [
-            'walkers' => $this->dogWalkPark->getWalkers()
+            'walkers' => $this->dogWalkPark->getWalkers(),
+            'locationBonusCards' => $this->dogWalkPark->getLocationBonusCards(),
+            'extraLocationBonuses' => $this->dogWalkPark->getAllLocationBonuses()
         ];
 
         $result['breedExpertAwards'] = $this->breedExpertAwardManager->getExpertAwards();
