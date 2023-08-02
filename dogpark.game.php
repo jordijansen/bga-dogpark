@@ -23,6 +23,7 @@ use managers\PlayerManager;
 use objects\DogCard;
 use objects\DogWalker;
 
+use objects\ObjectiveCard;
 use traits\ActionTrait;
 use traits\ArgsTrait;
 use traits\DebugTrait;
@@ -41,6 +42,7 @@ require_once('modules/php/commands/PlaceDogOnLeadCommand.php');
 require_once('modules/php/objects/Card.php');
 require_once('modules/php/objects/BreedExpertCard.php');
 require_once('modules/php/objects/ForecastCard.php');
+require_once('modules/php/objects/ObjectiveCard.php');
 require_once('modules/php/objects/DogCard.php');
 require_once('modules/php/objects/DogWalker.php');
 
@@ -52,6 +54,7 @@ require_once('modules/php/traits/DebugTrait.php');
 require_once('modules/php/traits/SetupTrait.php');
 
 require_once('modules/php/DogField.php');
+require_once('modules/php/DogWalkPark.php');
 require_once('modules/php/DogManager.php');
 require_once('modules/php/PlayerManager.php');
 require_once('modules/php/DogBreedExpertAwardManager.php');
@@ -74,11 +77,13 @@ class DogPark extends Table
     public Deck $breedCards;
     public Deck $forecastCards;
     public Deck $locationBonusCards;
+    public Deck $objectiveCards;
 
     // MANAGERS
     public CommandManager $commandManager;
     public PlayerManager $playerManager;
     public DogField $dogField;
+    public DogWalkPark $dogWalkPark;
     public DogManager $dogManager;
     public DogBreedExpertAwardManager $breedExpertAwardManager;
     public ForecastManager $forecastManager;
@@ -114,9 +119,13 @@ class DogPark extends Table
         $this->locationBonusCards = self::getNew("module.common.deck");
         $this->locationBonusCards->init('location_bonus');
 
+        $this->objectiveCards = self::getNew("module.common.deck");
+        $this->objectiveCards->init('objective');
+
         $this->commandManager = new CommandManager();
         $this->playerManager = new PlayerManager();
         $this->dogField = new DogField();
+        $this->dogWalkPark = new DogWalkPark();
         $this->dogManager = new DogManager();
         $this->breedExpertAwardManager = new DogBreedExpertAwardManager();
         $this->forecastManager = new ForecastManager();
@@ -155,6 +164,9 @@ class DogPark extends Table
             $player['leadDogs'] = DogCard::fromArray($this->dogCards->getCardsInLocation(LOCATION_LEAD, $playerId));
             $player['offerValue'] = $current_player_id == $playerId || $offerValueRevealed ? $this->getPlayerOfferValue($playerId) : 0;
             $player['resources'] = $this->playerManager->getResources($playerId);
+            $player['objectives'] = ObjectiveCard::fromArray($this->objectiveCards->getCardsInLocation(LOCATION_PLAYER, $playerId), $playerId != $current_player_id);
+            $player['selectedObjectiveCardId'] = $this->getGlobalVariable(OBJECTIVE_ID_ .$playerId);
+            $player['chosenObjective'] = current(ObjectiveCard::fromArray($this->objectiveCards->getCardsInLocation(LOCATION_SELECTED, $playerId), $playerId != $current_player_id));
         }
 
         $result['field'] = [
@@ -162,6 +174,11 @@ class DogPark extends Table
             'dogs' => $this->dogField->getDogCards(),
             'walkers' => $this->dogField->getWalkers()
         ];
+
+        $result['park'] = [
+            'walkers' => $this->dogWalkPark->getWalkers()
+        ];
+
         $result['breedExpertAwards'] = $this->breedExpertAwardManager->getExpertAwards();
         $result['forecastCards'] = $this->forecastManager->getForeCastCards();
 

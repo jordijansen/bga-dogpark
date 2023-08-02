@@ -4,6 +4,7 @@ class PlayerArea {
     private kennelStocks: {[playerId: number]: LineStock<DogCard>} = {}
     private leadStocks: {[playerId: number]: LineStock<DogCard>} = {}
     private playerDials: {[playerId: number]: DogOfferDial} = {}
+    private playerObjective: {[playerId: number]: LineStock<Card>} = {}
 
     constructor(private game: DogParkGame) {}
 
@@ -47,7 +48,17 @@ class PlayerArea {
                 initialValue: player.offerValue
             });
 
+            const objectiveStockId = `dp-player-objective-card-${player.id}`;
+            this.playerObjective[Number(player.id)] = new LineStock(this.game.objectiveCardManager, $(objectiveStockId), {})
+            this.moveObjectiveToPlayer(Number(player.id), player.chosenObjective);
         }
+    }
+
+    public moveObjectiveToPlayer(playerId: number, objectiveCard: Card) {
+        if (objectiveCard) {
+            return this.playerObjective[playerId].addCard(objectiveCard);
+        }
+        return Promise.resolve(true);
     }
 
     public moveWalkerToPlayer(playerId: number, walker?: DogWalker) {
@@ -98,6 +109,9 @@ class PlayerArea {
     }
 
     private createPlayerPanels(player: DogParkPlayer) {
-        dojo.place( `<div id="dp-player-resources-${player.id}" class="dp-player-resources"><div id="dp-player-dummy-resources-${player.id}" style="height: 0; width: 0; overflow: hidden;"></div></div>`, `player_board_${player.id}`);
+        dojo.place( `<div id="dp-player-resources-${player.id}" class="dp-player-resources">
+                            <div id="dp-player-dummy-resources-${player.id}" style="height: 0; width: 0; overflow: hidden;"></div>
+                          </div>
+                          <div id="dp-player-objective-card-${player.id}"  class="dp-player-objective-card"></div>`, `player_board_${player.id}`);
     }
 }

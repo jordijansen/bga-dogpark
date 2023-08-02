@@ -21,7 +21,7 @@ class DogPayCosts {
 
         Object.entries(this.dog.costs).forEach(([resource, cost]) => {
             for (let i = 0; i < cost; i++) {
-                if (this.remainingResources[resource] >= this.dog.costs[resource]) {
+                if (this.remainingResources[resource] >= 1) {
                     this.remainingResources[resource] -= 1;
                     this.selectedPayment.push({resource: resource, payUsing: [resource]});
                 } else {
@@ -69,13 +69,6 @@ class DogPayCosts {
     }
 
     private createResourceButtons() {
-        let stillNeedResources = false;
-        this.selectedPayment.forEach((costRow) => {
-            if(costRow.payUsing.includes('placeholder')) {
-                stillNeedResources = true;
-            }
-        });
-
         let result = `<div class="dp-dog-cost-pay-row">`;
         Object.entries(this.remainingResources)
             .forEach(([resource, nr]) => {
@@ -103,14 +96,14 @@ class DogPayCosts {
 
     private useResource(resource: string) {
         console.log('useResource');
-        this.selectedPayment.forEach((costRow) => {
+        for (const costRow of this.selectedPayment) {
             const indexOf = costRow.payUsing.indexOf('placeholder');
             if (indexOf >= 0) {
                 this.remainingResources[resource] -= 1;
                 costRow.payUsing[indexOf] = resource;
                 this.updateUi();
-                return;
+                break;
             }
-        });
+        }
     }
 }

@@ -54,11 +54,68 @@
       }
     }
 
-    #dp-game-board-park {
+    #dp-game-board-park-wrapper {
       width: 1000px;
       height: 570px;
       background-image: url("img/dogpark-board-park.jpg");
       background-size: cover;
+
+
+      #dp-game-board-park {
+        display: flex;
+
+        .dp-walk-trail {
+          display: flex;
+          gap: 16px;
+
+          &.start {
+            width: 75px;
+            height: 570px;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 2px;
+          }
+
+          .dp-park-column {
+            padding-bottom: 15px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            .dp-walk-spot {
+              border-radius: 15px;
+              width: 70px;
+              height: 275px;
+              &[data-spot-id="5"],&[data-spot-id="7"],&[data-spot-id="9"],&[data-spot-id="11"], &[data-spot-id="13"] {
+                height: 200px;
+                margin-bottom: 75px;
+              }
+
+              &[data-spot-id="15"] {
+                height: 190px;
+              }
+
+              &.selectable {
+                outline: 4px rgba(80, 200, 255, 0.75) solid;
+                cursor: pointer;
+              }
+
+              &.selected {
+                outline: 4px rgba(124, 252, 0, 0.75) solid;
+                cursor: pointer;
+              }
+            }
+          }
+
+          #dp-walk-leaving-park-spaces {
+
+          }
+        }
+      }
+
+
+
+
     }
 
     #dp-game-board-field-wrapper {

@@ -23,6 +23,8 @@ const RESOURCE_TOY = 'toy';
 const LOCATION_BONUS_PLENTIFUL = 'plentiful';
 const LOCATION_BONUS_REROUTED = 'rerouted';
 
+const OBJECTIVE_EXPERIENCED = 'experienced';
+const OBJECTIVE_STANDARD = 'standard';
 
 // PHASES
 const PHASE_SET_UP = 'PHASE_SET_UP';
@@ -42,6 +44,9 @@ const PHASE_HOME_TIME = 'PHASE_HOME_TIME';
  */
 const ST_GAME_SETUP = 1;
 
+const ST_CHOOSE_OBJECTIVES = 5;
+const ST_CHOOSE_OBJECTIVES_END = 6;
+
 const ST_RECRUITMENT_START = 10;
 const ST_RECRUITMENT_OFFER = 11;
 const ST_RECRUITMENT_OFFER_NEXT = 12;
@@ -57,11 +62,18 @@ const ST_SELECTION_PLACE_DOG_ON_LEAD_SELECT_RESOURCES = 33;
 const ST_SELECTION_PLACE_DOG_ON_LEAD_AFTER = 35;
 const ST_SELECTION_END = 40;
 
+const ST_WALKING_START = 50;
+const ST_WALKING_MOVE_WALKER = 51;
+const ST_WALKING_MOVE_WALKER_NEXT = 60;
+const ST_WALKING_END = 65;
+
 const ST_GAME_END = 99;
 
 /**
  * Actions
  */
+const ACT_CHOOSE_OBJECTIVE = 'chooseObjective';
+const ACT_CHANGE_OBJECTIVE = 'chooseObjective';
 const ACT_PLACE_OFFER_ON_DOG = 'placeOfferOnDog';
 const ACT_SKIP_PLACE_OFFER_ON_DOG = 'skipPlaceOfferOnDog';
 const ACT_RECRUIT_DOG = 'recruitDog';
@@ -70,6 +82,7 @@ const ACT_PLACE_DOG_ON_LEAD_CANCEL = 'placeDogOnLeadCancel';
 const ACT_PLACE_DOG_ON_LEAD_PAY_RESOURCES = 'placeDogOnLeadPayResources';
 const ACT_CONFIRM_SELECTION = 'confirmSelection';
 const ACT_CHANGE_SELECTION = 'changeSelection';
+const ACT_MOVE_WALKER = 'moveWalker';
 const ACT_UNDO = 'undo';
 
 /**
@@ -87,6 +100,10 @@ const LOCATION_DISCARD = 'discard';
 const LOCATION_PLAYER = 'player';
 const LOCATION_LEAD = 'lead';
 
+const LOCATION_PARK = 'park';
+
+const LOCATION_SELECTED = 'selected';
+
 const LOCATION_BREED_EXPERT_AWARDS = 'breed_expert';
 const LOCATION_FORECAST = 'forecast';
 
@@ -98,6 +115,7 @@ const CURRENT_PHASE = 'CURRENT_PHASE';
 const OFFER_VALUE_REVEALED = 'OFFER_VALUE_REVEALED';
 
 const SELECTION_DOG_ID_ = 'SELECTION_DOG_ID_';
+const OBJECTIVE_ID_ = 'OBJECTIVE_ID_';
 
 /**
  * Stats

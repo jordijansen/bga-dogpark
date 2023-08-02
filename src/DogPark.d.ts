@@ -14,6 +14,7 @@ interface DogParkGame extends Game {
     dogCardManager: DogCardManager;
     dogWalkerManager: DogWalkerManager;
     tokenManager: TokenManager;
+    objectiveCardManager: ObjectiveCardManager;
     gamedatas: DogParkGameData;
     animationManager: AnimationManager
     getPlayerId(): number;
@@ -27,7 +28,10 @@ interface DogParkPlayer extends Player {
     kennelDogs: DogCard[],
     leadDogs: DogCard[],
     offerValue: number,
-    resources: {stick: number, ball: number, treat: number, toy: number}
+    resources: {stick: number, ball: number, treat: number, toy: number},
+    objectives: Card[],
+    selectedObjectiveCardId: number,
+    chosenObjective: Card
 }
 
 interface DogParkGameData extends GameData {
@@ -36,6 +40,7 @@ interface DogParkGameData extends GameData {
     breedExpertAwards: Card[],
     forecastCards: Card[],
     field: { nrOfFields: number, dogs: DogCard[], walkers: DogWalker[] }
+    park: { walkers: DogWalker[] }
 }
 
 // ARGS
@@ -55,6 +60,10 @@ interface SelectionPlaceDogOnLeadSelectResourcesArgs {
 }
 
 // NOTIFS
+interface NotifObjectivesChosen {
+    chosenObjectiveCards: [{playerId: number, cardId: number}]
+}
+
 interface NotifDogRecruited {
     playerId: number,
     dog: DogCard,
@@ -85,5 +94,14 @@ interface NotifDogPlacedOnLead {
     playerId: number,
     dog: DogCard,
     resources: string[]
+}
+
+interface NotifPlayerGainsResources {
+    playerId: number,
+    resources: string[]
+}
+
+interface NotifMoveWalkers {
+    walkers: DogWalker[]
 }
 

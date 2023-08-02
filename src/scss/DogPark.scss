@@ -58,6 +58,20 @@ html, .mode_3d #game_play_area_background {
   }
 }
 
+.dp-player-objective-card {
+  .blackjack-size-landscape {
+    width: $blackjack-size-landscape-width-small;
+    height: $blackjack-size-landscape-height-small;
+
+    .card-sides {
+      .card-side {
+        width: $blackjack-size-landscape-width-small;
+        height: $blackjack-size-landscape-height-small;
+      }
+    }
+  }
+}
+
 #dp-pay-costs {
   display: inline-block;
   .dp-dog-cost-pay-row {
@@ -71,4 +85,7 @@ html, .mode_3d #game_play_area_background {
   }
 }
 
+#dp-choose-objectives-stock {
+  margin: 25px 0;
+}
 

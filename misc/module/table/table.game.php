@@ -118,7 +118,7 @@ class GameState {
     function setPlayerNonMultiactive($player_id, $next_state) {
     }
 
-    function getActivePlayerList() {
+    function getActivePlayerList(): array {
     }
 
     function updateMultiactiveOrNextState($next_state_if_none) {

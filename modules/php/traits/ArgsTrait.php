@@ -3,6 +3,7 @@
 namespace traits;
 use DogPark;
 use objects\DogCard;
+use objects\ObjectiveCard;
 
 trait ArgsTrait
 {
@@ -72,6 +73,11 @@ trait ArgsTrait
             "maxNumberOfDogs" => DogPark::$instance->forecastManager->getCurrentRoundMaxNumberOfDogsForSelection(),
             "numberOfDogsOnlead" => sizeof(DogPark::$instance->dogCards->getCardsInLocation(LOCATION_LEAD, $playerId)),
         ];
+    }
+
+    function argWalkingMoveWalker(): array
+    {
+        return [];
     }
 
     function getRecruitmentRoundArg() {

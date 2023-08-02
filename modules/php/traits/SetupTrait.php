@@ -51,13 +51,16 @@ trait SetupTrait
         $this->createBreedCards();
         $this->createForecastCards();
         $this->createLocationBonusCards();
+        $this->createObjectiveCards();
 
         /************ Start the game initialization *****/
-        // Fill the field with dogs
         $this->dogField->fillField();
         $this->breedExpertAwardManager->fillExpertAwards();
         $this->forecastManager->fillForecast();
+        $this->playerManager->dealObjectiveCardsToPlayers();
         /************ End of the game initialization *****/
+
+        $this->gamestate->setAllPlayersMultiactive();
     }
 
     private function createDogCards() {
@@ -110,5 +113,17 @@ trait SetupTrait
 
         $this->locationBonusCards->createCards($cards, LOCATION_DECK);
         $this->locationBonusCards->shuffle(LOCATION_DECK);
+    }
+
+    private function createObjectiveCards() {
+        $cards = array();
+        foreach ($this->OBJECTIVE_CARDS as $objectiveType => $objectiveCards) {
+            foreach ($objectiveCards as $id => $objectiveCard) {
+                $cards[] = array( 'type' => $objectiveType, 'type_arg' => intval($id), 'nbr' => 1);
+            }
+        }
+
+        $this->objectiveCards->createCards($cards, LOCATION_DECK);
+        $this->objectiveCards->shuffle(LOCATION_DECK);
     }
 }

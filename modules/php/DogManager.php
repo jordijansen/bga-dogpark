@@ -46,7 +46,7 @@ class DogManager extends APP_DbObject
             }
             $missingResources = abs(array_sum(array_filter($resourcesForDog, function ($r) { return $r < 0;})));
             $remainingResources = array_sum(array_filter($resourcesForDog, function ($r) { return $r > 0;}));
-            if ($missingResources == 0 || floor($remainingResources / 2) == $missingResources) {
+            if ($missingResources == 0 || floor($remainingResources / 2) >= $missingResources) {
                 $dogsForSelection[$dog->id] = $dog;
             }
         }

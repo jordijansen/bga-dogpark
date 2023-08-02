@@ -42,4 +42,13 @@ class PlayerResources {
             await this.playerResourceStocks[playerId][resource].addCard(token, {fromStock: this.game.dogCardManager.cardTokenVoidStocks[dog.id]})
         }
     }
+
+    public async gainResources(playerId: number, resources: string[]) {
+        for (const index in resources) {
+            const resource = resources[index];
+            this.playerResourceStocks[playerId][resource].incValue(1);
+            let token = this.game.tokenManager.createToken(resource as any)
+            await this.playerResourceStocks[playerId][resource].addCard(token)
+        }
+    }
 }

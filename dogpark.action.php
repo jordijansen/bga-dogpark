@@ -26,6 +26,25 @@ class action_dogpark extends APP_GameAction
         }
     }
 
+    public function chooseObjective()
+    {
+        self::setAjaxMode();
+
+        $cardId = self::getArg("cardId", AT_posint, true);
+        $this->game->chooseObjective($cardId);
+
+        self::ajaxResponse();
+    }
+
+    public function changeObjective()
+    {
+        self::setAjaxMode();
+
+        $this->game->changeObjective();
+
+        self::ajaxResponse();
+    }
+
     public function skipPlaceOfferOnDog()
     {
         self::setAjaxMode();

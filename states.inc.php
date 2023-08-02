@@ -56,7 +56,7 @@ $basicGameStates = [
         "description" => clienttranslate("Game setup"),
         "type" => "manager",
         "action" => "stGameSetup",
-        "transitions" => [ "" => ST_RECRUITMENT_START ]
+        "transitions" => [ "" => ST_CHOOSE_OBJECTIVES ]
     ],
 
     // Final state.
@@ -71,12 +71,40 @@ $basicGameStates = [
 ];
 
 //////////////////////////////////
+// SETUP
+//////////////////////////////////
+$setupStates = [
+    ST_CHOOSE_OBJECTIVES => [
+        "name" => "chooseObjectives",
+        "description" => clienttranslate('Waiting for players to choose objectives'),
+        "descriptionmyturn" => clienttranslate('You must choose an objective card'),
+        "type" => "multipleactiveplayer",
+        "possibleactions" => [
+            ACT_CHOOSE_OBJECTIVE,
+            ACT_CHANGE_OBJECTIVE
+        ],
+        "transitions" => [
+            "" => ST_CHOOSE_OBJECTIVES_END
+        ],
+    ],
+
+    ST_CHOOSE_OBJECTIVES_END => [
+        "name" => 'chooseObjectivesEnd',
+        "description" => clienttranslate("Choose objectives"),
+        "type" => "game",
+        "action" => "stChooseObjectivesEnd",
+        "transitions" => [
+            "" => ST_RECRUITMENT_START
+        ],
+    ]
+];
+//////////////////////////////////
 // RECRUITMENT
 //////////////////////////////////
 $recruitmentStates = [
     ST_RECRUITMENT_START => [
         "name" => "recruitmentStart",
-        "description" => "",
+        "description" => clienttranslate('Recruit: starting recruitment phase...'),
         "type" => "game",
         "action" => "stRecruitmentStart",
         "transitions" => [
@@ -142,7 +170,7 @@ $recruitmentStates = [
     ],
     ST_RECRUITMENT_END => [
         "name" => "recruitmentEnd",
-        "description" => "",
+        "description" => clienttranslate('Recruit: ending recruitment phase...'),
         "type" => "game",
         "action" => "stRecruitmentEnd",
         "transitions" => [
@@ -158,7 +186,7 @@ $recruitmentStates = [
 $selectionStates = [
     ST_SELECTION_START => [
         "name" => "selectionStart",
-        "description" => "",
+        "description" => clienttranslate('Select: starting selection phase...'),
         "type" => "game",
         "action" => "stSelectionStart",
         "transitions" => [
@@ -176,12 +204,12 @@ $selectionStates = [
             ACT_CHANGE_SELECTION
         ],
         "transitions" => [
-            "end" => ST_SELECTION_END
+            "" => ST_SELECTION_END
         ],
     ],
     ST_SELECTION_PLACE_DOG_ON_LEAD => [
         "name" => "selectionPlaceDogOnLead",
-        "descriptionmyturn" => clienttranslate('Select (${numberOfDogsOnlead}/${maxNumberOfDogs}): ${you} may place a dog on the lead'),
+        "descriptionmyturn" => clienttranslate('Select (${numberOfDogsOnlead}/${maxNumberOfDogs}): ${you} must place a dog on the lead'),
         "type" => "private",
         "args" => "argSelectionPlaceDogOnLead",
         "possibleactions" => [
@@ -208,7 +236,7 @@ $selectionStates = [
     ],
     ST_SELECTION_PLACE_DOG_ON_LEAD_AFTER => [
         "name" => "selectionPlaceDogOnLeadAfter",
-        "descriptionmyturn" => clienttranslate('Select (${numberOfDogsOnlead}/${maxNumberOfDogs}): ${you} may perform additional abilities'),
+        "descriptionmyturn" => clienttranslate('Select (${numberOfDogsOnlead}/${maxNumberOfDogs}): ${you} must perform additional abilities'),
         "type" => "private",
         "action" => "stSelectionPlaceDogOnLeadAfter",
         "args" => "argSelectionPlaceDogOnLeadAfter",
@@ -221,10 +249,11 @@ $selectionStates = [
     ],
     ST_SELECTION_END => [
         "name" => "selectionEnd",
-        "description" => "",
+        "description" => clienttranslate("Select: ending selection phase..."),
         "type" => "game",
         "action" => "stSelectionEnd",
         "transitions" => [
+            "walking" => ST_WALKING_START
         ]
     ],
 ];
@@ -233,10 +262,30 @@ $selectionStates = [
 // WALK
 //////////////////////////////////
 $walkingStates = [
-
+    ST_WALKING_START => [
+        "name" => "walkingStart",
+        "description" => "",
+        "type" => "game",
+        "action" => "stWalkingStart",
+        "transitions" => [
+            "playerTurn" => ST_WALKING_MOVE_WALKER
+        ]
+    ],
+    ST_WALKING_MOVE_WALKER => [
+        "name" => "walkingMoveWalker",
+        "description" => clienttranslate('Walk: ${actplayer} must move their walker'),
+        "descriptionmyturn" => clienttranslate('Walk: ${you} must move your walker'),
+        "args" => "argWalkingMoveWalker",
+        "type" => "activeplayer",
+        "possibleactions" => [
+            ACT_MOVE_WALKER
+        ],
+        "transitions" => [
+        ],
+    ],
 ];
 
-$machinestates = $basicGameStates + $recruitmentStates + $selectionStates + $walkingStates;
+$machinestates = $basicGameStates + $setupStates + $recruitmentStates + $selectionStates + $walkingStates;
 
 
 

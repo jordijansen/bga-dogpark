@@ -25,6 +25,7 @@
     Please REMOVE this comment before publishing your game on BGA
 -->
 <div id="dp-game">
+    <div id="dp-choose-objectives"></div>
     <div id="dp-game-board-wrapper">
         <div id="dp-game-board-main">
             <div id="dp-game-board-round-tracker" class="dp-board" style="order: 10;">
@@ -35,7 +36,9 @@
 
                 </div>
             </div>
-            <div id="dp-game-board-park" class="dp-board" style="order: 11;" ></div>
+            <div id="dp-game-board-park-wrapper" class="dp-board" style="order: 11;" >
+                <div id="dp-game-board-park"></div>
+            </div>
             <div id="dp-game-board-field-wrapper" style="order: 12;">
                 <div id="dp-game-board-field" class="dp-board"></div>
                 <div id="dp-game-board-offer-dials" class="whiteblock">
@@ -61,6 +64,9 @@
 
     <div class="forecast-art forecast-art-background" style="width: 195px; height: 142px;"></div>
     <div class="forecast-art forecast-art-2" style="width: 195px; height: 142px;"></div>
+
+    <div class="objective-art objective-art-background" style="width: 266px; height: 195px;"></div>
+    <div class="objective-art objective-art-2" style="width: 266px; height: 195px;"></div>
 </div>
 
 <div id="zoom-overall" style="width: 100%;"></div>

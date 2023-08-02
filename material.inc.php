@@ -100,6 +100,23 @@ $this->LOCATION_BONUS_CARDS = [
     ]
 ];
 
+$this->OBJECTIVE_CARDS = [
+    OBJECTIVE_EXPERIENCED => [
+        1 => [],
+        2 => [],
+        3 => [],
+        4 => [],
+        5 => []
+    ],
+    OBJECTIVE_STANDARD => [
+        6 => [],
+        7 => [],
+        8 => [],
+        9 => [],
+        10 => []
+    ],
+];
+
 $this->DOG_CARDS = [
     BASE_GAME => [
         1 => [ 'name' => clienttranslate('Australian Silky Terrier'), 'abilityTitle' => clienttranslate(''), 'abilityText' => clienttranslate('') ],

@@ -4,6 +4,7 @@ namespace managers;
 
 use APP_DbObject;
 use DogPark;
+use objects\ObjectiveCard;
 
 class PlayerManager extends APP_DbObject
 {
@@ -44,6 +45,23 @@ class PlayerManager extends APP_DbObject
         self::DbQuery("UPDATE player SET player_offer_value = null");
     }
 
+    public function dealObjectiveCardsToPlayers() {
+        $experiencedObjectiveCards = DogPark::$instance->objectiveCards->getCardsOfTypeInLocation(OBJECTIVE_EXPERIENCED, null, LOCATION_DECK);
+        $standardObjectiveCards = DogPark::$instance->objectiveCards->getCardsOfTypeInLocation(OBJECTIVE_STANDARD, null, LOCATION_DECK);
+
+        $players = DogPark::$instance->loadPlayersBasicInfos();
+        foreach ($players as $playerId => $player) {
+            $experiencedObjective = ObjectiveCard::from(array_shift($experiencedObjectiveCards));
+            if ($experiencedObjective->id == 1 && DogPark::$instance->getPlayersNumber() < 4) {
+                // Experienced Objective card should only be used in a 4 player game (or 5 in expansion??)
+                $experiencedObjective = ObjectiveCard::from(array_shift($experiencedObjectiveCards));
+            }
+            $standardObjective = ObjectiveCard::from(array_shift($standardObjectiveCards));
+            $cardIds = [$experiencedObjective->id, $standardObjective->id];
+            DogPark::$instance->objectiveCards->moveCards($cardIds, LOCATION_PLAYER, $playerId);
+        }
+    }
+
     public function payResources($playerId, $resources)
     {
         $this->updateResources($playerId, $resources, false);
@@ -65,7 +83,7 @@ class PlayerManager extends APP_DbObject
             $query .= "$columnName = $columnName $modifier $count,";
         }
         $query = rtrim($query, ',');
-        $query .= " WHERE player_id = ${playerId}";
+        $query .= " WHERE player_id = $playerId";
         self::DbQuery($query);
     }
 }

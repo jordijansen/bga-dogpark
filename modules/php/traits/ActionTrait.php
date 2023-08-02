@@ -5,6 +5,7 @@ use BgaUserException;
 use commands\PlaceDogOnLeadCommand;
 use objects\DogCard;
 use objects\DogWalker;
+use objects\ObjectiveCard;
 
 trait ActionTrait
 {
@@ -17,6 +18,30 @@ trait ActionTrait
         Each time a player is doing some game action, one of the methods below is called.
         (note: each method below must match an input method in nicodemus.action.php)
     */
+
+    function chooseObjective($cardId) {
+        $playerId = $this->getCurrentPlayerId();
+
+        $card = $this->objectiveCards->getCard($cardId);
+        if (!isset($card)) {
+            throw new BgaUserException('Unknown objective card');
+        }
+        $objectiveCard = ObjectiveCard::from($card);
+        if ($objectiveCard->location != LOCATION_PLAYER || $objectiveCard->locationArg != $playerId) {
+            throw new BgaUserException('Objective card not yours');
+        }
+        $this->setGlobalVariable(OBJECTIVE_ID_ .$playerId, $cardId);
+
+        $this->gamestate->setPlayerNonMultiactive($this->getCurrentPlayerId(), "");
+    }
+
+    function changeObjective() {
+        $playerId = $this->getCurrentPlayerId();
+
+        $this->deleteGlobalVariable(OBJECTIVE_ID_ .$playerId);
+
+        $this->gamestate->setPlayersMultiactive([$this->getCurrentPlayerId()], "");
+    }
 
     function placeOfferOnDog($dogId, $offerValue) {
         $this->checkAction(ACT_PLACE_OFFER_ON_DOG);
@@ -145,13 +170,21 @@ trait ActionTrait
     function confirmSelection() {
         $this->checkAction(ACT_CONFIRM_SELECTION);
 
+        $playerId = $this->getCurrentPlayerId();
+
+        if (sizeof($this->dogCards->getCardsInLocation(LOCATION_LEAD, $playerId)) == 0) {
+            if (sizeof($this->dogManager->getDogsForSelection($playerId)) > 1) {
+                throw new BgaUserException("You must place at least place one dog on the lead if you can");
+            }
+        }
+
         $this->notifyAllPlayers('gameLog', '${player_name} confirms selection',[
             'playerId' => $this->getCurrentPlayerId(),
             'player_name' => $this->getPlayerName($this->getCurrentPlayerId()),
         ]);
 
-        $this->gamestate->setPlayerNonMultiactive( $this->getCurrentPlayerId(), "end");
         $this->gamestate->unsetPrivateState($this->getCurrentPlayerId());
+        $this->gamestate->setPlayerNonMultiactive($this->getCurrentPlayerId(), "");
     }
 
     function changeSelection() {

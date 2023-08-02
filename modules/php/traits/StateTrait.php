@@ -2,6 +2,7 @@
 
 namespace traits;
 use objects\DogWalker;
+use objects\ObjectiveCard;
 use objects\SelectionUndo;
 
 trait StateTrait
@@ -14,6 +15,24 @@ trait StateTrait
         Here, you can create methods defined as "game state actions" (see "action" property in states.inc.php).
         The action method of state X is called everytime the current game state is set to X.
     */
+    //////////////////////////////////
+    // CHOOSE OBJECTIVES
+    //////////////////////////////////
+    function stChooseObjectivesEnd() {
+        $players = $this->loadPlayersBasicInfos();
+        $chosenObjectiveCards = [];
+        foreach ($players as $playerId => $player) {
+            $objectiveCardId = $this->getGlobalVariable(OBJECTIVE_ID_ .$playerId);
+            $this->objectiveCards->moveCard($objectiveCardId, LOCATION_SELECTED, $playerId);
+            $chosenObjectiveCards[] = ['playerId' => $playerId, 'cardId' => intval($objectiveCardId)];
+        }
+
+        $this->notifyAllPlayers('objectivesChosen', 'All players have chosen an objective card',[
+            'chosenObjectiveCards' => $chosenObjectiveCards
+        ]);
+        $this->gamestate->nextState("");
+    }
+
 
     //////////////////////////////////
     // RECRUITMENT
@@ -32,7 +51,9 @@ trait StateTrait
             'newPhase' => $newPhase
         ]);
 
-        $this->activeNextPlayer();
+        $firstPlayer = current($this->playerManager->getPlayerIdsInTurnOrder());
+        $playerId = intval($firstPlayer['player_id']);
+        $this->gamestate->changeActivePlayer($playerId);
         $this->gamestate->nextState("recruitmentOffer");
     }
 
@@ -168,5 +189,57 @@ trait StateTrait
     }
 
     function stSelectionPlaceDogOnLeadAfter($playerId) {
+    }
+
+    function stSelectionEnd() {
+        // Check if players have not placed a dog on their Lead
+        $players = $this->playerManager->getPlayerIdsInTurnOrder();
+        foreach ($players as $orderNo => $player) {
+            $playerId = intval($player['player_id']);
+            if (sizeof($this->dogCards->getCardsInLocation(LOCATION_LEAD, $playerId)) == 0) {
+                $resources = [RESOURCE_BALL => 1, RESOURCE_STICK => 1];
+                $this->playerManager->gainResources($playerId, $resources);
+                $this->notifyAllPlayers('playerGainsResources', clienttranslate('${player_name} gains resources because they can not walk any dog'),[
+                    'playerId' => $playerId,
+                    'player_name' => $this->getPlayerName($playerId),
+                    'resources' => [RESOURCE_BALL, RESOURCE_STICK]
+                ]);
+            }
+        }
+
+        $this->gamestate->nextState("walking");
+    }
+
+    //////////////////////////////////
+    // WALKING
+    //////////////////////////////////
+    function stWalkingStart()
+    {
+        $this->setGlobalVariable(CURRENT_PHASE, PHASE_WALKING);
+        $this->notifyAllPlayers('newPhase', clienttranslate('Entering new Phase: Selection'), [
+            'newPhase' => PHASE_WALKING
+        ]);
+
+        $players = $this->playerManager->getPlayerIdsInTurnOrder();
+        $playersWithDogsOnLead = [];
+        foreach ($players as $orderNo => $player) {
+            $playerId = intval($player['player_id']);
+            if (sizeof($this->dogCards->getCardsInLocation(LOCATION_LEAD, $playerId)) > 0) {
+                $playersWithDogsOnLead[] = $playerId;
+            }
+        }
+
+        $walkers = $this->dogWalkPark->moveWalkersOfPlayersToStartOfPark($playersWithDogsOnLead);
+        $this->notifyAllPlayers('moveWalkers', '', [
+            'walkers' => $walkers
+        ]);
+
+        $nextPlayerId = current($playersWithDogsOnLead);
+        if (isset($nextPlayerId)) {
+            $this->gamestate->changeActivePlayer($nextPlayerId);
+            $this->gamestate->nextState("playerTurn");
+        } else {
+            // TODO WHAT IF NO PLAYERS WALK DOGS
+        }
     }
 }

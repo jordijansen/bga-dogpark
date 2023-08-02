@@ -39,6 +39,26 @@
   }
 }
 
+.objective-art {
+  background-image: url("img/dogpark-multiplayer-objectives.jpg");
+  background-size: 400% auto;
+
+  &.objective-art-background {
+    background-position: 0 0;
+  }
+
+  @for $row from 0 through 2 {
+    @for $column from 0 through 3 {
+      $id: ($row * 4) + ($column + 1) - 1;
+      @if $id > 0 {
+        &.objective-art-#{$id} {
+          background-position: #{$column * math.div(100%, 3)} #{$row * math.div(100%, 2)};
+        }
+      }
+    }
+  }
+}
+
 .breed-expert-art {
   background-image: url("img/dogpark-breed-expert.jpg");
   background-size: 400% auto;
@@ -91,6 +111,27 @@
       border-radius: 5px;
       width: $blackjack-size-width;
       height: $blackjack-size-height;
+
+      &>* {
+        pointer-events: none;
+        user-select: none;
+      }
+    }
+  }
+}
+
+.blackjack-size-landscape {
+  display: inline-block;
+  position: relative;
+  border-radius: 5px;
+  width: $blackjack-size-landscape-width;
+  height: $blackjack-size-landscape-height;
+
+  .card-sides {
+    .card-side {
+      border-radius: 5px;
+      width: $blackjack-size-landscape-width;
+      height: $blackjack-size-landscape-height;
 
       &>* {
         pointer-events: none;
