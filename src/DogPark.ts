@@ -122,6 +122,8 @@ class DogPark implements DogParkGame {
             case 'selectionPlaceDogOnLeadSelectResources':
                 this.enteringSelectionPlaceDogOnLeadSelectResources(args.args as SelectionPlaceDogOnLeadSelectResourcesArgs);
                 break;
+            case 'walkingMoveWalker':
+                this.enteringWalkingMoveWalker(args.args as WalkingMoveWalkerArgs);
         }
     }
 
@@ -182,6 +184,12 @@ class DogPark implements DogParkGame {
         });
     }
 
+    private enteringWalkingMoveWalker(args: WalkingMoveWalkerArgs) {
+        if ((this as any).isCurrentPlayerActive()) {
+            this.dogWalkPark.enterWalkerSpotsSelection(args.possibleParkLocationIds, (locationId)=> {this.takeAction('moveWalker', {locationId})});
+        }
+    }
+
     public onLeavingState(stateName: string) {
         log( 'Leaving state: '+stateName );
 
@@ -196,12 +204,20 @@ class DogPark implements DogParkGame {
             case 'selectionPlaceDogOnLead':
                 this.leavingSelectionPlaceDogOnLead();
                 break;
+            case 'walkingMoveWalker':
+                this.leavingWalkingMoveWalker();
         }
     }
 
     private leavingSelectionPlaceDogOnLead() {
         if ((this as any).isCurrentPlayerActive()) {
             this.playerArea.setSelectionModeForKennel('none', this.getPlayerId());
+        }
+    }
+
+    private leavingWalkingMoveWalker() {
+        if ((this as any).isCurrentPlayerActive()) {
+            this.dogWalkPark.exitWalkerSpotsSelection()
         }
     }
 
@@ -234,7 +250,6 @@ class DogPark implements DogParkGame {
                     break;
             }
 
-            console.log(args);
             if (args?.canCancelMoves) {
                 (this as any).addActionButton('undoLast', _("Undo last action"), () => this.undoLast(), null, null, 'gray');
                 (this as any).addActionButton('undoAll', _("Restart turn"), () => this.undoAll(), null, null, 'red');
@@ -388,7 +403,8 @@ class DogPark implements DogParkGame {
             ['dogPlacedOnLead', undefined],
             ['undoDogPlacedOnLead', 1],
             ['playerGainsResources', undefined],
-            ['moveWalkers', undefined]
+            ['moveWalkers', undefined],
+            ['moveWalker', undefined]
             // ['shortTime', 1],
             // ['fixedTime', 1000]
         ];
@@ -466,6 +482,10 @@ class DogPark implements DogParkGame {
         return this.dogWalkPark.moveWalkers(args.walkers);
     }
 
+    private notif_moveWalker(args: NotifMoveWalker) {
+        return this.dogWalkPark.moveWalkers([args.walker]);
+    }
+
     public format_string_recursive(log: string, args: any) {
         try {
             if (log && args && !args.processed) {
@@ -477,6 +497,4 @@ class DogPark implements DogParkGame {
         }
         return (this as any).inherited(arguments);
     }
-
-
 }

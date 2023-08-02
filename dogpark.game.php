@@ -38,6 +38,7 @@ require_once('modules/php/Constants.inc.php');
 require_once('modules/php/commands/CommandManager.php');
 require_once('modules/php/commands/BaseCommand.php');
 require_once('modules/php/commands/PlaceDogOnLeadCommand.php');
+require_once('modules/php/commands/MoveWalkerCommand.php');
 
 require_once('modules/php/objects/Card.php');
 require_once('modules/php/objects/BreedExpertCard.php');

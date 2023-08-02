@@ -207,6 +207,9 @@ trait StateTrait
             }
         }
 
+        // Remove commands as they no longer can be undone
+        $this->commandManager->clearCommands();
+
         $this->gamestate->nextState("walking");
     }
 

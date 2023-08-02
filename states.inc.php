@@ -281,6 +281,21 @@ $walkingStates = [
             ACT_MOVE_WALKER
         ],
         "transitions" => [
+            '' => ST_WALKING_MOVE_WALKER_AFTER
+        ],
+    ],
+    ST_WALKING_MOVE_WALKER_AFTER => [
+        "name" => "walkingMoveWalkerAfter",
+        "description" => clienttranslate('Walk: ${actplayer} may perform additional actions'),
+        "descriptionmyturn" => clienttranslate('Walk: ${you} may perform additional actions'),
+        "args" => "argWalkingMoveWalkerAfter",
+        "type" => "activeplayer",
+        "possibleactions" => [
+            ACT_MOVE_WALKER_PAY_REPUTATION,
+            ACT_CONFIRM_WALKING,
+            ACT_UNDO
+        ],
+        "transitions" => [
         ],
     ],
 ];

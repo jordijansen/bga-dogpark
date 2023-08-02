@@ -2,6 +2,7 @@
 
 namespace traits;
 use BgaUserException;
+use commands\MoveWalkerCommand;
 use commands\PlaceDogOnLeadCommand;
 use objects\DogCard;
 use objects\DogWalker;
@@ -197,13 +198,36 @@ trait ActionTrait
         $this->gamestate->initializePrivateState($this->getCurrentPlayerId());
     }
 
+    function moveWalker($locationId) {
+        $this->checkAction(ACT_MOVE_WALKER);
+
+        $playerId = $this->getActivePlayerId();
+        $walker = DogWalker::from($this->dogWalkers->getCard($this->playerManager->getWalkerId($playerId)));
+        if ($walker->location != LOCATION_PARK) {
+            throw new BgaUserException('Walker not in park!');
+        }
+
+        $possibleParkLocations = $this->dogWalkPark->getPossibleParkLocationIds($playerId);
+        if (!in_array($locationId, $possibleParkLocations)) {
+            throw new BgaUserException('Location not allowed!');
+        }
+
+        $this->commandManager->addCommand($playerId, new MoveWalkerCommand($playerId, $walker->id, $walker->locationArg, $locationId));
+
+        $this->gamestate->nextState("");
+    }
+
     function undoLast() {
         $this->checkAction(ACT_UNDO);
 
         $playerId = $this->getCurrentPlayerId();
         $this->commandManager->removeLastCommand($playerId);
 
-        $this->gamestate->setPrivateState($playerId, ST_SELECTION_PLACE_DOG_ON_LEAD);
+        if ($this->getGlobalVariable(CURRENT_PHASE) == PHASE_SELECTION) {
+            $this->gamestate->setPrivateState($playerId, ST_SELECTION_PLACE_DOG_ON_LEAD);
+        } else if ($this->getGlobalVariable(CURRENT_PHASE) == PHASE_WALKING) {
+            $this->gamestate->jumpToState(ST_WALKING_MOVE_WALKER);
+        }
     }
 
     function undoAll() {
@@ -212,6 +236,10 @@ trait ActionTrait
         $playerId = $this->getCurrentPlayerId();
         $this->commandManager->removeAllCommands($playerId);
 
-        $this->gamestate->setPrivateState($playerId, ST_SELECTION_PLACE_DOG_ON_LEAD);
+        if ($this->getGlobalVariable(CURRENT_PHASE) == PHASE_SELECTION) {
+            $this->gamestate->setPrivateState($playerId, ST_SELECTION_PLACE_DOG_ON_LEAD);
+        } else if ($this->getGlobalVariable(CURRENT_PHASE) == PHASE_WALKING) {
+            $this->gamestate->jumpToState(ST_WALKING_MOVE_WALKER);
+        }
     }
 }

@@ -2776,6 +2776,8 @@ var DogWalkPark = /** @class */ (function () {
         this.game = game;
         this.walkerSpots = {};
         this.resourceSpots = {};
+        this.possibleParkLocationIds = [];
+        this.clickHandlers = [];
         this.element = $("dp-game-board-park");
     }
     DogWalkPark.prototype.setUp = function (gameData) {
@@ -2801,6 +2803,23 @@ var DogWalkPark = /** @class */ (function () {
     DogWalkPark.prototype.moveWalkers = function (walkers) {
         var _this = this;
         return Promise.all(walkers.map(function (walker) { return _this.walkerSpots[walker.locationArg].addCard(walker); }));
+    };
+    DogWalkPark.prototype.enterWalkerSpotsSelection = function (possibleParkLocationIds, onClick) {
+        var _this = this;
+        this.possibleParkLocationIds = possibleParkLocationIds;
+        this.possibleParkLocationIds.forEach(function (possibleParkLocationId) {
+            var element = $("dp-walk-spot-".concat(possibleParkLocationId));
+            _this.clickHandlers.push(dojo.connect(element, 'onclick', function () { onClick(possibleParkLocationId); }));
+            element.classList.add('selectable');
+        });
+    };
+    DogWalkPark.prototype.exitWalkerSpotsSelection = function () {
+        this.possibleParkLocationIds.forEach(function (possibleParkLocationId) {
+            var element = $("dp-walk-spot-".concat(possibleParkLocationId));
+            element.classList.remove('selectable');
+        });
+        this.clickHandlers.forEach(function (clickHandler) { return dojo.disconnect(clickHandler); });
+        this.clickHandlers = [];
     };
     DogWalkPark.prototype.addLocationBonusCard = function (card) {
         return this.locationBonusCardPile.addCard(card);
@@ -3148,6 +3167,8 @@ var DogPark = /** @class */ (function () {
             case 'selectionPlaceDogOnLeadSelectResources':
                 this.enteringSelectionPlaceDogOnLeadSelectResources(args.args);
                 break;
+            case 'walkingMoveWalker':
+                this.enteringWalkingMoveWalker(args.args);
         }
     };
     DogPark.prototype.enteringChooseObjectives = function () {
@@ -3205,6 +3226,12 @@ var DogPark = /** @class */ (function () {
             _this.takeNoLockAction('placeDogOnLeadPayResources', { dogId: args.dog.id, resources: JSON.stringify(resources) });
         });
     };
+    DogPark.prototype.enteringWalkingMoveWalker = function (args) {
+        var _this = this;
+        if (this.isCurrentPlayerActive()) {
+            this.dogWalkPark.enterWalkerSpotsSelection(args.possibleParkLocationIds, function (locationId) { _this.takeAction('moveWalker', { locationId: locationId }); });
+        }
+    };
     DogPark.prototype.onLeavingState = function (stateName) {
         log('Leaving state: ' + stateName);
         switch (stateName) {
@@ -3218,11 +3245,18 @@ var DogPark = /** @class */ (function () {
             case 'selectionPlaceDogOnLead':
                 this.leavingSelectionPlaceDogOnLead();
                 break;
+            case 'walkingMoveWalker':
+                this.leavingWalkingMoveWalker();
         }
     };
     DogPark.prototype.leavingSelectionPlaceDogOnLead = function () {
         if (this.isCurrentPlayerActive()) {
             this.playerArea.setSelectionModeForKennel('none', this.getPlayerId());
+        }
+    };
+    DogPark.prototype.leavingWalkingMoveWalker = function () {
+        if (this.isCurrentPlayerActive()) {
+            this.dogWalkPark.exitWalkerSpotsSelection();
         }
     };
     // onUpdateActionButtons: in this method you can manage "action buttons" that are displayed in the
@@ -3254,7 +3288,6 @@ var DogPark = /** @class */ (function () {
                     }
                     break;
             }
-            console.log(args);
             if (args === null || args === void 0 ? void 0 : args.canCancelMoves) {
                 this.addActionButton('undoLast', _("Undo last action"), function () { return _this.undoLast(); }, null, null, 'gray');
                 this.addActionButton('undoAll', _("Restart turn"), function () { return _this.undoAll(); }, null, null, 'red');
@@ -3396,7 +3429,8 @@ var DogPark = /** @class */ (function () {
             ['dogPlacedOnLead', undefined],
             ['undoDogPlacedOnLead', 1],
             ['playerGainsResources', undefined],
-            ['moveWalkers', undefined]
+            ['moveWalkers', undefined],
+            ['moveWalker', undefined]
             // ['shortTime', 1],
             // ['fixedTime', 1000]
         ];
@@ -3463,6 +3497,9 @@ var DogPark = /** @class */ (function () {
     };
     DogPark.prototype.notif_moveWalkers = function (args) {
         return this.dogWalkPark.moveWalkers(args.walkers);
+    };
+    DogPark.prototype.notif_moveWalker = function (args) {
+        return this.dogWalkPark.moveWalkers([args.walker]);
     };
     DogPark.prototype.format_string_recursive = function (log, args) {
         try {

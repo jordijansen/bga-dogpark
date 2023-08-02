@@ -69,6 +69,7 @@ const ST_SELECTION_END = 40;
 
 const ST_WALKING_START = 50;
 const ST_WALKING_MOVE_WALKER = 51;
+const ST_WALKING_MOVE_WALKER_AFTER = 55;
 const ST_WALKING_MOVE_WALKER_NEXT = 60;
 const ST_WALKING_END = 65;
 
@@ -88,6 +89,8 @@ const ACT_PLACE_DOG_ON_LEAD_PAY_RESOURCES = 'placeDogOnLeadPayResources';
 const ACT_CONFIRM_SELECTION = 'confirmSelection';
 const ACT_CHANGE_SELECTION = 'changeSelection';
 const ACT_MOVE_WALKER = 'moveWalker';
+const ACT_MOVE_WALKER_PAY_REPUTATION = 'moveWalkerPayReputation';
+const ACT_CONFIRM_WALKING = 'confirmWalking';
 const ACT_UNDO = 'undo';
 
 /**

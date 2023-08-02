@@ -78,21 +78,28 @@ $this->FORECAST_CARDS = [
 ];
 
 $this->PARK_LOCATIONS = [
-    1 => [RESOURCE_STICK],
-    2 => [RESOURCE_BALL],
-    3 => [RESOURCE_TOY],
-    4 => [RESOURCE_TREAT],
-    5 => [RESOURCE_STICK],
-    6 => [SCOUT],
-    7 => [REPUTATION],
-    8 => [RESOURCE_BALL],
-    9 => [SCOUT],
-    10 => [SWAP],
-    11 => [REPUTATION],
-    12 => [RESOURCE_TOY],
-    13 => [RESOURCE_BALL, RESOURCE_BALL],
-    14 => [RESOURCE_TREAT],
-    15 => [RESOURCE_STICK, RESOURCE_STICK],
+    0 =>  ['bonus' =>  [], 'nextLocations' => [1]],
+    1 =>  ['bonus' =>  [RESOURCE_STICK], 'nextLocations' => [2]],
+    2 =>  ['bonus' =>  [RESOURCE_BALL], 'nextLocations' => [3]],
+    3 =>  ['bonus' =>  [RESOURCE_TOY], 'nextLocations' => [4]],
+    4 =>  ['bonus' =>  [RESOURCE_TREAT], 'nextLocations' => [6]],
+    5 =>  ['bonus' =>  [RESOURCE_STICK], 'nextLocations' => [7]],
+    6 =>  ['bonus' =>  [SCOUT], 'nextLocations' => [5, 8]],
+    7 =>  ['bonus' =>  [REPUTATION], 'nextLocations' => [9]],
+    8 =>  ['bonus' =>  [RESOURCE_BALL], 'nextLocations' => [10]],
+    9 =>  ['bonus' =>  [SCOUT], 'nextLocations' => [11]],
+    10 => ['bonus' =>  [SWAP], 'nextLocations' => [12]],
+    11 => ['bonus' =>  [REPUTATION], 'nextLocations' => [13]],
+    12 => ['bonus' =>  [RESOURCE_TOY], 'nextLocations' => [14]],
+    13 => ['bonus' =>  [RESOURCE_BALL, RESOURCE_BALL], 'nextLocations' => [91,92,93,94]],
+    14 => ['bonus' =>  [RESOURCE_TREAT], 'nextLocations' => [15]],
+    15 => ['bonus' =>  [RESOURCE_STICK, RESOURCE_STICK], 'nextLocations' => [91,92,93,94]],
+
+    // Leaving the park spots
+    91 => ['bonus' => [], 'nextLocations' => []], // Only in 4 player games
+    92 => ['bonus' => [], 'nextLocations' => []],
+    93 => ['bonus' => [], 'nextLocations' => []],
+    94 => ['bonus' => [], 'nextLocations' => []]
 ];
 
 $this->LOCATION_BONUS_CARDS = [

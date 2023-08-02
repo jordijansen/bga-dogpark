@@ -21,6 +21,8 @@ class DogWalkPark {
     private walkerSpots: {[spotId: number]: LineStock<DogWalker>} = {}
     private resourceSpots: {[spotId: number]: LineStock<Token>} = {}
     private locationBonusCardPile: Deck<Card>;
+    private possibleParkLocationIds: number[] = [];
+    private clickHandlers: any[] = [];
 
     constructor(private game: DogParkGame) {
         this.element = $("dp-game-board-park");
@@ -54,7 +56,26 @@ class DogWalkPark {
         return Promise.all(walkers.map(walker => this.walkerSpots[walker.locationArg].addCard(walker)));
     }
 
-    private addLocationBonusCard(card: LocationBonusCard) {
+    public enterWalkerSpotsSelection(possibleParkLocationIds: number[], onClick: (locationId: number) => void) {
+        this.possibleParkLocationIds = possibleParkLocationIds;
+        this.possibleParkLocationIds.forEach(possibleParkLocationId => {
+            const element = $(`dp-walk-spot-${possibleParkLocationId}`);
+            this.clickHandlers.push(dojo.connect(element, 'onclick', () => { onClick(possibleParkLocationId); }));
+            element.classList.add('selectable')
+        });
+    }
+
+    public exitWalkerSpotsSelection() {
+        this.possibleParkLocationIds.forEach(possibleParkLocationId => {
+            const element = $(`dp-walk-spot-${possibleParkLocationId}`);
+            element.classList.remove('selectable')
+        });
+
+        this.clickHandlers.forEach(clickHandler => dojo.disconnect(clickHandler))
+        this.clickHandlers = [];
+    }
+
+    public addLocationBonusCard(card: LocationBonusCard) {
         return this.locationBonusCardPile.addCard(card);
     }
 
@@ -66,4 +87,6 @@ class DogWalkPark {
                          </div>`, $(`park-column-${DogWalkPark.spotColumnMap[id]}`))
 
     }
+
+
 }

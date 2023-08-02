@@ -38,6 +38,11 @@ class CommandManager extends APP_DbObject
         }
     }
 
+    public function clearCommands()
+    {
+        $this->DbQuery("DELETE FROM `command_log`");
+    }
+
     public function removeCommand($id) {
         $command = $this->toCommandObject($id);
         $command->undo();

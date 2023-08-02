@@ -68,6 +68,10 @@ interface SelectionPlaceDogOnLeadSelectResourcesArgs {
     resources: {stick: number, ball: number, treat: number, toy: number}
 }
 
+interface WalkingMoveWalkerArgs {
+    possibleParkLocationIds: number[]
+}
+
 // NOTIFS
 interface NotifObjectivesChosen {
     chosenObjectiveCards: [{playerId: number, cardId: number}]
@@ -112,5 +116,10 @@ interface NotifPlayerGainsResources {
 
 interface NotifMoveWalkers {
     walkers: DogWalker[]
+}
+
+interface NotifMoveWalker {
+    playerId: number,
+    walker: DogWalker
 }
 

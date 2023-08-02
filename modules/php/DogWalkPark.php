@@ -78,4 +78,39 @@ class DogWalkPark extends APP_DbObject
         self::DbQuery("DELETE FROM `extra_location_bonus`");
     }
 
+    public function getPossibleParkLocationIds(int $playerId)
+    {
+        $walkerId = DogPark::$instance->playerManager->getWalkerId($playerId);
+        $walker = DogWalker::from(DogPark::$instance->dogWalkers->getCard($walkerId));
+        if ($walker->location != LOCATION_PARK) {
+            throw new BgaUserException('Walker is not in park for player');
+        }
+
+        return $this->getNextLocations($walker->locationArg, 0, 4, []);
+    }
+
+    private function getNextLocations(int $locationId, int $currentDepth, int $maxDepth, array $result) {
+        $location = DogPark::$instance->PARK_LOCATIONS[$locationId];
+        if ($currentDepth == $maxDepth) {
+            return $result;
+        }
+
+        $newResult = [...$result];
+        foreach ($location['nextLocations'] as $newLocationId) {
+            // If the location is blocked by a BLOCK token, we skip the location
+            $newDepth = $currentDepth;
+            if ($this->isLocationAccessible($newLocationId)) {
+                $newResult = [...$newResult, $newLocationId];
+                $newDepth += 1;
+            }
+            $newResult = $this->getNextLocations($newLocationId, $newDepth, $maxDepth, $newResult);
+        }
+        return $newResult;
+    }
+
+    private function isLocationAccessible($locationId): bool
+    {
+        $locationBonuses = $this->getLocationBonus($locationId);
+        return !in_array(BLOCK, array_map(fn($locationBonus) => $locationBonus->bonus, array_values($locationBonuses)));
+    }
 }
