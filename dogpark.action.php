@@ -135,6 +135,25 @@ class action_dogpark extends APP_GameAction
         self::ajaxResponse();
     }
 
+    public function walkingAdditionalAction()
+    {
+        self::setAjaxMode();
+
+        $actionId = self::getArg("actionId", AT_alphanum, true);
+        $this->game->walkingAdditionalAction($actionId);
+
+        self::ajaxResponse();
+    }
+
+    public function confirmWalking()
+    {
+        self::setAjaxMode();
+
+        $this->game->confirmWalking();
+
+        self::ajaxResponse();
+    }
+
     public function undoLast()
     {
         self::setAjaxMode();

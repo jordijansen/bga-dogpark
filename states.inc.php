@@ -291,16 +291,43 @@ $walkingStates = [
         "args" => "argWalkingMoveWalkerAfter",
         "type" => "activeplayer",
         "possibleactions" => [
-            ACT_MOVE_WALKER_PAY_REPUTATION,
+            ACT_WALKING_ADDITIONAL_ACTION,
             ACT_CONFIRM_WALKING,
             ACT_UNDO
         ],
         "transitions" => [
+            "" => ST_WALKING_NEXT
         ],
+    ],
+    ST_WALKING_NEXT => [
+        "name" => "walkingNext",
+        "description" => clienttranslate('Walk: next player...'),
+        "type" => "game",
+        "action" => "stWalkingNext",
+        "transitions" => [
+            "playerTurn" => ST_WALKING_MOVE_WALKER,
+            "end" => ST_HOME_TIME
+        ]
     ],
 ];
 
-$machinestates = $basicGameStates + $setupStates + $recruitmentStates + $selectionStates + $walkingStates;
+//////////////////////////////////
+// HOME TIME
+//////////////////////////////////
+$homeTimeStates = [
+    ST_HOME_TIME => [
+        "name" => "homeTime",
+        "description" => clienttranslate('Home Time'),
+        "type" => "game",
+        "action" => "stHomeTime",
+        "transitions" => [
+            "nextRound" => ST_RECRUITMENT_START,
+            "endGame" => ST_GAME_END // TODO ENDGAME SCORING
+        ]
+    ],
+];
+
+$machinestates = $basicGameStates + $setupStates + $recruitmentStates + $selectionStates + $walkingStates + $homeTimeStates;
 
 
 

@@ -6,6 +6,10 @@ class DogWalker extends Card {
         parent::__construct($dbCard);
     }
 
+    /**
+     * @param $dbCards
+     * @return DogWalker[]
+     */
     public static function fromArray($dbCards): array
     {
         return array_map(fn($dbCard) => DogWalker::from($dbCard), array_values($dbCards));

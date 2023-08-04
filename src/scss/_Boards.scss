@@ -85,76 +85,95 @@
             gap: 2px;
           }
 
+          &.end {
+            position: absolute;
+            right: 10px;
+            top: 63px;
+            height: 295px;
+            width: 145px;
+            flex-direction: column;
+            gap: 4px;
+            .dp-walk-spot {
+              height: 70px;
+              width: 145px;
+              .dp-walker-spot {
+                height: 30px;
+                padding: 0;
+              }
+            }
+          }
+
           .dp-park-column {
             padding-bottom: 15px;
             display: flex;
             flex-direction: column;
             justify-content: flex-end;
-            .dp-walk-spot {
-              border-radius: 15px;
-              width: 70px;
-              height: 225px;
-              display: flex;
-              justify-content: end;
-              flex-direction: column;
-              align-items: center;
-              position: relative;
+          }
 
-              .dp-resource-spot {
-                position: absolute;
-                bottom: 65px;
+          .dp-walk-spot {
+            border-radius: 15px;
+            width: 70px;
+            height: 225px;
+            display: flex;
+            justify-content: end;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+
+            .dp-resource-spot {
+              position: absolute;
+              bottom: 65px;
+            }
+
+            .spot-label {
+              position: absolute;
+              bottom: 0;
+            }
+
+            .dp-walker-spot {
+              padding-left: 5px;
+              padding-bottom: 65px;
+              height: 175px;
+              .dp-dog-walker-token {
+                position: relative;
+                height: 35px;
+                .card-sides {
+                  .card-side {
+                    top: unset;
+                  }
+                }
               }
+            }
 
-              .spot-label {
-                position: absolute;
-                bottom: 0;
-              }
-
+            &[data-spot-id="5"],&[data-spot-id="7"],&[data-spot-id="9"],&[data-spot-id="11"], &[data-spot-id="13"] {
+              height: 150px;
+              margin-bottom: 125px;
               .dp-walker-spot {
-                padding-left: 5px;
-                padding-bottom: 65px;
-                height: 175px;
+                height: 100px;
                 .dp-dog-walker-token {
-                  position: relative;
-                  height: 35px;
-                  .card-sides {
-                    .card-side {
-                      top: unset;
-                    }
-                  }
+                  height: 20px;
                 }
               }
+            }
 
-              &[data-spot-id="5"],&[data-spot-id="7"],&[data-spot-id="9"],&[data-spot-id="11"], &[data-spot-id="13"] {
-                height: 150px;
-                margin-bottom: 125px;
-                .dp-walker-spot {
-                  height: 100px;
-                  .dp-dog-walker-token {
-                    height: 20px;
-                  }
+            &[data-spot-id="15"] {
+              height: 190px;
+              .dp-walker-spot {
+                height: 100px;
+                .dp-dog-walker-token {
+                  height: 20px;
                 }
               }
+            }
 
-              &[data-spot-id="15"] {
-                height: 190px;
-                .dp-walker-spot {
-                  height: 100px;
-                  .dp-dog-walker-token {
-                    height: 20px;
-                  }
-                }
-              }
+            &.selectable {
+              outline: 4px rgba(80, 200, 255, 0.75) solid;
+              cursor: pointer;
+            }
 
-              &.selectable {
-                outline: 4px rgba(80, 200, 255, 0.75) solid;
-                cursor: pointer;
-              }
-
-              &.selected {
-                outline: 4px rgba(124, 252, 0, 0.75) solid;
-                cursor: pointer;
-              }
+            &.selected {
+              outline: 4px rgba(124, 252, 0, 0.75) solid;
+              cursor: pointer;
             }
           }
 

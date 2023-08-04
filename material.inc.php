@@ -91,14 +91,15 @@ $this->PARK_LOCATIONS = [
     10 => ['bonus' =>  [SWAP], 'nextLocations' => [12]],
     11 => ['bonus' =>  [REPUTATION], 'nextLocations' => [13]],
     12 => ['bonus' =>  [RESOURCE_TOY], 'nextLocations' => [14]],
-    13 => ['bonus' =>  [RESOURCE_BALL, RESOURCE_BALL], 'nextLocations' => [91,92,93,94]],
+    13 => ['bonus' =>  [RESOURCE_BALL, RESOURCE_BALL], 'nextLocations' => [91,92,93]],
     14 => ['bonus' =>  [RESOURCE_TREAT], 'nextLocations' => [15]],
-    15 => ['bonus' =>  [RESOURCE_STICK, RESOURCE_STICK], 'nextLocations' => [91,92,93,94]],
+    15 => ['bonus' =>  [RESOURCE_STICK, RESOURCE_STICK], 'nextLocations' => [91,92,93]],
 
     // Leaving the park spots
     91 => ['bonus' => [], 'nextLocations' => []], // Only in 4 player games
     92 => ['bonus' => [], 'nextLocations' => []],
     93 => ['bonus' => [], 'nextLocations' => []],
+    // Last out of the park
     94 => ['bonus' => [], 'nextLocations' => []]
 ];
 

@@ -1,0 +1,67 @@
+<?php
+
+use actions\AdditionalAction;
+
+class ActionManager
+{
+    function addAction($playerId, $action) {
+        $existingActions = $this->getActions($playerId);
+        DogPark::$instance->setGlobalVariable(ADDITIONAL_ACTIONS_ .$playerId, [...$existingActions, $action]);
+    }
+    function addActions($playerId, $actions) {
+        $existingActions = $this->getActions($playerId);
+        DogPark::$instance->setGlobalVariable(ADDITIONAL_ACTIONS_ .$playerId, [...$existingActions, ...$actions]);
+    }
+
+    /**
+     * @return AdditionalAction[]
+     */
+    function getActions($playerId, $includeOnlyUnperformed = false) {
+        $actions = DogPark::$instance->getGlobalVariable(ADDITIONAL_ACTIONS_ .$playerId);
+        $actions = AdditionalAction::fromArray($actions);
+        if ($includeOnlyUnperformed) {
+            $actions = array_filter($actions, function($action) {return $action->performed == false;});
+        }
+        return [...$actions];
+    }
+
+    public function getAction($playerId, $actionId): ?AdditionalAction
+    {
+        $actions = $this->getActions($playerId);
+        foreach ($actions as $action) {
+            if ($action->id == $actionId) {
+                return $action;
+            }
+        }
+        return null;
+    }
+
+    public function removeAction($playerId, $actionId)
+    {
+        $actions = $this->getActions($playerId);
+        $newActions = array_filter($actions, function ($action) use($actionId){ return strcmp($action->id, $actionId) !== 0;});
+        DogPark::$instance->setGlobalVariable(ADDITIONAL_ACTIONS_ .$playerId, [...$newActions]);
+    }
+
+    public function clear(int $playerId)
+    {
+        DogPark::$instance->deleteGlobalVariable(ADDITIONAL_ACTIONS_ .$playerId);
+    }
+
+    public function markActionPerformed(int $playerId, string $actionId)
+    {
+       $action = $this->getAction($playerId, $actionId);
+       $this->removeAction($playerId, $actionId);
+       $action->performed = true;
+       $this->addAction($playerId, $action);
+    }
+
+    public function unmarkActionPerformed(int $playerId, string $actionId)
+    {
+        $action = $this->getAction($playerId, $actionId);
+        $this->removeAction($playerId, $actionId);
+        $action->performed = false;
+        $this->addAction($playerId, $action);
+    }
+
+}

@@ -40,14 +40,15 @@ trait StateTrait
     function stRecruitmentStart() {
         $currentPhase = $this->getGlobalVariable(CURRENT_PHASE);
         $newPhase = PHASE_RECRUITMENT_1;
-        $newPhaseLabel = clienttranslate('Entering new Phase: Recruitment (1/2)');
+        $newPhaseLabel = clienttranslate('Round ${round}: entering new Phase: Recruitment (1/2)');
         if ($currentPhase == PHASE_RECRUITMENT_1) {
             $newPhase = PHASE_RECRUITMENT_2;
-            $newPhaseLabel = clienttranslate('Entering new Phase: Recruitment (2/2)');
+            $newPhaseLabel = clienttranslate('Round ${round}: entering new Phase: Recruitment (2/2)');
         }
         $this->setGlobalVariable(CURRENT_PHASE, $newPhase);
 
         $this->notifyAllPlayers('newPhase', $newPhaseLabel, [
+            'round' => intval($this->getGlobalVariable(CURRENT_ROUND)),
             'newPhase' => $newPhase
         ]);
 
@@ -173,7 +174,9 @@ trait StateTrait
     function stSelectionStart()
     {
         $this->setGlobalVariable(CURRENT_PHASE, PHASE_SELECTION);
-        $this->notifyAllPlayers('newPhase', clienttranslate('Entering new Phase: Selection'), [
+
+        $this->notifyAllPlayers('newPhase', clienttranslate('Round ${round}: entering new Phase: Selection'), [
+            'round' => intval($this->getGlobalVariable(CURRENT_ROUND)),
             'newPhase' => PHASE_SELECTION
         ]);
 
@@ -197,12 +200,12 @@ trait StateTrait
         foreach ($players as $orderNo => $player) {
             $playerId = intval($player['player_id']);
             if (sizeof($this->dogCards->getCardsInLocation(LOCATION_LEAD, $playerId)) == 0) {
-                $resources = [RESOURCE_BALL => 1, RESOURCE_STICK => 1];
+                $resources = [RESOURCE_BALL, RESOURCE_STICK];
                 $this->playerManager->gainResources($playerId, $resources);
                 $this->notifyAllPlayers('playerGainsResources', clienttranslate('${player_name} gains resources because they can not walk any dog'),[
                     'playerId' => $playerId,
                     'player_name' => $this->getPlayerName($playerId),
-                    'resources' => [RESOURCE_BALL, RESOURCE_STICK]
+                    'resources' => $resources
                 ]);
             }
         }
@@ -219,7 +222,9 @@ trait StateTrait
     function stWalkingStart()
     {
         $this->setGlobalVariable(CURRENT_PHASE, PHASE_WALKING);
-        $this->notifyAllPlayers('newPhase', clienttranslate('Entering new Phase: Selection'), [
+
+        $this->notifyAllPlayers('newPhase', clienttranslate('Round ${round}: entering new Phase: Walking'), [
+            'round' => intval($this->getGlobalVariable(CURRENT_ROUND)),
             'newPhase' => PHASE_WALKING
         ]);
 
@@ -243,6 +248,68 @@ trait StateTrait
             $this->gamestate->nextState("playerTurn");
         } else {
             // TODO WHAT IF NO PLAYERS WALK DOGS
+        }
+    }
+
+    function stWalkingNext()
+    {
+        $walkersInPark = DogWalker::fromArray($this->dogWalkers->getCardsInLocation(LOCATION_PARK));
+        $walkersNotInLeavingParkSpace = array_filter($walkersInPark, function($walker) {return $walker->locationArg < 90;});
+        if (sizeof($walkersNotInLeavingParkSpace) > 1) {
+            $skipPlayer = true;
+            while ($skipPlayer) {
+                $this->activeNextPlayer();
+                $playerId = $this->getActivePlayerId();
+
+                $walker = $this->playerManager->getWalker($playerId);
+                if ($walker->location != LOCATION_PARK) {
+                    $skipPlayer = true;
+                } else if ($walker->locationArg > 90) {
+                    $skipPlayer = true;
+                } else {
+                    $skipPlayer = false;
+                }
+            }
+            $this->giveExtraTime($this->getActivePlayerId());
+            $this->gamestate->nextState( "playerTurn");
+        } else {
+            // Only one walker remains, ending this phase.
+            $lastWalker = current($walkersNotInLeavingParkSpace);
+            $playerId = $lastWalker->typeArg;
+
+            $playerScore = $this->getPlayerScore($playerId);
+            if ($playerScore > 0) {
+                $this->updatePlayerScore($playerId, $playerScore);
+            }
+            $this->dogWalkers->moveCard($lastWalker->id, LOCATION_PARK, 94);
+
+            $this->notifyAllPlayers('playerLeavesThePark', clienttranslate('${player_name} leaves the park and loses ${resource}'),[
+                'playerId' => $playerId,
+                'player_name' => $this->getPlayerName($playerId),
+                'resource' => 'reputation',
+                'locationId' => 94,
+                'score' => $this->getPlayerScore($playerId),
+                'walker' => $this->playerManager->getWalker($playerId)
+            ]);
+
+            $this->gamestate->nextState( "end");
+        }
+    }
+
+    function stHomeTime() {
+        $currentRound = intval($this->getGlobalVariable(CURRENT_ROUND));
+
+        $this->notifyAllPlayers('newPhase', clienttranslate('Round ${round}: entering new Phase: Home Time'), [
+            'round' => $currentRound,
+            'newPhase' => PHASE_HOME_TIME
+        ]);
+
+        if ($currentRound < 4) {
+            $this->setGlobalVariable(CURRENT_ROUND, $currentRound + 1);
+
+            $this->gamestate->nextState( "nextRound");
+        } else {
+            $this->gamestate->nextState( "endGame");
         }
     }
 }

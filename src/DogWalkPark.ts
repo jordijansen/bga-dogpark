@@ -19,7 +19,7 @@ class DogWalkPark {
 
     private element: HTMLElement;
     private walkerSpots: {[spotId: number]: LineStock<DogWalker>} = {}
-    private resourceSpots: {[spotId: number]: LineStock<Token>} = {}
+    public resourceSpots: {[spotId: number]: LineStock<Token>} = {}
     private locationBonusCardPile: Deck<Card>;
     private possibleParkLocationIds: number[] = [];
     private clickHandlers: any[] = [];
@@ -30,6 +30,7 @@ class DogWalkPark {
 
     public setUp(gameData: DogParkGameData) {
         dojo.place(`<div id="dp-walk-trail-start" class="dp-walk-trail start"></div>`, this.element);
+        dojo.place(`<div id="dp-walk-trail-end" class="dp-walk-trail end"></div>`, this.element);
         dojo.place(`<div id="dp-walk-trail" class="dp-walk-trail"></div>`, this.element);
         const trailWrapper = $('dp-walk-trail');
         for (let i = 1; i <= 10; i++) {
@@ -38,9 +39,14 @@ class DogWalkPark {
 
         this.walkerSpots[0] = new LineStock<DogWalker>(this.game.dogWalkerManager, $("dp-walk-trail-start"), {direction: "column", wrap: "nowrap", gap: '0px'})
         for (let i = 1; i <= 15; i++) {
-            this.createParkSpot(i);
+            this.createParkSpot(i, `park-column-${DogWalkPark.spotColumnMap[i]}`);
             this.walkerSpots[i] = new LineStock<DogWalker>(this.game.dogWalkerManager, $(`dp-walker-spot-${i}`), {direction: "column", wrap: "nowrap", gap: '0px'})
             this.resourceSpots[i] = new LineStock<Token>(this.game.tokenManager, $(`dp-resource-spot-${i}`), {direction: "column", wrap: "nowrap"})
+        }
+
+        for (let i = 91; i <= 94; i++) {
+            this.createParkSpot(i, `dp-walk-trail-end`);
+            this.walkerSpots[i] = new LineStock<DogWalker>(this.game.dogWalkerManager, $(`dp-walker-spot-${i}`), {direction: "column", wrap: "nowrap", gap: '0px'})
         }
 
         this.moveWalkers(gameData.park.walkers);
@@ -79,12 +85,11 @@ class DogWalkPark {
         return this.locationBonusCardPile.addCard(card);
     }
 
-    private createParkSpot(id: number) {
+    private createParkSpot(id: number, parentElement: string) {
         dojo.place(`<div id="dp-walk-spot-${id}" class="dp-walk-spot" data-spot-id="${id}">
-                            <div class="spot-label">${id}</div>
                             <div id="dp-resource-spot-${id}" class="dp-resource-spot"></div>
                             <div id="dp-walker-spot-${id}" class="dp-walker-spot"></div>
-                         </div>`, $(`park-column-${DogWalkPark.spotColumnMap[id]}`))
+                         </div>`, $(parentElement))
 
     }
 

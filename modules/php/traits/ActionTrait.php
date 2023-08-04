@@ -1,8 +1,12 @@
 <?php
 
 namespace traits;
+use actions\AdditionalAction;
 use BgaUserException;
+use commands\GainLeavingTheParkBonusCommand;
+use commands\GainLocationBonusCommand;
 use commands\MoveWalkerCommand;
+use commands\PayReputationForLocationCommand;
 use commands\PlaceDogOnLeadCommand;
 use objects\DogCard;
 use objects\DogWalker;
@@ -212,7 +216,61 @@ trait ActionTrait
             throw new BgaUserException('Location not allowed!');
         }
 
+        $otherWalkersInLocation = DogWalker::fromArray($this->dogWalkers->getCardsInLocation(LOCATION_PARK, $locationId));
+
         $this->commandManager->addCommand($playerId, new MoveWalkerCommand($playerId, $walker->id, $walker->locationArg, $locationId));
+
+        $this->actionManager->clear($playerId);
+        // TODO SOCIAL BUTTERFLY YOU DON'T NEED TO PAY REPUTATION
+        if (sizeof($otherWalkersInLocation) > 0) {
+            if ($this->getPlayerScore($playerId) > 0) {
+                $this->actionManager->addAction($playerId, new AdditionalAction(WALKING_PAY_REPUTATION_ACCEPT, (object) ["accepted" => true]));
+            }
+            $this->actionManager->addAction($playerId, new AdditionalAction(WALKING_PAY_REPUTATION_DENY, (object) ["accepted" => false]));
+        } if ($locationId > 90) {
+            if ($locationId == 91) {
+                $this->actionManager->addAction($playerId, new AdditionalAction(WALKING_GAIN_LEAVING_THE_PARK_BONUS, (object) ["bonusType" => REPUTATION, "amount" => 3]));
+            } else if ($locationId == 92) {
+                $this->actionManager->addAction($playerId, new AdditionalAction(WALKING_GAIN_LEAVING_THE_PARK_BONUS, (object) ["bonusType" => REPUTATION, "amount" => 2]));
+            } else if ($locationId == 93) {
+                $this->actionManager->addActions($playerId, [new AdditionalAction(WALKING_GAIN_LEAVING_THE_PARK_BONUS, (object) ["bonusType" => REPUTATION, "amount" => 1]),new AdditionalAction(WALKING_GAIN_LEAVING_THE_PARK_BONUS, (object) ["bonusType" => SWAP, "amount" => 1])]);
+            }
+        } else {
+            $locationBonuses = $this->dogWalkPark->getLocationBonuses($locationId);
+            $extraLocationBonuses = $this->dogWalkPark->getExtraLocationBonuses($locationId);
+            $this->actionManager->addActions($playerId, array_map(fn($bonus) => new AdditionalAction(WALKING_GAIN_LOCATION_BONUS, (object) ["bonusType" => $bonus, "extraBonus" => false]), $locationBonuses));
+            $this->actionManager->addActions($playerId, array_map(fn($bonus) => new AdditionalAction(WALKING_GAIN_LOCATION_BONUS, (object) ["bonusType" => $bonus, "extraBonus" => true]), $extraLocationBonuses));
+        }
+
+        $this->gamestate->nextState("");
+    }
+
+    function walkingAdditionalAction($actionId) {
+        $this->checkAction(ACT_WALKING_ADDITIONAL_ACTION);
+        $playerId = $this->getActivePlayerId();
+        $action = $this->actionManager->getAction($this->getActivePlayerId(), $actionId);
+        if ($action == null) {
+            throw new BgaUserException("Action not found!");
+        }
+
+        if ($action->type == WALKING_GAIN_LOCATION_BONUS) {
+            $this->commandManager->addCommand($playerId, new GainLocationBonusCommand($playerId, $actionId));
+        } else if ($action->type == WALKING_PAY_REPUTATION_ACCEPT) {
+            $this->commandManager->addCommand($playerId, new PayReputationForLocationCommand($playerId, $actionId));
+        } else if ($action->type == WALKING_PAY_REPUTATION_DENY) {
+            $this->commandManager->addCommand($playerId, new PayReputationForLocationCommand($playerId, $actionId));
+        } else if ($action->type == WALKING_GAIN_LEAVING_THE_PARK_BONUS) {
+            $this->commandManager->addCommand($playerId, new GainLeavingTheParkBonusCommand($playerId, $actionId));
+        }
+        $this->gamestate->jumpToState(ST_WALKING_MOVE_WALKER_AFTER);
+    }
+
+    function confirmWalking() {
+        $this->checkAction(ACT_CONFIRM_WALKING);
+
+        $playerId = $this->getActivePlayerId();
+        $this->actionManager->clear($playerId);
+        $this->commandManager->clearCommands();
 
         $this->gamestate->nextState("");
     }
@@ -221,12 +279,15 @@ trait ActionTrait
         $this->checkAction(ACT_UNDO);
 
         $playerId = $this->getCurrentPlayerId();
-        $this->commandManager->removeLastCommand($playerId);
-
+        $lastRemovedCommand = $this->commandManager->removeLastCommand($playerId);
         if ($this->getGlobalVariable(CURRENT_PHASE) == PHASE_SELECTION) {
             $this->gamestate->setPrivateState($playerId, ST_SELECTION_PLACE_DOG_ON_LEAD);
         } else if ($this->getGlobalVariable(CURRENT_PHASE) == PHASE_WALKING) {
-            $this->gamestate->jumpToState(ST_WALKING_MOVE_WALKER);
+            if (get_class($lastRemovedCommand) == "commands\MoveWalkerCommand") {
+                $this->gamestate->jumpToState(ST_WALKING_MOVE_WALKER);
+            } else {
+                $this->gamestate->jumpToState(ST_WALKING_MOVE_WALKER_AFTER);
+            }
         }
     }
 

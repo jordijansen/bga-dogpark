@@ -35,7 +35,7 @@ class MoveWalkerCommand extends BaseCommand
     {
         DogPark::$instance->dogWalkers->moveCard($this->walkerId, LOCATION_PARK, $this->currentLocation);
 
-        DogPark::$instance->notifyAllPlayers('moveWalker', clienttranslate('Undo: ${player_name} moves their walker back'),[
+        DogPark::$instance->notifyAllPlayers('moveWalker', clienttranslate('Undo: ${player_name} moves their walker'),[
             'playerId' => $this->playerId,
             'player_name' => DogPark::$instance->getPlayerName($this->playerId),
             'walker' => DogWalker::from(DogPark::$instance->dogWalkers->getCard($this->walkerId))

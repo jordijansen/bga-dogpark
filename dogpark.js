@@ -2783,6 +2783,7 @@ var DogWalkPark = /** @class */ (function () {
     DogWalkPark.prototype.setUp = function (gameData) {
         var _this = this;
         dojo.place("<div id=\"dp-walk-trail-start\" class=\"dp-walk-trail start\"></div>", this.element);
+        dojo.place("<div id=\"dp-walk-trail-end\" class=\"dp-walk-trail end\"></div>", this.element);
         dojo.place("<div id=\"dp-walk-trail\" class=\"dp-walk-trail\"></div>", this.element);
         var trailWrapper = $('dp-walk-trail');
         for (var i = 1; i <= 10; i++) {
@@ -2790,9 +2791,13 @@ var DogWalkPark = /** @class */ (function () {
         }
         this.walkerSpots[0] = new LineStock(this.game.dogWalkerManager, $("dp-walk-trail-start"), { direction: "column", wrap: "nowrap", gap: '0px' });
         for (var i = 1; i <= 15; i++) {
-            this.createParkSpot(i);
+            this.createParkSpot(i, "park-column-".concat(DogWalkPark.spotColumnMap[i]));
             this.walkerSpots[i] = new LineStock(this.game.dogWalkerManager, $("dp-walker-spot-".concat(i)), { direction: "column", wrap: "nowrap", gap: '0px' });
             this.resourceSpots[i] = new LineStock(this.game.tokenManager, $("dp-resource-spot-".concat(i)), { direction: "column", wrap: "nowrap" });
+        }
+        for (var i = 91; i <= 94; i++) {
+            this.createParkSpot(i, "dp-walk-trail-end");
+            this.walkerSpots[i] = new LineStock(this.game.dogWalkerManager, $("dp-walker-spot-".concat(i)), { direction: "column", wrap: "nowrap", gap: '0px' });
         }
         this.moveWalkers(gameData.park.walkers);
         // Park Bonuses
@@ -2824,8 +2829,8 @@ var DogWalkPark = /** @class */ (function () {
     DogWalkPark.prototype.addLocationBonusCard = function (card) {
         return this.locationBonusCardPile.addCard(card);
     };
-    DogWalkPark.prototype.createParkSpot = function (id) {
-        dojo.place("<div id=\"dp-walk-spot-".concat(id, "\" class=\"dp-walk-spot\" data-spot-id=\"").concat(id, "\">\n                            <div class=\"spot-label\">").concat(id, "</div>\n                            <div id=\"dp-resource-spot-").concat(id, "\" class=\"dp-resource-spot\"></div>\n                            <div id=\"dp-walker-spot-").concat(id, "\" class=\"dp-walker-spot\"></div>\n                         </div>"), $("park-column-".concat(DogWalkPark.spotColumnMap[id])));
+    DogWalkPark.prototype.createParkSpot = function (id, parentElement) {
+        dojo.place("<div id=\"dp-walk-spot-".concat(id, "\" class=\"dp-walk-spot\" data-spot-id=\"").concat(id, "\">\n                            <div id=\"dp-resource-spot-").concat(id, "\" class=\"dp-resource-spot\"></div>\n                            <div id=\"dp-walker-spot-").concat(id, "\" class=\"dp-walker-spot\"></div>\n                         </div>"), $(parentElement));
     };
     DogWalkPark.spotColumnMap = {
         '1': 1,
@@ -2968,28 +2973,22 @@ var PlayerResources = /** @class */ (function () {
     };
     PlayerResources.prototype.payResourcesForDog = function (playerId, dog, resources) {
         return __awaiter(this, void 0, void 0, function () {
-            var _a, _b, _c, _i, index, resource, token;
-            return __generator(this, function (_d) {
-                switch (_d.label) {
+            var _i, resources_1, resource, token;
+            var _this = this;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
                     case 0:
-                        _a = resources;
-                        _b = [];
-                        for (_c in _a)
-                            _b.push(_c);
-                        _i = 0;
-                        _d.label = 1;
+                        resources.forEach(function (resource) { return _this.playerResourceStocks[playerId][resource].decValue(1); });
+                        _i = 0, resources_1 = resources;
+                        _a.label = 1;
                     case 1:
-                        if (!(_i < _b.length)) return [3 /*break*/, 4];
-                        _c = _b[_i];
-                        if (!(_c in _a)) return [3 /*break*/, 3];
-                        index = _c;
-                        resource = resources[index];
-                        this.playerResourceStocks[playerId][resource].decValue(1);
+                        if (!(_i < resources_1.length)) return [3 /*break*/, 4];
+                        resource = resources_1[_i];
                         token = this.game.tokenManager.createToken(resource);
                         return [4 /*yield*/, this.game.dogCardManager.cardTokenVoidStocks[dog.id].addCard(token, { fromStock: this.playerResourceStocks[playerId][resource] })];
                     case 2:
-                        _d.sent();
-                        _d.label = 3;
+                        _a.sent();
+                        _a.label = 3;
                     case 3:
                         _i++;
                         return [3 /*break*/, 1];
@@ -3000,28 +2999,22 @@ var PlayerResources = /** @class */ (function () {
     };
     PlayerResources.prototype.gainResourcesFromDog = function (playerId, dog, resources) {
         return __awaiter(this, void 0, void 0, function () {
-            var _a, _b, _c, _i, index, resource, token;
-            return __generator(this, function (_d) {
-                switch (_d.label) {
+            var _i, resources_2, resource, token;
+            var _this = this;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
                     case 0:
-                        _a = resources;
-                        _b = [];
-                        for (_c in _a)
-                            _b.push(_c);
-                        _i = 0;
-                        _d.label = 1;
+                        resources.forEach(function (resource) { return _this.playerResourceStocks[playerId][resource].incValue(1); });
+                        _i = 0, resources_2 = resources;
+                        _a.label = 1;
                     case 1:
-                        if (!(_i < _b.length)) return [3 /*break*/, 4];
-                        _c = _b[_i];
-                        if (!(_c in _a)) return [3 /*break*/, 3];
-                        index = _c;
-                        resource = resources[index];
-                        this.playerResourceStocks[playerId][resource].incValue(1);
+                        if (!(_i < resources_2.length)) return [3 /*break*/, 4];
+                        resource = resources_2[_i];
                         token = this.game.tokenManager.createToken(resource);
                         return [4 /*yield*/, this.playerResourceStocks[playerId][resource].addCard(token, { fromStock: this.game.dogCardManager.cardTokenVoidStocks[dog.id] })];
                     case 2:
-                        _d.sent();
-                        _d.label = 3;
+                        _a.sent();
+                        _a.label = 3;
                     case 3:
                         _i++;
                         return [3 /*break*/, 1];
@@ -3030,35 +3023,63 @@ var PlayerResources = /** @class */ (function () {
             });
         });
     };
-    PlayerResources.prototype.gainResources = function (playerId, resources) {
+    PlayerResources.prototype.gainResourceFromLocation = function (playerId, locationId, resource, extraBonus) {
         return __awaiter(this, void 0, void 0, function () {
-            var _a, _b, _c, _i, index, resource, token;
-            return __generator(this, function (_d) {
-                switch (_d.label) {
+            var stock, token, token;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
                     case 0:
-                        _a = resources;
-                        _b = [];
-                        for (_c in _a)
-                            _b.push(_c);
-                        _i = 0;
-                        _d.label = 1;
-                    case 1:
-                        if (!(_i < _b.length)) return [3 /*break*/, 4];
-                        _c = _b[_i];
-                        if (!(_c in _a)) return [3 /*break*/, 3];
-                        index = _c;
-                        resource = resources[index];
                         this.playerResourceStocks[playerId][resource].incValue(1);
+                        stock = this.game.dogWalkPark.resourceSpots[locationId];
+                        if (!extraBonus) return [3 /*break*/, 2];
+                        token = stock.getCards().find(function (token) { return token.type === resource; });
+                        return [4 /*yield*/, this.playerResourceStocks[playerId][resource].addCard(token)];
+                    case 1:
+                        _a.sent();
+                        return [3 /*break*/, 4];
+                    case 2:
+                        token = this.game.tokenManager.createToken(resource);
+                        return [4 /*yield*/, this.playerResourceStocks[playerId][resource].addCard(token, { fromStock: stock })];
+                    case 3:
+                        _a.sent();
+                        _a.label = 4;
+                    case 4: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    PlayerResources.prototype.gainResources = function (playerId, resources, fromElementId) {
+        return __awaiter(this, void 0, void 0, function () {
+            var _i, resources_3, resource, token;
+            var _this = this;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        resources.forEach(function (resource) { return _this.playerResourceStocks[playerId][resource].incValue(1); });
+                        _i = 0, resources_3 = resources;
+                        _a.label = 1;
+                    case 1:
+                        if (!(_i < resources_3.length)) return [3 /*break*/, 4];
+                        resource = resources_3[_i];
                         token = this.game.tokenManager.createToken(resource);
                         return [4 /*yield*/, this.playerResourceStocks[playerId][resource].addCard(token)];
                     case 2:
-                        _d.sent();
-                        _d.label = 3;
+                        _a.sent();
+                        _a.label = 3;
                     case 3:
                         _i++;
                         return [3 /*break*/, 1];
                     case 4: return [2 /*return*/];
                 }
+            });
+        });
+    };
+    PlayerResources.prototype.payResources = function (playerId, resources) {
+        return __awaiter(this, void 0, void 0, function () {
+            var _this = this;
+            return __generator(this, function (_a) {
+                resources.forEach(function (resource) { return _this.playerResourceStocks[playerId][resource].decValue(1); });
+                return [2 /*return*/];
             });
         });
     };
@@ -3216,7 +3237,7 @@ var DogPark = /** @class */ (function () {
     DogPark.prototype.enteringSelectionPlaceDogOnLeadSelectResources = function (args) {
         var _this = this;
         this.gamedatas.gamestate.descriptionmyturn = dojo.string.substitute(_('Select resources for ${dogName}'), { dogName: args.dog.name });
-        this.gamedatas.gamestate.descriptionmyturn = this.gamedatas.gamestate.descriptionmyturn + '<br /><div id="dp-pay-costs"></div><br />';
+        this.gamedatas.gamestate.descriptionmyturn = this.gamedatas.gamestate.descriptionmyturn + '<br /><div id="dp-pay-costs"></div>';
         this.updatePageTitle();
         this.currentPlayerPayCosts = new DogPayCosts("dp-pay-costs", args.resources, args.dog, function () {
             dojo.destroy('dp-pay-costs');
@@ -3287,9 +3308,15 @@ var DogPark = /** @class */ (function () {
                         dojo.addClass('confirmSelection', 'disabled');
                     }
                     break;
+                case 'walkingMoveWalkerAfter':
+                    var walkingMoveWalkerAfterArgs = args;
+                    this.addWalkingAdditionalActionButtons(walkingMoveWalkerAfterArgs);
+                    if (walkingMoveWalkerAfterArgs.additionalActions.every(function (action) { return action.optional; })) {
+                        this.addActionButton('confirmWalking', _("Confirm Walking"), function () { return _this.confirmWalking(); });
+                    }
             }
             if (args === null || args === void 0 ? void 0 : args.canCancelMoves) {
-                this.addActionButton('undoLast', _("Undo last action"), function () { return _this.undoLast(); }, null, null, 'gray');
+                this.addActionButton('undoLast', _("Undo last action"), function () { return _this.undoLast(); }, null, null, 'red');
                 this.addActionButton('undoAll', _("Restart turn"), function () { return _this.undoAll(); }, null, null, 'red');
             }
         }
@@ -3305,6 +3332,30 @@ var DogPark = /** @class */ (function () {
                 }
             }
         }
+    };
+    DogPark.prototype.addWalkingAdditionalActionButtons = function (args) {
+        var _this = this;
+        if (args.additionalActions && args.additionalActions.length > 0) {
+            args.additionalActions.forEach(function (additionalAction) {
+                switch (additionalAction.type) {
+                    case 'WALKING_PAY_REPUTATION_ACCEPT':
+                        _this.addActionButton("payReputationAccept", dojo.string.substitute(_('Pay ${resourceType} to unlock location bonus(es)'), { resourceType: _this.tokenIcon('reputation') }), function () { return _this.walkingAdditionalAction(additionalAction); }, null, null, 'gray');
+                        break;
+                    case 'WALKING_PAY_REPUTATION_DENY':
+                        _this.addActionButton("payReputationDeny", _('Skip location bonuses'), function () { return _this.walkingAdditionalAction(additionalAction); }, null, null, 'gray');
+                        break;
+                    case 'WALKING_GAIN_LOCATION_BONUS':
+                        _this.addActionButton("gainLocationBonus".concat(additionalAction.id), dojo.string.substitute(_('Gain location bonus ${resourceType}'), { resourceType: _this.tokenIcon(additionalAction.additionalArgs['bonusType']) }), function () { return _this.walkingAdditionalAction(additionalAction); }, null, null, 'gray');
+                        break;
+                    case 'WALKING_GAIN_LEAVING_THE_PARK_BONUS':
+                        _this.addActionButton("gainLeavingPark".concat(additionalAction.id), dojo.string.substitute(_('Gain leaving the park bonus ${resourceType}'), { resourceType: _this.tokenIcons(additionalAction.additionalArgs['bonusType'], additionalAction.additionalArgs['amount']) }), function () { return _this.walkingAdditionalAction(additionalAction); }, null, null, 'gray');
+                        break;
+                }
+            });
+        }
+    };
+    DogPark.prototype.walkingAdditionalAction = function (args) {
+        this.takeAction('walkingAdditionalAction', { actionId: args.id });
     };
     DogPark.prototype.confirmObjective = function () {
         var cardId = this.currentPlayerChooseObjectives.getSelectedObjectiveId();
@@ -3343,6 +3394,9 @@ var DogPark = /** @class */ (function () {
     };
     DogPark.prototype.changeSelection = function () {
         this.takeNoLockAction('changeSelection');
+    };
+    DogPark.prototype.confirmWalking = function () {
+        this.takeAction('confirmWalking');
     };
     DogPark.prototype.undoLast = function () {
         this.takeNoLockAction('undoLast');
@@ -3429,8 +3483,12 @@ var DogPark = /** @class */ (function () {
             ['dogPlacedOnLead', undefined],
             ['undoDogPlacedOnLead', 1],
             ['playerGainsResources', undefined],
+            ['playerGainsLocationBonusResource', undefined],
+            ['undoPlayerGainsLocationBonusResource', undefined],
             ['moveWalkers', undefined],
-            ['moveWalker', undefined]
+            ['moveWalker', undefined],
+            ['playerPaysReputationForLocation', undefined],
+            ['playerLeavesThePark', undefined]
             // ['shortTime', 1],
             // ['fixedTime', 1000]
         ];
@@ -3479,6 +3537,7 @@ var DogPark = /** @class */ (function () {
         return Promise.all(this.dogField.addDogCardsToField(args.dogs));
     };
     DogPark.prototype.notif_newPhase = function (args) {
+        this.roundTracker.updateRound(args.round);
         this.roundTracker.updatePhase(args.newPhase);
     };
     DogPark.prototype.notif_dogPlacedOnLead = function (args) {
@@ -3495,11 +3554,57 @@ var DogPark = /** @class */ (function () {
     DogPark.prototype.notif_playerGainsResources = function (args) {
         return this.playerResources.gainResources(args.playerId, args.resources);
     };
+    DogPark.prototype.notif_playerGainsLocationBonusResource = function (args) {
+        if (args.resource === 'reputation') {
+            this.setScore(args.playerId, args.score);
+            if (!!args.extraBonus) {
+                this.dogWalkPark.resourceSpots[args.locationId].removeCard(this.dogWalkPark.resourceSpots[args.locationId].getCards().find(function (token) { return token.type === args.resource; }));
+            }
+        }
+        else {
+            return this.playerResources.gainResourceFromLocation(args.playerId, args.locationId, args.resource, args.extraBonus);
+        }
+        return Promise.resolve();
+    };
+    DogPark.prototype.notif_undoPlayerGainsLocationBonusResource = function (args) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        if (!args.extraBonus) return [3 /*break*/, 2];
+                        return [4 /*yield*/, this.dogWalkPark.resourceSpots[args.locationId].addCard(this.tokenManager.createToken(args.resource))];
+                    case 1:
+                        _a.sent();
+                        _a.label = 2;
+                    case 2:
+                        if (!(args.resource === 'reputation')) return [3 /*break*/, 3];
+                        this.setScore(args.playerId, args.score);
+                        return [3 /*break*/, 5];
+                    case 3: return [4 /*yield*/, this.playerResources.payResources(args.playerId, [args.resource])];
+                    case 4:
+                        _a.sent();
+                        _a.label = 5;
+                    case 5: return [2 /*return*/];
+                }
+            });
+        });
+    };
     DogPark.prototype.notif_moveWalkers = function (args) {
         return this.dogWalkPark.moveWalkers(args.walkers);
     };
     DogPark.prototype.notif_moveWalker = function (args) {
         return this.dogWalkPark.moveWalkers([args.walker]);
+    };
+    DogPark.prototype.notif_playerPaysReputationForLocation = function (args) {
+        this.setScore(args.playerId, args.score);
+        return Promise.resolve();
+    };
+    DogPark.prototype.notif_playerLeavesThePark = function (args) {
+        this.setScore(args.playerId, args.score);
+        if (args.walker) {
+            return this.dogWalkPark.moveWalkers([args.walker]);
+        }
+        return Promise.resolve();
     };
     DogPark.prototype.format_string_recursive = function (log, args) {
         try {
@@ -3512,6 +3617,16 @@ var DogPark = /** @class */ (function () {
             console.error(log, args, "Exception thrown", e.stack);
         }
         return this.inherited(arguments);
+    };
+    DogPark.prototype.tokenIcon = function (type) {
+        return "<div class=\"dp-token-token small\" data-type=\"".concat(type, "\"></div>");
+    };
+    DogPark.prototype.tokenIcons = function (type, nrOfIcons) {
+        var tokens = [];
+        for (var i = 0; i < nrOfIcons; i++) {
+            tokens.push(this.tokenIcon(type));
+        }
+        return tokens.join(' ');
     };
     return DogPark;
 }());

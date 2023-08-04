@@ -4,6 +4,7 @@ namespace managers;
 
 use APP_DbObject;
 use DogPark;
+use objects\DogWalker;
 use objects\ObjectiveCard;
 
 class PlayerManager extends APP_DbObject
@@ -38,6 +39,11 @@ class PlayerManager extends APP_DbObject
 
     public function getWalkerId($playerId) {
         return $this->getUniqueValueFromDB("SELECT card_id FROM walker WHERE card_type_arg = " .$playerId);
+    }
+
+    public function getWalker($playerId) {
+        $walkerId = $this->getWalkerId($playerId);
+        return DogWalker::from(DogPark::$instance->dogWalkers->getCard($walkerId));
     }
 
     public function resetAllOfferValues() {

@@ -85,7 +85,9 @@ trait ArgsTrait
     function argWalkingMoveWalkerAfter(): array
     {
         return [
-            "canCancelMoves" => DogPark::$instance->commandManager->hasCommands($this->getActivePlayerId()),
+            "locationId" => $this->playerManager->getWalker($this->getActivePlayerId())->locationArg,
+            "canCancelMoves" => $this->commandManager->hasCommands($this->getActivePlayerId()),
+            "additionalActions" => $this->actionManager->getActions($this->getActivePlayerId(), true)
         ];
     }
 

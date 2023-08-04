@@ -22,6 +22,7 @@ interface DogParkGame extends Game {
     locationBonusCardManager: LocationBonusCardManager;
     dogCardManager: DogCardManager;
     dogWalkerManager: DogWalkerManager;
+    dogWalkPark: DogWalkPark;
     tokenManager: TokenManager;
     objectiveCardManager: ObjectiveCardManager;
     gamedatas: DogParkGameData;
@@ -72,6 +73,12 @@ interface WalkingMoveWalkerArgs {
     possibleParkLocationIds: number[]
 }
 
+interface WalkingMoveWalkerAfterArgs {
+    locationId: number,
+    additionalActions: [{id: string, type: string, additionalArgs: any[], optional: boolean}]
+}
+
+
 // NOTIFS
 interface NotifObjectivesChosen {
     chosenObjectiveCards: [{playerId: number, cardId: number}]
@@ -100,6 +107,7 @@ interface NotifFieldRefilled {
 }
 
 interface NotifNewPhase {
+    round: number,
     newPhase: string
 }
 
@@ -111,7 +119,15 @@ interface NotifDogPlacedOnLead {
 
 interface NotifPlayerGainsResources {
     playerId: number,
-    resources: string[]
+    resources: string[],
+}
+
+interface NotifPlayerGainsLocationBonusResource {
+    playerId: number,
+    resource: string,
+    locationId: number,
+    extraBonus: boolean,
+    score: number
 }
 
 interface NotifMoveWalkers {
@@ -122,4 +138,16 @@ interface NotifMoveWalker {
     playerId: number,
     walker: DogWalker
 }
+
+interface NotifPlayerPaysReputationForLocation {
+    playerId: number,
+    score: number
+}
+
+interface NotifPlayerLeavesThePark {
+    playerId: number,
+    score: number,
+    walker?: DogWalker
+}
+
 

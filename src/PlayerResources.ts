@@ -26,29 +26,48 @@ class PlayerResources {
     }
 
     public async payResourcesForDog(playerId: number, dog: DogCard, resources: string[]) {
-        for (const index in resources) {
-            const resource = resources[index];
-            this.playerResourceStocks[playerId][resource].decValue(1);
+        resources.forEach(resource => this.playerResourceStocks[playerId][resource].decValue(1));
+
+        for (const resource of resources) {
             let token = this.game.tokenManager.createToken(resource as any)
             await this.game.dogCardManager.cardTokenVoidStocks[dog.id].addCard(token, {fromStock: this.playerResourceStocks[playerId][resource]})
         }
     }
 
     public async gainResourcesFromDog(playerId: number, dog: DogCard, resources: string[]) {
-        for (const index in resources) {
-            const resource = resources[index];
-            this.playerResourceStocks[playerId][resource].incValue(1);
+        resources.forEach(resource => this.playerResourceStocks[playerId][resource].incValue(1));
+
+        for (const resource of resources) {
             let token = this.game.tokenManager.createToken(resource as any)
             await this.playerResourceStocks[playerId][resource].addCard(token, {fromStock: this.game.dogCardManager.cardTokenVoidStocks[dog.id]})
         }
     }
 
-    public async gainResources(playerId: number, resources: string[]) {
-        for (const index in resources) {
-            const resource = resources[index];
-            this.playerResourceStocks[playerId][resource].incValue(1);
+    public async gainResourceFromLocation(playerId: number, locationId: number, resource: string, extraBonus: boolean) {
+        this.playerResourceStocks[playerId][resource].incValue(1);
+        const stock = this.game.dogWalkPark.resourceSpots[locationId];
+
+        if (extraBonus) {
+            const token = stock.getCards().find(token => token.type === resource);
+            await this.playerResourceStocks[playerId][resource].addCard(token)
+        } else  {
+            const token = this.game.tokenManager.createToken(resource as any)
+            await this.playerResourceStocks[playerId][resource].addCard(token, {fromStock: stock})
+        }
+    }
+
+    public async gainResources(playerId: number, resources: string[], fromElementId?: string) {
+        resources.forEach(resource => this.playerResourceStocks[playerId][resource].incValue(1));
+
+        for (const resource of resources) {
             let token = this.game.tokenManager.createToken(resource as any)
             await this.playerResourceStocks[playerId][resource].addCard(token)
         }
     }
+
+    public async payResources(playerId: number, resources: string[]) {
+        resources.forEach(resource => this.playerResourceStocks[playerId][resource].decValue(1));
+    }
+
+
 }

@@ -68,10 +68,16 @@ class DogWalkPark extends APP_DbObject
     }
 
     /**
-     * @return LocationBonus[]
+     * @return String[]
      */
-    public function getLocationBonus($locationId) {
-        return LocationBonus::fromArray(self::getCollectionFromDB("SELECT * FROM `extra_location_bonus` WHERE `location_id` = $locationId"));
+    public function getLocationBonuses($locationId) {
+        $locationBonuses = DogPark::$instance->PARK_LOCATIONS[$locationId]['bonus'];
+        return [...$locationBonuses];
+    }
+
+    public function getExtraLocationBonuses($locationId) {
+        $extraLocationBonuses = array_keys(self::getCollectionFromDB("SELECT bonus FROM `extra_location_bonus` WHERE `location_id` = $locationId"));
+        return [...$extraLocationBonuses];
     }
 
     public function removeRemainingLocationBonuses() {
@@ -110,7 +116,21 @@ class DogWalkPark extends APP_DbObject
 
     private function isLocationAccessible($locationId): bool
     {
-        $locationBonuses = $this->getLocationBonus($locationId);
-        return !in_array(BLOCK, array_map(fn($locationBonus) => $locationBonus->bonus, array_values($locationBonuses)));
+        // Only available in a 4 player game
+        if ($locationId == 91 && DogPark::$instance->getPlayersNumber() < 4) {
+            return false;
+        }
+        $locationBonuses = [...$this->getLocationBonuses($locationId), ...$this->getExtraLocationBonuses($locationId)];
+        return !in_array(BLOCK, $locationBonuses);
+    }
+
+    public function addExtraLocationBonus(int $locationId, $bonus)
+    {
+        self::DbQuery("INSERT INTO `extra_location_bonus` (`location_id`, `bonus`) VALUES ($locationId, '$bonus')");
+    }
+
+    public function removeExtraLocationBonus(int $locationId, $bonus)
+    {
+        self::DbQuery("DELETE FROM `extra_location_bonus` WHERE location_id = $locationId AND bonus = '$bonus';");
     }
 }

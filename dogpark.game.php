@@ -39,6 +39,9 @@ require_once('modules/php/commands/CommandManager.php');
 require_once('modules/php/commands/BaseCommand.php');
 require_once('modules/php/commands/PlaceDogOnLeadCommand.php');
 require_once('modules/php/commands/MoveWalkerCommand.php');
+require_once('modules/php/commands/GainLocationBonusCommand.php');
+require_once('modules/php/commands/PayReputationForLocationCommand.php');
+require_once('modules/php/commands/GainLeavingTheParkBonusCommand.php');
 
 require_once('modules/php/objects/Card.php');
 require_once('modules/php/objects/BreedExpertCard.php');
@@ -48,6 +51,8 @@ require_once('modules/php/objects/LocationBonusCard.php');
 require_once('modules/php/objects/LocationBonus.php');
 require_once('modules/php/objects/DogCard.php');
 require_once('modules/php/objects/DogWalker.php');
+require_once('modules/php/actions/AdditionalAction.php');
+require_once('modules/php/ReflectionUtils.php');
 
 require_once('modules/php/traits/UtilsTrait.php');
 require_once('modules/php/traits/ActionTrait.php');
@@ -62,6 +67,7 @@ require_once('modules/php/DogManager.php');
 require_once('modules/php/PlayerManager.php');
 require_once('modules/php/DogBreedExpertAwardManager.php');
 require_once('modules/php/ForecastManager.php');
+require_once('modules/php/ActionManager.php');
 
 class DogPark extends Table
 {
@@ -90,6 +96,7 @@ class DogPark extends Table
     public DogManager $dogManager;
     public DogBreedExpertAwardManager $breedExpertAwardManager;
     public ForecastManager $forecastManager;
+    public ActionManager $actionManager;
 
     function __construct( )
 	{
@@ -132,6 +139,7 @@ class DogPark extends Table
         $this->dogManager = new DogManager();
         $this->breedExpertAwardManager = new DogBreedExpertAwardManager();
         $this->forecastManager = new ForecastManager();
+        $this->actionManager = new ActionManager();
     }
 	
     protected function getGameName( )

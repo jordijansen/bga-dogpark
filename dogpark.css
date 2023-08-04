@@ -402,13 +402,30 @@ body > .card {
   align-items: center;
   gap: 2px;
 }
+#dp-game-board-wrapper #dp-game-board-main #dp-game-board-park-wrapper #dp-game-board-park .dp-walk-trail.end {
+  position: absolute;
+  right: 10px;
+  top: 63px;
+  height: 295px;
+  width: 145px;
+  flex-direction: column;
+  gap: 4px;
+}
+#dp-game-board-wrapper #dp-game-board-main #dp-game-board-park-wrapper #dp-game-board-park .dp-walk-trail.end .dp-walk-spot {
+  height: 70px;
+  width: 145px;
+}
+#dp-game-board-wrapper #dp-game-board-main #dp-game-board-park-wrapper #dp-game-board-park .dp-walk-trail.end .dp-walk-spot .dp-walker-spot {
+  height: 30px;
+  padding: 0;
+}
 #dp-game-board-wrapper #dp-game-board-main #dp-game-board-park-wrapper #dp-game-board-park .dp-walk-trail .dp-park-column {
   padding-bottom: 15px;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
 }
-#dp-game-board-wrapper #dp-game-board-main #dp-game-board-park-wrapper #dp-game-board-park .dp-walk-trail .dp-park-column .dp-walk-spot {
+#dp-game-board-wrapper #dp-game-board-main #dp-game-board-park-wrapper #dp-game-board-park .dp-walk-trail .dp-walk-spot {
   border-radius: 15px;
   width: 70px;
   height: 225px;
@@ -418,50 +435,50 @@ body > .card {
   align-items: center;
   position: relative;
 }
-#dp-game-board-wrapper #dp-game-board-main #dp-game-board-park-wrapper #dp-game-board-park .dp-walk-trail .dp-park-column .dp-walk-spot .dp-resource-spot {
+#dp-game-board-wrapper #dp-game-board-main #dp-game-board-park-wrapper #dp-game-board-park .dp-walk-trail .dp-walk-spot .dp-resource-spot {
   position: absolute;
   bottom: 65px;
 }
-#dp-game-board-wrapper #dp-game-board-main #dp-game-board-park-wrapper #dp-game-board-park .dp-walk-trail .dp-park-column .dp-walk-spot .spot-label {
+#dp-game-board-wrapper #dp-game-board-main #dp-game-board-park-wrapper #dp-game-board-park .dp-walk-trail .dp-walk-spot .spot-label {
   position: absolute;
   bottom: 0;
 }
-#dp-game-board-wrapper #dp-game-board-main #dp-game-board-park-wrapper #dp-game-board-park .dp-walk-trail .dp-park-column .dp-walk-spot .dp-walker-spot {
+#dp-game-board-wrapper #dp-game-board-main #dp-game-board-park-wrapper #dp-game-board-park .dp-walk-trail .dp-walk-spot .dp-walker-spot {
   padding-left: 5px;
   padding-bottom: 65px;
   height: 175px;
 }
-#dp-game-board-wrapper #dp-game-board-main #dp-game-board-park-wrapper #dp-game-board-park .dp-walk-trail .dp-park-column .dp-walk-spot .dp-walker-spot .dp-dog-walker-token {
+#dp-game-board-wrapper #dp-game-board-main #dp-game-board-park-wrapper #dp-game-board-park .dp-walk-trail .dp-walk-spot .dp-walker-spot .dp-dog-walker-token {
   position: relative;
   height: 35px;
 }
-#dp-game-board-wrapper #dp-game-board-main #dp-game-board-park-wrapper #dp-game-board-park .dp-walk-trail .dp-park-column .dp-walk-spot .dp-walker-spot .dp-dog-walker-token .card-sides .card-side {
+#dp-game-board-wrapper #dp-game-board-main #dp-game-board-park-wrapper #dp-game-board-park .dp-walk-trail .dp-walk-spot .dp-walker-spot .dp-dog-walker-token .card-sides .card-side {
   top: unset;
 }
-#dp-game-board-wrapper #dp-game-board-main #dp-game-board-park-wrapper #dp-game-board-park .dp-walk-trail .dp-park-column .dp-walk-spot[data-spot-id="5"], #dp-game-board-wrapper #dp-game-board-main #dp-game-board-park-wrapper #dp-game-board-park .dp-walk-trail .dp-park-column .dp-walk-spot[data-spot-id="7"], #dp-game-board-wrapper #dp-game-board-main #dp-game-board-park-wrapper #dp-game-board-park .dp-walk-trail .dp-park-column .dp-walk-spot[data-spot-id="9"], #dp-game-board-wrapper #dp-game-board-main #dp-game-board-park-wrapper #dp-game-board-park .dp-walk-trail .dp-park-column .dp-walk-spot[data-spot-id="11"], #dp-game-board-wrapper #dp-game-board-main #dp-game-board-park-wrapper #dp-game-board-park .dp-walk-trail .dp-park-column .dp-walk-spot[data-spot-id="13"] {
+#dp-game-board-wrapper #dp-game-board-main #dp-game-board-park-wrapper #dp-game-board-park .dp-walk-trail .dp-walk-spot[data-spot-id="5"], #dp-game-board-wrapper #dp-game-board-main #dp-game-board-park-wrapper #dp-game-board-park .dp-walk-trail .dp-walk-spot[data-spot-id="7"], #dp-game-board-wrapper #dp-game-board-main #dp-game-board-park-wrapper #dp-game-board-park .dp-walk-trail .dp-walk-spot[data-spot-id="9"], #dp-game-board-wrapper #dp-game-board-main #dp-game-board-park-wrapper #dp-game-board-park .dp-walk-trail .dp-walk-spot[data-spot-id="11"], #dp-game-board-wrapper #dp-game-board-main #dp-game-board-park-wrapper #dp-game-board-park .dp-walk-trail .dp-walk-spot[data-spot-id="13"] {
   height: 150px;
   margin-bottom: 125px;
 }
-#dp-game-board-wrapper #dp-game-board-main #dp-game-board-park-wrapper #dp-game-board-park .dp-walk-trail .dp-park-column .dp-walk-spot[data-spot-id="5"] .dp-walker-spot, #dp-game-board-wrapper #dp-game-board-main #dp-game-board-park-wrapper #dp-game-board-park .dp-walk-trail .dp-park-column .dp-walk-spot[data-spot-id="7"] .dp-walker-spot, #dp-game-board-wrapper #dp-game-board-main #dp-game-board-park-wrapper #dp-game-board-park .dp-walk-trail .dp-park-column .dp-walk-spot[data-spot-id="9"] .dp-walker-spot, #dp-game-board-wrapper #dp-game-board-main #dp-game-board-park-wrapper #dp-game-board-park .dp-walk-trail .dp-park-column .dp-walk-spot[data-spot-id="11"] .dp-walker-spot, #dp-game-board-wrapper #dp-game-board-main #dp-game-board-park-wrapper #dp-game-board-park .dp-walk-trail .dp-park-column .dp-walk-spot[data-spot-id="13"] .dp-walker-spot {
+#dp-game-board-wrapper #dp-game-board-main #dp-game-board-park-wrapper #dp-game-board-park .dp-walk-trail .dp-walk-spot[data-spot-id="5"] .dp-walker-spot, #dp-game-board-wrapper #dp-game-board-main #dp-game-board-park-wrapper #dp-game-board-park .dp-walk-trail .dp-walk-spot[data-spot-id="7"] .dp-walker-spot, #dp-game-board-wrapper #dp-game-board-main #dp-game-board-park-wrapper #dp-game-board-park .dp-walk-trail .dp-walk-spot[data-spot-id="9"] .dp-walker-spot, #dp-game-board-wrapper #dp-game-board-main #dp-game-board-park-wrapper #dp-game-board-park .dp-walk-trail .dp-walk-spot[data-spot-id="11"] .dp-walker-spot, #dp-game-board-wrapper #dp-game-board-main #dp-game-board-park-wrapper #dp-game-board-park .dp-walk-trail .dp-walk-spot[data-spot-id="13"] .dp-walker-spot {
   height: 100px;
 }
-#dp-game-board-wrapper #dp-game-board-main #dp-game-board-park-wrapper #dp-game-board-park .dp-walk-trail .dp-park-column .dp-walk-spot[data-spot-id="5"] .dp-walker-spot .dp-dog-walker-token, #dp-game-board-wrapper #dp-game-board-main #dp-game-board-park-wrapper #dp-game-board-park .dp-walk-trail .dp-park-column .dp-walk-spot[data-spot-id="7"] .dp-walker-spot .dp-dog-walker-token, #dp-game-board-wrapper #dp-game-board-main #dp-game-board-park-wrapper #dp-game-board-park .dp-walk-trail .dp-park-column .dp-walk-spot[data-spot-id="9"] .dp-walker-spot .dp-dog-walker-token, #dp-game-board-wrapper #dp-game-board-main #dp-game-board-park-wrapper #dp-game-board-park .dp-walk-trail .dp-park-column .dp-walk-spot[data-spot-id="11"] .dp-walker-spot .dp-dog-walker-token, #dp-game-board-wrapper #dp-game-board-main #dp-game-board-park-wrapper #dp-game-board-park .dp-walk-trail .dp-park-column .dp-walk-spot[data-spot-id="13"] .dp-walker-spot .dp-dog-walker-token {
+#dp-game-board-wrapper #dp-game-board-main #dp-game-board-park-wrapper #dp-game-board-park .dp-walk-trail .dp-walk-spot[data-spot-id="5"] .dp-walker-spot .dp-dog-walker-token, #dp-game-board-wrapper #dp-game-board-main #dp-game-board-park-wrapper #dp-game-board-park .dp-walk-trail .dp-walk-spot[data-spot-id="7"] .dp-walker-spot .dp-dog-walker-token, #dp-game-board-wrapper #dp-game-board-main #dp-game-board-park-wrapper #dp-game-board-park .dp-walk-trail .dp-walk-spot[data-spot-id="9"] .dp-walker-spot .dp-dog-walker-token, #dp-game-board-wrapper #dp-game-board-main #dp-game-board-park-wrapper #dp-game-board-park .dp-walk-trail .dp-walk-spot[data-spot-id="11"] .dp-walker-spot .dp-dog-walker-token, #dp-game-board-wrapper #dp-game-board-main #dp-game-board-park-wrapper #dp-game-board-park .dp-walk-trail .dp-walk-spot[data-spot-id="13"] .dp-walker-spot .dp-dog-walker-token {
   height: 20px;
 }
-#dp-game-board-wrapper #dp-game-board-main #dp-game-board-park-wrapper #dp-game-board-park .dp-walk-trail .dp-park-column .dp-walk-spot[data-spot-id="15"] {
+#dp-game-board-wrapper #dp-game-board-main #dp-game-board-park-wrapper #dp-game-board-park .dp-walk-trail .dp-walk-spot[data-spot-id="15"] {
   height: 190px;
 }
-#dp-game-board-wrapper #dp-game-board-main #dp-game-board-park-wrapper #dp-game-board-park .dp-walk-trail .dp-park-column .dp-walk-spot[data-spot-id="15"] .dp-walker-spot {
+#dp-game-board-wrapper #dp-game-board-main #dp-game-board-park-wrapper #dp-game-board-park .dp-walk-trail .dp-walk-spot[data-spot-id="15"] .dp-walker-spot {
   height: 100px;
 }
-#dp-game-board-wrapper #dp-game-board-main #dp-game-board-park-wrapper #dp-game-board-park .dp-walk-trail .dp-park-column .dp-walk-spot[data-spot-id="15"] .dp-walker-spot .dp-dog-walker-token {
+#dp-game-board-wrapper #dp-game-board-main #dp-game-board-park-wrapper #dp-game-board-park .dp-walk-trail .dp-walk-spot[data-spot-id="15"] .dp-walker-spot .dp-dog-walker-token {
   height: 20px;
 }
-#dp-game-board-wrapper #dp-game-board-main #dp-game-board-park-wrapper #dp-game-board-park .dp-walk-trail .dp-park-column .dp-walk-spot.selectable {
+#dp-game-board-wrapper #dp-game-board-main #dp-game-board-park-wrapper #dp-game-board-park .dp-walk-trail .dp-walk-spot.selectable {
   outline: 4px rgba(80, 200, 255, 0.75) solid;
   cursor: pointer;
 }
-#dp-game-board-wrapper #dp-game-board-main #dp-game-board-park-wrapper #dp-game-board-park .dp-walk-trail .dp-park-column .dp-walk-spot.selected {
+#dp-game-board-wrapper #dp-game-board-main #dp-game-board-park-wrapper #dp-game-board-park .dp-walk-trail .dp-walk-spot.selected {
   outline: 4px rgba(124, 252, 0, 0.75) solid;
   cursor: pointer;
 }
@@ -689,6 +706,7 @@ body > .card {
   width: 52.5px;
   height: 45px;
   display: inline-block;
+  vertical-align: middle;
 }
 .dp-token-token.small {
   width: 31px;
