@@ -33,48 +33,15 @@
   }
 }
 
+#dp-game {
+  display: flex;
+  flex-direction: column;
+}
+
 html, .mode_3d #game_play_area_background {
   background-image: url('img/dogpark-bg.jpg');
   .whiteblock {
     border-radius: 10px;
-  }
-}
-
-.dp-player-resources {
-  display: flex;
-  gap: 5px;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: center;
-
-  .counter-void-stock-wrapper {
-    display: flex;
-    align-items: center;
-    font-size: 20px;
-
-    .counter-void-stock-icon {
-      margin: 5px;
-    }
-  }
-}
-
-.dp-player-first-player-marker-wrapper {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 8px;
-}
-
-.dp-player-objective-card {
-  .blackjack-size-landscape {
-    width: $blackjack-size-landscape-width-small;
-    height: $blackjack-size-landscape-height-small;
-
-    .card-sides {
-      .card-side {
-        width: $blackjack-size-landscape-width-small;
-        height: $blackjack-size-landscape-height-small;
-      }
-    }
   }
 }
 
@@ -93,5 +60,50 @@ html, .mode_3d #game_play_area_background {
 
 #dp-choose-objectives-stock {
   margin: 25px 0;
+}
+
+#player_boards {
+  .player-board {
+    background-image: url("img/dogpark-player-panel-bg.jpg");
+    background-size: cover;
+
+    .dp-player-resources {
+      display: flex;
+      gap: 5px;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+
+      .counter-void-stock-wrapper {
+        display: flex;
+        align-items: center;
+        font-size: 20px;
+
+        .counter-void-stock-icon {
+          margin: 5px;
+        }
+      }
+    }
+
+    .dp-player-first-player-marker-wrapper {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 8px;
+    }
+
+    .dp-player-objective-card {
+      .blackjack-size-landscape {
+        width: $blackjack-size-landscape-width-small;
+        height: $blackjack-size-landscape-height-small;
+
+        .card-sides {
+          .card-side {
+            width: $blackjack-size-landscape-width-small;
+            height: $blackjack-size-landscape-height-small;
+          }
+        }
+      }
+    }
+  }
 }
 

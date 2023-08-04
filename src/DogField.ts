@@ -45,14 +45,6 @@ class DogField {
         return null;
     }
 
-    public setFocusToField() {
-        $('dp-game-board-field-wrapper').style.order = 1;
-    }
-
-    public removeFocusToField() {
-        $('dp-game-board-field-wrapper').style.order = 12;
-    }
-
     private createFieldSlot(id: number) {
         return `<div id="dp-field-slot-${id}" class="dp-field-slot">
                     <div id="dp-field-slot-${id}-dog" class="dp-field-slot-card">

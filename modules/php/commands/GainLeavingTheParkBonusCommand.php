@@ -66,7 +66,6 @@ class GainLeavingTheParkBonusCommand extends BaseCommand
             'locationId' => $locationId,
             'score' => DogPark::$instance->getPlayerScore($this->playerId)
         ]);
-        DogPark::$instance->actionManager->unmarkActionPerformed($this->playerId, $this->actionId);
 
         $actions = DogPark::$instance->actionManager->getActions($this->playerId);
         $actionsToMark = array_filter($actions, function ($action) { return $action->type == WALKING_GAIN_LEAVING_THE_PARK_BONUS;});

@@ -115,6 +115,12 @@ class DogWalkPark extends APP_DbObject
         if ($locationId == 91 && DogPark::$instance->getPlayersNumber() < 4) {
             return false;
         }
+        if ($locationId > 90) {
+            $otherWalkersInLocation = DogPark::$instance->dogWalkers->getCardsInLocation(LOCATION_PARK, $locationId);
+            if (sizeof($otherWalkersInLocation) > 0) {
+                return false;
+            }
+        }
         $locationBonuses = [...$this->getLocationBonuses($locationId), ...$this->getExtraLocationBonuses($locationId)];
         return !in_array(BLOCK, $locationBonuses);
     }

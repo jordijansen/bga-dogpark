@@ -198,9 +198,6 @@ class DogPark implements DogParkGame {
             case 'recruitmentTakeDog':
                 this.dogField.setDogSelectionMode('none');
                 break;
-            case 'recruitmentEnd':
-                this.dogField.removeFocusToField();
-                break;
             case 'selectionPlaceDogOnLead':
                 this.leavingSelectionPlaceDogOnLead();
                 break;

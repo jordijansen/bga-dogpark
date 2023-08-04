@@ -2766,12 +2766,6 @@ var DogField = /** @class */ (function () {
         }
         return null;
     };
-    DogField.prototype.setFocusToField = function () {
-        $('dp-game-board-field-wrapper').style.order = 1;
-    };
-    DogField.prototype.removeFocusToField = function () {
-        $('dp-game-board-field-wrapper').style.order = 12;
-    };
     DogField.prototype.createFieldSlot = function (id) {
         return "<div id=\"dp-field-slot-".concat(id, "\" class=\"dp-field-slot\">\n                    <div id=\"dp-field-slot-").concat(id, "-dog\" class=\"dp-field-slot-card\">\n                    </div>\n                    <div id=\"dp-field-slot-").concat(id, "-walkers\" class=\"dp-field-slot-walkers\">\n                    </div>\n                </div>");
     };
@@ -2872,19 +2866,17 @@ var PlayerArea = /** @class */ (function () {
         this.playerObjective = {};
     }
     PlayerArea.prototype.setUp = function (gameData) {
-        var playerAreas = [];
         for (var playerId in gameData.players) {
             var player = gameData.players[playerId];
             this.createPlayerPanels(player);
             var playerArea = this.createPlayerArea(player);
             if (Number(player.id) === this.game.getPlayerId()) {
-                playerAreas.unshift(playerArea);
+                dojo.place(playerArea, "dp-own-player-area");
             }
             else {
-                playerAreas.push(playerArea);
+                dojo.place(playerArea, "dp-player-areas");
             }
         }
-        playerAreas.forEach(function (playerArea) { return dojo.place(playerArea, "dp-player-areas"); });
         for (var playerId in gameData.players) {
             var player = gameData.players[playerId];
             var dogWalkerStockId = "dp-player-walker-area-".concat(player.id);
@@ -2956,7 +2948,7 @@ var PlayerArea = /** @class */ (function () {
         }));
     };
     PlayerArea.prototype.createPlayerArea = function (player) {
-        return "<div id=\"dp-player-area-".concat(player.id, "\" class=\"whiteblock dp-player-area\">\n                    <h2>").concat(player.name, "</h2>\n                    <div class=\"dp-lead-board dp-board\" data-color=\"#").concat(player.color, "\">\n                        <div id=\"dp-player-area-").concat(player.id, "-lead\" class=\"dp-lead-board-lead\"></div>\n                    </div>\n                    <div id=\"dp-player-area-").concat(player.id, "-kennel\">\n                    \n                    </div>\n                </div>");
+        return "<div id=\"dp-player-area-".concat(player.id, "\" class=\"whiteblock dp-player-area\" style=\"background-color: #").concat(player.color, ";\">\n                    <div class=\"player-name-wrapper\">\n                        <h2 style=\"color: #").concat(player.color, ";\">").concat(player.name, "</h2>\n                    </div>\n                    <div class=\"dp-lead-board dp-board\" data-color=\"#").concat(player.color, "\">\n                        <div id=\"dp-player-area-").concat(player.id, "-lead\" class=\"dp-lead-board-lead\"></div>\n                    </div>\n                    <div id=\"dp-player-area-").concat(player.id, "-kennel\">\n                    </div>\n                </div>");
     };
     PlayerArea.prototype.createPlayerPanels = function (player) {
         dojo.place("<div id=\"dp-player-resources-".concat(player.id, "\" class=\"dp-player-resources\">\n                            <div id=\"dp-player-dummy-resources-").concat(player.id, "\" style=\"height: 0; width: 0; overflow: hidden;\"></div>\n                          </div>\n                          <div id=\"dp-player-first-player-marker-wrapper-").concat(player.id, "\" class=\"dp-player-first-player-marker-wrapper\"></div>\n                          <div id=\"dp-player-objective-card-").concat(player.id, "\"  class=\"dp-player-objective-card\"></div>"), "player_board_".concat(player.id));
@@ -3122,6 +3114,32 @@ var RoundTracker = /** @class */ (function () {
     };
     RoundTracker.prototype.updatePhase = function (phase) {
         $(RoundTracker.elementId).dataset.phase = this.toPhaseId(phase);
+        this.resetFocus();
+        this.setFocus(phase);
+    };
+    RoundTracker.prototype.resetFocus = function () {
+        $('dp-game-board-wrapper').style.order = 10;
+        $('dp-own-player-area').style.order = 11;
+        $('dp-player-areas').style.order = 12;
+        $('dp-game-board-park-wrapper').style.order = 10;
+        $('dp-game-board-field-wrapper').style.order = 11;
+    };
+    RoundTracker.prototype.setFocus = function (phase) {
+        switch (phase) {
+            case 'PHASE_RECRUITMENT_1':
+            case 'PHASE_RECRUITMENT_2':
+                $('dp-game-board-field-wrapper').style.order = 2;
+                break;
+            case 'PHASE_SELECTION':
+                $('dp-own-player-area').style.order = 1;
+                break;
+        }
+    };
+    RoundTracker.prototype.setFocusToField = function () {
+        $('dp-game-board-field-wrapper').style.order = 1;
+    };
+    RoundTracker.prototype.removeFocusToField = function () {
+        $('dp-game-board-field-wrapper').style.order = 12;
     };
     RoundTracker.prototype.toPhaseId = function (phase) {
         switch (phase) {
@@ -3283,9 +3301,6 @@ var DogPark = /** @class */ (function () {
             case 'recruitmentOffer':
             case 'recruitmentTakeDog':
                 this.dogField.setDogSelectionMode('none');
-                break;
-            case 'recruitmentEnd':
-                this.dogField.removeFocusToField();
                 break;
             case 'selectionPlaceDogOnLead':
                 this.leavingSelectionPlaceDogOnLead();

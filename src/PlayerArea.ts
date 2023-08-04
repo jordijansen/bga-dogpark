@@ -9,20 +9,17 @@ class PlayerArea {
     constructor(private game: DogParkGame) {}
 
     public setUp(gameData: DogParkGameData) {
-        const playerAreas = [];
-
         for (const playerId in gameData.players) {
             const player = gameData.players[playerId];
 
             this.createPlayerPanels(player);
             const playerArea= this.createPlayerArea(player);
             if (Number(player.id) === this.game.getPlayerId()) {
-                playerAreas.unshift(playerArea);
+                dojo.place(playerArea, "dp-own-player-area")
             } else {
-                playerAreas.push(playerArea);
+                dojo.place(playerArea, "dp-player-areas")
             }
         }
-        playerAreas.forEach(playerArea => dojo.place(playerArea, "dp-player-areas"))
 
         for (const playerId in gameData.players) {
             const player = gameData.players[playerId];
@@ -110,13 +107,14 @@ class PlayerArea {
     }
 
     private createPlayerArea(player: DogParkPlayer) {
-        return `<div id="dp-player-area-${player.id}" class="whiteblock dp-player-area">
-                    <h2>${player.name}</h2>
+        return `<div id="dp-player-area-${player.id}" class="whiteblock dp-player-area" style="background-color: #${player.color};">
+                    <div class="player-name-wrapper">
+                        <h2 style="color: #${player.color};">${player.name}</h2>
+                    </div>
                     <div class="dp-lead-board dp-board" data-color="#${player.color}">
                         <div id="dp-player-area-${player.id}-lead" class="dp-lead-board-lead"></div>
                     </div>
                     <div id="dp-player-area-${player.id}-kennel">
-                    
                     </div>
                 </div>`;
     }

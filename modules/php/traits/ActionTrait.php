@@ -227,7 +227,7 @@ trait ActionTrait
                 $this->actionManager->addAction($playerId, new AdditionalAction(WALKING_PAY_REPUTATION_ACCEPT, (object) ["accepted" => true]));
             }
             $this->actionManager->addAction($playerId, new AdditionalAction(WALKING_PAY_REPUTATION_DENY, (object) ["accepted" => false]));
-        } if ($locationId > 90) {
+        } else if ($locationId > 90) {
             if ($locationId == 91) {
                 $this->actionManager->addAction($playerId, new AdditionalAction(WALKING_GAIN_LEAVING_THE_PARK_BONUS, (object) ["bonusType" => REPUTATION, "amount" => 3]));
             } else if ($locationId == 92) {

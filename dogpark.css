@@ -541,6 +541,7 @@ body > .card {
   display: flex;
   justify-content: space-evenly;
   align-items: center;
+  margin-bottom: 0;
 }
 #dp-game-board-wrapper #dp-game-board-main #dp-game-board-field-wrapper #dp-game-board-offer-dials .dp-player-walker-area {
   width: 52px;
@@ -555,6 +556,7 @@ body > .card {
     top: 25px;
     left: -10px;
     transition: left 0.5s ease-in-out;
+    z-index: 1;
   }
   #dp-game-board-wrapper #dp-game-board-side.hide-side-bar {
     left: -327px;
@@ -589,18 +591,28 @@ body > .card {
   height: 142px;
 }
 
-#dp-player-areas {
+#dp-player-areas, #dp-own-player-area {
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
   gap: 10px;
 }
-#dp-player-areas .dp-player-area {
+#dp-player-areas .dp-player-area, #dp-own-player-area .dp-player-area {
   gap: 10px;
   display: flex;
   flex-direction: column;
 }
-#dp-player-areas .dp-player-area .dp-lead-board {
+#dp-player-areas .dp-player-area .player-name-wrapper, #dp-own-player-area .dp-player-area .player-name-wrapper {
+  display: flex;
+  justify-content: center;
+}
+#dp-player-areas .dp-player-area h2, #dp-own-player-area .dp-player-area h2 {
+  background-color: white;
+  border-radius: 25px;
+  text-transform: uppercase;
+  padding: 5px 25px;
+}
+#dp-player-areas .dp-player-area .dp-lead-board, #dp-own-player-area .dp-player-area .dp-lead-board {
   background-image: url("img/dogpark-leadboards.jpg");
   background-size: auto 500%;
   width: 850px;
@@ -608,31 +620,31 @@ body > .card {
   display: flex;
   flex-direction: row;
 }
-#dp-player-areas .dp-player-area .dp-lead-board .dp-lead-board-walker {
+#dp-player-areas .dp-player-area .dp-lead-board .dp-lead-board-walker, #dp-own-player-area .dp-player-area .dp-lead-board .dp-lead-board-walker {
   flex: 1;
   max-width: 224px;
   display: flex;
   align-items: center;
   justify-content: center;
 }
-#dp-player-areas .dp-player-area .dp-lead-board .dp-lead-board-lead {
+#dp-player-areas .dp-player-area .dp-lead-board .dp-lead-board-lead, #dp-own-player-area .dp-player-area .dp-lead-board .dp-lead-board-lead {
   margin: 27px 23px;
   flex: 1;
   justify-content: right;
 }
-#dp-player-areas .dp-player-area .dp-lead-board[data-color="#c45f5f"] {
+#dp-player-areas .dp-player-area .dp-lead-board[data-color="#c45f5f"], #dp-own-player-area .dp-player-area .dp-lead-board[data-color="#c45f5f"] {
   background-position: 0 0%;
 }
-#dp-player-areas .dp-player-area .dp-lead-board[data-color="#8b91ba"] {
+#dp-player-areas .dp-player-area .dp-lead-board[data-color="#8b91ba"], #dp-own-player-area .dp-player-area .dp-lead-board[data-color="#8b91ba"] {
   background-position: 0 25%;
 }
-#dp-player-areas .dp-player-area .dp-lead-board[data-color="#d2ce74"] {
+#dp-player-areas .dp-player-area .dp-lead-board[data-color="#d2ce74"], #dp-own-player-area .dp-player-area .dp-lead-board[data-color="#d2ce74"] {
   background-position: 0 50%;
 }
-#dp-player-areas .dp-player-area .dp-lead-board[data-color="#90beac"] {
+#dp-player-areas .dp-player-area .dp-lead-board[data-color="#90beac"], #dp-own-player-area .dp-player-area .dp-lead-board[data-color="#90beac"] {
   background-position: 0 75%;
 }
-#dp-player-areas .dp-player-area .dp-lead-board[data-color="#000000"] {
+#dp-player-areas .dp-player-area .dp-lead-board[data-color="#000000"], #dp-own-player-area .dp-player-area .dp-lead-board[data-color="#000000"] {
   background-position: 0 100%;
 }
 
@@ -1184,42 +1196,16 @@ body > .card {
   cursor: pointer;
 }
 
+#dp-game {
+  display: flex;
+  flex-direction: column;
+}
+
 html, .mode_3d #game_play_area_background {
   background-image: url("img/dogpark-bg.jpg");
 }
 html .whiteblock, .mode_3d #game_play_area_background .whiteblock {
   border-radius: 10px;
-}
-
-.dp-player-resources {
-  display: flex;
-  gap: 5px;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: center;
-}
-.dp-player-resources .counter-void-stock-wrapper {
-  display: flex;
-  align-items: center;
-  font-size: 20px;
-}
-.dp-player-resources .counter-void-stock-wrapper .counter-void-stock-icon {
-  margin: 5px;
-}
-
-.dp-player-first-player-marker-wrapper {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 8px;
-}
-
-.dp-player-objective-card .blackjack-size-landscape {
-  width: 230px;
-  height: 168.6px;
-}
-.dp-player-objective-card .blackjack-size-landscape .card-sides .card-side {
-  width: 230px;
-  height: 168.6px;
 }
 
 #dp-pay-costs {
@@ -1237,6 +1223,39 @@ html .whiteblock, .mode_3d #game_play_area_background .whiteblock {
 
 #dp-choose-objectives-stock {
   margin: 25px 0;
+}
+
+#player_boards .player-board {
+  background-image: url("img/dogpark-player-panel-bg.jpg");
+  background-size: cover;
+}
+#player_boards .player-board .dp-player-resources {
+  display: flex;
+  gap: 5px;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+}
+#player_boards .player-board .dp-player-resources .counter-void-stock-wrapper {
+  display: flex;
+  align-items: center;
+  font-size: 20px;
+}
+#player_boards .player-board .dp-player-resources .counter-void-stock-wrapper .counter-void-stock-icon {
+  margin: 5px;
+}
+#player_boards .player-board .dp-player-first-player-marker-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 8px;
+}
+#player_boards .player-board .dp-player-objective-card .blackjack-size-landscape {
+  width: 230px;
+  height: 168.6px;
+}
+#player_boards .player-board .dp-player-objective-card .blackjack-size-landscape .card-sides .card-side {
+  width: 230px;
+  height: 168.6px;
 }
 
 /*# sourceMappingURL=dogpark.css.map */
