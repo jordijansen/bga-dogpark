@@ -24,6 +24,9 @@ class ForecastManager
         DogPark::$instance->forecastCards->pickCardsForLocation(1, LOCATION_DECK, LOCATION_FORECAST, 4);
     }
 
+    /**
+     * @return ForecastCard[]
+     */
     public function getForeCastCards(): array
     {
         return ForecastCard::fromArray(DogPark::$instance->forecastCards->getCardsInLocation(LOCATION_FORECAST));

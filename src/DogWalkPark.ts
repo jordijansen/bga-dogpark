@@ -55,7 +55,12 @@ class DogWalkPark {
         // Park Bonuses
         this.locationBonusCardPile = new Deck(this.game.locationBonusCardManager, $('dp-game-board-park-location-card-deck'), { thicknesses: [1]})
         gameData.park.locationBonusCards.forEach(card => this.addLocationBonusCard(card))
-        gameData.park.extraLocationBonuses.forEach(locationBonus => this.resourceSpots[locationBonus.locationId].addCard(this.game.tokenManager.createToken(locationBonus.bonus)))
+        this.addExtraLocationBonuses(gameData.park.extraLocationBonuses);
+    }
+
+    public addExtraLocationBonuses(extraLocationBonuses: LocationBonus[]) {
+        Object.values(this.resourceSpots).forEach((stock) => stock.removeAll());
+        extraLocationBonuses.forEach(locationBonus => this.resourceSpots[locationBonus.locationId].addCard(this.game.tokenManager.createToken(locationBonus.bonus)))
     }
 
     public moveWalkers(walkers: DogWalker[]) {

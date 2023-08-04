@@ -45,11 +45,6 @@ class DogWalkPark extends APP_DbObject
         $query .= ";";
 
         self::DbQuery($query);
-
-        DogPark::$instance->notifyAllPlayers('newLocationBonusCardDrawn', clienttranslate('The park is replenished with new bonuses'),[
-            'locationCard' => $locationCard
-        ]);
-
     }
 
     /**

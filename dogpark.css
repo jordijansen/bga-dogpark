@@ -651,6 +651,7 @@ body > .card {
   box-shadow: none;
   width: 39.375px !important;
   height: 33.75px !important;
+  outline: none;
 }
 .dp-card-token .card-sides .card-side > * {
   pointer-events: none;
@@ -662,6 +663,13 @@ body > .card {
   background-size: cover;
   width: 45px;
   height: 45px;
+}
+
+.dp-first-player-marker {
+  background-image: url("img/dogpark-first-player-marker.png");
+  background-size: cover;
+  width: 45px;
+  height: 43px;
 }
 
 .dp-dog-walker {
@@ -1197,6 +1205,12 @@ html .whiteblock, .mode_3d #game_play_area_background .whiteblock {
 }
 .dp-player-resources .counter-void-stock-wrapper .counter-void-stock-icon {
   margin: 5px;
+}
+
+.dp-player-first-player-marker-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 8px;
 }
 
 .dp-player-objective-card .blackjack-size-landscape {

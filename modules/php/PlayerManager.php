@@ -37,6 +37,10 @@ class PlayerManager extends APP_DbObject
         return $this->getCollectionFromDB("SELECT player_custom_order, player_id FROM player ORDER BY player_custom_order ASC");
     }
 
+    public function getPlayerCustomOrderNo($playerId) {
+        return $this->getUniqueValueFromDB("SELECT player_custom_order FROM player WHERE player_id = $playerId");
+    }
+
     public function getWalkerId($playerId) {
         return $this->getUniqueValueFromDB("SELECT card_id FROM walker WHERE card_type_arg = " .$playerId);
     }
@@ -91,5 +95,23 @@ class PlayerManager extends APP_DbObject
         $query = rtrim($query, ',');
         $query .= " WHERE player_id = $playerId";
         self::DbQuery($query);
+    }
+
+    public function passFirstPlayerMarker(): int
+    {
+        $playerIdsInOrder = $this->getPlayerIdsInTurnOrder();
+        $newFirstPlayerId = null;
+        foreach ($playerIdsInOrder as $playerOrderNo => $player) {
+            $playerId = intval($player['player_id']);
+            $newTurnOrder = intval($playerOrderNo) - 1;
+            if (intval($playerOrderNo) == 1) {
+                $newTurnOrder = DogPark::$instance->getPlayersNumber();
+            }
+            if ($newTurnOrder == 1) {
+                $newFirstPlayerId = $playerId;
+            }
+            self::DbQuery("UPDATE player SET player_custom_order = $newTurnOrder WHERE player_id = $playerId");
+        }
+        return $newFirstPlayerId;
     }
 }

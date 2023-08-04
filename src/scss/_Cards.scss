@@ -2,6 +2,24 @@
 
 @import 'Variables';
 
+@mixin selectable {
+  &.bga-cards_selectable-card {
+    .card-side {
+      outline: 8px rgba(80, 200, 255, 0.75) solid;
+      cursor: pointer;
+    }
+  }
+}
+
+@mixin selected {
+  &.bga-cards_selected-card {
+    .card-side {
+      outline: 8px rgba(124, 252, 0, 0.75) solid;
+      cursor: pointer;
+    }
+  }
+}
+
 .dog-card-art {
   &[data-set="BASE_GAME"] {
     @for $row from 0 through 3 {

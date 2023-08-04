@@ -74,6 +74,8 @@
 
 <div id="zoom-overall" style="width: 100%;"></div>
 
+
+
 <div class="dp-token-token" data-type="walked"></div>
 <div class="dp-token-token" data-type="reputation"></div>
 <div class="dp-token-token" data-type="toy"></div>

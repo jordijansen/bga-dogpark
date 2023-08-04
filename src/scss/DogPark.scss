@@ -58,6 +58,12 @@ html, .mode_3d #game_play_area_background {
   }
 }
 
+.dp-player-first-player-marker-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 8px;
+}
+
 .dp-player-objective-card {
   .blackjack-size-landscape {
     width: $blackjack-size-landscape-width-small;

@@ -165,11 +165,12 @@ class DogPark extends Table
     
         // Get information about players
         // Note: you can retrieve some extra field you added for "player" table in "dbmodel.sql" if you need it.
-        $sql = "SELECT player_id id, player_score score, player_no playerNo FROM player ";
+        $sql = "SELECT player_id id, player_score score, player_custom_order orderNo FROM player ";
         $result['players'] = self::getCollectionFromDb( $sql );
 
         $offerValueRevealed = $this->getGlobalVariable(OFFER_VALUE_REVEALED);
         foreach($result['players'] as $playerId => &$player) {
+            $player['orderNo'] = intval($player['orderNo']);
             $player['walker'] = current(DogWalker::fromArray($this->dogWalkers->getCardsInLocation(LOCATION_PLAYER, $playerId)));
             $player['kennelDogs'] = DogCard::fromArray($this->dogCards->getCardsInLocation(LOCATION_PLAYER, $playerId));
             $player['leadDogs'] = DogCard::fromArray($this->dogCards->getCardsInLocation(LOCATION_LEAD, $playerId));
@@ -179,6 +180,9 @@ class DogPark extends Table
             $player['selectedObjectiveCardId'] = $this->getGlobalVariable(OBJECTIVE_ID_ .$playerId);
             $player['chosenObjective'] = current(ObjectiveCard::fromArray($this->objectiveCards->getCardsInLocation(LOCATION_SELECTED, $playerId), $playerId != $current_player_id));
         }
+
+        $result['currentRound'] = intval($this->getGlobalVariable(CURRENT_ROUND));
+        $result['currentPhase'] = $this->getGlobalVariable(CURRENT_PHASE);
 
         $result['field'] = [
             'nrOfFields' => $this->dogField->getNumberOfFields(),
@@ -194,9 +198,12 @@ class DogPark extends Table
 
         $result['breedExpertAwards'] = $this->breedExpertAwardManager->getExpertAwards();
         $result['forecastCards'] = $this->forecastManager->getForeCastCards();
+        foreach ($result['forecastCards'] as $foreCastCard) {
+            if($foreCastCard->locationArg < $result['currentRound']) {
+                $foreCastCard->typeArg = null;
+            }
+        }
 
-        $result['currentRound'] = $this->getGlobalVariable(CURRENT_ROUND);
-        $result['currentPhase'] = $this->getGlobalVariable(CURRENT_PHASE);
         return $result;
     }
 

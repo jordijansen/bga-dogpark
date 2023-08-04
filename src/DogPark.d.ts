@@ -25,6 +25,7 @@ interface DogParkGame extends Game {
     dogWalkPark: DogWalkPark;
     tokenManager: TokenManager;
     objectiveCardManager: ObjectiveCardManager;
+    forecastManager: ForecastManager,
     gamedatas: DogParkGameData;
     animationManager: AnimationManager
     getPlayerId(): number;
@@ -41,7 +42,8 @@ interface DogParkPlayer extends Player {
     resources: {stick: number, ball: number, treat: number, toy: number},
     objectives: Card[],
     selectedObjectiveCardId: number,
-    chosenObjective: Card
+    chosenObjective: Card,
+    orderNo: number
 }
 
 interface DogParkGameData extends GameData {
@@ -148,6 +150,39 @@ interface NotifPlayerLeavesThePark {
     playerId: number,
     score: number,
     walker?: DogWalker
+}
+
+interface NotifPlayerGainsReputation {
+    playerId: number,
+    score: number
+}
+
+interface NotifPlayerLosesReputation {
+    playerId: number,
+    score: number
+}
+
+interface NotifMoveDogsToKennel {
+    playerId: number,
+    dogs: DogCard[]
+}
+
+interface NotifMoveWalkerBackToPlayer {
+    playerId: number,
+    walker: DogWalker
+}
+
+interface NotifFlipForecastCard {
+    foreCastCard: Card
+}
+
+interface NotifNewLocationBonusCardDrawn {
+    locationBonusCard: LocationBonusCard,
+    locationBonuses: LocationBonus[]
+}
+
+interface NotifNewFirstWalker {
+    playerId: number
 }
 
 

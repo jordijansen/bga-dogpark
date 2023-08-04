@@ -33,7 +33,7 @@ class PlayerArea {
             this.moveWalkerToPlayer(Number(player.id), player.walker);
 
             const kennelStockId = `dp-player-area-${player.id}-kennel`;
-            this.kennelStocks[Number(player.id)] = new LineStock<DogCard>(this.game.dogCardManager, $(kennelStockId), {center: false})
+            this.kennelStocks[Number(player.id)] = new LineStock<DogCard>(this.game.dogCardManager, $(kennelStockId), {center: true})
             this.moveDogsToKennel(Number(player.id), player.kennelDogs);
 
             const leadStockId = `dp-player-area-${player.id}-lead`;
@@ -51,6 +51,10 @@ class PlayerArea {
             const objectiveStockId = `dp-player-objective-card-${player.id}`;
             this.playerObjective[Number(player.id)] = new LineStock(this.game.objectiveCardManager, $(objectiveStockId), {})
             this.moveObjectiveToPlayer(Number(player.id), player.chosenObjective);
+
+            if (player.orderNo === 1) {
+                dojo.place(this.createFirsPlayerMarker(), $(`dp-player-first-player-marker-wrapper-${player.id}`))
+            }
         }
     }
 
@@ -96,6 +100,15 @@ class PlayerArea {
         }
     }
 
+    public setNewFirstWalker(playerId: number) {
+        const element = $('dp-first-player-marker');
+        return this.game.animationManager.play(
+                new BgaAttachWithAnimation({
+                    animation: new BgaSlideAnimation({ element, transitionTimingFunction: 'ease-out' }),
+                    attachElement: $(`dp-player-first-player-marker-wrapper-${playerId}`)
+                }));
+    }
+
     private createPlayerArea(player: DogParkPlayer) {
         return `<div id="dp-player-area-${player.id}" class="whiteblock dp-player-area">
                     <h2>${player.name}</h2>
@@ -112,6 +125,13 @@ class PlayerArea {
         dojo.place( `<div id="dp-player-resources-${player.id}" class="dp-player-resources">
                             <div id="dp-player-dummy-resources-${player.id}" style="height: 0; width: 0; overflow: hidden;"></div>
                           </div>
+                          <div id="dp-player-first-player-marker-wrapper-${player.id}" class="dp-player-first-player-marker-wrapper"></div>
                           <div id="dp-player-objective-card-${player.id}"  class="dp-player-objective-card"></div>`, `player_board_${player.id}`);
     }
+
+    private createFirsPlayerMarker() {
+        return `<div id="dp-first-player-marker" class="dp-token dp-first-player-marker"></div>`;
+    }
+
+
 }

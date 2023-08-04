@@ -3,7 +3,7 @@ class ForecastManager extends CardManager<Card> {
     public static CARD_WIDTH = 195;
     public static CARD_HEIGHT = 142;
 
-    private stock: SlotStock<Card>;
+    public stock: SlotStock<Card>;
 
     constructor(private dogParkGame: DogParkGame) {
         super(dogParkGame, {
@@ -16,6 +16,12 @@ class ForecastManager extends CardManager<Card> {
                 div.classList.add(`forecast-art`)
                 div.classList.add(`forecast-art-${card.typeArg}`)
             },
+            setupBackDiv: (card: Card, div: HTMLElement) => {
+                div.id = `${this.getId(card)}-back`;
+                div.classList.add(`forecast-art`)
+                div.classList.add(`forecast-art-background`)
+            },
+            isCardVisible: (card) => !!card.typeArg,
             cardWidth: ForecastManager.CARD_WIDTH,
             cardHeight: ForecastManager.CARD_HEIGHT,
         })

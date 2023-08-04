@@ -443,7 +443,14 @@ class DogPark implements DogParkGame {
             ['moveWalkers', undefined],
             ['moveWalker', undefined],
             ['playerPaysReputationForLocation', undefined],
-            ['playerLeavesThePark', undefined]
+            ['playerLeavesThePark', undefined],
+            ['playerGainsReputation', undefined],
+            ['playerLosesReputation', undefined],
+            ['moveDogsToKennel', undefined],
+            ['moveWalkerBackToPlayer', undefined],
+            ['flipForecastCard', undefined],
+            ['newLocationBonusCardDrawn', undefined],
+            ['newFirstWalker', undefined]
             // ['shortTime', 1],
             // ['fixedTime', 1000]
         ];
@@ -560,6 +567,39 @@ class DogPark implements DogParkGame {
             return this.dogWalkPark.moveWalkers([args.walker]);
         }
         return Promise.resolve();
+    }
+
+    private notif_playerGainsReputation(args: NotifPlayerGainsReputation) {
+        this.setScore(args.playerId, args.score);
+        return Promise.resolve();
+    }
+
+    private notif_playerLosesReputation(args: NotifPlayerLosesReputation) {
+        this.setScore(args.playerId, args.score);
+        return Promise.resolve();
+    }
+
+    private notif_moveDogsToKennel(args: NotifMoveDogsToKennel) {
+        return this.playerArea.moveDogsToKennel(args.playerId, args.dogs);
+    }
+
+    private notif_moveWalkerBackToPlayer(args: NotifMoveWalkerBackToPlayer) {
+        return this.playerArea.moveWalkerToPlayer(args.playerId, args.walker);
+    }
+
+    private notif_flipForecastCard(args: NotifFlipForecastCard) {
+        this.forecastManager.flipCard(args.foreCastCard);
+        return Promise.resolve();
+    }
+
+    private notif_newLocationBonusCardDrawn(args: NotifNewLocationBonusCardDrawn) {
+        return this.dogWalkPark.addLocationBonusCard(args.locationBonusCard)
+            .then(() => this.dogWalkPark.addExtraLocationBonuses(args.locationBonuses))
+
+    }
+
+    private notif_newFirstWalker(args: NotifNewFirstWalker) {
+        return this.playerArea.setNewFirstWalker(args.playerId);
     }
 
     public format_string_recursive(log: string, args: any) {

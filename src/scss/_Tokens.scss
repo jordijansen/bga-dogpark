@@ -16,7 +16,7 @@
       box-shadow: none;
       width: 39.375px !important;
       height: 33.75px !important;
-
+      outline: none;
       & > * {
         pointer-events: none;
         user-select: none;
@@ -30,6 +30,13 @@
   background-size: cover;
   width: 45px;
   height: 45px;
+}
+
+.dp-first-player-marker {
+  background-image: url('img/dogpark-first-player-marker.png');
+  background-size: cover;
+  width: 45px;
+  height: 43px;
 }
 
 .dp-dog-walker {
