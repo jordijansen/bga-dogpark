@@ -51,11 +51,15 @@ class DogCardManager extends CardManager<DogCard> {
         }
     }
 
-    private addInitialResourcesToDog(dog: DogCard) {
+    public addInitialResourcesToDog(dog: DogCard) {
         for (const resource in dog.resourcesOnCard) {
             for (let i = 0; i < Number(dog.resourcesOnCard[resource]); i++) {
                 this.addResourceToDog(dog.id, resource as any);
             }
         }
+    }
+
+    public removeAllResourcesFromDog(id: number) {
+        this.cardTokenStocks[id].removeAll();
     }
 }

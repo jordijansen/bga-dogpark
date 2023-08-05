@@ -313,13 +313,34 @@
     .player-name-wrapper {
       display: flex;
       justify-content: center;
-    }
 
-    h2 {
-      background-color: white;
-      border-radius: 25px;
-      text-transform: uppercase;
-      padding: 5px 25px;
+      h2 {
+        background-color: white;
+        border-radius: 25px;
+        text-transform: uppercase;
+        padding: 5px 25px;
+        margin: 0;
+      }
+    }
+    
+    .dp-player-area-section-wrapper {
+      display: flex;
+      flex-direction: row;
+
+      .label-wrapper {
+        writing-mode: vertical-rl;
+        text-orientation: upright;
+        text-transform: uppercase;
+        display: flex;
+        justify-content: center;
+
+        h2 {
+          background-color: white;
+          border-radius: 25px;
+          padding: 10px 5px;
+          margin: 0 10px 0 0;
+        }
+      }
     }
 
     .dp-lead-board {
@@ -349,6 +370,10 @@
           background-position: 0 (list.index($player-colors, $player-color) - 1) * 25%;
         }
       }
+    }
+
+    .dp-player-area-kennel {
+      width: 850px;
     }
   }
 }

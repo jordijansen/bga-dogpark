@@ -75,6 +75,8 @@ const ST_WALKING_END = 65;
 
 const ST_HOME_TIME = 70;
 
+const ST_ACTION_SWAP = 80;
+
 const ST_GAME_END = 99;
 
 /**
@@ -94,6 +96,9 @@ const ACT_MOVE_WALKER = 'moveWalker';
 const ACT_WALKING_ADDITIONAL_ACTION = 'walkingAdditionalAction';
 const ACT_CONFIRM_WALKING = 'confirmWalking';
 const ACT_UNDO = 'undo';
+
+const ACT_SWAP = 'swap';
+const ACT_CANCEL = 'cancel';
 
 /**
  * Locations
@@ -128,7 +133,9 @@ const SELECTION_DOG_ID_ = 'SELECTION_DOG_ID_';
 const OBJECTIVE_ID_ = 'OBJECTIVE_ID_';
 
 const ADDITIONAL_ACTIONS_ = 'ADDITIONAL_ACTIONS_';
-const ADDITIONAL_ACTIONS_PERFORMED_ = 'ADDITIONAL_ACTIONS_PERFORMED_';
+
+const STATE_AFTER_SWAP = 'STATE_AFTER_SWAP';
+const CURRENT_ACTION_ID = 'SWAP_ACTION_ID';
 
 /**
  * Additional Actions

@@ -8,6 +8,7 @@ use commands\GainLocationBonusCommand;
 use commands\MoveWalkerCommand;
 use commands\PayReputationForLocationCommand;
 use commands\PlaceDogOnLeadCommand;
+use commands\SwapCommand;
 use objects\DogCard;
 use objects\DogWalker;
 use objects\ObjectiveCard;
@@ -233,13 +234,15 @@ trait ActionTrait
             } else if ($locationId == 92) {
                 $this->actionManager->addAction($playerId, new AdditionalAction(WALKING_GAIN_LEAVING_THE_PARK_BONUS, (object) ["bonusType" => REPUTATION, "amount" => 2]));
             } else if ($locationId == 93) {
-                $this->actionManager->addActions($playerId, [new AdditionalAction(WALKING_GAIN_LEAVING_THE_PARK_BONUS, (object) ["bonusType" => REPUTATION, "amount" => 1]),new AdditionalAction(WALKING_GAIN_LEAVING_THE_PARK_BONUS, (object) ["bonusType" => SWAP, "amount" => 1])]);
+                $action1 = new AdditionalAction(WALKING_GAIN_LEAVING_THE_PARK_BONUS, (object) ["bonusType" => REPUTATION, "amount" => 1]);
+                $action2 = new AdditionalAction(WALKING_GAIN_LEAVING_THE_PARK_BONUS, (object) ["bonusType" => SWAP, "leavingTheParkOtherActionId" => $action1->id, "amount" => 1]);
+                $this->actionManager->addActions($playerId, [$action1, $action2]);
             }
         } else {
             $locationBonuses = $this->dogWalkPark->getLocationBonuses($locationId);
             $extraLocationBonuses = $this->dogWalkPark->getExtraLocationBonuses($locationId);
-            $this->actionManager->addActions($playerId, array_map(fn($bonus) => new AdditionalAction(WALKING_GAIN_LOCATION_BONUS, (object) ["bonusType" => $bonus, "extraBonus" => false]), $locationBonuses));
-            $this->actionManager->addActions($playerId, array_map(fn($bonus) => new AdditionalAction(WALKING_GAIN_LOCATION_BONUS, (object) ["bonusType" => $bonus, "extraBonus" => true]), $extraLocationBonuses));
+            $this->actionManager->addActions($playerId, array_map(fn($bonus) => new AdditionalAction(WALKING_GAIN_LOCATION_BONUS, (object) ["bonusType" => $bonus, "extraBonus" => false], in_array($bonus, [SWAP, SCOUT])), $locationBonuses));
+            $this->actionManager->addActions($playerId, array_map(fn($bonus) => new AdditionalAction(WALKING_GAIN_LOCATION_BONUS, (object) ["bonusType" => $bonus, "extraBonus" => true], in_array($bonus, [SWAP, SCOUT])), $extraLocationBonuses));
         }
 
         $this->gamestate->nextState("");
@@ -253,16 +256,35 @@ trait ActionTrait
             throw new BgaUserException("Action not found!");
         }
 
+        $refreshCurrentState = true;
         if ($action->type == WALKING_GAIN_LOCATION_BONUS) {
-            $this->commandManager->addCommand($playerId, new GainLocationBonusCommand($playerId, $actionId));
+            if ($action->additionalArgs->bonusType == SWAP) {
+                $refreshCurrentState = false;
+                $this->setGlobalVariable(STATE_AFTER_SWAP, ST_WALKING_MOVE_WALKER_AFTER);
+                $this->setGlobalVariable(CURRENT_ACTION_ID, $actionId);
+                $this->gamestate->jumpToState(ST_ACTION_SWAP);
+            } else {
+                $this->commandManager->addCommand($playerId, new GainLocationBonusCommand($playerId, $actionId));
+            }
         } else if ($action->type == WALKING_PAY_REPUTATION_ACCEPT) {
             $this->commandManager->addCommand($playerId, new PayReputationForLocationCommand($playerId, $actionId));
         } else if ($action->type == WALKING_PAY_REPUTATION_DENY) {
             $this->commandManager->addCommand($playerId, new PayReputationForLocationCommand($playerId, $actionId));
         } else if ($action->type == WALKING_GAIN_LEAVING_THE_PARK_BONUS) {
-            $this->commandManager->addCommand($playerId, new GainLeavingTheParkBonusCommand($playerId, $actionId));
+            if ($action->additionalArgs->bonusType == SWAP) {
+                $refreshCurrentState = false;
+                $this->setGlobalVariable(STATE_AFTER_SWAP, ST_WALKING_MOVE_WALKER_AFTER);
+                $this->setGlobalVariable(CURRENT_ACTION_ID, $actionId);
+                $this->gamestate->jumpToState(ST_ACTION_SWAP);
+            } else {
+                $this->commandManager->addCommand($playerId, new GainLeavingTheParkBonusCommand($playerId, $actionId));
+            }
         }
-        $this->gamestate->jumpToState(ST_WALKING_MOVE_WALKER_AFTER);
+
+        if ($refreshCurrentState) {
+            // Default go back to same state so possible actions are refreshed.
+            $this->gamestate->jumpToState(ST_WALKING_MOVE_WALKER_AFTER);
+        }
     }
 
     function confirmWalking() {
@@ -273,6 +295,31 @@ trait ActionTrait
         $this->commandManager->clearCommands();
 
         $this->gamestate->nextState("");
+    }
+
+    function cancelSwap() {
+        $this->checkAction(ACT_CANCEL);
+        $this->gamestate->jumpToState(intval($this->getGlobalVariable(STATE_AFTER_SWAP)));
+    }
+
+    function confirmSwap($fieldDogId, $kennelDogId) {
+        $this->checkAction(ACT_SWAP);
+
+        $playerId = $this->getActivePlayerId();
+        $fieldDog = DogCard::from($this->dogCards->getCard($fieldDogId));
+        if ($fieldDog->location != LOCATION_FIELD) {
+            throw new BgaUserException("Dog not in field");
+        }
+
+        $kennelDog = DogCard::from($this->dogCards->getCard($kennelDogId));
+        if ($kennelDog->location != LOCATION_PLAYER || $kennelDog->locationArg != $playerId) {
+            throw new BgaUserException("Dog not in kennel of active player");
+        }
+
+        $actionId = $this->getGlobalVariable(CURRENT_ACTION_ID);
+        $this->commandManager->addCommand($playerId, new SwapCommand($playerId, $actionId, $fieldDogId, $kennelDogId, $kennelDog->resourcesOnCard));
+
+        $this->gamestate->jumpToState(intval($this->getGlobalVariable(STATE_AFTER_SWAP)));
     }
 
     function undoLast() {

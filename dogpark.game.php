@@ -42,6 +42,7 @@ require_once('modules/php/commands/MoveWalkerCommand.php');
 require_once('modules/php/commands/GainLocationBonusCommand.php');
 require_once('modules/php/commands/PayReputationForLocationCommand.php');
 require_once('modules/php/commands/GainLeavingTheParkBonusCommand.php');
+require_once('modules/php/commands/SwapCommand.php');
 
 require_once('modules/php/objects/Card.php');
 require_once('modules/php/objects/BreedExpertCard.php');

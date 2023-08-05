@@ -327,7 +327,27 @@ $homeTimeStates = [
     ],
 ];
 
-$machinestates = $basicGameStates + $setupStates + $recruitmentStates + $selectionStates + $walkingStates + $homeTimeStates;
+//////////////////////////////////
+// Action states
+//////////////////////////////////
+$actionStates = [
+    ST_ACTION_SWAP => [
+        "name" => "actionSwap",
+        "description" => clienttranslate('${actplayer} may swap one of their dogs'),
+        "descriptionmyturn" => clienttranslate('${you} may swap one of your dogs'),
+        "args" => "argActionSwap",
+        "type" => "activeplayer",
+        "possibleactions" => [
+            ACT_SWAP,
+            ACT_CANCEL
+        ],
+        "transitions" => [
+            // We use jump to state to get out of this state.
+        ],
+    ],
+];
+
+$machinestates = $basicGameStates + $setupStates + $recruitmentStates + $selectionStates + $walkingStates + $homeTimeStates + $actionStates;
 
 
 

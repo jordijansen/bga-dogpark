@@ -606,11 +606,29 @@ body > .card {
   display: flex;
   justify-content: center;
 }
-#dp-player-areas .dp-player-area h2, #dp-own-player-area .dp-player-area h2 {
+#dp-player-areas .dp-player-area .player-name-wrapper h2, #dp-own-player-area .dp-player-area .player-name-wrapper h2 {
   background-color: white;
   border-radius: 25px;
   text-transform: uppercase;
   padding: 5px 25px;
+  margin: 0;
+}
+#dp-player-areas .dp-player-area .dp-player-area-section-wrapper, #dp-own-player-area .dp-player-area .dp-player-area-section-wrapper {
+  display: flex;
+  flex-direction: row;
+}
+#dp-player-areas .dp-player-area .dp-player-area-section-wrapper .label-wrapper, #dp-own-player-area .dp-player-area .dp-player-area-section-wrapper .label-wrapper {
+  writing-mode: vertical-rl;
+  text-orientation: upright;
+  text-transform: uppercase;
+  display: flex;
+  justify-content: center;
+}
+#dp-player-areas .dp-player-area .dp-player-area-section-wrapper .label-wrapper h2, #dp-own-player-area .dp-player-area .dp-player-area-section-wrapper .label-wrapper h2 {
+  background-color: white;
+  border-radius: 25px;
+  padding: 10px 5px;
+  margin: 0 10px 0 0;
 }
 #dp-player-areas .dp-player-area .dp-lead-board, #dp-own-player-area .dp-player-area .dp-lead-board {
   background-image: url("img/dogpark-leadboards.jpg");
@@ -646,6 +664,9 @@ body > .card {
 }
 #dp-player-areas .dp-player-area .dp-lead-board[data-color="#000000"], #dp-own-player-area .dp-player-area .dp-lead-board[data-color="#000000"] {
   background-position: 0 100%;
+}
+#dp-player-areas .dp-player-area .dp-player-area-kennel, #dp-own-player-area .dp-player-area .dp-player-area-kennel {
+  width: 850px;
 }
 
 .dp-token {
@@ -769,7 +790,7 @@ body > .card {
   background-size: 1000% auto;
   width: 22.16px;
   height: 19px;
-  background-position: 12.5% 0;
+  background-position: 11.1111111111% 0;
 }
 .fa.fa-star:before {
   content: unset;

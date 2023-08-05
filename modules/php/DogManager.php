@@ -69,4 +69,15 @@ class DogManager extends APP_DbObject
         self::DbQuery("UPDATE dog SET $columnName = $columnName - 1 WHERE card_id = ".$dogId);
     }
 
+    public function removeAllResources(int $id)
+    {
+        self::DbQuery("UPDATE dog SET dog_walked = 0, dog_stick = 0, dog_ball = 0, dog_treat = 0, dog_toy = 0 WHERE card_id = ".$id);
+    }
+
+    public function setResource(int $id, int $walked, int $stick, int $ball, int $treat, int $toy)
+    {
+        self::DbQuery("UPDATE dog SET dog_walked = $walked, dog_stick = $stick, dog_ball = $ball, dog_treat = $treat, dog_toy = $toy WHERE card_id = ".$id);
+
+    }
+
 }

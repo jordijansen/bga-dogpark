@@ -97,6 +97,14 @@ class PlayerArea {
         }
     }
 
+    public getSelectedKennelDog(playerId: number) {
+        const selection = this.kennelStocks[playerId].getSelection();
+        if (selection.length > 0) {
+            return selection[0];
+        }
+        return null;
+    }
+
     public setNewFirstWalker(playerId: number) {
         const element = $('dp-first-player-marker');
         return this.game.animationManager.play(
@@ -111,10 +119,20 @@ class PlayerArea {
                     <div class="player-name-wrapper">
                         <h2 style="color: #${player.color};">${player.name}</h2>
                     </div>
-                    <div class="dp-lead-board dp-board" data-color="#${player.color}">
-                        <div id="dp-player-area-${player.id}-lead" class="dp-lead-board-lead"></div>
+                    <div class="dp-player-area-section-wrapper">
+                        <div class="label-wrapper">
+                            <h2 style="color: #${player.color};">${_('Lead')}</h2>
+                        </div>
+                        <div class="dp-lead-board dp-board" data-color="#${player.color}">
+                            <div id="dp-player-area-${player.id}-lead" class="dp-lead-board-lead"></div>
+                        </div>
                     </div>
-                    <div id="dp-player-area-${player.id}-kennel">
+                    <div class="dp-player-area-section-wrapper">
+                        <div class="label-wrapper">
+                            <h2 style="color: #${player.color};">${_('Kennel')}</h2>
+                        </div>
+                        <div id="dp-player-area-${player.id}-kennel" class="dp-player-area-kennel">
+                        </div>
                     </div>
                 </div>`;
     }
@@ -130,6 +148,4 @@ class PlayerArea {
     private createFirsPlayerMarker() {
         return `<div id="dp-first-player-marker" class="dp-token dp-first-player-marker"></div>`;
     }
-
-
 }

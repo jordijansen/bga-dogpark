@@ -80,6 +80,11 @@ interface WalkingMoveWalkerAfterArgs {
     additionalActions: [{id: string, type: string, additionalArgs: any[], optional: boolean}]
 }
 
+interface ActionSwapArgs {
+    dogsInKennel: DogCard[],
+    dogsInField: DogCard[]
+}
+
 
 // NOTIFS
 interface NotifObjectivesChosen {
@@ -183,6 +188,12 @@ interface NotifNewLocationBonusCardDrawn {
 
 interface NotifNewFirstWalker {
     playerId: number
+}
+
+interface NotifPlayerSwaps {
+    playerId: number,
+    kennelDog: DogCard,
+    fieldDog: DogCard
 }
 
 

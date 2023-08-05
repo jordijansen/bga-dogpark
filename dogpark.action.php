@@ -154,6 +154,26 @@ class action_dogpark extends APP_GameAction
         self::ajaxResponse();
     }
 
+    public function confirmSwap()
+    {
+        self::setAjaxMode();
+
+        $fieldDogId = self::getArg("fieldDogId", AT_posint, true);
+        $kennelDogId = self::getArg("kennelDogId", AT_posint, true);
+        $this->game->confirmSwap($fieldDogId, $kennelDogId);
+
+        self::ajaxResponse();
+    }
+
+    public function cancelSwap()
+    {
+        self::setAjaxMode();
+
+        $this->game->cancelSwap();
+
+        self::ajaxResponse();
+    }
+
     public function undoLast()
     {
         self::setAjaxMode();

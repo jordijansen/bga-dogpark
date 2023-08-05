@@ -3,7 +3,6 @@
 # TODO
 - Selection what if no players can walk any dogs?
 - Auto Walker(s)
-- Swap Action (+ LEAD token if leaving park bonus)
 - Scout Action
 - Final Scoring
   - General
@@ -34,6 +33,8 @@ Final Scoring
 - Toy Collector
 - Treat Lover
 
+# Done
+- Swap Action (+ LEAD token if leaving park bonus)
 
 
 # RULES

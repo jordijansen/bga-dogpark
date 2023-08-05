@@ -124,6 +124,10 @@ class DogPark implements DogParkGame {
                 break;
             case 'walkingMoveWalker':
                 this.enteringWalkingMoveWalker(args.args as WalkingMoveWalkerArgs);
+                break;
+            case 'actionSwap':
+                this.enteringActionSwap(args.args as ActionSwapArgs);
+                break;
         }
     }
 
@@ -190,6 +194,13 @@ class DogPark implements DogParkGame {
         }
     }
 
+    private enteringActionSwap(args: ActionSwapArgs) {
+        if ((this as any).isCurrentPlayerActive()) {
+            this.playerArea.setSelectionModeForKennel("single", this.getPlayerId(), args.dogsInKennel);
+            this.dogField.setDogSelectionMode('single');
+        }
+    }
+
     public onLeavingState(stateName: string) {
         log( 'Leaving state: '+stateName );
 
@@ -203,6 +214,9 @@ class DogPark implements DogParkGame {
                 break;
             case 'walkingMoveWalker':
                 this.leavingWalkingMoveWalker();
+                break;
+            case 'actionSwap':
+                this.leavingActionSwap();
         }
     }
 
@@ -215,6 +229,13 @@ class DogPark implements DogParkGame {
     private leavingWalkingMoveWalker() {
         if ((this as any).isCurrentPlayerActive()) {
             this.dogWalkPark.exitWalkerSpotsSelection()
+        }
+    }
+
+    private leavingActionSwap() {
+        if ((this as any).isCurrentPlayerActive()) {
+            this.playerArea.setSelectionModeForKennel("none", this.getPlayerId());
+            this.dogField.setDogSelectionMode('none');
         }
     }
 
@@ -251,6 +272,11 @@ class DogPark implements DogParkGame {
                     if (walkingMoveWalkerAfterArgs.additionalActions.every(action => action.optional)) {
                         (this as any).addActionButton('confirmWalking', _("Confirm Walking"), () => this.confirmWalking());
                     }
+                    break;
+                case 'actionSwap':
+                    (this as any).addActionButton('confirmSwap', _("Confirm"), () => this.confirmSwap());
+                    (this as any).addActionButton('cancel', _("Cancel"), () => this.cancelSwap(), null, null, 'red');
+                    break;
             }
 
             if (args?.canCancelMoves) {
@@ -340,6 +366,22 @@ class DogPark implements DogParkGame {
 
     private confirmWalking() {
         this.takeAction('confirmWalking')
+    }
+
+    private confirmSwap() {
+        const fieldDog = this.dogField.getSelectedDog();
+        const kennelDog = this.playerArea.getSelectedKennelDog(this.getPlayerId());
+        if (!fieldDog) {
+            (this as any).showMessage(_("You must select 1 dog in the field"), 'error')
+        } else if (!kennelDog) {
+            (this as any).showMessage(_("You must select 1 dog in your kennel"), 'error')
+        } else {
+            this.takeAction("confirmSwap", {fieldDogId: fieldDog.id, kennelDogId: kennelDog.id})
+        }
+    }
+
+    private cancelSwap() {
+        this.takeAction('cancelSwap');
     }
 
     private undoLast() {
@@ -447,7 +489,8 @@ class DogPark implements DogParkGame {
             ['moveWalkerBackToPlayer', undefined],
             ['flipForecastCard', undefined],
             ['newLocationBonusCardDrawn', undefined],
-            ['newFirstWalker', undefined]
+            ['newFirstWalker', undefined],
+            ['playerSwaps', undefined]
             // ['shortTime', 1],
             // ['fixedTime', 1000]
         ];
@@ -597,6 +640,13 @@ class DogPark implements DogParkGame {
 
     private notif_newFirstWalker(args: NotifNewFirstWalker) {
         return this.playerArea.setNewFirstWalker(args.playerId);
+    }
+
+    private notif_playerSwaps(args: NotifPlayerSwaps) {
+        this.dogCardManager.removeAllResourcesFromDog(args.kennelDog.id);
+        this.dogCardManager.addInitialResourcesToDog(args.fieldDog);
+        this.dogField.addDogCardsToField([args.kennelDog]);
+        return this.playerArea.moveDogsToKennel(args.playerId,[args.fieldDog]);
     }
 
     public format_string_recursive(log: string, args: any) {

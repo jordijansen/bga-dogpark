@@ -91,7 +91,16 @@ trait ArgsTrait
         ];
     }
 
+    function argActionSwap(): array
+    {
+        return [
+            "dogsInKennel" => DogCard::fromArray($this->dogCards->getCardsInLocation(LOCATION_PLAYER, $this->getActivePlayerId())),
+            "dogsInField" => $this->dogField->getDogCards()
+        ];
+    }
+
     function getRecruitmentRoundArg() {
         return $this->getGlobalVariable(CURRENT_PHASE) == PHASE_RECRUITMENT_2 ? 2 : 1;
     }
+    
 }
