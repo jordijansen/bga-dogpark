@@ -84,10 +84,10 @@ class DogField {
     }
 
     private createScoutArea() {
-        return `<div class="label-wrapper" style="margin: 16px 0;">
+        return `<div class="label-wrapper" style="margin-bottom: 16px;">
                   <h2><div class="dp-token-token" data-type="scout"></div> ${_('Scouted Cards')}</h2>
                 </div>
-                <div id="dp-game-board-field-scout" style="margin-bottom: 16px;"></div>`
+                <div id="dp-game-board-field-scout"></div>`
     }
 
 

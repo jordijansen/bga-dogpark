@@ -11,12 +11,14 @@ class PlayerManager extends APP_DbObject
 {
 
     public function setInitialResources() {
-        self::DbQuery("UPDATE player SET player_sticks = 2, player_balls = 2, player_toys = 1, player_treats = 1");
+        self::DbQuery("UPDATE extra_player SET player_sticks = 2, player_balls = 2, player_toys = 1, player_treats = 1");
     }
 
     public function setInitialPlayerOder() {
-        self::DbQuery("UPDATE player SET player_custom_order = player_no");
+        self::DbQuery("UPDATE extra_player ep SET ep.player_custom_order = (SELECT player_no FROM player p WHERE p.player_id = ep.player_id)");
     }
+
+    public function getPlayerOrder() {}
 
     public function getResources($playerId) {
         $resources = current($this->getCollectionFromDB("SELECT 
@@ -24,7 +26,7 @@ class PlayerManager extends APP_DbObject
                                                  player_balls as ball,
                                                  player_toys as toy,
                                                  player_treats as treat
-                                                 FROM player 
+                                                 FROM extra_player 
                                                  WHERE player_id = ".$playerId));
         $resources['stick'] = intval($resources['stick']);
         $resources['ball'] = intval($resources['ball']);
@@ -34,11 +36,11 @@ class PlayerManager extends APP_DbObject
     }
 
     public function getPlayerIdsInTurnOrder() {
-        return $this->getCollectionFromDB("SELECT player_custom_order, player_id FROM player ORDER BY player_custom_order ASC");
+        return $this->getCollectionFromDB("SELECT player_custom_order, player_id FROM extra_player WHERE player_custom_order > 0 ORDER BY player_custom_order ASC");
     }
 
     public function getPlayerCustomOrderNo($playerId) {
-        return $this->getUniqueValueFromDB("SELECT player_custom_order FROM player WHERE player_id = $playerId");
+        return intval($this->getUniqueValueFromDB("SELECT player_custom_order FROM extra_player WHERE player_id = $playerId"));
     }
 
     public function getWalkerId($playerId) {
@@ -52,7 +54,19 @@ class PlayerManager extends APP_DbObject
 
     public function resetAllOfferValues() {
         DogPark::$instance->setGlobalVariable(OFFER_VALUE_REVEALED, false);
-        self::DbQuery("UPDATE player SET player_offer_value = null");
+        self::DbQuery("UPDATE extra_player SET player_offer_value = null");
+    }
+
+    function updatePlayerOfferValue(int $playerId, $offerValue) {
+        if ($offerValue == null) {
+            $this->DbQuery("UPDATE extra_player SET player_offer_value = null WHERE player_id = ". $playerId);
+        } else {
+            $this->DbQuery("UPDATE extra_player SET player_offer_value = ".$offerValue." WHERE player_id = ". $playerId);
+        }
+    }
+
+    function getPlayerOfferValue(int $playerId) {
+        return intval($this->getUniqueValueFromDB("SELECT player_offer_value FROM extra_player WHERE player_id = $playerId"));
     }
 
     public function dealObjectiveCardsToPlayers() {
@@ -85,7 +99,7 @@ class PlayerManager extends APP_DbObject
     private function updateResources($playerId, $resources, $increment)
     {
         $resourcesCountByType = array_count_values($resources);
-        $query = "UPDATE player SET ";
+        $query = "UPDATE extra_player SET ";
         $modifier = $increment ? '+' : '-';
 
         foreach ($resourcesCountByType as $resource => $count) {
@@ -110,7 +124,7 @@ class PlayerManager extends APP_DbObject
             if ($newTurnOrder == 1) {
                 $newFirstPlayerId = $playerId;
             }
-            self::DbQuery("UPDATE player SET player_custom_order = $newTurnOrder WHERE player_id = $playerId");
+            self::DbQuery("UPDATE extra_player SET player_custom_order = $newTurnOrder WHERE player_id = $playerId");
         }
         return $newFirstPlayerId;
     }

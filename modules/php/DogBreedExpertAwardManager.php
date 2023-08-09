@@ -19,8 +19,11 @@ class DogBreedExpertAwardManager
         DogPark::$instance->breedCards->pickCardsForLocation(1, LOCATION_DECK, LOCATION_BREED_EXPERT_AWARDS, 7);
     }
 
+    /**
+     * @return BreedExpertCard[]
+     */
     public function getExpertAwards(): array
     {
-        return BreedExpertCard::fromArray(DogPark::$instance->breedCards->getCardsInLocation(LOCATION_BREED_EXPERT_AWARDS));
+        return BreedExpertCard::fromArray(DogPark::$instance->breedCards->getCardsInLocation(LOCATION_BREED_EXPERT_AWARDS, null, 'card_location_arg'));
     }
 }

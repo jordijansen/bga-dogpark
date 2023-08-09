@@ -10,23 +10,30 @@ use objects\DogWalker;
 class DogManager extends APP_DbObject
 {
     function recruitDog($playerId, $dogId, $reputationCost, $dogWalkerId) {
-        $playerScore = DogPark::$instance->getPlayerScore($playerId);
-        $newScore = $playerScore - $reputationCost;
-        DogPark::$instance->updatePlayerScore($playerId, $newScore);
-
         $this->moveDogToKennel($playerId, $dogId);
-
         $dogCard = DogCard::from(DogPark::$instance->dogCards->getCard($dogId));
-        DogPark::$instance->notifyAllPlayers('dogRecruited', clienttranslate('${player_name} pays ${reputationCost} and recruits <b>${dogName}</b>'),[
+
+        $args = [
             'i18n' => ['dogName'],
             'playerId' => $playerId,
-            'player_name' => DogPark::$instance->getPlayerName($playerId),
-            'reputationCost' => $reputationCost,
             'dog' => $dogCard,
             'dogName' => $dogCard->name,
-            'score' => $newScore,
             'walker' => DogWalker::from(DogPark::$instance->dogWalkers->getCard($dogWalkerId))
-        ]);
+        ];
+
+        if ($playerId > 2) {
+            $playerScore = DogPark::$instance->getPlayerScore($playerId);
+            $newScore = $playerScore - $reputationCost;
+            DogPark::$instance->updatePlayerScore($playerId, $newScore);
+
+            $args['player_name'] = DogPark::$instance->getPlayerName($playerId);
+            $args['reputationCost'] = $reputationCost;
+            $args['score'] = $newScore;
+            DogPark::$instance->notifyAllPlayers('dogRecruited', clienttranslate('${player_name} pays ${reputationCost} and recruits <b>${dogName}</b>'), $args);
+        } else {
+            $args['name'] = DogPark::$instance->getPlayerName($playerId);
+            DogPark::$instance->notifyAllPlayers('dogRecruited', clienttranslate('${name} recruits <b>${dogName}</b>'), $args);
+        }
     }
 
     public function moveDogToKennel($playerId, $dogId)

@@ -49,7 +49,10 @@
 
       display: flex;
       justify-content: center;
-      align-items: center;
+      align-items: end;
+      .dp-dog-walker-token {
+        margin-bottom: 10px;
+      }
     }
   }
 

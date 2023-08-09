@@ -114,9 +114,14 @@ CREATE TABLE IF NOT EXISTS `extra_location_bonus` (
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
 
-ALTER TABLE `player` ADD `player_offer_value` INT UNSIGNED NULL;
-ALTER TABLE `player` ADD `player_custom_order` INT UNSIGNED NOT NULL DEFAULT '0';
-ALTER TABLE `player` ADD `player_sticks` INT UNSIGNED NOT NULL DEFAULT '0';
-ALTER TABLE `player` ADD `player_treats` INT UNSIGNED NOT NULL DEFAULT '0';
-ALTER TABLE `player` ADD `player_balls` INT UNSIGNED NOT NULL DEFAULT '0';
-ALTER TABLE `player` ADD `player_toys` INT UNSIGNED NOT NULL DEFAULT '0';
+CREATE TABLE IF NOT EXISTS `extra_player` (
+    `player_id` int(10) unsigned NOT NULL,
+    `player_offer_value` int(10) unsigned NULL,
+    `player_custom_order` int(10) unsigned NOT NULL DEFAULT '0',
+    `player_sticks` int(10) unsigned NOT NULL DEFAULT '0',
+    `player_treats` int(10) unsigned NOT NULL DEFAULT '0',
+    `player_balls` int(10) unsigned NOT NULL DEFAULT '0',
+    `player_toys` int(10) unsigned NOT NULL DEFAULT '0',
+    PRIMARY KEY (`player_id`)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;
+

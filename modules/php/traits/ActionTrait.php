@@ -70,7 +70,7 @@ trait ActionTrait
 
         $locationArgForWalker = sizeof($this->dogWalkers->getCardsInLocation('field_'.$dog->locationArg)) + 1;
         $this->dogWalkers->moveAllCardsInLocation(LOCATION_PLAYER, 'field_'.$dog->locationArg, $activePlayerId, $locationArgForWalker);
-        $this->updatePlayerOfferValue($activePlayerId, $offerValue);
+        $this->playerManager->updatePlayerOfferValue($activePlayerId, $offerValue);
 
         $this->notifyAllPlayers('dogOfferPlaced', clienttranslate('${player_name} places an offer on <b>${dogName}</b>'),[
             'i18n' => ['dogName'],
@@ -95,7 +95,7 @@ trait ActionTrait
             throw new BgaUserException("Can't skip");
         }
 
-        $this->updatePlayerOfferValue($activePlayerId, 0);
+        $this->playerManager->updatePlayerOfferValue($activePlayerId, 0);
 
         $this->notifyAllPlayers('gameLog', clienttranslate('${player_name} can not place an offer (insufficient reputation)'),[
             'playerId' => $activePlayerId,

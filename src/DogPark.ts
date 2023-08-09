@@ -731,5 +731,12 @@ class DogPark implements DogParkGame {
         return tokens.join(' ');
     }
 
+    public updatePlayerOrdering() {
+        (this as any).inherited(arguments);
+        this.gamedatas.autoWalkers.forEach(autoWalker => {
+            this.playerArea.initAutoWalkers(autoWalker);
+        });
+    }
+
 
 }

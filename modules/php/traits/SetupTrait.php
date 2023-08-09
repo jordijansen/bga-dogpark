@@ -26,17 +26,28 @@ trait SetupTrait
         // Create players
         // Note: if you added some extra field on "player" table in the database (dbmodel.sql), you can initialize it there.
         $sql = "INSERT INTO player (player_id, player_color, player_canal, player_name, player_avatar, player_score) VALUES ";
-        $values = array();
+        $extraSql = "INSERT INTO extra_player (player_id) VALUES ";
+        $values = [];
+        $extraValues = [];
         foreach( $players as $player_id => $player )
         {
             $color = array_shift( $default_colors );
             $values[] = "('".$player_id."','$color','".$player['player_canal']."','".addslashes( $player['player_name'] )."','".addslashes( $player['player_avatar'] )."', 5)";
+            $extraValues[] = "('".$player_id."')";
         }
         $sql .= implode( ',', $values );
+        $extraSql .= implode( ',', $extraValues );
+        self::DbQuery( $extraSql );
         self::DbQuery( $sql );
         self::reattributeColorsBasedOnPreferences( $players, $gameinfos['player_colors'] );
         self::reloadPlayersBasicInfos();
 
+
+        $autoWalkers = $this->getAutoWalkers();
+        foreach ($autoWalkers as $autoWalker) {
+            self::DbQuery("INSERT INTO extra_player (player_id) VALUES ($autoWalker->id)");
+        }
+        
         $this->playerManager->setInitialPlayerOder();
         $this->playerManager->setInitialResources();
 
@@ -82,6 +93,14 @@ trait SetupTrait
             $cards = array();
             $cards[] = array( 'type' => $player['player_color'], 'type_arg' => $playerId, 'nbr' => 1);
             $this->dogWalkers->createCards($cards, LOCATION_PLAYER, $playerId);
+        }
+
+        $autoWalkers = $this->getAutoWalkers();
+        foreach ($autoWalkers as $autoWalker)
+        {
+            $cards = array();
+            $cards[] = array( 'type' => $autoWalker->color, 'type_arg' => $autoWalker->id, 'nbr' => 1);
+            $this->dogWalkers->createCards($cards, LOCATION_PLAYER, $autoWalker->id);
         }
     }
     private function createBreedCards() {

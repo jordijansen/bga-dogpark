@@ -85,10 +85,12 @@ html, .mode_3d #game_play_area_background {
       }
     }
 
-    .dp-player-first-player-marker-wrapper {
+    .dp-player-token-wrapper {
       display: flex;
       justify-content: center;
       margin-bottom: 8px;
+      gap: 8px;
+      align-items: center;
     }
 
     .dp-player-objective-card {

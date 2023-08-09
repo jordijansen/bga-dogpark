@@ -1169,7 +1169,10 @@ body > .card {
   background-size: 500% auto;
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: end;
+}
+.dp-dial.side-front .side-front-overlay .dp-dog-walker-token {
+  margin-bottom: 10px;
 }
 .dp-dial.side-back {
   background-image: url("img/dogpark-dials-back.png");
@@ -1264,10 +1267,12 @@ html .whiteblock, .mode_3d #game_play_area_background .whiteblock {
 #player_boards .player-board .dp-player-resources .counter-void-stock-wrapper .counter-void-stock-icon {
   margin: 5px;
 }
-#player_boards .player-board .dp-player-first-player-marker-wrapper {
+#player_boards .player-board .dp-player-token-wrapper {
   display: flex;
   justify-content: center;
   margin-bottom: 8px;
+  gap: 8px;
+  align-items: center;
 }
 #player_boards .player-board .dp-player-objective-card .blackjack-size-landscape {
   width: 230px;

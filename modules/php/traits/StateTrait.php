@@ -64,9 +64,14 @@ trait StateTrait
     }
 
     function stRecruitmentOfferNext() {
-        $playerCustomOrderNo = intval($this->playerManager->getPlayerCustomOrderNo($this->getActivePlayerId()));
+        $playerCustomOrderNo = $this->playerManager->getPlayerCustomOrderNo($this->getActivePlayerId());
         if ($playerCustomOrderNo == $this->getPlayersNumber()) {
-            // All Human Players have had their turn to place an offer
+            // All Human Players have had their turn to place an offer - Auto walkers take turn if present in this game
+            $autoWalkers = $this->getAutoWalkers();
+            foreach ($autoWalkers as $autoWalker) {
+                $autoWalker->takeRecruitmentTurn();
+            }
+
             $this->gamestate->nextState("resolveOffers");
         } else {
             $this->activeNextPlayer();
@@ -81,9 +86,19 @@ trait StateTrait
             $this->notifyAllPlayers('offerValueRevealed', clienttranslate('${player_name} reveals an offer of ${offerValue}'),[
                 'playerId' => $playerId,
                 'player_name' => $this->getPlayerName($playerId),
-                'offerValue' => $this->getPlayerOfferValue($playerId)
+                'offerValue' => $this->playerManager->getPlayerOfferValue($playerId)
             ]);
         }
+
+        $autoWalkers = $this->getAutoWalkers();
+        foreach ($autoWalkers as $autoWalker) {
+            $this->notifyAllPlayers('offerValueRevealed', clienttranslate('${name} reveals an offer of ${offerValue}'),[
+                'playerId' => $autoWalker->id,
+                'name' => $autoWalker->name,
+                'offerValue' => $this->playerManager->getPlayerOfferValue($autoWalker->id)
+            ]);
+        }
+
         $this->setGlobalVariable(OFFER_VALUE_REVEALED, true);
 
         $dogCards = $this->dogField->getDogCards();
@@ -95,14 +110,14 @@ trait StateTrait
                 foreach ($walkersInField as $walker) {
                     if ($highestBid != null) {
                         // First we compare the offers, higher offer wins
-                        $currentHighestOffer = $this->getPlayerOfferValue($highestBid->typeArg);
-                        $newOffer = $this->getPlayerOfferValue($walker->typeArg);
+                        $currentHighestOffer = $this->playerManager->getPlayerOfferValue($highestBid->typeArg);
+                        $newOffer = $this->playerManager->getPlayerOfferValue($walker->typeArg);
                         if ($newOffer > $currentHighestOffer) {
                             $highestBid = $walker;
                         } else if ($newOffer == $currentHighestOffer) {
                             // If there is a tie in the offers, compare position in walkerQueue
-                            $currentHighestLocation = $this->getPlayerOfferValue($highestBid->locationArg);
-                            $newLocation = $this->getPlayerOfferValue($walker->locationArg);
+                            $currentHighestLocation = $this->playerManager->getPlayerOfferValue($highestBid->locationArg);
+                            $newLocation = $this->playerManager->getPlayerOfferValue($walker->locationArg);
                             if ($newLocation > $currentHighestLocation) {
                                 $highestBid = $walker;
                             }
@@ -113,8 +128,7 @@ trait StateTrait
                 }
 
                 $this->dogWalkers->moveCard($highestBid->id, LOCATION_PLAYER, $highestBid->typeArg);
-                $this->dogManager->recruitDog($highestBid->typeArg, $dogCard->id, intval($this->getPlayerOfferValue($highestBid->typeArg)), $highestBid->id);
-
+                $this->dogManager->recruitDog($highestBid->typeArg, $dogCard->id, intval($this->playerManager->getPlayerOfferValue($highestBid->typeArg)), $highestBid->id);
             }
         }
 
@@ -143,13 +157,22 @@ trait StateTrait
                 foreach ($playerIdsInOrder as $playerOrderNo => $player) {
                     // Lastly all players that couldn't offer (insufficient reputation) get a change to choose a dog
                     $playerId = intval($player['player_id']);
-                    if ($this->getPlayerOfferValue($playerId) == 0) {
-                        $this->updatePlayerOfferValue($playerId, null);
+                    if ($this->playerManager->getPlayerOfferValue($playerId) == 0) {
+                        $this->playerManager->updatePlayerOfferValue($playerId, null);
                         $this->gamestate->changeActivePlayer($playerId);
                         $this->gamestate->nextState("nextPlayer");
                         return;
                     }
                 }
+            }
+        }
+
+        $autoWalkers = $this->getAutoWalkers();
+        foreach ($autoWalkers as $autoWalker) {
+            $walker = $this->playerManager->getWalker($autoWalker->id);
+            if (substr($walker->location, 0, 5) === "field") {
+                $leftOverDog = current($this->dogField->getDogCards());
+                $this->dogManager->recruitDog($autoWalker->id, $leftOverDog->id, 0, $walker->id);
             }
         }
 

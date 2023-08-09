@@ -2,19 +2,38 @@
 
 namespace traits;
 
+use objects\AutoWalker;
+
 trait UtilsTrait
 {
 
-    function updatePlayerOfferValue(int $playerId, $offerValue) {
-        if ($offerValue == null) {
-            $this->DbQuery("UPDATE player SET player_offer_value = null WHERE player_id = ". $playerId);
-        } else {
-            $this->DbQuery("UPDATE player SET player_offer_value = ".$offerValue." WHERE player_id = ". $playerId);
+    /**
+     * @return AutoWalker[]
+     */
+    function getAutoWalkers() {
+        $gameinfos = self::getGameinfos();
+        $playerColors = $gameinfos['player_colors'];
+
+        $players = $this->loadPlayersBasicInfos();
+        $usedPlayerColors = array_map(fn($players) => $players['player_color'], array_values($players));
+
+        $unusedPlayerColors = array_filter($playerColors, function($color) use($usedPlayerColors){return !in_array($color, $usedPlayerColors);});
+
+        $nrOfPlayers = $this->getPlayersNumber();
+        $autoWalkers = [];
+        if ($nrOfPlayers <= 2) {
+            $nrOfAutoWalkers = $nrOfPlayers == 1 ? 2 : 1;
+            for ($i = 1; $i <= $nrOfAutoWalkers; $i++) {
+                $autoWalkers[] = new AutoWalker($i, array_shift($unusedPlayerColors));
+            }
         }
+        return $autoWalkers;
     }
 
-    function getPlayerOfferValue(int $playerId) {
-        return intval($this->getUniqueValueFromDB("SELECT player_offer_value FROM player WHERE player_id = $playerId"));
+    function getNextAutoWalkerDiceValue() {
+        $diceValues = [1, 2, 2, 3, 3, 4];
+        $index = bga_rand(1, 6);
+        return $diceValues[$index - 1];
     }
 
     //////////////////////////////////////////////////////////////////////////////
@@ -60,7 +79,11 @@ trait UtilsTrait
     }
 
     function getPlayerName(int $playerId) {
-        return self::getUniqueValueFromDB("SELECT player_name FROM player WHERE player_id = $playerId");
+        if ($playerId > 2) {
+            return self::getUniqueValueFromDB("SELECT player_name FROM player WHERE player_id = $playerId");
+        } else {
+            return "Autowalker #$playerId";
+        }
     }
 
     function getPlayerColor(int $playerId) {

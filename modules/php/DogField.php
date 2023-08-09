@@ -43,7 +43,7 @@ class DogField
      */
     public function getDogCards(): array
     {
-        return DogCard::fromArray(DogPark::$instance->dogCards->getCardsInLocation(LOCATION_FIELD));
+        return DogCard::fromArray(DogPark::$instance->dogCards->getCardsInLocation(LOCATION_FIELD, null, 'card_location_arg'));
     }
 
     /**

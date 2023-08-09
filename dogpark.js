@@ -2556,7 +2556,7 @@ var DogOfferDial = /** @class */ (function () {
         if (!this.settings.readOnly) {
             result += "<a id=\"dp-dial-button-decrease\" class=\"bgabutton bgabutton_blue\"><i class=\"fa fa-minus\" aria-hidden=\"true\"></i></a>";
         }
-        result += "<div id=\"".concat(this.settings.elementId, "\" class=\"dp-dial side-front\" data-color=\"#").concat(this.settings.player.color, "\" data-value=\"").concat(this._currentValue, "\">\n                    <div class=\"side-front-numbers\"></div>\n                    <div class=\"side-front-overlay\">").concat(this.settings.readOnly ? this.settings.player.name : '', "</div>\n                </div>");
+        result += "<div id=\"".concat(this.settings.elementId, "\" class=\"dp-dial side-front\" data-color=\"#").concat(this.settings.player.color, "\" data-value=\"").concat(this._currentValue, "\">\n                    <div class=\"side-front-numbers\"></div>\n                    <div class=\"side-front-overlay\"><div id=\"dp-walker-rest-area-").concat(this.settings.player.id, "\"></div></div>\n                </div>");
         if (!this.settings.readOnly) {
             result += "<a id=\"dp-dial-button-increase\" class=\"bgabutton bgabutton_blue\"><i class=\"fa fa-plus\" aria-hidden=\"true\"></i></a>";
         }
@@ -2796,7 +2796,7 @@ var DogField = /** @class */ (function () {
         return "<div id=\"dp-field-slot-".concat(id, "\" class=\"dp-field-slot\">\n                    <div id=\"dp-field-slot-").concat(id, "-dog\" class=\"dp-field-slot-card\">\n                    </div>\n                    <div id=\"dp-field-slot-").concat(id, "-walkers\" class=\"dp-field-slot-walkers\">\n                    </div>\n                </div>");
     };
     DogField.prototype.createScoutArea = function () {
-        return "<div class=\"label-wrapper\" style=\"margin: 16px 0;\">\n                  <h2><div class=\"dp-token-token\" data-type=\"scout\"></div> ".concat(_('Scouted Cards'), "</h2>\n                </div>\n                <div id=\"dp-game-board-field-scout\" style=\"margin-bottom: 16px;\"></div>");
+        return "<div class=\"label-wrapper\" style=\"margin-bottom: 16px;\">\n                  <h2><div class=\"dp-token-token\" data-type=\"scout\"></div> ".concat(_('Scouted Cards'), "</h2>\n                </div>\n                <div id=\"dp-game-board-field-scout\"></div>");
     };
     return DogField;
 }());
@@ -2908,8 +2908,14 @@ var PlayerArea = /** @class */ (function () {
         }
         for (var playerId in gameData.players) {
             var player = gameData.players[playerId];
-            var dogWalkerStockId = "dp-player-walker-area-".concat(player.id);
-            dojo.place("<div id=\"".concat(dogWalkerStockId, "\" class=\"dp-player-walker-area\"></div>"), $('dp-game-board-offer-dials'));
+            this.playerDials[Number(player.id)] = new DogOfferDial({
+                elementId: "dp-game-board-offer-dial-".concat(player.id),
+                parentId: "dp-player-token-wrapper-".concat(player.id),
+                player: player,
+                readOnly: true,
+                initialValue: player.offerValue
+            });
+            var dogWalkerStockId = "dp-walker-rest-area-".concat(player.id);
             this.walkerStocks[Number(player.id)] = new LineStock(this.game.dogWalkerManager, $(dogWalkerStockId), { center: false });
             this.moveWalkerToPlayer(Number(player.id), player.walker);
             var kennelStockId = "dp-player-area-".concat(player.id, "-kennel");
@@ -2918,18 +2924,11 @@ var PlayerArea = /** @class */ (function () {
             var leadStockId = "dp-player-area-".concat(player.id, "-lead");
             this.leadStocks[Number(player.id)] = new LineStock(this.game.dogCardManager, $(leadStockId), { center: false });
             this.moveDogsToLead(Number(player.id), player.leadDogs);
-            this.playerDials[Number(player.id)] = new DogOfferDial({
-                elementId: "dp-game-board-offer-dial-".concat(player.id),
-                parentId: 'dp-game-board-offer-dials',
-                player: player,
-                readOnly: true,
-                initialValue: player.offerValue
-            });
             var objectiveStockId = "dp-player-objective-card-".concat(player.id);
             this.playerObjective[Number(player.id)] = new LineStock(this.game.objectiveCardManager, $(objectiveStockId), {});
             this.moveObjectiveToPlayer(Number(player.id), player.chosenObjective);
             if (player.orderNo === 1) {
-                dojo.place(this.createFirsPlayerMarker(), $("dp-player-first-player-marker-wrapper-".concat(player.id)));
+                dojo.place(this.createFirsPlayerMarker(), $("dp-player-token-wrapper-".concat(player.id)));
             }
         }
     };
@@ -2983,11 +2982,28 @@ var PlayerArea = /** @class */ (function () {
             attachElement: $("dp-player-first-player-marker-wrapper-".concat(playerId))
         }));
     };
+    PlayerArea.prototype.initAutoWalkers = function (autoWalker) {
+        dojo.place("<div id=\"overall_auto_walker_".concat(autoWalker.id, "_board\" class=\"player-board\" style=\"height: auto;\">\n                                    <div class=\"player_board_inner\">\n                                        <div class=\"player-name\" id=\"player_name_").concat(autoWalker.id, "\" style=\"color: #").concat(autoWalker.color, "\">\n                                            ").concat(autoWalker.name, "                    \n                                        </div>\n                                        <div class=\"player_board_content\">\n                                            <div id=\"dp-player-token-wrapper-").concat(autoWalker.id, "\" class=\"dp-player-token-wrapper\"></div>\n                                        </div>\n                                    </div>\n                                </div>"), "player_boards");
+        dojo.place("<div id=\"dp-player-area-".concat(autoWalker.id, "\" class=\"whiteblock dp-player-area\" style=\"background-color: #").concat(autoWalker.color, ";\">\n                            <div class=\"label-wrapper\">\n                                <h2 style=\"color: #").concat(autoWalker.color, ";\">").concat(autoWalker.name, "</h2>\n                            </div>\n                            <div class=\"dp-player-area-section-wrapper\">\n                                <div class=\"label-wrapper vertical\">\n                                    <h2 style=\"color: #").concat(autoWalker.color, ";\">").concat(_('Kennel'), "</h2>\n                                </div>\n                                <div id=\"dp-player-area-").concat(autoWalker.id, "-kennel\" class=\"dp-player-area-kennel\">\n                                </div>\n                            </div>\n                        </div>"), "dp-player-areas");
+        this.playerDials[Number(autoWalker.id)] = new DogOfferDial({
+            elementId: "dp-game-board-offer-dial-".concat(autoWalker.id),
+            parentId: "dp-player-token-wrapper-".concat(autoWalker.id),
+            player: autoWalker,
+            readOnly: true,
+            initialValue: autoWalker.offerValue
+        });
+        var dogWalkerStockId = "dp-walker-rest-area-".concat(autoWalker.id);
+        this.walkerStocks[Number(autoWalker.id)] = new LineStock(this.game.dogWalkerManager, $(dogWalkerStockId), { center: false });
+        this.moveWalkerToPlayer(autoWalker.id, autoWalker.walker);
+        var kennelStockId = "dp-player-area-".concat(autoWalker.id, "-kennel");
+        this.kennelStocks[Number(autoWalker.id)] = new LineStock(this.game.dogCardManager, $(kennelStockId), { center: true });
+        this.moveDogsToKennel(Number(autoWalker.id), autoWalker.kennelDogs);
+    };
     PlayerArea.prototype.createPlayerArea = function (player) {
         return "<div id=\"dp-player-area-".concat(player.id, "\" class=\"whiteblock dp-player-area\" style=\"background-color: #").concat(player.color, ";\">\n                    <div class=\"label-wrapper\">\n                        <h2 style=\"color: #").concat(player.color, ";\">").concat(player.name, "</h2>\n                    </div>\n                    <div class=\"dp-player-area-section-wrapper\">\n                        <div class=\"label-wrapper vertical\">\n                            <h2 style=\"color: #").concat(player.color, ";\">").concat(_('Lead'), "</h2>\n                        </div>\n                        <div class=\"dp-lead-board dp-board\" data-color=\"#").concat(player.color, "\">\n                            <div id=\"dp-player-area-").concat(player.id, "-lead\" class=\"dp-lead-board-lead\"></div>\n                        </div>\n                    </div>\n                    <div class=\"dp-player-area-section-wrapper\">\n                        <div class=\"label-wrapper vertical\">\n                            <h2 style=\"color: #").concat(player.color, ";\">").concat(_('Kennel'), "</h2>\n                        </div>\n                        <div id=\"dp-player-area-").concat(player.id, "-kennel\" class=\"dp-player-area-kennel\">\n                        </div>\n                    </div>\n                </div>");
     };
     PlayerArea.prototype.createPlayerPanels = function (player) {
-        dojo.place("<div id=\"dp-player-resources-".concat(player.id, "\" class=\"dp-player-resources\">\n                            <div id=\"dp-player-dummy-resources-").concat(player.id, "\" style=\"height: 0; width: 0; overflow: hidden;\"></div>\n                          </div>\n                          <div id=\"dp-player-first-player-marker-wrapper-").concat(player.id, "\" class=\"dp-player-first-player-marker-wrapper\"></div>\n                          <div id=\"dp-player-objective-card-").concat(player.id, "\"  class=\"dp-player-objective-card\"></div>"), "player_board_".concat(player.id));
+        dojo.place("<div id=\"dp-player-resources-".concat(player.id, "\" class=\"dp-player-resources\">\n                            <div id=\"dp-player-dummy-resources-").concat(player.id, "\" style=\"height: 0; width: 0; overflow: hidden;\"></div>\n                          </div>\n                          <div id=\"dp-player-token-wrapper-").concat(player.id, "\" class=\"dp-player-token-wrapper\"></div>\n                          <div id=\"dp-player-objective-card-").concat(player.id, "\"  class=\"dp-player-objective-card\"></div>"), "player_board_".concat(player.id));
     };
     PlayerArea.prototype.createFirsPlayerMarker = function () {
         return "<div id=\"dp-first-player-marker\" class=\"dp-token dp-first-player-marker\"></div>";
@@ -3838,6 +3854,13 @@ var DogPark = /** @class */ (function () {
             tokens.push(this.tokenIcon(type));
         }
         return tokens.join(' ');
+    };
+    DogPark.prototype.updatePlayerOrdering = function () {
+        var _this = this;
+        this.inherited(arguments);
+        this.gamedatas.autoWalkers.forEach(function (autoWalker) {
+            _this.playerArea.initAutoWalkers(autoWalker);
+        });
     };
     return DogPark;
 }());

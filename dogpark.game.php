@@ -54,6 +54,7 @@ require_once('modules/php/objects/LocationBonusCard.php');
 require_once('modules/php/objects/LocationBonus.php');
 require_once('modules/php/objects/DogCard.php');
 require_once('modules/php/objects/DogWalker.php');
+require_once('modules/php/objects/AutoWalker.php');
 require_once('modules/php/actions/AdditionalAction.php');
 require_once('modules/php/ReflectionUtils.php');
 
@@ -168,16 +169,16 @@ class DogPark extends Table
     
         // Get information about players
         // Note: you can retrieve some extra field you added for "player" table in "dbmodel.sql" if you need it.
-        $sql = "SELECT player_id id, player_score score, player_custom_order orderNo FROM player ";
+        $sql = "SELECT player_id id, player_score score FROM player ";
         $result['players'] = self::getCollectionFromDb( $sql );
 
         $offerValueRevealed = $this->getGlobalVariable(OFFER_VALUE_REVEALED);
         foreach($result['players'] as $playerId => &$player) {
-            $player['orderNo'] = intval($player['orderNo']);
-            $player['walker'] = current(DogWalker::fromArray($this->dogWalkers->getCardsInLocation(LOCATION_PLAYER, $playerId)));
+            $player['orderNo'] = $this->playerManager->getPlayerCustomOrderNo($playerId);
+            $player['walker'] = $this->playerManager->getWalker($playerId);
             $player['kennelDogs'] = DogCard::fromArray($this->dogCards->getCardsInLocation(LOCATION_PLAYER, $playerId));
             $player['leadDogs'] = DogCard::fromArray($this->dogCards->getCardsInLocation(LOCATION_LEAD, $playerId));
-            $player['offerValue'] = $current_player_id == $playerId || $offerValueRevealed ? $this->getPlayerOfferValue($playerId) : 0;
+            $player['offerValue'] = $current_player_id == $playerId || $offerValueRevealed ? $this->playerManager->getPlayerOfferValue($playerId) : 0;
             $player['resources'] = $this->playerManager->getResources($playerId);
             $player['objectives'] = ObjectiveCard::fromArray($this->objectiveCards->getCardsInLocation(LOCATION_PLAYER, $playerId), $playerId != $current_player_id);
             $player['selectedObjectiveCardId'] = $this->getGlobalVariable(OBJECTIVE_ID_ .$playerId);
@@ -200,13 +201,26 @@ class DogPark extends Table
             'extraLocationBonuses' => $this->dogWalkPark->getAllLocationBonuses()
         ];
 
-
         $result['breedExpertAwards'] = $this->breedExpertAwardManager->getExpertAwards();
         $result['forecastCards'] = $this->forecastManager->getForeCastCards();
         foreach ($result['forecastCards'] as $foreCastCard) {
             if($foreCastCard->locationArg < $result['currentRound']) {
                 $foreCastCard->typeArg = null;
             }
+        }
+
+        $autoWalkers = $this->getAutoWalkers();
+        $result['autoWalkers'] = [];
+        foreach($autoWalkers as &$autoWalker) {
+            $result['autoWalkers'][] = [
+                'id' => $autoWalker->id,
+                'name' => $autoWalker->name,
+                'color' => $autoWalker->color,
+                'walker' => $this->playerManager->getWalker($autoWalker->id),
+                'kennelDogs' => DogCard::fromArray($this->dogCards->getCardsInLocation(LOCATION_PLAYER, $autoWalker->id)),
+                'offerValue' => $offerValueRevealed ? $this->playerManager->getPlayerOfferValue($autoWalker->id) : 0
+
+            ];
         }
 
         return $result;

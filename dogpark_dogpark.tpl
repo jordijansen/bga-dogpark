@@ -44,10 +44,7 @@
             </div>
             <div id="dp-game-board-field-wrapper" style="order: 11;">
                 <div id="dp-game-board-field" class="dp-board"></div>
-                <div id="dp-game-board-field-additional" class="whiteblock">
-                    <div id="dp-game-board-offer-dials"></div>
-                    <div id="dp-game-board-field-scout-wrapper"></div>
-                </div>
+                <div id="dp-game-board-field-scout-wrapper" class="whiteblock"></div>
             </div>
         </div>
         <div id="dp-game-board-side" class="dp-board hide-side-bar">

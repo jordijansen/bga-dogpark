@@ -1,7 +1,7 @@
 interface DogOfferDialSettings {
     elementId: string,
     parentId: string,
-    player: DogParkPlayer,
+    player: { id: any, color: string},
     initialValue: number,
     maxOfferValue?: number,
     readOnly: boolean
@@ -49,7 +49,7 @@ class DogOfferDial {
         }
         result += `<div id="${this.settings.elementId}" class="dp-dial side-front" data-color="#${this.settings.player.color}" data-value="${this._currentValue}">
                     <div class="side-front-numbers"></div>
-                    <div class="side-front-overlay">${this.settings.readOnly ? this.settings.player.name : ''}</div>
+                    <div class="side-front-overlay"><div id="dp-walker-rest-area-${this.settings.player.id}"></div></div>
                 </div>`
         if (!this.settings.readOnly) {
             result += `<a id="dp-dial-button-increase" class="bgabutton bgabutton_blue"><i class="fa fa-plus" aria-hidden="true"></i></a>`

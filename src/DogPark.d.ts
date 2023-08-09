@@ -14,6 +14,15 @@ interface LocationBonusCard extends Card {
 interface DogWalker extends Card {
 }
 
+interface AutoWalker {
+    kennelDogs: DogCard[];
+    id: number,
+    name: string,
+    color: string,
+    offerValue: number,
+    walker: DogWalker
+}
+
 interface LocationBonus {
     id: number, locationId: number, bonus: Token['type']
 }
@@ -53,6 +62,7 @@ interface DogParkGameData extends GameData {
     forecastCards: Card[],
     field: { nrOfFields: number, dogs: DogCard[], scoutedDogs: DogCard[], walkers: DogWalker[] }
     park: { walkers: DogWalker[], locationBonusCards: LocationBonusCard[], extraLocationBonuses: LocationBonus[]}
+    autoWalkers: AutoWalker[]
 }
 
 // ARGS
@@ -103,7 +113,6 @@ interface NotifDogRecruited {
 
 interface NotifDogOfferPlaced {
     playerId: number,
-    dog: DogCard,
     walker: DogWalker
 }
 
