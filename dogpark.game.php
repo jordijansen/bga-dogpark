@@ -43,6 +43,8 @@ require_once('modules/php/commands/GainLocationBonusCommand.php');
 require_once('modules/php/commands/PayReputationForLocationCommand.php');
 require_once('modules/php/commands/GainLeavingTheParkBonusCommand.php');
 require_once('modules/php/commands/SwapCommand.php');
+require_once('modules/php/commands/ScoutCommand.php');
+require_once('modules/php/commands/EndScoutCommand.php');
 
 require_once('modules/php/objects/Card.php');
 require_once('modules/php/objects/BreedExpertCard.php');
@@ -188,7 +190,8 @@ class DogPark extends Table
         $result['field'] = [
             'nrOfFields' => $this->dogField->getNumberOfFields(),
             'dogs' => $this->dogField->getDogCards(),
-            'walkers' => $this->dogField->getWalkers()
+            'walkers' => $this->dogField->getWalkers(),
+            'scoutedDogs' => is_array($this->getGlobalVariable(SCOUTED_CARDS)) ? DogCard::fromArray($this->dogCards->getCards($this->getGlobalVariable(SCOUTED_CARDS))) : []
         ];
 
         $result['park'] = [
@@ -196,6 +199,7 @@ class DogPark extends Table
             'locationBonusCards' => $this->dogWalkPark->getLocationBonusCards(),
             'extraLocationBonuses' => $this->dogWalkPark->getAllLocationBonuses()
         ];
+
 
         $result['breedExpertAwards'] = $this->breedExpertAwardManager->getExpertAwards();
         $result['forecastCards'] = $this->forecastManager->getForeCastCards();

@@ -174,6 +174,26 @@ class action_dogpark extends APP_GameAction
         self::ajaxResponse();
     }
 
+    public function confirmScout()
+    {
+        self::setAjaxMode();
+
+        $fieldDogId = self::getArg("fieldDogId", AT_posint, true);
+        $scoutDogId = self::getArg("scoutDogId", AT_posint, true);
+        $this->game->confirmScout($fieldDogId, $scoutDogId);
+
+        self::ajaxResponse();
+    }
+
+    public function endScout()
+    {
+        self::setAjaxMode();
+
+        $this->game->endScout();
+
+        self::ajaxResponse();
+    }
+
     public function undoLast()
     {
         self::setAjaxMode();

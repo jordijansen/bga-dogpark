@@ -76,6 +76,8 @@ const ST_WALKING_END = 65;
 const ST_HOME_TIME = 70;
 
 const ST_ACTION_SWAP = 80;
+const ST_ACTION_SCOUT_START = 81;
+const ST_ACTION_SCOUT = 82;
 
 const ST_GAME_END = 99;
 
@@ -98,6 +100,8 @@ const ACT_CONFIRM_WALKING = 'confirmWalking';
 const ACT_UNDO = 'undo';
 
 const ACT_SWAP = 'swap';
+const ACT_SCOUT_REPLACE = 'scoutReplace';
+const ACT_SCOUT_END = 'scoutEnd';
 const ACT_CANCEL = 'cancel';
 
 /**
@@ -134,7 +138,10 @@ const OBJECTIVE_ID_ = 'OBJECTIVE_ID_';
 
 const ADDITIONAL_ACTIONS_ = 'ADDITIONAL_ACTIONS_';
 
+const SCOUTED_CARDS = 'SCOUTED_CARDS';
+
 const STATE_AFTER_SWAP = 'STATE_AFTER_SWAP';
+const STATE_AFTER_SCOUT = 'STATE_AFTER_SCOUT';
 const CURRENT_ACTION_ID = 'SWAP_ACTION_ID';
 
 /**

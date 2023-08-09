@@ -128,6 +128,9 @@ class DogPark implements DogParkGame {
             case 'actionSwap':
                 this.enteringActionSwap(args.args as ActionSwapArgs);
                 break;
+            case 'actionScout':
+                this.enteringActionScout(args.args as ActionScoutArgs);
+                break;
         }
     }
 
@@ -139,7 +142,7 @@ class DogPark implements DogParkGame {
     private enteringRecruitmentOffer(args: RecruitmentOfferArgs) {
         if ((this as any).isCurrentPlayerActive()) {
             if (args.maxOfferValue > 0) {
-                this.dogField.setDogSelectionMode('single');
+                this.dogField.setDogSelectionModeField('single');
                 this.gamedatas.gamestate.descriptionmyturn = this.gamedatas.gamestate.descriptionmyturn + '<br />' + _('Select a dog and offer value (reputation cost)') + '<br />';
                 this.gamedatas.gamestate.descriptionmyturn = this.gamedatas.gamestate.descriptionmyturn + '<div id="dp-offer-dial-controls-wrapper"></div>';
                 (this as any).updatePageTitle();
@@ -160,7 +163,7 @@ class DogPark implements DogParkGame {
 
     private enteringRecruitmentTakeDog() {
         if ((this as any).isCurrentPlayerActive()) {
-            this.dogField.setDogSelectionMode('single');
+            this.dogField.setDogSelectionModeField('single');
         }
     }
 
@@ -197,7 +200,15 @@ class DogPark implements DogParkGame {
     private enteringActionSwap(args: ActionSwapArgs) {
         if ((this as any).isCurrentPlayerActive()) {
             this.playerArea.setSelectionModeForKennel("single", this.getPlayerId(), args.dogsInKennel);
-            this.dogField.setDogSelectionMode('single');
+            this.dogField.setDogSelectionModeField('single');
+        }
+    }
+
+    private enteringActionScout(args: ActionScoutArgs) {
+        this.dogField.addDogCardsToScoutedField(args.scoutedDogCards)
+        if ((this as any).isCurrentPlayerActive() && args.scoutedDogCards && args.scoutedDogCards.length > 0) {
+            this.dogField.setDogSelectionModeField('single');
+            this.dogField.setDogSelectionModeScout('single');
         }
     }
 
@@ -207,7 +218,7 @@ class DogPark implements DogParkGame {
         switch (stateName) {
             case 'recruitmentOffer':
             case 'recruitmentTakeDog':
-                this.dogField.setDogSelectionMode('none');
+                this.dogField.setDogSelectionModeField('none');
                 break;
             case 'selectionPlaceDogOnLead':
                 this.leavingSelectionPlaceDogOnLead();
@@ -217,6 +228,8 @@ class DogPark implements DogParkGame {
                 break;
             case 'actionSwap':
                 this.leavingActionSwap();
+            case 'actionScout':
+                this.leavingActionScout();
         }
     }
 
@@ -234,8 +247,15 @@ class DogPark implements DogParkGame {
 
     private leavingActionSwap() {
         if ((this as any).isCurrentPlayerActive()) {
-            this.playerArea.setSelectionModeForKennel("none", this.getPlayerId());
-            this.dogField.setDogSelectionMode('none');
+            this.playerArea.setSelectionModeForKennel('none', this.getPlayerId());
+            this.dogField.setDogSelectionModeField('none');
+        }
+    }
+
+    private leavingActionScout() {
+        if ((this as any).isCurrentPlayerActive()) {
+            this.dogField.setDogSelectionModeScout('none');
+            this.dogField.setDogSelectionModeField('none');
         }
     }
 
@@ -277,11 +297,17 @@ class DogPark implements DogParkGame {
                     (this as any).addActionButton('confirmSwap', _("Confirm"), () => this.confirmSwap());
                     (this as any).addActionButton('cancel', _("Cancel"), () => this.cancelSwap(), null, null, 'red');
                     break;
+                case 'actionScout':
+                    if ((args as ActionScoutArgs).scoutedDogCards.length > 0) {
+                        (this as any).addActionButton('confirmScout', _("Replace Dog"), () => this.confirmScout());
+                    }
+                    (this as any).addActionButton('endScout', _("End Scout Action"), () => this.endScout(), null, null, 'red');
+                    break;
             }
 
             if (args?.canCancelMoves) {
-                (this as any).addActionButton('undoLast', _("Undo last action"), () => this.undoLast(), null, null, 'red');
-                (this as any).addActionButton('undoAll', _("Restart turn"), () => this.undoAll(), null, null, 'red');
+                (this as any).addActionButton('undoLast', _("Undo last"), () => this.undoLast(), null, null, 'red');
+                (this as any).addActionButton('undoAll', _("Undo all"), () => this.undoAll(), null, null, 'red');
             }
         } else {
             if (!this.isReadOnly()) {
@@ -318,8 +344,12 @@ class DogPark implements DogParkGame {
         }
     }
 
-    private walkingAdditionalAction(args: { id: string; type: string; additionalArgs: any[] }) {
-        this.takeAction('walkingAdditionalAction', {actionId: args.id})
+    private walkingAdditionalAction(args: { id: string; type: string; additionalArgs: any[], canBeUndone: boolean }) {
+        if (args.canBeUndone) {
+            this.takeAction('walkingAdditionalAction', {actionId: args.id})
+        } else {
+            this.wrapInConfirm(() => this.takeAction('walkingAdditionalAction', {actionId: args.id}))
+        }
     }
 
     private confirmObjective() {
@@ -337,7 +367,7 @@ class DogPark implements DogParkGame {
     }
 
     private recruitDog() {
-        const selectedDog = this.dogField.getSelectedDog();
+        const selectedDog = this.dogField.getSelectedFieldDog();
         this.takeAction('recruitDog', {dogId: selectedDog?.id})
     }
 
@@ -346,7 +376,7 @@ class DogPark implements DogParkGame {
     }
 
     private placeOfferOnDog() {
-        const selectedDog = this.dogField.getSelectedDog();
+        const selectedDog = this.dogField.getSelectedFieldDog();
         const offerValue = this.currentPlayerOfferDial.currentValue;
 
         this.takeAction('placeOfferOnDog', {dogId: selectedDog?.id, offerValue});
@@ -369,7 +399,7 @@ class DogPark implements DogParkGame {
     }
 
     private confirmSwap() {
-        const fieldDog = this.dogField.getSelectedDog();
+        const fieldDog = this.dogField.getSelectedFieldDog();
         const kennelDog = this.playerArea.getSelectedKennelDog(this.getPlayerId());
         if (!fieldDog) {
             (this as any).showMessage(_("You must select 1 dog in the field"), 'error')
@@ -382,6 +412,22 @@ class DogPark implements DogParkGame {
 
     private cancelSwap() {
         this.takeAction('cancelSwap');
+    }
+
+    private confirmScout() {
+        const fieldDog = this.dogField.getSelectedFieldDog();
+        const scoutDog = this.dogField.getSelectedScoutDog();
+        if (!fieldDog) {
+            (this as any).showMessage(_("You must select 1 dog in the field"), 'error')
+        } else if (!scoutDog) {
+            (this as any).showMessage(_("You must select 1 dog from the scout area"), 'error')
+        } else {
+            this.takeAction("confirmScout", {fieldDogId: fieldDog.id, scoutDogId: scoutDog.id})
+        }
+    }
+
+    private endScout() {
+        this.takeAction("endScout")
     }
 
     private undoLast() {
@@ -490,7 +536,9 @@ class DogPark implements DogParkGame {
             ['flipForecastCard', undefined],
             ['newLocationBonusCardDrawn', undefined],
             ['newFirstWalker', undefined],
-            ['playerSwaps', undefined]
+            ['playerSwaps', undefined],
+            ['playerScoutReplaces', undefined],
+            ['undoPlayerScoutReplaces', undefined],
             // ['shortTime', 1],
             // ['fixedTime', 1000]
         ];
@@ -649,6 +697,16 @@ class DogPark implements DogParkGame {
         return this.playerArea.moveDogsToKennel(args.playerId,[args.fieldDog]);
     }
 
+    private notif_playerScoutReplaces(args: NotifPlayerScoutReplaces) {
+        this.dogField.discardDogFromField(args.fieldDog)
+        return Promise.all(this.dogField.addDogCardsToField([args.scoutDog]));
+    }
+
+    private notif_undoPlayerScoutReplaces(args: NotifPlayerScoutReplaces) {
+        this.dogField.addDogCardsToField([args.scoutDog])
+        return this.dogField.addDogCardsToScoutedField([args.fieldDog]);
+    }
+
     public format_string_recursive(log: string, args: any) {
         try {
             if (log && args && !args.processed) {
@@ -672,4 +730,6 @@ class DogPark implements DogParkGame {
         }
         return tokens.join(' ');
     }
+
+
 }

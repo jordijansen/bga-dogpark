@@ -1,6 +1,7 @@
 <?php
 
 namespace traits;
+use objects\BreedExpertCard;
 use objects\DogCard;
 use objects\DogWalker;
 use objects\ObjectiveCard;
@@ -393,5 +394,26 @@ trait StateTrait
         } else {
             $this->gamestate->nextState( "endGame");
         }
+    }
+
+    function stActionScoutStart() {
+        $topTwoCards = $this->dogCards->getCardsOnTop(2, LOCATION_DECK);
+        $topTwoCardIds = array_map(fn($dbCard) => $dbCard['id'], $topTwoCards);
+
+        $this->dogCards->moveCards($topTwoCardIds, LOCATION_DISCARD);
+
+        $this->setGlobalVariable(SCOUTED_CARDS, $topTwoCardIds);
+        $this->commandManager->clearCommands();
+
+        $actionId = $this->getGlobalVariable(CURRENT_ACTION_ID);
+        $this->actionManager->markActionPerformed($this->getActivePlayerId(), $actionId);
+
+        $this->notifyAllPlayers('gameLog', clienttranslate('${player_name} performs a scout action and reveals the top two cards from the deck'),[
+            'playerId' => $this->getActivePlayerId(),
+            'player_name' => $this->getPlayerName($this->getActivePlayerId()),
+            'scoutedDogs' => DogCard::fromArray($this->dogCards->getCards($topTwoCardIds))
+        ]);
+
+        $this->gamestate->nextState( "");
     }
 }

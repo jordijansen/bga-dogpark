@@ -99,6 +99,14 @@ trait ArgsTrait
         ];
     }
 
+    function argActionScout(): array
+    {
+        return [
+            "canCancelMoves" => DogPark::$instance->commandManager->hasCommands($this->getActivePlayerId()),
+            "scoutedDogCards" => DogCard::fromArray($this->dogCards->getCards($this->getGlobalVariable(SCOUTED_CARDS)))
+        ];
+    }
+
     function getRecruitmentRoundArg() {
         return $this->getGlobalVariable(CURRENT_PHASE) == PHASE_RECRUITMENT_2 ? 2 : 1;
     }

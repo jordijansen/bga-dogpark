@@ -1,16 +1,26 @@
 class DogField {
     private dogStocks: {[slotId: number]: LineStock<DogCard>} = {}
     private walkerStocks: {[slotId: number]: LineStock<DogWalker>} = {}
+    private scoutedDogStock: LineStock<DogCard>;
     constructor(private game: DogParkGame) {}
 
     public setUp(gameData: DogParkGameData) {
+        dojo.place(this.createScoutArea(), 'dp-game-board-field-scout-wrapper')
+        this.scoutedDogStock = new LineStock<DogCard>(this.game.dogCardManager, $('dp-game-board-field-scout'), {gap: '16px'});
         for(let i = 1; i <= gameData.field.nrOfFields; i++) {
             dojo.place(this.createFieldSlot(i), 'dp-game-board-field');
             this.dogStocks[i] = new LineStock<DogCard>(this.game.dogCardManager, $(`dp-field-slot-${i}-dog`), {})
             this.walkerStocks[i] = new LineStock<DogWalker>(this.game.dogWalkerManager, $(`dp-field-slot-${i}-walkers`), {})
         }
+
+        this.addDogCardsToScoutedField(gameData.field.scoutedDogs);
         this.addDogCardsToField(gameData.field.dogs);
         this.addWalkersToField(gameData.field.walkers);
+    }
+
+    public addDogCardsToScoutedField(scoutedDogs: DogCard[]) {
+        this.scoutedDogStock.removeAll();
+        return this.scoutedDogStock.addCards(scoutedDogs);
     }
 
     public addDogCardsToField(dogs: DogCard[]) {
@@ -23,7 +33,7 @@ class DogField {
             .map(walker => this.walkerStocks[Number(walker.location.replace('field_', ''))].addCard(walker))
     }
 
-    public setDogSelectionMode(selectionMode: CardSelectionMode) {
+    public setDogSelectionModeField(selectionMode: CardSelectionMode) {
         for (const slotId in this.dogStocks) {
             this.dogStocks[slotId].onSelectionChange = selectionMode === 'none' ? undefined : () => {
                 for (const otherSlotId in this.dogStocks) {
@@ -36,13 +46,32 @@ class DogField {
         }
     }
 
-    public getSelectedDog() {
+    public setDogSelectionModeScout(selectionMode: CardSelectionMode) {
+        this.scoutedDogStock.setSelectionMode(selectionMode);
+    }
+
+    public getSelectedFieldDog() {
         for (const slotId in this.dogStocks) {
             if (this.dogStocks[slotId].getSelection() && this.dogStocks[slotId].getSelection().length === 1) {
                 return this.dogStocks[slotId].getSelection()[0];
             }
         }
         return null;
+    }
+
+    public getSelectedScoutDog() {
+        if (this.scoutedDogStock.getSelection() && this.scoutedDogStock.getSelection().length === 1) {
+            return this.scoutedDogStock.getSelection()[0];
+        }
+        return null;
+    }
+
+    public discardDogFromField(fieldDog: DogCard) {
+        for (const slotId in this.dogStocks) {
+            if (this.dogStocks[slotId].contains(fieldDog)) {
+                this.dogStocks[slotId].removeCard(fieldDog);
+            }
+        }
     }
 
     private createFieldSlot(id: number) {
@@ -53,4 +82,13 @@ class DogField {
                     </div>
                 </div>`;
     }
+
+    private createScoutArea() {
+        return `<div class="label-wrapper" style="margin: 16px 0;">
+                  <h2><div class="dp-token-token" data-type="scout"></div> ${_('Scouted Cards')}</h2>
+                </div>
+                <div id="dp-game-board-field-scout" style="margin-bottom: 16px;"></div>`
+    }
+
+
 }

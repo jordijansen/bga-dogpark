@@ -31,12 +31,14 @@ class CommandManager extends APP_DbObject
         return $this->removeCommand($idToRemove);
     }
 
-    public function removeAllCommands($playerId)
+    public function removeAllCommands($playerId): BaseCommand
     {
         $idsToRemove = $this->getCollectionFromDB("SELECT id FROM `command_log` WHERE player_id = ". $playerId ." ORDER BY id DESC");
+        $lastCommandRemoved = null;
         foreach ($idsToRemove as $id => $obj) {
-            $this->removeCommand(intval($id));
+            $lastCommandRemoved = $this->removeCommand(intval($id));
         }
+        return $lastCommandRemoved;
     }
 
     public function clearCommands()

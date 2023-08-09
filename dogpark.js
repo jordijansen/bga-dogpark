@@ -2726,13 +2726,20 @@ var DogField = /** @class */ (function () {
         this.walkerStocks = {};
     }
     DogField.prototype.setUp = function (gameData) {
+        dojo.place(this.createScoutArea(), 'dp-game-board-field-scout-wrapper');
+        this.scoutedDogStock = new LineStock(this.game.dogCardManager, $('dp-game-board-field-scout'), { gap: '16px' });
         for (var i = 1; i <= gameData.field.nrOfFields; i++) {
             dojo.place(this.createFieldSlot(i), 'dp-game-board-field');
             this.dogStocks[i] = new LineStock(this.game.dogCardManager, $("dp-field-slot-".concat(i, "-dog")), {});
             this.walkerStocks[i] = new LineStock(this.game.dogWalkerManager, $("dp-field-slot-".concat(i, "-walkers")), {});
         }
+        this.addDogCardsToScoutedField(gameData.field.scoutedDogs);
         this.addDogCardsToField(gameData.field.dogs);
         this.addWalkersToField(gameData.field.walkers);
+    };
+    DogField.prototype.addDogCardsToScoutedField = function (scoutedDogs) {
+        this.scoutedDogStock.removeAll();
+        return this.scoutedDogStock.addCards(scoutedDogs);
     };
     DogField.prototype.addDogCardsToField = function (dogs) {
         var _this = this;
@@ -2744,7 +2751,7 @@ var DogField = /** @class */ (function () {
         return walkers.filter(function (walker) { return walker.location.startsWith('field_'); })
             .map(function (walker) { return _this.walkerStocks[Number(walker.location.replace('field_', ''))].addCard(walker); });
     };
-    DogField.prototype.setDogSelectionMode = function (selectionMode) {
+    DogField.prototype.setDogSelectionModeField = function (selectionMode) {
         var _this = this;
         var _loop_3 = function (slotId) {
             this_1.dogStocks[slotId].onSelectionChange = selectionMode === 'none' ? undefined : function () {
@@ -2761,7 +2768,10 @@ var DogField = /** @class */ (function () {
             _loop_3(slotId);
         }
     };
-    DogField.prototype.getSelectedDog = function () {
+    DogField.prototype.setDogSelectionModeScout = function (selectionMode) {
+        this.scoutedDogStock.setSelectionMode(selectionMode);
+    };
+    DogField.prototype.getSelectedFieldDog = function () {
         for (var slotId in this.dogStocks) {
             if (this.dogStocks[slotId].getSelection() && this.dogStocks[slotId].getSelection().length === 1) {
                 return this.dogStocks[slotId].getSelection()[0];
@@ -2769,8 +2779,24 @@ var DogField = /** @class */ (function () {
         }
         return null;
     };
+    DogField.prototype.getSelectedScoutDog = function () {
+        if (this.scoutedDogStock.getSelection() && this.scoutedDogStock.getSelection().length === 1) {
+            return this.scoutedDogStock.getSelection()[0];
+        }
+        return null;
+    };
+    DogField.prototype.discardDogFromField = function (fieldDog) {
+        for (var slotId in this.dogStocks) {
+            if (this.dogStocks[slotId].contains(fieldDog)) {
+                this.dogStocks[slotId].removeCard(fieldDog);
+            }
+        }
+    };
     DogField.prototype.createFieldSlot = function (id) {
         return "<div id=\"dp-field-slot-".concat(id, "\" class=\"dp-field-slot\">\n                    <div id=\"dp-field-slot-").concat(id, "-dog\" class=\"dp-field-slot-card\">\n                    </div>\n                    <div id=\"dp-field-slot-").concat(id, "-walkers\" class=\"dp-field-slot-walkers\">\n                    </div>\n                </div>");
+    };
+    DogField.prototype.createScoutArea = function () {
+        return "<div class=\"label-wrapper\" style=\"margin: 16px 0;\">\n                  <h2><div class=\"dp-token-token\" data-type=\"scout\"></div> ".concat(_('Scouted Cards'), "</h2>\n                </div>\n                <div id=\"dp-game-board-field-scout\" style=\"margin-bottom: 16px;\"></div>");
     };
     return DogField;
 }());
@@ -2958,7 +2984,7 @@ var PlayerArea = /** @class */ (function () {
         }));
     };
     PlayerArea.prototype.createPlayerArea = function (player) {
-        return "<div id=\"dp-player-area-".concat(player.id, "\" class=\"whiteblock dp-player-area\" style=\"background-color: #").concat(player.color, ";\">\n                    <div class=\"player-name-wrapper\">\n                        <h2 style=\"color: #").concat(player.color, ";\">").concat(player.name, "</h2>\n                    </div>\n                    <div class=\"dp-player-area-section-wrapper\">\n                        <div class=\"label-wrapper\">\n                            <h2 style=\"color: #").concat(player.color, ";\">").concat(_('Lead'), "</h2>\n                        </div>\n                        <div class=\"dp-lead-board dp-board\" data-color=\"#").concat(player.color, "\">\n                            <div id=\"dp-player-area-").concat(player.id, "-lead\" class=\"dp-lead-board-lead\"></div>\n                        </div>\n                    </div>\n                    <div class=\"dp-player-area-section-wrapper\">\n                        <div class=\"label-wrapper\">\n                            <h2 style=\"color: #").concat(player.color, ";\">").concat(_('Kennel'), "</h2>\n                        </div>\n                        <div id=\"dp-player-area-").concat(player.id, "-kennel\" class=\"dp-player-area-kennel\">\n                        </div>\n                    </div>\n                </div>");
+        return "<div id=\"dp-player-area-".concat(player.id, "\" class=\"whiteblock dp-player-area\" style=\"background-color: #").concat(player.color, ";\">\n                    <div class=\"label-wrapper\">\n                        <h2 style=\"color: #").concat(player.color, ";\">").concat(player.name, "</h2>\n                    </div>\n                    <div class=\"dp-player-area-section-wrapper\">\n                        <div class=\"label-wrapper vertical\">\n                            <h2 style=\"color: #").concat(player.color, ";\">").concat(_('Lead'), "</h2>\n                        </div>\n                        <div class=\"dp-lead-board dp-board\" data-color=\"#").concat(player.color, "\">\n                            <div id=\"dp-player-area-").concat(player.id, "-lead\" class=\"dp-lead-board-lead\"></div>\n                        </div>\n                    </div>\n                    <div class=\"dp-player-area-section-wrapper\">\n                        <div class=\"label-wrapper vertical\">\n                            <h2 style=\"color: #").concat(player.color, ";\">").concat(_('Kennel'), "</h2>\n                        </div>\n                        <div id=\"dp-player-area-").concat(player.id, "-kennel\" class=\"dp-player-area-kennel\">\n                        </div>\n                    </div>\n                </div>");
     };
     PlayerArea.prototype.createPlayerPanels = function (player) {
         dojo.place("<div id=\"dp-player-resources-".concat(player.id, "\" class=\"dp-player-resources\">\n                            <div id=\"dp-player-dummy-resources-").concat(player.id, "\" style=\"height: 0; width: 0; overflow: hidden;\"></div>\n                          </div>\n                          <div id=\"dp-player-first-player-marker-wrapper-").concat(player.id, "\" class=\"dp-player-first-player-marker-wrapper\"></div>\n                          <div id=\"dp-player-objective-card-").concat(player.id, "\"  class=\"dp-player-objective-card\"></div>"), "player_board_".concat(player.id));
@@ -3246,6 +3272,9 @@ var DogPark = /** @class */ (function () {
             case 'actionSwap':
                 this.enteringActionSwap(args.args);
                 break;
+            case 'actionScout':
+                this.enteringActionScout(args.args);
+                break;
         }
     };
     DogPark.prototype.enteringChooseObjectives = function () {
@@ -3255,7 +3284,7 @@ var DogPark = /** @class */ (function () {
     DogPark.prototype.enteringRecruitmentOffer = function (args) {
         if (this.isCurrentPlayerActive()) {
             if (args.maxOfferValue > 0) {
-                this.dogField.setDogSelectionMode('single');
+                this.dogField.setDogSelectionModeField('single');
                 this.gamedatas.gamestate.descriptionmyturn = this.gamedatas.gamestate.descriptionmyturn + '<br />' + _('Select a dog and offer value (reputation cost)') + '<br />';
                 this.gamedatas.gamestate.descriptionmyturn = this.gamedatas.gamestate.descriptionmyturn + '<div id="dp-offer-dial-controls-wrapper"></div>';
                 this.updatePageTitle();
@@ -3276,7 +3305,7 @@ var DogPark = /** @class */ (function () {
     };
     DogPark.prototype.enteringRecruitmentTakeDog = function () {
         if (this.isCurrentPlayerActive()) {
-            this.dogField.setDogSelectionMode('single');
+            this.dogField.setDogSelectionModeField('single');
         }
     };
     DogPark.prototype.enteringSelectionPlaceDogOnLead = function (args) {
@@ -3312,7 +3341,14 @@ var DogPark = /** @class */ (function () {
     DogPark.prototype.enteringActionSwap = function (args) {
         if (this.isCurrentPlayerActive()) {
             this.playerArea.setSelectionModeForKennel("single", this.getPlayerId(), args.dogsInKennel);
-            this.dogField.setDogSelectionMode('single');
+            this.dogField.setDogSelectionModeField('single');
+        }
+    };
+    DogPark.prototype.enteringActionScout = function (args) {
+        this.dogField.addDogCardsToScoutedField(args.scoutedDogCards);
+        if (this.isCurrentPlayerActive() && args.scoutedDogCards && args.scoutedDogCards.length > 0) {
+            this.dogField.setDogSelectionModeField('single');
+            this.dogField.setDogSelectionModeScout('single');
         }
     };
     DogPark.prototype.onLeavingState = function (stateName) {
@@ -3320,7 +3356,7 @@ var DogPark = /** @class */ (function () {
         switch (stateName) {
             case 'recruitmentOffer':
             case 'recruitmentTakeDog':
-                this.dogField.setDogSelectionMode('none');
+                this.dogField.setDogSelectionModeField('none');
                 break;
             case 'selectionPlaceDogOnLead':
                 this.leavingSelectionPlaceDogOnLead();
@@ -3330,6 +3366,8 @@ var DogPark = /** @class */ (function () {
                 break;
             case 'actionSwap':
                 this.leavingActionSwap();
+            case 'actionScout':
+                this.leavingActionScout();
         }
     };
     DogPark.prototype.leavingSelectionPlaceDogOnLead = function () {
@@ -3344,8 +3382,14 @@ var DogPark = /** @class */ (function () {
     };
     DogPark.prototype.leavingActionSwap = function () {
         if (this.isCurrentPlayerActive()) {
-            this.playerArea.setSelectionModeForKennel("none", this.getPlayerId());
-            this.dogField.setDogSelectionMode('none');
+            this.playerArea.setSelectionModeForKennel('none', this.getPlayerId());
+            this.dogField.setDogSelectionModeField('none');
+        }
+    };
+    DogPark.prototype.leavingActionScout = function () {
+        if (this.isCurrentPlayerActive()) {
+            this.dogField.setDogSelectionModeScout('none');
+            this.dogField.setDogSelectionModeField('none');
         }
     };
     // onUpdateActionButtons: in this method you can manage "action buttons" that are displayed in the
@@ -3387,10 +3431,16 @@ var DogPark = /** @class */ (function () {
                     this.addActionButton('confirmSwap', _("Confirm"), function () { return _this.confirmSwap(); });
                     this.addActionButton('cancel', _("Cancel"), function () { return _this.cancelSwap(); }, null, null, 'red');
                     break;
+                case 'actionScout':
+                    if (args.scoutedDogCards.length > 0) {
+                        this.addActionButton('confirmScout', _("Replace Dog"), function () { return _this.confirmScout(); });
+                    }
+                    this.addActionButton('endScout', _("End Scout Action"), function () { return _this.endScout(); }, null, null, 'red');
+                    break;
             }
             if (args === null || args === void 0 ? void 0 : args.canCancelMoves) {
-                this.addActionButton('undoLast', _("Undo last action"), function () { return _this.undoLast(); }, null, null, 'red');
-                this.addActionButton('undoAll', _("Restart turn"), function () { return _this.undoAll(); }, null, null, 'red');
+                this.addActionButton('undoLast', _("Undo last"), function () { return _this.undoLast(); }, null, null, 'red');
+                this.addActionButton('undoAll', _("Undo all"), function () { return _this.undoAll(); }, null, null, 'red');
             }
         }
         else {
@@ -3428,7 +3478,13 @@ var DogPark = /** @class */ (function () {
         }
     };
     DogPark.prototype.walkingAdditionalAction = function (args) {
-        this.takeAction('walkingAdditionalAction', { actionId: args.id });
+        var _this = this;
+        if (args.canBeUndone) {
+            this.takeAction('walkingAdditionalAction', { actionId: args.id });
+        }
+        else {
+            this.wrapInConfirm(function () { return _this.takeAction('walkingAdditionalAction', { actionId: args.id }); });
+        }
     };
     DogPark.prototype.confirmObjective = function () {
         var cardId = this.currentPlayerChooseObjectives.getSelectedObjectiveId();
@@ -3445,14 +3501,14 @@ var DogPark = /** @class */ (function () {
         this.takeNoLockAction('changeObjective', null, function () { return _this.currentPlayerChooseObjectives.enter(); });
     };
     DogPark.prototype.recruitDog = function () {
-        var selectedDog = this.dogField.getSelectedDog();
+        var selectedDog = this.dogField.getSelectedFieldDog();
         this.takeAction('recruitDog', { dogId: selectedDog === null || selectedDog === void 0 ? void 0 : selectedDog.id });
     };
     DogPark.prototype.skipPlaceOfferOnDog = function () {
         this.takeAction('skipPlaceOfferOnDog');
     };
     DogPark.prototype.placeOfferOnDog = function () {
-        var selectedDog = this.dogField.getSelectedDog();
+        var selectedDog = this.dogField.getSelectedFieldDog();
         var offerValue = this.currentPlayerOfferDial.currentValue;
         this.takeAction('placeOfferOnDog', { dogId: selectedDog === null || selectedDog === void 0 ? void 0 : selectedDog.id, offerValue: offerValue });
     };
@@ -3472,7 +3528,7 @@ var DogPark = /** @class */ (function () {
         this.takeAction('confirmWalking');
     };
     DogPark.prototype.confirmSwap = function () {
-        var fieldDog = this.dogField.getSelectedDog();
+        var fieldDog = this.dogField.getSelectedFieldDog();
         var kennelDog = this.playerArea.getSelectedKennelDog(this.getPlayerId());
         if (!fieldDog) {
             this.showMessage(_("You must select 1 dog in the field"), 'error');
@@ -3486,6 +3542,22 @@ var DogPark = /** @class */ (function () {
     };
     DogPark.prototype.cancelSwap = function () {
         this.takeAction('cancelSwap');
+    };
+    DogPark.prototype.confirmScout = function () {
+        var fieldDog = this.dogField.getSelectedFieldDog();
+        var scoutDog = this.dogField.getSelectedScoutDog();
+        if (!fieldDog) {
+            this.showMessage(_("You must select 1 dog in the field"), 'error');
+        }
+        else if (!scoutDog) {
+            this.showMessage(_("You must select 1 dog from the scout area"), 'error');
+        }
+        else {
+            this.takeAction("confirmScout", { fieldDogId: fieldDog.id, scoutDogId: scoutDog.id });
+        }
+    };
+    DogPark.prototype.endScout = function () {
+        this.takeAction("endScout");
     };
     DogPark.prototype.undoLast = function () {
         this.takeNoLockAction('undoLast');
@@ -3585,7 +3657,9 @@ var DogPark = /** @class */ (function () {
             ['flipForecastCard', undefined],
             ['newLocationBonusCardDrawn', undefined],
             ['newFirstWalker', undefined],
-            ['playerSwaps', undefined]
+            ['playerSwaps', undefined],
+            ['playerScoutReplaces', undefined],
+            ['undoPlayerScoutReplaces', undefined],
             // ['shortTime', 1],
             // ['fixedTime', 1000]
         ];
@@ -3734,6 +3808,14 @@ var DogPark = /** @class */ (function () {
         this.dogCardManager.addInitialResourcesToDog(args.fieldDog);
         this.dogField.addDogCardsToField([args.kennelDog]);
         return this.playerArea.moveDogsToKennel(args.playerId, [args.fieldDog]);
+    };
+    DogPark.prototype.notif_playerScoutReplaces = function (args) {
+        this.dogField.discardDogFromField(args.fieldDog);
+        return Promise.all(this.dogField.addDogCardsToField([args.scoutDog]));
+    };
+    DogPark.prototype.notif_undoPlayerScoutReplaces = function (args) {
+        this.dogField.addDogCardsToField([args.scoutDog]);
+        return this.dogField.addDogCardsToScoutedField([args.fieldDog]);
     };
     DogPark.prototype.format_string_recursive = function (log, args) {
         try {

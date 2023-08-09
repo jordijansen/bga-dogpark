@@ -3,11 +3,13 @@
 namespace traits;
 use actions\AdditionalAction;
 use BgaUserException;
+use commands\EndScoutCommand;
 use commands\GainLeavingTheParkBonusCommand;
 use commands\GainLocationBonusCommand;
 use commands\MoveWalkerCommand;
 use commands\PayReputationForLocationCommand;
 use commands\PlaceDogOnLeadCommand;
+use commands\ScoutCommand;
 use commands\SwapCommand;
 use objects\DogCard;
 use objects\DogWalker;
@@ -241,8 +243,8 @@ trait ActionTrait
         } else {
             $locationBonuses = $this->dogWalkPark->getLocationBonuses($locationId);
             $extraLocationBonuses = $this->dogWalkPark->getExtraLocationBonuses($locationId);
-            $this->actionManager->addActions($playerId, array_map(fn($bonus) => new AdditionalAction(WALKING_GAIN_LOCATION_BONUS, (object) ["bonusType" => $bonus, "extraBonus" => false], in_array($bonus, [SWAP, SCOUT])), $locationBonuses));
-            $this->actionManager->addActions($playerId, array_map(fn($bonus) => new AdditionalAction(WALKING_GAIN_LOCATION_BONUS, (object) ["bonusType" => $bonus, "extraBonus" => true], in_array($bonus, [SWAP, SCOUT])), $extraLocationBonuses));
+            $this->actionManager->addActions($playerId, array_map(fn($bonus) => new AdditionalAction(WALKING_GAIN_LOCATION_BONUS, (object) ["bonusType" => $bonus, "extraBonus" => false], in_array($bonus, [SWAP, SCOUT]), $bonus != SCOUT), $locationBonuses));
+            $this->actionManager->addActions($playerId, array_map(fn($bonus) => new AdditionalAction(WALKING_GAIN_LOCATION_BONUS, (object) ["bonusType" => $bonus, "extraBonus" => true], in_array($bonus, [SWAP, SCOUT]), $bonus != SCOUT), $extraLocationBonuses));
         }
 
         $this->gamestate->nextState("");
@@ -263,6 +265,11 @@ trait ActionTrait
                 $this->setGlobalVariable(STATE_AFTER_SWAP, ST_WALKING_MOVE_WALKER_AFTER);
                 $this->setGlobalVariable(CURRENT_ACTION_ID, $actionId);
                 $this->gamestate->jumpToState(ST_ACTION_SWAP);
+            } else if ($action->additionalArgs->bonusType == SCOUT) {
+                $refreshCurrentState = false;
+                $this->setGlobalVariable(STATE_AFTER_SCOUT, ST_WALKING_MOVE_WALKER_AFTER);
+                $this->setGlobalVariable(CURRENT_ACTION_ID, $actionId);
+                $this->gamestate->jumpToState(ST_ACTION_SCOUT_START);
             } else {
                 $this->commandManager->addCommand($playerId, new GainLocationBonusCommand($playerId, $actionId));
             }
@@ -322,32 +329,61 @@ trait ActionTrait
         $this->gamestate->jumpToState(intval($this->getGlobalVariable(STATE_AFTER_SWAP)));
     }
 
+    function confirmScout($fieldDogId, $scoutDogId) {
+        $this->checkAction(ACT_SCOUT_REPLACE);
+
+        $playerId = $this->getActivePlayerId();
+        $fieldDog = DogCard::from($this->dogCards->getCard($fieldDogId));
+        if ($fieldDog->location != LOCATION_FIELD) {
+            throw new BgaUserException("Dog not in field");
+        }
+
+        $scoutedDogIds = $this->getGlobalVariable(SCOUTED_CARDS);
+        if (!in_array($scoutDogId, $scoutedDogIds)) {
+            throw new BgaUserException("Dog not scouted");
+        }
+
+        $this->commandManager->addCommand($playerId, new ScoutCommand($playerId, $fieldDogId, $scoutDogId));
+
+        $this->gamestate->jumpToState(ST_ACTION_SCOUT);
+    }
+
+    function endScout() {
+        $this->checkAction(ACT_SCOUT_END);
+
+        $playerId = $this->getActivePlayerId();
+        $this->commandManager->addCommand($playerId, new EndScoutCommand());
+
+        $this->gamestate->jumpToState(intval($this->getGlobalVariable(STATE_AFTER_SCOUT)));
+    }
+
     function undoLast() {
         $this->checkAction(ACT_UNDO);
 
         $playerId = $this->getCurrentPlayerId();
         $lastRemovedCommand = $this->commandManager->removeLastCommand($playerId);
-        if ($this->getGlobalVariable(CURRENT_PHASE) == PHASE_SELECTION) {
-            $this->gamestate->setPrivateState($playerId, ST_SELECTION_PLACE_DOG_ON_LEAD);
-        } else if ($this->getGlobalVariable(CURRENT_PHASE) == PHASE_WALKING) {
-            if (get_class($lastRemovedCommand) == "commands\MoveWalkerCommand") {
-                $this->gamestate->jumpToState(ST_WALKING_MOVE_WALKER);
-            } else {
-                $this->gamestate->jumpToState(ST_WALKING_MOVE_WALKER_AFTER);
-            }
-        }
+
+        $this->redirectAfterUndo($playerId, $lastRemovedCommand);
     }
 
     function undoAll() {
         $this->checkAction(ACT_UNDO);
 
         $playerId = $this->getCurrentPlayerId();
-        $this->commandManager->removeAllCommands($playerId);
+        $lastRemovedCommand = $this->commandManager->removeAllCommands($playerId);
 
-        if ($this->getGlobalVariable(CURRENT_PHASE) == PHASE_SELECTION) {
+        $this->redirectAfterUndo($playerId, $lastRemovedCommand);
+    }
+
+    function redirectAfterUndo($playerId, $lastRemovedCommand) {
+        if (get_class($lastRemovedCommand) == "commands\MoveWalkerCommand") {
+            $this->gamestate->jumpToState(ST_WALKING_MOVE_WALKER);
+        } else if (get_class($lastRemovedCommand) == "commands\ScoutCommand" || get_class($lastRemovedCommand) == "commands\EndScoutCommand") {
+            $this->gamestate->jumpToState(ST_ACTION_SCOUT);
+        } else if ($this->getGlobalVariable(CURRENT_PHASE) == PHASE_SELECTION) {
             $this->gamestate->setPrivateState($playerId, ST_SELECTION_PLACE_DOG_ON_LEAD);
         } else if ($this->getGlobalVariable(CURRENT_PHASE) == PHASE_WALKING) {
-            $this->gamestate->jumpToState(ST_WALKING_MOVE_WALKER);
+            $this->gamestate->jumpToState(ST_WALKING_MOVE_WALKER_AFTER);
         }
     }
 }

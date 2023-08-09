@@ -333,13 +333,37 @@ $homeTimeStates = [
 $actionStates = [
     ST_ACTION_SWAP => [
         "name" => "actionSwap",
-        "description" => clienttranslate('${actplayer} may swap one of their dogs'),
-        "descriptionmyturn" => clienttranslate('${you} may swap one of your dogs'),
+        "description" => clienttranslate('Swap: ${actplayer} may swap one of their dogs'),
+        "descriptionmyturn" => clienttranslate('Swap: ${you} may swap one of your dogs'),
         "args" => "argActionSwap",
         "type" => "activeplayer",
         "possibleactions" => [
             ACT_SWAP,
             ACT_CANCEL
+        ],
+        "transitions" => [
+            // We use jump to state to get out of this state.
+        ],
+    ],
+    ST_ACTION_SCOUT_START => [
+        "name" => "actionScoutStart",
+        "description" => clienttranslate('Scout: drawing the top two cards...'),
+        "type" => "game",
+        "action" => "stActionScoutStart",
+        "transitions" => [
+            "" => ST_ACTION_SCOUT
+        ]
+    ],
+    ST_ACTION_SCOUT => [
+        "name" => "actionScout",
+        "description" => clienttranslate('Scout: ${actplayer} may replace cards in the field'),
+        "descriptionmyturn" => clienttranslate('Scout: ${you} may replace cards in the field'),
+        "args" => "argActionScout",
+        "type" => "activeplayer",
+        "possibleactions" => [
+            ACT_SCOUT_REPLACE,
+            ACT_SCOUT_END,
+            ACT_UNDO
         ],
         "transitions" => [
             // We use jump to state to get out of this state.

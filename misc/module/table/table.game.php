@@ -383,11 +383,11 @@ class Deck {
         return [];
     }
 
-    public function moveCards(array $cardIds, string $location, ?int $location_arg)
+    public function moveCards(array $cardIds, string $location, int $location_arg = null)
     {
     }
 
-    public function moveCard(int $cardId, string $location, ?int $location_arg)
+    public function moveCard(int $cardId, string $location, int $location_arg = null)
     {
     }
 
@@ -406,6 +406,10 @@ class Deck {
     }
 
     public function moveAllCardsInLocation($from_location, $to_location, $from_location_arg=null, $to_location_arg=0)
+    {
+    }
+
+    public function getCardsOnTop(int $numberOfCard, string $location) : array
     {
     }
 

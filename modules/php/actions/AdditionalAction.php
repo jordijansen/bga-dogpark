@@ -10,14 +10,16 @@ class AdditionalAction {
     public \stdClass $additionalArgs;
     public bool $performed;
     public bool $optional;
+    public bool $canBeUndone;
 
-    public function __construct($type, $additionalArgs, $optional = false)
+    public function __construct($type, $additionalArgs, $optional = false, $canBeUndone = true)
     {
         $this->id = AdditionalAction::newId();
         $this->type = $type;
         $this->additionalArgs = $additionalArgs;
         $this->performed = false;
         $this->optional = $optional;
+        $this->canBeUndone = $canBeUndone;
     }
 
     private static function newId() {

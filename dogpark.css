@@ -537,6 +537,9 @@ body > .card {
   top: 112px;
   left: 82px;
 }
+#dp-game-board-wrapper #dp-game-board-main #dp-game-board-field-wrapper #dp-game-board-field-scout .card {
+  margin-bottom: 10px;
+}
 #dp-game-board-wrapper #dp-game-board-main #dp-game-board-field-wrapper #dp-game-board-offer-dials {
   display: flex;
   justify-content: space-evenly;
@@ -591,6 +594,26 @@ body > .card {
   height: 142px;
 }
 
+.label-wrapper {
+  display: flex;
+  justify-content: center;
+}
+.label-wrapper h2 {
+  background-color: white;
+  border-radius: 25px;
+  text-transform: uppercase;
+  padding: 5px 25px;
+  margin: 0;
+}
+.label-wrapper.vertical {
+  writing-mode: vertical-rl;
+  text-orientation: upright;
+}
+.label-wrapper.vertical h2 {
+  padding: 10px 5px;
+  margin: 0 10px 0 0;
+}
+
 #dp-player-areas, #dp-own-player-area {
   display: flex;
   justify-content: center;
@@ -602,33 +625,9 @@ body > .card {
   display: flex;
   flex-direction: column;
 }
-#dp-player-areas .dp-player-area .player-name-wrapper, #dp-own-player-area .dp-player-area .player-name-wrapper {
-  display: flex;
-  justify-content: center;
-}
-#dp-player-areas .dp-player-area .player-name-wrapper h2, #dp-own-player-area .dp-player-area .player-name-wrapper h2 {
-  background-color: white;
-  border-radius: 25px;
-  text-transform: uppercase;
-  padding: 5px 25px;
-  margin: 0;
-}
 #dp-player-areas .dp-player-area .dp-player-area-section-wrapper, #dp-own-player-area .dp-player-area .dp-player-area-section-wrapper {
   display: flex;
   flex-direction: row;
-}
-#dp-player-areas .dp-player-area .dp-player-area-section-wrapper .label-wrapper, #dp-own-player-area .dp-player-area .dp-player-area-section-wrapper .label-wrapper {
-  writing-mode: vertical-rl;
-  text-orientation: upright;
-  text-transform: uppercase;
-  display: flex;
-  justify-content: center;
-}
-#dp-player-areas .dp-player-area .dp-player-area-section-wrapper .label-wrapper h2, #dp-own-player-area .dp-player-area .dp-player-area-section-wrapper .label-wrapper h2 {
-  background-color: white;
-  border-radius: 25px;
-  padding: 10px 5px;
-  margin: 0 10px 0 0;
 }
 #dp-player-areas .dp-player-area .dp-lead-board, #dp-own-player-area .dp-player-area .dp-lead-board {
   background-image: url("img/dogpark-leadboards.jpg");

@@ -51,7 +51,7 @@ interface DogParkGameData extends GameData {
     currentPhase: string,
     breedExpertAwards: Card[],
     forecastCards: Card[],
-    field: { nrOfFields: number, dogs: DogCard[], walkers: DogWalker[] }
+    field: { nrOfFields: number, dogs: DogCard[], scoutedDogs: DogCard[], walkers: DogWalker[] }
     park: { walkers: DogWalker[], locationBonusCards: LocationBonusCard[], extraLocationBonuses: LocationBonus[]}
 }
 
@@ -77,7 +77,7 @@ interface WalkingMoveWalkerArgs {
 
 interface WalkingMoveWalkerAfterArgs {
     locationId: number,
-    additionalActions: [{id: string, type: string, additionalArgs: any[], optional: boolean}]
+    additionalActions: [{id: string, type: string, additionalArgs: any[], optional: boolean, canBeUndone: boolean}]
 }
 
 interface ActionSwapArgs {
@@ -85,6 +85,9 @@ interface ActionSwapArgs {
     dogsInField: DogCard[]
 }
 
+interface ActionScoutArgs {
+    scoutedDogCards: DogCard[]
+}
 
 // NOTIFS
 interface NotifObjectivesChosen {
@@ -195,5 +198,15 @@ interface NotifPlayerSwaps {
     kennelDog: DogCard,
     fieldDog: DogCard
 }
+
+interface NotifPlayerScouts {
+    scoutedDogs: DogCard[]
+}
+
+interface NotifPlayerScoutReplaces {
+    scoutDog: DogCard,
+    fieldDog: DogCard
+}
+
 
 
