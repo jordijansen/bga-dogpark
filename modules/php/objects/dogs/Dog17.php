@@ -1,15 +1,13 @@
 <?php
-
 namespace objects\dogs;
 
 use objects\DogCard;
 
-class Dog17 extends DogCard
-{
-    public array $breeds = [BREED_TOY];
-    public array $costs = [RESOURCE_STICK => 2];
+class Dog17 extends DogCard {
+
     public function __construct($dbCard)
     {
         parent::__construct($dbCard);
     }
 }
+

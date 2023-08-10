@@ -2,7 +2,9 @@
 namespace objects;
 use DogPark;
 
-for($i = 1; $i<=18;$i++)
+include("dogtraits/Eager.php");
+
+for($i = 1; $i<=163;$i++)
 {
     include("dogs/Dog{$i}.php");
 }
@@ -21,7 +23,11 @@ class DogCard extends Card {
     public function __construct($dbCard)
     {
         parent::__construct($dbCard);
-        $this->name = DogPark::$instance->DOG_CARDS[$this->type][intval($this->typeArg)]['name'];
+        $dogInfo = DogPark::$instance->DOG_CARDS[intval($this->typeArg)];
+
+        $this->name = $dogInfo['name'];
+        $this->breeds = $dogInfo['breeds'];
+        $this->costs = $dogInfo['costs'];
 
         $this->resourcesOnCard = DogPark::$instance->dogManager->getDogResources($this->id);
     }
@@ -39,6 +45,9 @@ class DogCard extends Card {
     {
         $cardTypeArg = array_key_exists('card_type_arg', $dbCard) || array_key_exists('type_arg', $dbCard) ? intval($dbCard['card_type_arg'] ?? $dbCard['type_arg']) : null;
         $class = "objects\dogs\Dog" .$cardTypeArg;
-        return new $class($dbCard);
+        if (class_exists($class)) {
+            return new $class($dbCard);
+        }
+        return new DogCard($dbCard);
     }
 }

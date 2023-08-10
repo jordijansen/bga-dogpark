@@ -1,7 +1,6 @@
 # bga-dogpark
 
 # TODO
-- Selection what if no players can walk any dogs?
 - Final Scoring
   - General
   - Objective Cards
@@ -35,6 +34,7 @@ Final Scoring
 - Swap Action (+ LEAD token if leaving park bonus)
 - Scout Action
 - Auto Walker(s)
+- Selection what if no (or only 1 player) can walk any dogs?
 
 
 # RULES

@@ -20,17 +20,38 @@
   }
 }
 
+// 63
 .dog-card-art {
-  &[data-set="BASE_GAME"] {
-    @for $row from 0 through 3 {
-      @for $column from 0 through 4 {
-        $id: ($row * 5) + ($column + 1);
-        @if $id <= 18 {
-          &.dog-card-art-#{$id} {
-            background-image: url("img/dogpark-dog-cards-base-toy.jpg");
-            background-size: 500% auto;
-            background-position: #{$column * math.div(100%, 4)} #{$row * math.div(100%, 3)};
-          }
+    @for $row from 0 through 6 {
+      @for $column from 0 through 8 {
+        $id: ($row * 9) + ($column + 1);
+        &.dog-card-art-#{$id} {
+          background-image: url("img/dogpark-dog-cards-base-0.jpg");
+          background-size: 900% auto;
+          background-position: #{$column * math.div(100%, 8)} #{$row * math.div(100%, 6)};
+        }
+      }
+    }
+
+  @for $row from 0 through 6 {
+    @for $column from 0 through 8 {
+      $id: ($row * 9) + ($column + 1) + 63;
+      &.dog-card-art-#{$id} {
+        background-image: url("img/dogpark-dog-cards-base-1.jpg");
+        background-size: 900% auto;
+        background-position: #{$column * math.div(100%, 8)} #{$row * math.div(100%, 6)};
+      }
+    }
+  }
+
+  @for $row from 0 through 4 {
+    @for $column from 0 through 8 {
+      $id: ($row * 9) + ($column + 1) + 126;
+      @if $id <= 163 {
+        &.dog-card-art-#{$id} {
+          background-image: url("img/dogpark-dog-cards-base-2.jpg");
+          background-size: 900% auto;
+          background-position: #{$column * math.div(100%, 8)} #{$row * math.div(100%, 4)};
         }
       }
     }

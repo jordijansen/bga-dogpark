@@ -795,95 +795,820 @@ body > .card {
   content: unset;
 }
 
-.dog-card-art[data-set=BASE_GAME].dog-card-art-1 {
-  background-image: url("img/dogpark-dog-cards-base-toy.jpg");
-  background-size: 500% auto;
+.dog-card-art.dog-card-art-1 {
+  background-image: url("img/dogpark-dog-cards-base-0.jpg");
+  background-size: 900% auto;
   background-position: 0% 0%;
 }
-.dog-card-art[data-set=BASE_GAME].dog-card-art-2 {
-  background-image: url("img/dogpark-dog-cards-base-toy.jpg");
-  background-size: 500% auto;
+.dog-card-art.dog-card-art-2 {
+  background-image: url("img/dogpark-dog-cards-base-0.jpg");
+  background-size: 900% auto;
+  background-position: 12.5% 0%;
+}
+.dog-card-art.dog-card-art-3 {
+  background-image: url("img/dogpark-dog-cards-base-0.jpg");
+  background-size: 900% auto;
   background-position: 25% 0%;
 }
-.dog-card-art[data-set=BASE_GAME].dog-card-art-3 {
-  background-image: url("img/dogpark-dog-cards-base-toy.jpg");
-  background-size: 500% auto;
+.dog-card-art.dog-card-art-4 {
+  background-image: url("img/dogpark-dog-cards-base-0.jpg");
+  background-size: 900% auto;
+  background-position: 37.5% 0%;
+}
+.dog-card-art.dog-card-art-5 {
+  background-image: url("img/dogpark-dog-cards-base-0.jpg");
+  background-size: 900% auto;
   background-position: 50% 0%;
 }
-.dog-card-art[data-set=BASE_GAME].dog-card-art-4 {
-  background-image: url("img/dogpark-dog-cards-base-toy.jpg");
-  background-size: 500% auto;
+.dog-card-art.dog-card-art-6 {
+  background-image: url("img/dogpark-dog-cards-base-0.jpg");
+  background-size: 900% auto;
+  background-position: 62.5% 0%;
+}
+.dog-card-art.dog-card-art-7 {
+  background-image: url("img/dogpark-dog-cards-base-0.jpg");
+  background-size: 900% auto;
   background-position: 75% 0%;
 }
-.dog-card-art[data-set=BASE_GAME].dog-card-art-5 {
-  background-image: url("img/dogpark-dog-cards-base-toy.jpg");
-  background-size: 500% auto;
+.dog-card-art.dog-card-art-8 {
+  background-image: url("img/dogpark-dog-cards-base-0.jpg");
+  background-size: 900% auto;
+  background-position: 87.5% 0%;
+}
+.dog-card-art.dog-card-art-9 {
+  background-image: url("img/dogpark-dog-cards-base-0.jpg");
+  background-size: 900% auto;
   background-position: 100% 0%;
 }
-.dog-card-art[data-set=BASE_GAME].dog-card-art-6 {
-  background-image: url("img/dogpark-dog-cards-base-toy.jpg");
-  background-size: 500% auto;
+.dog-card-art.dog-card-art-10 {
+  background-image: url("img/dogpark-dog-cards-base-0.jpg");
+  background-size: 900% auto;
+  background-position: 0% 16.6666666667%;
+}
+.dog-card-art.dog-card-art-11 {
+  background-image: url("img/dogpark-dog-cards-base-0.jpg");
+  background-size: 900% auto;
+  background-position: 12.5% 16.6666666667%;
+}
+.dog-card-art.dog-card-art-12 {
+  background-image: url("img/dogpark-dog-cards-base-0.jpg");
+  background-size: 900% auto;
+  background-position: 25% 16.6666666667%;
+}
+.dog-card-art.dog-card-art-13 {
+  background-image: url("img/dogpark-dog-cards-base-0.jpg");
+  background-size: 900% auto;
+  background-position: 37.5% 16.6666666667%;
+}
+.dog-card-art.dog-card-art-14 {
+  background-image: url("img/dogpark-dog-cards-base-0.jpg");
+  background-size: 900% auto;
+  background-position: 50% 16.6666666667%;
+}
+.dog-card-art.dog-card-art-15 {
+  background-image: url("img/dogpark-dog-cards-base-0.jpg");
+  background-size: 900% auto;
+  background-position: 62.5% 16.6666666667%;
+}
+.dog-card-art.dog-card-art-16 {
+  background-image: url("img/dogpark-dog-cards-base-0.jpg");
+  background-size: 900% auto;
+  background-position: 75% 16.6666666667%;
+}
+.dog-card-art.dog-card-art-17 {
+  background-image: url("img/dogpark-dog-cards-base-0.jpg");
+  background-size: 900% auto;
+  background-position: 87.5% 16.6666666667%;
+}
+.dog-card-art.dog-card-art-18 {
+  background-image: url("img/dogpark-dog-cards-base-0.jpg");
+  background-size: 900% auto;
+  background-position: 100% 16.6666666667%;
+}
+.dog-card-art.dog-card-art-19 {
+  background-image: url("img/dogpark-dog-cards-base-0.jpg");
+  background-size: 900% auto;
   background-position: 0% 33.3333333333%;
 }
-.dog-card-art[data-set=BASE_GAME].dog-card-art-7 {
-  background-image: url("img/dogpark-dog-cards-base-toy.jpg");
-  background-size: 500% auto;
+.dog-card-art.dog-card-art-20 {
+  background-image: url("img/dogpark-dog-cards-base-0.jpg");
+  background-size: 900% auto;
+  background-position: 12.5% 33.3333333333%;
+}
+.dog-card-art.dog-card-art-21 {
+  background-image: url("img/dogpark-dog-cards-base-0.jpg");
+  background-size: 900% auto;
   background-position: 25% 33.3333333333%;
 }
-.dog-card-art[data-set=BASE_GAME].dog-card-art-8 {
-  background-image: url("img/dogpark-dog-cards-base-toy.jpg");
-  background-size: 500% auto;
+.dog-card-art.dog-card-art-22 {
+  background-image: url("img/dogpark-dog-cards-base-0.jpg");
+  background-size: 900% auto;
+  background-position: 37.5% 33.3333333333%;
+}
+.dog-card-art.dog-card-art-23 {
+  background-image: url("img/dogpark-dog-cards-base-0.jpg");
+  background-size: 900% auto;
   background-position: 50% 33.3333333333%;
 }
-.dog-card-art[data-set=BASE_GAME].dog-card-art-9 {
-  background-image: url("img/dogpark-dog-cards-base-toy.jpg");
-  background-size: 500% auto;
+.dog-card-art.dog-card-art-24 {
+  background-image: url("img/dogpark-dog-cards-base-0.jpg");
+  background-size: 900% auto;
+  background-position: 62.5% 33.3333333333%;
+}
+.dog-card-art.dog-card-art-25 {
+  background-image: url("img/dogpark-dog-cards-base-0.jpg");
+  background-size: 900% auto;
   background-position: 75% 33.3333333333%;
 }
-.dog-card-art[data-set=BASE_GAME].dog-card-art-10 {
-  background-image: url("img/dogpark-dog-cards-base-toy.jpg");
-  background-size: 500% auto;
+.dog-card-art.dog-card-art-26 {
+  background-image: url("img/dogpark-dog-cards-base-0.jpg");
+  background-size: 900% auto;
+  background-position: 87.5% 33.3333333333%;
+}
+.dog-card-art.dog-card-art-27 {
+  background-image: url("img/dogpark-dog-cards-base-0.jpg");
+  background-size: 900% auto;
   background-position: 100% 33.3333333333%;
 }
-.dog-card-art[data-set=BASE_GAME].dog-card-art-11 {
-  background-image: url("img/dogpark-dog-cards-base-toy.jpg");
-  background-size: 500% auto;
+.dog-card-art.dog-card-art-28 {
+  background-image: url("img/dogpark-dog-cards-base-0.jpg");
+  background-size: 900% auto;
+  background-position: 0% 50%;
+}
+.dog-card-art.dog-card-art-29 {
+  background-image: url("img/dogpark-dog-cards-base-0.jpg");
+  background-size: 900% auto;
+  background-position: 12.5% 50%;
+}
+.dog-card-art.dog-card-art-30 {
+  background-image: url("img/dogpark-dog-cards-base-0.jpg");
+  background-size: 900% auto;
+  background-position: 25% 50%;
+}
+.dog-card-art.dog-card-art-31 {
+  background-image: url("img/dogpark-dog-cards-base-0.jpg");
+  background-size: 900% auto;
+  background-position: 37.5% 50%;
+}
+.dog-card-art.dog-card-art-32 {
+  background-image: url("img/dogpark-dog-cards-base-0.jpg");
+  background-size: 900% auto;
+  background-position: 50% 50%;
+}
+.dog-card-art.dog-card-art-33 {
+  background-image: url("img/dogpark-dog-cards-base-0.jpg");
+  background-size: 900% auto;
+  background-position: 62.5% 50%;
+}
+.dog-card-art.dog-card-art-34 {
+  background-image: url("img/dogpark-dog-cards-base-0.jpg");
+  background-size: 900% auto;
+  background-position: 75% 50%;
+}
+.dog-card-art.dog-card-art-35 {
+  background-image: url("img/dogpark-dog-cards-base-0.jpg");
+  background-size: 900% auto;
+  background-position: 87.5% 50%;
+}
+.dog-card-art.dog-card-art-36 {
+  background-image: url("img/dogpark-dog-cards-base-0.jpg");
+  background-size: 900% auto;
+  background-position: 100% 50%;
+}
+.dog-card-art.dog-card-art-37 {
+  background-image: url("img/dogpark-dog-cards-base-0.jpg");
+  background-size: 900% auto;
   background-position: 0% 66.6666666667%;
 }
-.dog-card-art[data-set=BASE_GAME].dog-card-art-12 {
-  background-image: url("img/dogpark-dog-cards-base-toy.jpg");
-  background-size: 500% auto;
+.dog-card-art.dog-card-art-38 {
+  background-image: url("img/dogpark-dog-cards-base-0.jpg");
+  background-size: 900% auto;
+  background-position: 12.5% 66.6666666667%;
+}
+.dog-card-art.dog-card-art-39 {
+  background-image: url("img/dogpark-dog-cards-base-0.jpg");
+  background-size: 900% auto;
   background-position: 25% 66.6666666667%;
 }
-.dog-card-art[data-set=BASE_GAME].dog-card-art-13 {
-  background-image: url("img/dogpark-dog-cards-base-toy.jpg");
-  background-size: 500% auto;
+.dog-card-art.dog-card-art-40 {
+  background-image: url("img/dogpark-dog-cards-base-0.jpg");
+  background-size: 900% auto;
+  background-position: 37.5% 66.6666666667%;
+}
+.dog-card-art.dog-card-art-41 {
+  background-image: url("img/dogpark-dog-cards-base-0.jpg");
+  background-size: 900% auto;
   background-position: 50% 66.6666666667%;
 }
-.dog-card-art[data-set=BASE_GAME].dog-card-art-14 {
-  background-image: url("img/dogpark-dog-cards-base-toy.jpg");
-  background-size: 500% auto;
+.dog-card-art.dog-card-art-42 {
+  background-image: url("img/dogpark-dog-cards-base-0.jpg");
+  background-size: 900% auto;
+  background-position: 62.5% 66.6666666667%;
+}
+.dog-card-art.dog-card-art-43 {
+  background-image: url("img/dogpark-dog-cards-base-0.jpg");
+  background-size: 900% auto;
   background-position: 75% 66.6666666667%;
 }
-.dog-card-art[data-set=BASE_GAME].dog-card-art-15 {
-  background-image: url("img/dogpark-dog-cards-base-toy.jpg");
-  background-size: 500% auto;
+.dog-card-art.dog-card-art-44 {
+  background-image: url("img/dogpark-dog-cards-base-0.jpg");
+  background-size: 900% auto;
+  background-position: 87.5% 66.6666666667%;
+}
+.dog-card-art.dog-card-art-45 {
+  background-image: url("img/dogpark-dog-cards-base-0.jpg");
+  background-size: 900% auto;
   background-position: 100% 66.6666666667%;
 }
-.dog-card-art[data-set=BASE_GAME].dog-card-art-16 {
-  background-image: url("img/dogpark-dog-cards-base-toy.jpg");
-  background-size: 500% auto;
+.dog-card-art.dog-card-art-46 {
+  background-image: url("img/dogpark-dog-cards-base-0.jpg");
+  background-size: 900% auto;
+  background-position: 0% 83.3333333333%;
+}
+.dog-card-art.dog-card-art-47 {
+  background-image: url("img/dogpark-dog-cards-base-0.jpg");
+  background-size: 900% auto;
+  background-position: 12.5% 83.3333333333%;
+}
+.dog-card-art.dog-card-art-48 {
+  background-image: url("img/dogpark-dog-cards-base-0.jpg");
+  background-size: 900% auto;
+  background-position: 25% 83.3333333333%;
+}
+.dog-card-art.dog-card-art-49 {
+  background-image: url("img/dogpark-dog-cards-base-0.jpg");
+  background-size: 900% auto;
+  background-position: 37.5% 83.3333333333%;
+}
+.dog-card-art.dog-card-art-50 {
+  background-image: url("img/dogpark-dog-cards-base-0.jpg");
+  background-size: 900% auto;
+  background-position: 50% 83.3333333333%;
+}
+.dog-card-art.dog-card-art-51 {
+  background-image: url("img/dogpark-dog-cards-base-0.jpg");
+  background-size: 900% auto;
+  background-position: 62.5% 83.3333333333%;
+}
+.dog-card-art.dog-card-art-52 {
+  background-image: url("img/dogpark-dog-cards-base-0.jpg");
+  background-size: 900% auto;
+  background-position: 75% 83.3333333333%;
+}
+.dog-card-art.dog-card-art-53 {
+  background-image: url("img/dogpark-dog-cards-base-0.jpg");
+  background-size: 900% auto;
+  background-position: 87.5% 83.3333333333%;
+}
+.dog-card-art.dog-card-art-54 {
+  background-image: url("img/dogpark-dog-cards-base-0.jpg");
+  background-size: 900% auto;
+  background-position: 100% 83.3333333333%;
+}
+.dog-card-art.dog-card-art-55 {
+  background-image: url("img/dogpark-dog-cards-base-0.jpg");
+  background-size: 900% auto;
   background-position: 0% 100%;
 }
-.dog-card-art[data-set=BASE_GAME].dog-card-art-17 {
-  background-image: url("img/dogpark-dog-cards-base-toy.jpg");
-  background-size: 500% auto;
+.dog-card-art.dog-card-art-56 {
+  background-image: url("img/dogpark-dog-cards-base-0.jpg");
+  background-size: 900% auto;
+  background-position: 12.5% 100%;
+}
+.dog-card-art.dog-card-art-57 {
+  background-image: url("img/dogpark-dog-cards-base-0.jpg");
+  background-size: 900% auto;
   background-position: 25% 100%;
 }
-.dog-card-art[data-set=BASE_GAME].dog-card-art-18 {
-  background-image: url("img/dogpark-dog-cards-base-toy.jpg");
-  background-size: 500% auto;
+.dog-card-art.dog-card-art-58 {
+  background-image: url("img/dogpark-dog-cards-base-0.jpg");
+  background-size: 900% auto;
+  background-position: 37.5% 100%;
+}
+.dog-card-art.dog-card-art-59 {
+  background-image: url("img/dogpark-dog-cards-base-0.jpg");
+  background-size: 900% auto;
   background-position: 50% 100%;
+}
+.dog-card-art.dog-card-art-60 {
+  background-image: url("img/dogpark-dog-cards-base-0.jpg");
+  background-size: 900% auto;
+  background-position: 62.5% 100%;
+}
+.dog-card-art.dog-card-art-61 {
+  background-image: url("img/dogpark-dog-cards-base-0.jpg");
+  background-size: 900% auto;
+  background-position: 75% 100%;
+}
+.dog-card-art.dog-card-art-62 {
+  background-image: url("img/dogpark-dog-cards-base-0.jpg");
+  background-size: 900% auto;
+  background-position: 87.5% 100%;
+}
+.dog-card-art.dog-card-art-63 {
+  background-image: url("img/dogpark-dog-cards-base-0.jpg");
+  background-size: 900% auto;
+  background-position: 100% 100%;
+}
+.dog-card-art.dog-card-art-64 {
+  background-image: url("img/dogpark-dog-cards-base-1.jpg");
+  background-size: 900% auto;
+  background-position: 0% 0%;
+}
+.dog-card-art.dog-card-art-65 {
+  background-image: url("img/dogpark-dog-cards-base-1.jpg");
+  background-size: 900% auto;
+  background-position: 12.5% 0%;
+}
+.dog-card-art.dog-card-art-66 {
+  background-image: url("img/dogpark-dog-cards-base-1.jpg");
+  background-size: 900% auto;
+  background-position: 25% 0%;
+}
+.dog-card-art.dog-card-art-67 {
+  background-image: url("img/dogpark-dog-cards-base-1.jpg");
+  background-size: 900% auto;
+  background-position: 37.5% 0%;
+}
+.dog-card-art.dog-card-art-68 {
+  background-image: url("img/dogpark-dog-cards-base-1.jpg");
+  background-size: 900% auto;
+  background-position: 50% 0%;
+}
+.dog-card-art.dog-card-art-69 {
+  background-image: url("img/dogpark-dog-cards-base-1.jpg");
+  background-size: 900% auto;
+  background-position: 62.5% 0%;
+}
+.dog-card-art.dog-card-art-70 {
+  background-image: url("img/dogpark-dog-cards-base-1.jpg");
+  background-size: 900% auto;
+  background-position: 75% 0%;
+}
+.dog-card-art.dog-card-art-71 {
+  background-image: url("img/dogpark-dog-cards-base-1.jpg");
+  background-size: 900% auto;
+  background-position: 87.5% 0%;
+}
+.dog-card-art.dog-card-art-72 {
+  background-image: url("img/dogpark-dog-cards-base-1.jpg");
+  background-size: 900% auto;
+  background-position: 100% 0%;
+}
+.dog-card-art.dog-card-art-73 {
+  background-image: url("img/dogpark-dog-cards-base-1.jpg");
+  background-size: 900% auto;
+  background-position: 0% 16.6666666667%;
+}
+.dog-card-art.dog-card-art-74 {
+  background-image: url("img/dogpark-dog-cards-base-1.jpg");
+  background-size: 900% auto;
+  background-position: 12.5% 16.6666666667%;
+}
+.dog-card-art.dog-card-art-75 {
+  background-image: url("img/dogpark-dog-cards-base-1.jpg");
+  background-size: 900% auto;
+  background-position: 25% 16.6666666667%;
+}
+.dog-card-art.dog-card-art-76 {
+  background-image: url("img/dogpark-dog-cards-base-1.jpg");
+  background-size: 900% auto;
+  background-position: 37.5% 16.6666666667%;
+}
+.dog-card-art.dog-card-art-77 {
+  background-image: url("img/dogpark-dog-cards-base-1.jpg");
+  background-size: 900% auto;
+  background-position: 50% 16.6666666667%;
+}
+.dog-card-art.dog-card-art-78 {
+  background-image: url("img/dogpark-dog-cards-base-1.jpg");
+  background-size: 900% auto;
+  background-position: 62.5% 16.6666666667%;
+}
+.dog-card-art.dog-card-art-79 {
+  background-image: url("img/dogpark-dog-cards-base-1.jpg");
+  background-size: 900% auto;
+  background-position: 75% 16.6666666667%;
+}
+.dog-card-art.dog-card-art-80 {
+  background-image: url("img/dogpark-dog-cards-base-1.jpg");
+  background-size: 900% auto;
+  background-position: 87.5% 16.6666666667%;
+}
+.dog-card-art.dog-card-art-81 {
+  background-image: url("img/dogpark-dog-cards-base-1.jpg");
+  background-size: 900% auto;
+  background-position: 100% 16.6666666667%;
+}
+.dog-card-art.dog-card-art-82 {
+  background-image: url("img/dogpark-dog-cards-base-1.jpg");
+  background-size: 900% auto;
+  background-position: 0% 33.3333333333%;
+}
+.dog-card-art.dog-card-art-83 {
+  background-image: url("img/dogpark-dog-cards-base-1.jpg");
+  background-size: 900% auto;
+  background-position: 12.5% 33.3333333333%;
+}
+.dog-card-art.dog-card-art-84 {
+  background-image: url("img/dogpark-dog-cards-base-1.jpg");
+  background-size: 900% auto;
+  background-position: 25% 33.3333333333%;
+}
+.dog-card-art.dog-card-art-85 {
+  background-image: url("img/dogpark-dog-cards-base-1.jpg");
+  background-size: 900% auto;
+  background-position: 37.5% 33.3333333333%;
+}
+.dog-card-art.dog-card-art-86 {
+  background-image: url("img/dogpark-dog-cards-base-1.jpg");
+  background-size: 900% auto;
+  background-position: 50% 33.3333333333%;
+}
+.dog-card-art.dog-card-art-87 {
+  background-image: url("img/dogpark-dog-cards-base-1.jpg");
+  background-size: 900% auto;
+  background-position: 62.5% 33.3333333333%;
+}
+.dog-card-art.dog-card-art-88 {
+  background-image: url("img/dogpark-dog-cards-base-1.jpg");
+  background-size: 900% auto;
+  background-position: 75% 33.3333333333%;
+}
+.dog-card-art.dog-card-art-89 {
+  background-image: url("img/dogpark-dog-cards-base-1.jpg");
+  background-size: 900% auto;
+  background-position: 87.5% 33.3333333333%;
+}
+.dog-card-art.dog-card-art-90 {
+  background-image: url("img/dogpark-dog-cards-base-1.jpg");
+  background-size: 900% auto;
+  background-position: 100% 33.3333333333%;
+}
+.dog-card-art.dog-card-art-91 {
+  background-image: url("img/dogpark-dog-cards-base-1.jpg");
+  background-size: 900% auto;
+  background-position: 0% 50%;
+}
+.dog-card-art.dog-card-art-92 {
+  background-image: url("img/dogpark-dog-cards-base-1.jpg");
+  background-size: 900% auto;
+  background-position: 12.5% 50%;
+}
+.dog-card-art.dog-card-art-93 {
+  background-image: url("img/dogpark-dog-cards-base-1.jpg");
+  background-size: 900% auto;
+  background-position: 25% 50%;
+}
+.dog-card-art.dog-card-art-94 {
+  background-image: url("img/dogpark-dog-cards-base-1.jpg");
+  background-size: 900% auto;
+  background-position: 37.5% 50%;
+}
+.dog-card-art.dog-card-art-95 {
+  background-image: url("img/dogpark-dog-cards-base-1.jpg");
+  background-size: 900% auto;
+  background-position: 50% 50%;
+}
+.dog-card-art.dog-card-art-96 {
+  background-image: url("img/dogpark-dog-cards-base-1.jpg");
+  background-size: 900% auto;
+  background-position: 62.5% 50%;
+}
+.dog-card-art.dog-card-art-97 {
+  background-image: url("img/dogpark-dog-cards-base-1.jpg");
+  background-size: 900% auto;
+  background-position: 75% 50%;
+}
+.dog-card-art.dog-card-art-98 {
+  background-image: url("img/dogpark-dog-cards-base-1.jpg");
+  background-size: 900% auto;
+  background-position: 87.5% 50%;
+}
+.dog-card-art.dog-card-art-99 {
+  background-image: url("img/dogpark-dog-cards-base-1.jpg");
+  background-size: 900% auto;
+  background-position: 100% 50%;
+}
+.dog-card-art.dog-card-art-100 {
+  background-image: url("img/dogpark-dog-cards-base-1.jpg");
+  background-size: 900% auto;
+  background-position: 0% 66.6666666667%;
+}
+.dog-card-art.dog-card-art-101 {
+  background-image: url("img/dogpark-dog-cards-base-1.jpg");
+  background-size: 900% auto;
+  background-position: 12.5% 66.6666666667%;
+}
+.dog-card-art.dog-card-art-102 {
+  background-image: url("img/dogpark-dog-cards-base-1.jpg");
+  background-size: 900% auto;
+  background-position: 25% 66.6666666667%;
+}
+.dog-card-art.dog-card-art-103 {
+  background-image: url("img/dogpark-dog-cards-base-1.jpg");
+  background-size: 900% auto;
+  background-position: 37.5% 66.6666666667%;
+}
+.dog-card-art.dog-card-art-104 {
+  background-image: url("img/dogpark-dog-cards-base-1.jpg");
+  background-size: 900% auto;
+  background-position: 50% 66.6666666667%;
+}
+.dog-card-art.dog-card-art-105 {
+  background-image: url("img/dogpark-dog-cards-base-1.jpg");
+  background-size: 900% auto;
+  background-position: 62.5% 66.6666666667%;
+}
+.dog-card-art.dog-card-art-106 {
+  background-image: url("img/dogpark-dog-cards-base-1.jpg");
+  background-size: 900% auto;
+  background-position: 75% 66.6666666667%;
+}
+.dog-card-art.dog-card-art-107 {
+  background-image: url("img/dogpark-dog-cards-base-1.jpg");
+  background-size: 900% auto;
+  background-position: 87.5% 66.6666666667%;
+}
+.dog-card-art.dog-card-art-108 {
+  background-image: url("img/dogpark-dog-cards-base-1.jpg");
+  background-size: 900% auto;
+  background-position: 100% 66.6666666667%;
+}
+.dog-card-art.dog-card-art-109 {
+  background-image: url("img/dogpark-dog-cards-base-1.jpg");
+  background-size: 900% auto;
+  background-position: 0% 83.3333333333%;
+}
+.dog-card-art.dog-card-art-110 {
+  background-image: url("img/dogpark-dog-cards-base-1.jpg");
+  background-size: 900% auto;
+  background-position: 12.5% 83.3333333333%;
+}
+.dog-card-art.dog-card-art-111 {
+  background-image: url("img/dogpark-dog-cards-base-1.jpg");
+  background-size: 900% auto;
+  background-position: 25% 83.3333333333%;
+}
+.dog-card-art.dog-card-art-112 {
+  background-image: url("img/dogpark-dog-cards-base-1.jpg");
+  background-size: 900% auto;
+  background-position: 37.5% 83.3333333333%;
+}
+.dog-card-art.dog-card-art-113 {
+  background-image: url("img/dogpark-dog-cards-base-1.jpg");
+  background-size: 900% auto;
+  background-position: 50% 83.3333333333%;
+}
+.dog-card-art.dog-card-art-114 {
+  background-image: url("img/dogpark-dog-cards-base-1.jpg");
+  background-size: 900% auto;
+  background-position: 62.5% 83.3333333333%;
+}
+.dog-card-art.dog-card-art-115 {
+  background-image: url("img/dogpark-dog-cards-base-1.jpg");
+  background-size: 900% auto;
+  background-position: 75% 83.3333333333%;
+}
+.dog-card-art.dog-card-art-116 {
+  background-image: url("img/dogpark-dog-cards-base-1.jpg");
+  background-size: 900% auto;
+  background-position: 87.5% 83.3333333333%;
+}
+.dog-card-art.dog-card-art-117 {
+  background-image: url("img/dogpark-dog-cards-base-1.jpg");
+  background-size: 900% auto;
+  background-position: 100% 83.3333333333%;
+}
+.dog-card-art.dog-card-art-118 {
+  background-image: url("img/dogpark-dog-cards-base-1.jpg");
+  background-size: 900% auto;
+  background-position: 0% 100%;
+}
+.dog-card-art.dog-card-art-119 {
+  background-image: url("img/dogpark-dog-cards-base-1.jpg");
+  background-size: 900% auto;
+  background-position: 12.5% 100%;
+}
+.dog-card-art.dog-card-art-120 {
+  background-image: url("img/dogpark-dog-cards-base-1.jpg");
+  background-size: 900% auto;
+  background-position: 25% 100%;
+}
+.dog-card-art.dog-card-art-121 {
+  background-image: url("img/dogpark-dog-cards-base-1.jpg");
+  background-size: 900% auto;
+  background-position: 37.5% 100%;
+}
+.dog-card-art.dog-card-art-122 {
+  background-image: url("img/dogpark-dog-cards-base-1.jpg");
+  background-size: 900% auto;
+  background-position: 50% 100%;
+}
+.dog-card-art.dog-card-art-123 {
+  background-image: url("img/dogpark-dog-cards-base-1.jpg");
+  background-size: 900% auto;
+  background-position: 62.5% 100%;
+}
+.dog-card-art.dog-card-art-124 {
+  background-image: url("img/dogpark-dog-cards-base-1.jpg");
+  background-size: 900% auto;
+  background-position: 75% 100%;
+}
+.dog-card-art.dog-card-art-125 {
+  background-image: url("img/dogpark-dog-cards-base-1.jpg");
+  background-size: 900% auto;
+  background-position: 87.5% 100%;
+}
+.dog-card-art.dog-card-art-126 {
+  background-image: url("img/dogpark-dog-cards-base-1.jpg");
+  background-size: 900% auto;
+  background-position: 100% 100%;
+}
+.dog-card-art.dog-card-art-127 {
+  background-image: url("img/dogpark-dog-cards-base-2.jpg");
+  background-size: 900% auto;
+  background-position: 0% 0%;
+}
+.dog-card-art.dog-card-art-128 {
+  background-image: url("img/dogpark-dog-cards-base-2.jpg");
+  background-size: 900% auto;
+  background-position: 12.5% 0%;
+}
+.dog-card-art.dog-card-art-129 {
+  background-image: url("img/dogpark-dog-cards-base-2.jpg");
+  background-size: 900% auto;
+  background-position: 25% 0%;
+}
+.dog-card-art.dog-card-art-130 {
+  background-image: url("img/dogpark-dog-cards-base-2.jpg");
+  background-size: 900% auto;
+  background-position: 37.5% 0%;
+}
+.dog-card-art.dog-card-art-131 {
+  background-image: url("img/dogpark-dog-cards-base-2.jpg");
+  background-size: 900% auto;
+  background-position: 50% 0%;
+}
+.dog-card-art.dog-card-art-132 {
+  background-image: url("img/dogpark-dog-cards-base-2.jpg");
+  background-size: 900% auto;
+  background-position: 62.5% 0%;
+}
+.dog-card-art.dog-card-art-133 {
+  background-image: url("img/dogpark-dog-cards-base-2.jpg");
+  background-size: 900% auto;
+  background-position: 75% 0%;
+}
+.dog-card-art.dog-card-art-134 {
+  background-image: url("img/dogpark-dog-cards-base-2.jpg");
+  background-size: 900% auto;
+  background-position: 87.5% 0%;
+}
+.dog-card-art.dog-card-art-135 {
+  background-image: url("img/dogpark-dog-cards-base-2.jpg");
+  background-size: 900% auto;
+  background-position: 100% 0%;
+}
+.dog-card-art.dog-card-art-136 {
+  background-image: url("img/dogpark-dog-cards-base-2.jpg");
+  background-size: 900% auto;
+  background-position: 0% 25%;
+}
+.dog-card-art.dog-card-art-137 {
+  background-image: url("img/dogpark-dog-cards-base-2.jpg");
+  background-size: 900% auto;
+  background-position: 12.5% 25%;
+}
+.dog-card-art.dog-card-art-138 {
+  background-image: url("img/dogpark-dog-cards-base-2.jpg");
+  background-size: 900% auto;
+  background-position: 25% 25%;
+}
+.dog-card-art.dog-card-art-139 {
+  background-image: url("img/dogpark-dog-cards-base-2.jpg");
+  background-size: 900% auto;
+  background-position: 37.5% 25%;
+}
+.dog-card-art.dog-card-art-140 {
+  background-image: url("img/dogpark-dog-cards-base-2.jpg");
+  background-size: 900% auto;
+  background-position: 50% 25%;
+}
+.dog-card-art.dog-card-art-141 {
+  background-image: url("img/dogpark-dog-cards-base-2.jpg");
+  background-size: 900% auto;
+  background-position: 62.5% 25%;
+}
+.dog-card-art.dog-card-art-142 {
+  background-image: url("img/dogpark-dog-cards-base-2.jpg");
+  background-size: 900% auto;
+  background-position: 75% 25%;
+}
+.dog-card-art.dog-card-art-143 {
+  background-image: url("img/dogpark-dog-cards-base-2.jpg");
+  background-size: 900% auto;
+  background-position: 87.5% 25%;
+}
+.dog-card-art.dog-card-art-144 {
+  background-image: url("img/dogpark-dog-cards-base-2.jpg");
+  background-size: 900% auto;
+  background-position: 100% 25%;
+}
+.dog-card-art.dog-card-art-145 {
+  background-image: url("img/dogpark-dog-cards-base-2.jpg");
+  background-size: 900% auto;
+  background-position: 0% 50%;
+}
+.dog-card-art.dog-card-art-146 {
+  background-image: url("img/dogpark-dog-cards-base-2.jpg");
+  background-size: 900% auto;
+  background-position: 12.5% 50%;
+}
+.dog-card-art.dog-card-art-147 {
+  background-image: url("img/dogpark-dog-cards-base-2.jpg");
+  background-size: 900% auto;
+  background-position: 25% 50%;
+}
+.dog-card-art.dog-card-art-148 {
+  background-image: url("img/dogpark-dog-cards-base-2.jpg");
+  background-size: 900% auto;
+  background-position: 37.5% 50%;
+}
+.dog-card-art.dog-card-art-149 {
+  background-image: url("img/dogpark-dog-cards-base-2.jpg");
+  background-size: 900% auto;
+  background-position: 50% 50%;
+}
+.dog-card-art.dog-card-art-150 {
+  background-image: url("img/dogpark-dog-cards-base-2.jpg");
+  background-size: 900% auto;
+  background-position: 62.5% 50%;
+}
+.dog-card-art.dog-card-art-151 {
+  background-image: url("img/dogpark-dog-cards-base-2.jpg");
+  background-size: 900% auto;
+  background-position: 75% 50%;
+}
+.dog-card-art.dog-card-art-152 {
+  background-image: url("img/dogpark-dog-cards-base-2.jpg");
+  background-size: 900% auto;
+  background-position: 87.5% 50%;
+}
+.dog-card-art.dog-card-art-153 {
+  background-image: url("img/dogpark-dog-cards-base-2.jpg");
+  background-size: 900% auto;
+  background-position: 100% 50%;
+}
+.dog-card-art.dog-card-art-154 {
+  background-image: url("img/dogpark-dog-cards-base-2.jpg");
+  background-size: 900% auto;
+  background-position: 0% 75%;
+}
+.dog-card-art.dog-card-art-155 {
+  background-image: url("img/dogpark-dog-cards-base-2.jpg");
+  background-size: 900% auto;
+  background-position: 12.5% 75%;
+}
+.dog-card-art.dog-card-art-156 {
+  background-image: url("img/dogpark-dog-cards-base-2.jpg");
+  background-size: 900% auto;
+  background-position: 25% 75%;
+}
+.dog-card-art.dog-card-art-157 {
+  background-image: url("img/dogpark-dog-cards-base-2.jpg");
+  background-size: 900% auto;
+  background-position: 37.5% 75%;
+}
+.dog-card-art.dog-card-art-158 {
+  background-image: url("img/dogpark-dog-cards-base-2.jpg");
+  background-size: 900% auto;
+  background-position: 50% 75%;
+}
+.dog-card-art.dog-card-art-159 {
+  background-image: url("img/dogpark-dog-cards-base-2.jpg");
+  background-size: 900% auto;
+  background-position: 62.5% 75%;
+}
+.dog-card-art.dog-card-art-160 {
+  background-image: url("img/dogpark-dog-cards-base-2.jpg");
+  background-size: 900% auto;
+  background-position: 75% 75%;
+}
+.dog-card-art.dog-card-art-161 {
+  background-image: url("img/dogpark-dog-cards-base-2.jpg");
+  background-size: 900% auto;
+  background-position: 87.5% 75%;
+}
+.dog-card-art.dog-card-art-162 {
+  background-image: url("img/dogpark-dog-cards-base-2.jpg");
+  background-size: 900% auto;
+  background-position: 100% 75%;
+}
+.dog-card-art.dog-card-art-163 {
+  background-image: url("img/dogpark-dog-cards-base-2.jpg");
+  background-size: 900% auto;
+  background-position: 0% 100%;
 }
 
 .location-bonus-art {
