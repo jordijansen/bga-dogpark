@@ -268,7 +268,8 @@ $walkingStates = [
         "type" => "game",
         "action" => "stWalkingStart",
         "transitions" => [
-            "playerTurn" => ST_WALKING_MOVE_WALKER
+            "playerTurn" => ST_WALKING_MOVE_WALKER,
+            "skipWalkingPhase" => ST_HOME_TIME
         ]
     ],
     ST_WALKING_MOVE_WALKER => [
@@ -364,6 +365,19 @@ $actionStates = [
             ACT_SCOUT_REPLACE,
             ACT_SCOUT_END,
             ACT_UNDO
+        ],
+        "transitions" => [
+            // We use jump to state to get out of this state.
+        ],
+    ],
+    ST_ACTION_MOVE_AUTO_WALKER => [
+        "name" => "actionMoveAutoWalker",
+        "description" => clienttranslate('${actplayer} must move <span style="font-weight:bold;color:#${autoWalkerColor};">${autoWalkerName}</span> ${nrOfPlaces} places'),
+        "descriptionmyturn" => clienttranslate('${you} must move <span style="font-weight:bold;color:#${autoWalkerColor};">${autoWalkerName}</span> ${nrOfPlaces} places'),
+        "args" => "argActionMoveAutoWalker",
+        "type" => "activeplayer",
+        "possibleactions" => [
+            ACT_MOVE_AUTO_WALKER,
         ],
         "transitions" => [
             // We use jump to state to get out of this state.

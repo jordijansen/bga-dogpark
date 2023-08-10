@@ -99,6 +99,10 @@ interface ActionScoutArgs {
     scoutedDogCards: DogCard[]
 }
 
+interface ActionMoveAutoWalkerArgs {
+    possibleParkLocationIds: number[]
+}
+
 // NOTIFS
 interface NotifObjectivesChosen {
     chosenObjectiveCards: [{playerId: number, cardId: number}]

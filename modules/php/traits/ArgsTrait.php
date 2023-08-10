@@ -3,6 +3,7 @@
 namespace traits;
 use DogPark;
 use objects\DogCard;
+use objects\DogWalker;
 use objects\ObjectiveCard;
 
 trait ArgsTrait
@@ -78,7 +79,7 @@ trait ArgsTrait
     function argWalkingMoveWalker(): array
     {
         return [
-            "possibleParkLocationIds" => $this->dogWalkPark->getPossibleParkLocationIds($this->getActivePlayerId())
+            "possibleParkLocationIds" => $this->dogWalkPark->getPossibleParkLocationIds($this->playerManager->getWalkerId($this->getActivePlayerId()))
         ];
     }
 
@@ -109,6 +110,19 @@ trait ArgsTrait
 
     function getRecruitmentRoundArg() {
         return $this->getGlobalVariable(CURRENT_PHASE) == PHASE_RECRUITMENT_2 ? 2 : 1;
+    }
+
+    function argActionMoveAutoWalker() {
+        $walker = DogWalker::from($this->dogWalkers->getCard(intval($this->getGlobalVariable(LAST_WALKED_WALKER_ID))));
+        $autoWalker = $this->getAutoWalkers()[$walker->typeArg];
+        $nrOfPlaces = intval($this->getGlobalVariable(MOVE_AUTO_WALKER_STEPS));
+        $possibleLocations = $this->getGlobalVariable(MOVE_AUTO_WALKER_LOCATIONS);
+        return [
+            "autoWalkerName" => $autoWalker->name,
+            "autoWalkerColor" => $autoWalker->color,
+            "possibleParkLocationIds" => $possibleLocations,
+            "nrOfPlaces" => $nrOfPlaces
+        ];
     }
     
 }

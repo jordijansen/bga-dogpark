@@ -214,7 +214,7 @@ trait ActionTrait
             throw new BgaUserException('Walker not in park!');
         }
 
-        $possibleParkLocations = $this->dogWalkPark->getPossibleParkLocationIds($playerId);
+        $possibleParkLocations = $this->dogWalkPark->getPossibleParkLocationIds($walker->id);
         if (!in_array($locationId, $possibleParkLocations)) {
             throw new BgaUserException('Location not allowed!');
         }
@@ -260,6 +260,7 @@ trait ActionTrait
 
         $refreshCurrentState = true;
         if ($action->type == WALKING_GAIN_LOCATION_BONUS) {
+            $this->commandManager->addCommand($playerId, new GainLocationBonusCommand($playerId, $actionId));
             if ($action->additionalArgs->bonusType == SWAP) {
                 $refreshCurrentState = false;
                 $this->setGlobalVariable(STATE_AFTER_SWAP, ST_WALKING_MOVE_WALKER_AFTER);
@@ -270,8 +271,6 @@ trait ActionTrait
                 $this->setGlobalVariable(STATE_AFTER_SCOUT, ST_WALKING_MOVE_WALKER_AFTER);
                 $this->setGlobalVariable(CURRENT_ACTION_ID, $actionId);
                 $this->gamestate->jumpToState(ST_ACTION_SCOUT_START);
-            } else {
-                $this->commandManager->addCommand($playerId, new GainLocationBonusCommand($playerId, $actionId));
             }
         } else if ($action->type == WALKING_PAY_REPUTATION_ACCEPT) {
             $this->commandManager->addCommand($playerId, new PayReputationForLocationCommand($playerId, $actionId));
@@ -300,6 +299,8 @@ trait ActionTrait
         $playerId = $this->getActivePlayerId();
         $this->actionManager->clear($playerId);
         $this->commandManager->clearCommands();
+
+        $this->setGlobalVariable(LAST_WALKED_WALKER_ID, $this->playerManager->getWalkerId($playerId));
 
         $this->gamestate->nextState("");
     }
@@ -355,6 +356,16 @@ trait ActionTrait
         $this->commandManager->addCommand($playerId, new EndScoutCommand());
 
         $this->gamestate->jumpToState(intval($this->getGlobalVariable(STATE_AFTER_SCOUT)));
+    }
+
+    function moveAutoWalker($locationId) {
+        $this->checkAction(ACT_MOVE_AUTO_WALKER);
+
+        $walker = DogWalker::from($this->dogWalkers->getCard(intval($this->getGlobalVariable(LAST_WALKED_WALKER_ID))));
+        $autoWalker = $this->getAutoWalkers()[$walker->typeArg];
+        $nrOfPlaces = intval($this->getGlobalVariable(MOVE_AUTO_WALKER_STEPS));
+
+        $autoWalker->moveWalkerToLocation($walker->id, $locationId, $nrOfPlaces);
     }
 
     function undoLast() {

@@ -194,6 +194,16 @@ class action_dogpark extends APP_GameAction
         self::ajaxResponse();
     }
 
+    public function moveAutoWalker()
+    {
+        self::setAjaxMode();
+
+        $locationId = self::getArg("locationId", AT_posint, true);
+        $this->game->moveAutoWalker($locationId);
+
+        self::ajaxResponse();
+    }
+
     public function undoLast()
     {
         self::setAjaxMode();

@@ -24,7 +24,7 @@ trait UtilsTrait
         if ($nrOfPlayers <= 2) {
             $nrOfAutoWalkers = $nrOfPlayers == 1 ? 2 : 1;
             for ($i = 1; $i <= $nrOfAutoWalkers; $i++) {
-                $autoWalkers[] = new AutoWalker($i, array_shift($unusedPlayerColors));
+                $autoWalkers[$i] = new AutoWalker($i, array_shift($unusedPlayerColors));
             }
         }
         return $autoWalkers;

@@ -26,6 +26,18 @@ class DogWalkPark extends APP_DbObject
         return $walkers;
     }
 
+    public function moveWalkersOfAutoWalkersToStartOfPark(): array
+    {
+        $walkers = [];
+        $autoWalkers = DogPark::$instance->getAutoWalkers();
+        foreach ($autoWalkers as $autoWalker) {
+            $walkerId = DogPark::$instance->playerManager->getWalkerId($autoWalker->id);
+            DogPark::$instance->dogWalkers->moveCard($walkerId, LOCATION_PARK, 0);
+            $walkers[] = DogWalker::from(DogPark::$instance->dogWalkers->getCard($walkerId));
+        }
+        return $walkers;
+    }
+
     public function getWalkers() {
         return DogWalker::fromArray(DogPark::$instance->dogWalkers->getCardsInLocation(LOCATION_PARK));
     }
@@ -79,9 +91,8 @@ class DogWalkPark extends APP_DbObject
         self::DbQuery("DELETE FROM `extra_location_bonus`");
     }
 
-    public function getPossibleParkLocationIds(int $playerId)
+    public function getPossibleParkLocationIds(int $walkerId)
     {
-        $walkerId = DogPark::$instance->playerManager->getWalkerId($playerId);
         $walker = DogWalker::from(DogPark::$instance->dogWalkers->getCard($walkerId));
         if ($walker->location != LOCATION_PARK) {
             throw new BgaUserException('Walker is not in park for player');
@@ -90,7 +101,7 @@ class DogWalkPark extends APP_DbObject
         return $this->getNextLocations($walker->locationArg, 0, 4, []);
     }
 
-    private function getNextLocations(int $locationId, int $currentDepth, int $maxDepth, array $result) {
+    public function getNextLocations(int $locationId, int $currentDepth, int $maxDepth, array $result, bool $exact = false) {
         $location = DogPark::$instance->PARK_LOCATIONS[$locationId];
         if ($currentDepth == $maxDepth) {
             return $result;
@@ -101,15 +112,19 @@ class DogWalkPark extends APP_DbObject
             // If the location is blocked by a BLOCK token, we skip the location
             $newDepth = $currentDepth;
             if ($this->isLocationAccessible($newLocationId)) {
-                $newResult = [...$newResult, $newLocationId];
+                if ($exact && $currentDepth == ($maxDepth - 1)) {
+                    $newResult = [...$newResult, $newLocationId];
+                } else if(!$exact) {
+                    $newResult = [...$newResult, $newLocationId];
+                }
                 $newDepth += 1;
             }
-            $newResult = $this->getNextLocations($newLocationId, $newDepth, $maxDepth, $newResult);
+            $newResult = $this->getNextLocations($newLocationId, $newDepth, $maxDepth, $newResult, $exact);
         }
         return $newResult;
     }
 
-    private function isLocationAccessible($locationId): bool
+    public function isLocationAccessible($locationId): bool
     {
         // Only available in a 4 player game
         if ($locationId == 91 && DogPark::$instance->getPlayersNumber() < 4) {

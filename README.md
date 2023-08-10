@@ -2,7 +2,6 @@
 
 # TODO
 - Selection what if no players can walk any dogs?
-- Auto Walker(s)
 - Final Scoring
   - General
   - Objective Cards
@@ -35,6 +34,7 @@ Final Scoring
 # Done
 - Swap Action (+ LEAD token if leaving park bonus)
 - Scout Action
+- Auto Walker(s)
 
 
 # RULES

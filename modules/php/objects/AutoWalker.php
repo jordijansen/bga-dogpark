@@ -2,6 +2,7 @@
 
 namespace objects;
 
+use BgaUserException;
 use DogPark;
 
 class AutoWalker
@@ -47,6 +48,46 @@ class AutoWalker
         }
 
 
+    }
+
+    public function takeWalkingTurn()
+    {
+        $walker = DogPark::$instance->playerManager->getWalker($this->id);
+        $steps = DogPark::$instance->getNextAutoWalkerDiceValue();
+        $possibleLocations = DogPark::$instance->dogWalkPark->getNextLocations($walker->locationArg, 0, $steps, [], true);
+        if (sizeof($possibleLocations) == 1) {
+            $this->moveWalkerToLocation($walker->id, current($possibleLocations), $steps);
+        } else {
+            $possibleLocationsLeavingThePark = array_filter($possibleLocations, function ($locationId) { return $locationId >= 90;});
+            if (sizeof($possibleLocations) == 0 || sizeof($possibleLocationsLeavingThePark) > 0) {
+                // We've moved past the last spot, find the top most leaving the park spot that is open
+                $leavingTheParkLocations = array_filter(array_keys(DogPark::$instance->PARK_LOCATIONS), function ($locationId) { return $locationId >= 90;});
+                $availableLeavingTheParkLocations = array_filter($leavingTheParkLocations, function ($locationId) { return DogPark::$instance->dogWalkPark->isLocationAccessible($locationId);});
+                $topMostSpot = min($availableLeavingTheParkLocations);
+                $this->moveWalkerToLocation($walker->id, $topMostSpot, $steps);
+            } else {
+                DogPark::$instance->setGlobalVariable(LAST_WALKED_WALKER_ID, $walker->id);
+                DogPark::$instance->setGlobalVariable(MOVE_AUTO_WALKER_STEPS, $steps);
+                DogPark::$instance->setGlobalVariable(MOVE_AUTO_WALKER_LOCATIONS, $possibleLocations);
+
+                $playersInOrder = DogPark::$instance->playerManager->getPlayerIdsInTurnOrder();
+                DogPark::$instance->gamestate->changeActivePlayer(intval(current($playersInOrder)['player_id']));
+                DogPark::$instance->gamestate->jumpToState(ST_ACTION_MOVE_AUTO_WALKER);
+            }
+        }
+    }
+
+    public function moveWalkerToLocation($walkerId, $locationId, $steps)
+    {
+        DogPark::$instance->dogWalkers->moveCard($walkerId, LOCATION_PARK, $locationId);
+        DogPark::$instance->setGlobalVariable(LAST_WALKED_WALKER_ID, $walkerId);
+
+        DogPark::$instance->notifyAllPlayers('moveWalkers', clienttranslate('${name} moves ${steps}'), [
+            'name' => $this->name,
+            'steps' => $steps,
+            'walkers' => [DogWalker::from(DogPark::$instance->dogWalkers->getCard($walkerId))]
+        ]);
+        DogPark::$instance->gamestate->jumpToState(ST_WALKING_NEXT);
     }
 
 }

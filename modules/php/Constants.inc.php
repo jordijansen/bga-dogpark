@@ -78,6 +78,7 @@ const ST_HOME_TIME = 70;
 const ST_ACTION_SWAP = 80;
 const ST_ACTION_SCOUT_START = 81;
 const ST_ACTION_SCOUT = 82;
+const ST_ACTION_MOVE_AUTO_WALKER = 83;
 
 const ST_GAME_END = 99;
 
@@ -102,6 +103,7 @@ const ACT_UNDO = 'undo';
 const ACT_SWAP = 'swap';
 const ACT_SCOUT_REPLACE = 'scoutReplace';
 const ACT_SCOUT_END = 'scoutEnd';
+const ACT_MOVE_AUTO_WALKER = 'moveAutoWalker';
 const ACT_CANCEL = 'cancel';
 
 /**
@@ -143,6 +145,10 @@ const SCOUTED_CARDS = 'SCOUTED_CARDS';
 const STATE_AFTER_SWAP = 'STATE_AFTER_SWAP';
 const STATE_AFTER_SCOUT = 'STATE_AFTER_SCOUT';
 const CURRENT_ACTION_ID = 'SWAP_ACTION_ID';
+
+const LAST_WALKED_WALKER_ID = 'LAST_WALKED_WALKER_ID';
+const MOVE_AUTO_WALKER_STEPS = 'MOVE_AUTO_WALKER_STEPS';
+const MOVE_AUTO_WALKER_LOCATIONS = 'MOVE_AUTO_WALKER_LOCATIONS';
 
 /**
  * Additional Actions

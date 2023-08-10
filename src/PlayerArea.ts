@@ -63,7 +63,7 @@ class PlayerArea {
     }
 
     public moveWalkerToPlayer(playerId: number, walker?: DogWalker) {
-        if (walker) {
+        if (walker && walker.location == 'player') {
             return this.walkerStocks[playerId].addCard(walker);
         }
         return Promise.resolve(true);
@@ -110,7 +110,7 @@ class PlayerArea {
         return this.game.animationManager.play(
                 new BgaAttachWithAnimation({
                     animation: new BgaSlideAnimation({ element, transitionTimingFunction: 'ease-out' }),
-                    attachElement: $(`dp-player-first-player-marker-wrapper-${playerId}`)
+                    attachElement: $(`dp-player-token-wrapper-${playerId}`)
                 }));
     }
 

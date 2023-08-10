@@ -21,12 +21,12 @@ class GainLocationBonusCommand extends BaseCommand
         $bonusType = $action->additionalArgs->bonusType;
         $locationId = DogPark::$instance->playerManager->getWalker($this->playerId)->locationArg;
 
+        if ($action->additionalArgs->extraBonus) {
+            DogPark::$instance->dogWalkPark->removeExtraLocationBonus($locationId, $bonusType);
+        }
+
         if (in_array($bonusType, [RESOURCE_STICK, RESOURCE_BALL, RESOURCE_TREAT, RESOURCE_TOY])) {
             DogPark::$instance->playerManager->gainResources($this->playerId, [$bonusType]);
-
-            if ($action->additionalArgs->extraBonus) {
-                DogPark::$instance->dogWalkPark->removeExtraLocationBonus($locationId, $bonusType);
-            }
         } else if ($bonusType == REPUTATION) {
             $playerScore = DogPark::$instance->getPlayerScore($this->playerId);
             DogPark::$instance->updatePlayerScore($this->playerId, $playerScore + 1);
@@ -49,12 +49,12 @@ class GainLocationBonusCommand extends BaseCommand
         $bonusType = $action->additionalArgs->bonusType;
         $locationId = DogPark::$instance->playerManager->getWalker($this->playerId)->locationArg;
 
+        if ($action->additionalArgs->extraBonus) {
+            DogPark::$instance->dogWalkPark->addExtraLocationBonus($locationId, $bonusType);
+        }
+
         if (in_array($bonusType, [RESOURCE_STICK, RESOURCE_BALL, RESOURCE_TREAT, RESOURCE_TOY])) {
             DogPark::$instance->playerManager->payResources($this->playerId, [$bonusType]);
-
-            if ($action->additionalArgs->extraBonus) {
-                DogPark::$instance->dogWalkPark->addExtraLocationBonus($locationId, $bonusType);
-            }
         } else if ($bonusType == REPUTATION) {
             $playerScore = DogPark::$instance->getPlayerScore($this->playerId);
             DogPark::$instance->updatePlayerScore($this->playerId, $playerScore - 1);

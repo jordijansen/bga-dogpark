@@ -264,43 +264,47 @@ trait StateTrait
         }
 
         $walkers = $this->dogWalkPark->moveWalkersOfPlayersToStartOfPark($playersWithDogsOnLead);
+        $walkers = [...$walkers, ...$this->dogWalkPark->moveWalkersOfAutoWalkersToStartOfPark()];
         $this->notifyAllPlayers('moveWalkers', '', [
             'walkers' => $walkers
         ]);
 
         $nextPlayerId = current($playersWithDogsOnLead);
-        if (isset($nextPlayerId)) {
+        if (sizeof($playersWithDogsOnLead) > 0) {
             $this->gamestate->changeActivePlayer($nextPlayerId);
             $this->gamestate->nextState("playerTurn");
         } else {
-            // TODO WHAT IF NO PLAYERS WALK DOGS
+            $this->gamestate->nextState("skipWalkingPhase");
         }
     }
 
     function stWalkingNext()
     {
-        $walkersInPark = DogWalker::fromArray($this->dogWalkers->getCardsInLocation(LOCATION_PARK));
-        $walkersNotInLeavingParkSpace = array_filter($walkersInPark, function($walker) {return $walker->locationArg < 90;});
-        if (sizeof($walkersNotInLeavingParkSpace) > 1) {
-            $skipPlayer = true;
-            while ($skipPlayer) {
-                $this->activeNextPlayer();
-                $playerId = $this->getActivePlayerId();
+        $walkersOrdered = [];
+        $players = $this->playerManager->getPlayerIdsInTurnOrder();
+        foreach ($players as $orderNo => $player) {
+            $playerId = intval($player['player_id']);
+            $walker = $this->playerManager->getWalker($playerId);
+            $walkersOrdered[$walker->id] = $walker;
+        }
 
-                $walker = $this->playerManager->getWalker($playerId);
-                if ($walker->location != LOCATION_PARK) {
-                    $skipPlayer = true;
-                } else if ($walker->locationArg > 90) {
-                    $skipPlayer = true;
-                } else {
-                    $skipPlayer = false;
-                }
-            }
-            $this->giveExtraTime($this->getActivePlayerId());
-            $this->gamestate->nextState( "playerTurn");
-        } else {
-            // Only one walker remains, ending this phase.
-            $lastWalker = current($walkersNotInLeavingParkSpace);
+        $autoWalkers = $this->getAutoWalkers();
+        foreach ($autoWalkers as $autoWalker) {
+            $walker = $this->playerManager->getWalker($autoWalker->id);
+            $walkersOrdered[$walker->id] = $walker;
+        }
+
+        $walkersInPark = array_filter($walkersOrdered, function($walker) {return $walker->location == LOCATION_PARK;});
+        $walkersInLeavingParkSpace = array_filter($walkersInPark, function($walker) {return $walker->locationArg >= 90;});
+        $walkersNotInLeavingParkSpace = array_filter($walkersInPark, function($walker) {return $walker->locationArg < 90;});
+        $playerWalkersNotInLeavingParkSpace = array_filter($walkersNotInLeavingParkSpace, function($walker) {return $walker->typeArg > 2;});
+
+        if (sizeof($playerWalkersNotInLeavingParkSpace) == 0) {
+            // All players have left the park (and potentially only auto walkers remain)
+            $this->gamestate->nextState( "end");
+        } else if (sizeof($walkersInLeavingParkSpace) > 0 && sizeof($playerWalkersNotInLeavingParkSpace) == 1) {
+            // There is only one player walker remaining in the park and no autowalkers
+            $lastWalker = current($playerWalkersNotInLeavingParkSpace);
             $playerId = $lastWalker->typeArg;
 
             $playerScore = $this->getPlayerScore($playerId);
@@ -319,7 +323,41 @@ trait StateTrait
             ]);
 
             $this->gamestate->nextState( "end");
+        } else {
+            // We should find the next walker and activate that
+            $nextWalkerId = $this->get_next_key_array($walkersInPark, intval($this->getGlobalVariable(LAST_WALKED_WALKER_ID)));
+            $nextWalker = null;
+            while ($nextWalker == null) {
+                $walker = DogWalker::from($this->dogWalkers->getCard($nextWalkerId));
+                if ($walker->locationArg > 90) {
+                    $nextWalkerId = $this->get_next_key_array($walkersInPark, $nextWalkerId);
+                } else {
+                    $nextWalker = $walker;
+                }
+            }
+
+            if ($nextWalker->typeArg > 2) {
+                // This is a player walker
+                $this->gamestate->changeActivePlayer($nextWalker->typeArg);
+                $this->giveExtraTime($this->getActivePlayerId());
+                $this->gamestate->nextState( "playerTurn");
+            } else {
+                // This is a auto walker
+                $autoWalker = $autoWalkers[$nextWalker->typeArg];
+                $autoWalker->takeWalkingTurn();
+            }
         }
+    }
+
+    function get_next_key_array($array,$key){
+        $keys = array_keys($array);
+        $position = array_search($key, $keys);
+        if (isset($keys[$position + 1])) {
+            $nextKey = $keys[$position + 1];
+        } else {
+            $nextKey = $keys[0];
+        }
+        return $nextKey;
     }
 
     function stHomeTime() {
@@ -380,6 +418,19 @@ trait StateTrait
             $this->notifyAllPlayers('moveWalkerBackToPlayer', clienttranslate('${player_name} walker returns home'),[
                 'playerId' => $playerId,
                 'player_name' => $this->getPlayerName($playerId),
+                'walker' => DogWalker::from($this->dogWalkers->getCard($walkerId))
+            ]);
+        }
+
+        // Remove autowalkers from park
+        $autoWalkers = $this->getAutoWalkers();
+        foreach ($autoWalkers as $autoWalker) {
+            $walkerId = $this->playerManager->getWalkerId($autoWalker->id);
+            $this->dogWalkers->moveCard($walkerId, LOCATION_PLAYER, $autoWalker->id);
+
+            $this->notifyAllPlayers('moveWalkerBackToPlayer', clienttranslate('${autoWalkerName} returns home'),[
+                'playerId' => $autoWalker->id,
+                'autoWalkerName' => $autoWalker->name,
                 'walker' => DogWalker::from($this->dogWalkers->getCard($walkerId))
             ]);
         }

@@ -2939,7 +2939,7 @@ var PlayerArea = /** @class */ (function () {
         return Promise.resolve(true);
     };
     PlayerArea.prototype.moveWalkerToPlayer = function (playerId, walker) {
-        if (walker) {
+        if (walker && walker.location == 'player') {
             return this.walkerStocks[playerId].addCard(walker);
         }
         return Promise.resolve(true);
@@ -2979,7 +2979,7 @@ var PlayerArea = /** @class */ (function () {
         var element = $('dp-first-player-marker');
         return this.game.animationManager.play(new BgaAttachWithAnimation({
             animation: new BgaSlideAnimation({ element: element, transitionTimingFunction: 'ease-out' }),
-            attachElement: $("dp-player-first-player-marker-wrapper-".concat(playerId))
+            attachElement: $("dp-player-token-wrapper-".concat(playerId))
         }));
     };
     PlayerArea.prototype.initAutoWalkers = function (autoWalker) {
@@ -3291,6 +3291,9 @@ var DogPark = /** @class */ (function () {
             case 'actionScout':
                 this.enteringActionScout(args.args);
                 break;
+            case 'actionMoveAutoWalker':
+                this.enteringActionMoveAutoWalker(args.args);
+                break;
         }
     };
     DogPark.prototype.enteringChooseObjectives = function () {
@@ -3367,6 +3370,12 @@ var DogPark = /** @class */ (function () {
             this.dogField.setDogSelectionModeScout('single');
         }
     };
+    DogPark.prototype.enteringActionMoveAutoWalker = function (args) {
+        var _this = this;
+        if (this.isCurrentPlayerActive()) {
+            this.dogWalkPark.enterWalkerSpotsSelection(args.possibleParkLocationIds, function (locationId) { _this.takeAction('moveAutoWalker', { locationId: locationId }); });
+        }
+    };
     DogPark.prototype.onLeavingState = function (stateName) {
         log('Leaving state: ' + stateName);
         switch (stateName) {
@@ -3384,6 +3393,8 @@ var DogPark = /** @class */ (function () {
                 this.leavingActionSwap();
             case 'actionScout':
                 this.leavingActionScout();
+            case 'actionMoveAutoWalker':
+                this.leavingActionMoveAutoWalker();
         }
     };
     DogPark.prototype.leavingSelectionPlaceDogOnLead = function () {
@@ -3406,6 +3417,11 @@ var DogPark = /** @class */ (function () {
         if (this.isCurrentPlayerActive()) {
             this.dogField.setDogSelectionModeScout('none');
             this.dogField.setDogSelectionModeField('none');
+        }
+    };
+    DogPark.prototype.leavingActionMoveAutoWalker = function () {
+        if (this.isCurrentPlayerActive()) {
+            this.dogWalkPark.exitWalkerSpotsSelection();
         }
     };
     // onUpdateActionButtons: in this method you can manage "action buttons" that are displayed in the
@@ -3445,7 +3461,7 @@ var DogPark = /** @class */ (function () {
                     break;
                 case 'actionSwap':
                     this.addActionButton('confirmSwap', _("Confirm"), function () { return _this.confirmSwap(); });
-                    this.addActionButton('cancel', _("Cancel"), function () { return _this.cancelSwap(); }, null, null, 'red');
+                    this.addActionButton('skipSwap', _("Skip"), function () { return _this.skipSwap(); }, null, null, 'red');
                     break;
                 case 'actionScout':
                     if (args.scoutedDogCards.length > 0) {
@@ -3556,7 +3572,7 @@ var DogPark = /** @class */ (function () {
             this.takeAction("confirmSwap", { fieldDogId: fieldDog.id, kennelDogId: kennelDog.id });
         }
     };
-    DogPark.prototype.cancelSwap = function () {
+    DogPark.prototype.skipSwap = function () {
         this.takeAction('cancelSwap');
     };
     DogPark.prototype.confirmScout = function () {
@@ -3742,13 +3758,13 @@ var DogPark = /** @class */ (function () {
         return this.playerResources.gainResources(args.playerId, args.resources);
     };
     DogPark.prototype.notif_playerGainsLocationBonusResource = function (args) {
+        if (!!args.extraBonus) {
+            this.dogWalkPark.resourceSpots[args.locationId].removeCard(this.dogWalkPark.resourceSpots[args.locationId].getCards().find(function (token) { return token.type === args.resource; }));
+        }
         if (args.resource === 'reputation') {
             this.setScore(args.playerId, args.score);
-            if (!!args.extraBonus) {
-                this.dogWalkPark.resourceSpots[args.locationId].removeCard(this.dogWalkPark.resourceSpots[args.locationId].getCards().find(function (token) { return token.type === args.resource; }));
-            }
         }
-        else {
+        else if (['ball', 'stick', 'treat', 'toy'].includes(args.resource)) {
             return this.playerResources.gainResourceFromLocation(args.playerId, args.locationId, args.resource, args.extraBonus);
         }
         return Promise.resolve();
@@ -3767,7 +3783,9 @@ var DogPark = /** @class */ (function () {
                         if (!(args.resource === 'reputation')) return [3 /*break*/, 3];
                         this.setScore(args.playerId, args.score);
                         return [3 /*break*/, 5];
-                    case 3: return [4 /*yield*/, this.playerResources.payResources(args.playerId, [args.resource])];
+                    case 3:
+                        if (!['ball', 'stick', 'treat', 'toy'].includes(args.resource)) return [3 /*break*/, 5];
+                        return [4 /*yield*/, this.playerResources.payResources(args.playerId, [args.resource])];
                     case 4:
                         _a.sent();
                         _a.label = 5;
