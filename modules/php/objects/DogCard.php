@@ -7,6 +7,7 @@ include("dogtraits/Crafty.php");
 
 include("dogtraits/GoFetch.php");
 include("dogtraits/Obedient.php");
+include("dogtraits/Playmate.php");
 
 
 for($i = 1; $i<=163;$i++)

@@ -12,6 +12,7 @@ use commands\MoveWalkerCommand;
 use commands\ObedientDogAbilityCommand;
 use commands\PayReputationForLocationCommand;
 use commands\PlaceDogOnLeadCommand;
+use commands\PlaymateDogAbilityCommand;
 use commands\ScoutCommand;
 use commands\SwapCommand;
 use commands\EagerDogAbilityCommand;
@@ -296,6 +297,8 @@ trait ActionTrait
                 $this->commandManager->addCommand($playerId, new GoFetchDogAbilityCommand($playerId, $actionId));
             } else if ($dog->ability == OBEDIENT) {
                 $this->commandManager->addCommand($playerId, new ObedientDogAbilityCommand($playerId, $actionId));
+            } else if ($dog->ability == PLAYMATE) {
+                $this->commandManager->addCommand($playerId, new PlaymateDogAbilityCommand($playerId, $actionId));
             }
         }
     }
