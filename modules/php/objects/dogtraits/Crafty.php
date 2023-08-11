@@ -21,11 +21,6 @@ trait Crafty
         return sprintf(_("During SELECTION, when you place this dog on the Lead, you may discard 1 _icon-all-resources_ to gain up to 1 _icon-%s_."), $this->craftyResource);
     }
 
-    public function isAbilityAutoResolve() : bool
-    {
-        return false;
-    }
-
     public function isAbilityOptional() : bool
     {
         return true;

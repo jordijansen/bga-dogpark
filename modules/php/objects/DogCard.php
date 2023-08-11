@@ -6,6 +6,7 @@ include("dogtraits/Eager.php");
 include("dogtraits/Crafty.php");
 
 include("dogtraits/GoFetch.php");
+include("dogtraits/Obedient.php");
 
 
 for($i = 1; $i<=163;$i++)
@@ -71,11 +72,6 @@ class DogCard extends Card {
     protected function getAbility() : string
     {
         return '';
-    }
-
-    public function isAbilityAutoResolve() : bool
-    {
-        return false;
     }
 
     public function isAbilityOptional() : bool

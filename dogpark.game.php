@@ -48,6 +48,7 @@ require_once('modules/php/commands/EndScoutCommand.php');
 require_once('modules/php/commands/EagerDogAbilityCommand.php');
 require_once('modules/php/commands/CraftyDogAbilityCommand.php');
 require_once('modules/php/commands/GoFetchDogAbilityCommand.php');
+require_once('modules/php/commands/ObedientDogAbilityCommand.php');
 
 require_once('modules/php/objects/Card.php');
 require_once('modules/php/objects/BreedExpertCard.php');

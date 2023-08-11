@@ -8,6 +8,7 @@ trait DebugTrait
 
     function jumpState()
     {
+        $this->setGlobalVariable(USED_WALK_ABILITIES, []);
         $this->gamestate->jumpToState(40);
     }
 

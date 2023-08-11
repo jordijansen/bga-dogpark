@@ -237,7 +237,8 @@ interface NotifActivateDogAbility {
     playerId: number,
     dog: DogCard,
     gainedResources?: string[],
-    lostResources?: string[]
+    lostResources?: string[],
+    score?: number
 }
 
 

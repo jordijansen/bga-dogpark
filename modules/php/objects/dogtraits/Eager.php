@@ -20,8 +20,4 @@ trait Eager
         return sprintf(_("During <b>SELECTION</b>, when you place this dog on the Lead, gain _icon-%s_."), $this->eagerResource);
     }
 
-    public function isAbilityAutoResolve() : bool
-    {
-        return true;
-    }
 }

@@ -9,6 +9,7 @@ use commands\GainLeavingTheParkBonusCommand;
 use commands\GainLocationBonusCommand;
 use commands\GoFetchDogAbilityCommand;
 use commands\MoveWalkerCommand;
+use commands\ObedientDogAbilityCommand;
 use commands\PayReputationForLocationCommand;
 use commands\PlaceDogOnLeadCommand;
 use commands\ScoutCommand;
@@ -293,6 +294,8 @@ trait ActionTrait
                 $this->gamestate->setPrivateState($playerId, ST_ACTION_CRAFTY);
             } else if ($dog->ability == GO_FETCH) {
                 $this->commandManager->addCommand($playerId, new GoFetchDogAbilityCommand($playerId, $actionId));
+            } else if ($dog->ability == OBEDIENT) {
+                $this->commandManager->addCommand($playerId, new ObedientDogAbilityCommand($playerId, $actionId));
             }
         }
     }

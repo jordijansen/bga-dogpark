@@ -753,6 +753,9 @@ class DogPark implements DogParkGame {
         if (args.lostResources) {
             promises.push(this.playerResources.payResourcesToDog(args.playerId, args.dog, args.lostResources));
         }
+        if (args.score) {
+            this.setScore(args.playerId, args.score);
+        }
 
         return Promise.all(promises);
     }

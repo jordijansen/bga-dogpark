@@ -15,8 +15,6 @@
 Dog Card Abilities
 
 Walking
-- Go Fetch!
-- Obedient
 - Playmate
 - Search and Rescue
 - Social Butterfly
@@ -39,6 +37,9 @@ Dog Card Abilities:
 Selection
 - Crafty
 - Eager
+Walking
+- Go Fetch!
+- Obedient
 
 
 
