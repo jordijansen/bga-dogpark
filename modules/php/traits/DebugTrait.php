@@ -8,7 +8,7 @@ trait DebugTrait
 
     function jumpState()
     {
-        $this->gamestate->jumpToState(50);
+        $this->gamestate->jumpToState(40);
     }
 
     function placeInKennel($playerId, $dogTypeId) {

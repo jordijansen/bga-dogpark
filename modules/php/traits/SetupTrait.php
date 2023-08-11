@@ -55,6 +55,7 @@ trait SetupTrait
         $this->setGlobalVariable(CURRENT_ROUND, 1);
         $this->setGlobalVariable(CURRENT_PHASE, PHASE_SET_UP);
         $this->setGlobalVariable(OFFER_VALUE_REVEALED, false);
+        $this->setGlobalVariable(USED_WALK_ABILITIES, []);
 
         /************ Create Card Decks *****************/
         $this->createDogCards();

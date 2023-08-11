@@ -2,17 +2,20 @@
 
 namespace commands;
 
+use actions\AdditionalAction;
 use DogPark;
 
 class GainLocationBonusCommand extends BaseCommand
 {
     private int $playerId;
     private string $actionId;
+    private string $originActionId;
 
     public function __construct(int $playerId, string $actionId)
     {
         $this->playerId = $playerId;
         $this->actionId = $actionId;
+        $this->originActionId = AdditionalAction::newId();
     }
 
     public function do()
@@ -31,6 +34,8 @@ class GainLocationBonusCommand extends BaseCommand
             $playerScore = DogPark::$instance->getPlayerScore($this->playerId);
             DogPark::$instance->updatePlayerScore($this->playerId, $playerScore + 1);
         }
+
+        DogPark::$instance->dogManager->createWalkingAdditionalActionsForDogsOnLead($this->playerId, $bonusType, $this->originActionId);
 
         DogPark::$instance->notifyAllPlayers('playerGainsLocationBonusResource', clienttranslate('Location Bonus: ${player_name} gains ${resource}'),[
             'playerId' => $this->playerId,
@@ -59,6 +64,8 @@ class GainLocationBonusCommand extends BaseCommand
             $playerScore = DogPark::$instance->getPlayerScore($this->playerId);
             DogPark::$instance->updatePlayerScore($this->playerId, $playerScore - 1);
         }
+
+        DogPark::$instance->dogManager->undoWalkingAdditionalActioinForDogsOnLead($this->playerId, $this->originActionId);
 
         DogPark::$instance->notifyAllPlayers('undoPlayerGainsLocationBonusResource', clienttranslate('Undo: Location Bonus: ${player_name} gains ${resource}'),[
             'playerId' => $this->playerId,

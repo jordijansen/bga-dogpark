@@ -142,8 +142,3 @@ $this->OBJECTIVE_CARDS = [
         10 => []
     ],
 ];
-
-$this->ABILITIES = [
-    EAGER => clienttranslate('Eager'),
-    CRAFTY => clienttranslate('Crafty')
-];

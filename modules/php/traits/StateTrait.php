@@ -278,6 +278,8 @@ trait StateTrait
 
     function stWalkingNext()
     {
+        $this->setGlobalVariable(USED_WALK_ABILITIES, []);
+
         $walkersOrdered = [];
         $players = $this->playerManager->getPlayerIdsInTurnOrder();
         foreach ($players as $orderNo => $player) {

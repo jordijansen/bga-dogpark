@@ -14,14 +14,14 @@ class PlaceDogOnLeadCommand extends BaseCommand
      * @var string[]
      */
     private $resources;
-    private string $additionalActionId;
+    private string $originActionId;
 
     public function __construct(int $playerId, int $dogId, array $resources)
     {
         $this->playerId = $playerId;
         $this->dogId = $dogId;
         $this->resources = $resources;
-        $this->additionalActionId = AdditionalAction::newId();
+        $this->originActionId = AdditionalAction::newId();
     }
 
     public function do()
@@ -41,13 +41,11 @@ class PlaceDogOnLeadCommand extends BaseCommand
         ]);
 
         if (in_array($dog->ability, SELECTION_ABILITIES)) {
-            $action = new AdditionalAction(USE_DOG_ABILITY, (object) [
+            DogPark::$instance->actionManager->addAction($this->playerId, new AdditionalAction(USE_DOG_ABILITY, (object) [
                 "dogId" => $this->dogId,
                 "dogName" => $dog->name,
                 "abilityTitle" => $dog->abilityTitle
-            ], $dog->isAbilityOptional());
-            $action->id = $this->additionalActionId;
-            DogPark::$instance->actionManager->addAction($this->playerId, $action);
+            ], $dog->isAbilityOptional(), true, $this->originActionId));
         }
     }
 
@@ -67,6 +65,6 @@ class PlaceDogOnLeadCommand extends BaseCommand
             'resources' => $this->resources
         ]);
 
-        DogPark::$instance->actionManager->removeAction($this->playerId, $this->additionalActionId);
+        DogPark::$instance->actionManager->removeActionsForOriginActionId($this->playerId, $this->originActionId);
     }
 }

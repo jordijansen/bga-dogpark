@@ -5,6 +5,9 @@ use DogPark;
 include("dogtraits/Eager.php");
 include("dogtraits/Crafty.php");
 
+include("dogtraits/GoFetch.php");
+
+
 for($i = 1; $i<=163;$i++)
 {
     include("dogs/Dog{$i}.php");

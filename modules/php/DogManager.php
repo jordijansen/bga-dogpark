@@ -2,6 +2,7 @@
 
 namespace managers;
 
+use actions\AdditionalAction;
 use APP_DbObject;
 use DogPark;
 use objects\DogCard;
@@ -58,6 +59,35 @@ class DogManager extends APP_DbObject
             }
         }
         return $dogsForSelection;
+    }
+
+    public function createWalkingAdditionalActionsForDogsOnLead($playerId, $resourceGained, $originActionId) {
+        $dogsOnLead = DogCard::fromArray(DogPark::$instance->dogCards->getCardsInLocation(LOCATION_LEAD, $playerId));
+        foreach ($dogsOnLead as $dog) {
+            // walk abilities may only be used once per movement
+            $usedDogIds = DogPark::$instance->getGlobalVariable(USED_WALK_ABILITIES);
+            if (!in_array($dog->id, $usedDogIds)) {
+                if ($dog->ability == GO_FETCH && $dog->goFetchResource == $resourceGained) {
+                    DogPark::$instance->actionManager->addAction($playerId, new AdditionalAction(USE_DOG_ABILITY, (object) [
+                        "dogId" => $dog->id,
+                        "dogName" => $dog->name,
+                        "abilityTitle" => $dog->abilityTitle
+                    ], $dog->isAbilityOptional(), true, $originActionId));
+
+                    DogPark::$instance->setGlobalVariable(USED_WALK_ABILITIES, [...$usedDogIds, $dog->id]);
+                }
+            }
+        }
+    }
+
+    public function undoWalkingAdditionalActioinForDogsOnLead($playerId, $originActionId) {
+        $usedDogIds = DogPark::$instance->getGlobalVariable(USED_WALK_ABILITIES);
+        $originatedActions = DogPark::$instance->actionManager->getActionsForOriginActionId($playerId, $originActionId);
+        foreach ($originatedActions as $originatedAction) {
+            $usedDogIds = array_filter($usedDogIds, function($usedDogId) use($originatedAction){return $usedDogId != $originatedAction->additionalArgs->dogId;});
+            DogPark::$instance->actionManager->removeAction($playerId, $originatedAction->id);
+        }
+        DogPark::$instance->setGlobalVariable(USED_WALK_ABILITIES, $usedDogIds);
     }
 
     public function getDogResources($dogId) {

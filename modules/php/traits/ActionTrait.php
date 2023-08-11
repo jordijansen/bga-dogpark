@@ -7,6 +7,7 @@ use commands\CraftyDogAbilityCommand;
 use commands\EndScoutCommand;
 use commands\GainLeavingTheParkBonusCommand;
 use commands\GainLocationBonusCommand;
+use commands\GoFetchDogAbilityCommand;
 use commands\MoveWalkerCommand;
 use commands\PayReputationForLocationCommand;
 use commands\PlaceDogOnLeadCommand;
@@ -265,6 +266,8 @@ trait ActionTrait
                 $this->setGlobalVariable(STATE_AFTER_SCOUT, ST_WALKING_MOVE_WALKER_AFTER);
                 $this->setGlobalVariable(CURRENT_ACTION_ID, $actionId);
                 $this->gamestate->jumpToState(ST_ACTION_SCOUT_START);
+            } else {
+                $this->gamestate->jumpToState(ST_WALKING_MOVE_WALKER_AFTER);
             }
         } else if ($action->type == WALKING_PAY_REPUTATION_ACCEPT) {
             $this->commandManager->addCommand($playerId, new PayReputationForLocationCommand($playerId, $actionId));
@@ -288,6 +291,8 @@ trait ActionTrait
             } else if ($dog->ability == CRAFTY) {
                 $this->setGlobalVariable(CURRENT_ACTION_ID .$playerId, $actionId);
                 $this->gamestate->setPrivateState($playerId, ST_ACTION_CRAFTY);
+            } else if ($dog->ability == GO_FETCH) {
+                $this->commandManager->addCommand($playerId, new GoFetchDogAbilityCommand($playerId, $actionId));
             }
         }
     }

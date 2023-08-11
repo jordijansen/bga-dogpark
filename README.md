@@ -10,6 +10,7 @@
   - Solo Ratings shown as target
 - Variants & Options
 - Forecast Cards
+- Move scouted cards area under park
 
 Dog Card Abilities
 

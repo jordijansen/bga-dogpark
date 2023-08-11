@@ -153,6 +153,8 @@ const LAST_WALKED_WALKER_ID = 'LAST_WALKED_WALKER_ID';
 const MOVE_AUTO_WALKER_STEPS = 'MOVE_AUTO_WALKER_STEPS';
 const MOVE_AUTO_WALKER_LOCATIONS = 'MOVE_AUTO_WALKER_LOCATIONS';
 
+const USED_WALK_ABILITIES = 'USED_WALK_ABILITIES';
+
 /**
  * Additional Actions
  */
@@ -168,8 +170,10 @@ const USE_DOG_ABILITY = 'USE_DOG_ABILITY';
  */
 const EAGER = 'eager';
 const CRAFTY = 'crafty';
+const GO_FETCH = 'gofetch';
 
 const SELECTION_ABILITIES = [EAGER, CRAFTY];
+const WALKING_ABILITIES = [GO_FETCH];
 
 /**
  * Stats

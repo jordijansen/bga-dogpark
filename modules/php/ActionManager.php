@@ -64,4 +64,21 @@ class ActionManager
         $this->addAction($playerId, $action);
     }
 
+    public function removeActionsForOriginActionId(int $playerId, string $originActionId)
+    {
+        $actions = $this->getActionsForOriginActionId($playerId, $originActionId);
+        foreach ($actions as $action) {
+            $this->removeAction($playerId, $action->id);
+        }
+    }
+
+    /**
+     * @return AdditionalAction[]
+     */
+    public function getActionsForOriginActionId(int $playerId, string $originActionId): array
+    {
+        $actions = $this->getActions($playerId);
+        return array_filter($actions, function($action) use($originActionId) {return $action->originActionId == $originActionId;});
+    }
+
 }

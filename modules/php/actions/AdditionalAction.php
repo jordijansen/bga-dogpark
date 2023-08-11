@@ -11,8 +11,9 @@ class AdditionalAction {
     public bool $performed;
     public bool $optional;
     public bool $canBeUndone;
+    public ?string $originActionId;
 
-    public function __construct($type, $additionalArgs, $optional = false, $canBeUndone = true)
+    public function __construct($type, $additionalArgs, $optional = false, $canBeUndone = true, $originActionId = null)
     {
         $this->id = AdditionalAction::newId();
         $this->type = $type;
@@ -20,6 +21,7 @@ class AdditionalAction {
         $this->performed = false;
         $this->optional = $optional;
         $this->canBeUndone = $canBeUndone;
+        $this->originActionId = $originActionId;
     }
 
     public static function newId() {
