@@ -47,7 +47,8 @@ trait ArgsTrait
             "playerId" => $playerId,
             "maxNumberOfDogs" => DogPark::$instance->forecastManager->getCurrentRoundMaxNumberOfDogsForSelection(),
             "numberOfDogsOnlead" => sizeof(DogPark::$instance->dogCards->getCardsInLocation(LOCATION_LEAD, $playerId)),
-            "dogs" => DogPark::$instance->dogManager->getDogsForSelection($playerId)
+            "dogs" => DogPark::$instance->dogManager->getDogsForSelection($playerId),
+            "additionalActions" => $this->actionManager->getActions($playerId, true)
         ];
     }
 
@@ -63,16 +64,6 @@ trait ArgsTrait
             "maxNumberOfDogs" => DogPark::$instance->forecastManager->getCurrentRoundMaxNumberOfDogsForSelection(),
             "numberOfDogsOnlead" => sizeof(DogPark::$instance->dogCards->getCardsInLocation(LOCATION_LEAD, $playerId)),
             "resources" => DogPark::$instance->playerManager->getResources($playerId)
-        ];
-    }
-
-    function argSelectionPlaceDogOnLeadAfter($playerId): array
-    {
-        return [
-            "canCancelMoves" => DogPark::$instance->commandManager->hasCommands($playerId),
-            "playerId" => $playerId,
-            "maxNumberOfDogs" => DogPark::$instance->forecastManager->getCurrentRoundMaxNumberOfDogsForSelection(),
-            "numberOfDogsOnlead" => sizeof(DogPark::$instance->dogCards->getCardsInLocation(LOCATION_LEAD, $playerId)),
         ];
     }
 
@@ -105,6 +96,18 @@ trait ArgsTrait
         return [
             "canCancelMoves" => DogPark::$instance->commandManager->hasCommands($this->getActivePlayerId()),
             "scoutedDogCards" => DogCard::fromArray($this->dogCards->getCards($this->getGlobalVariable(SCOUTED_CARDS)))
+        ];
+    }
+
+    function argActionCrafty($playerId): array
+    {
+        $actionId = $this->getGlobalVariable(CURRENT_ACTION_ID .$playerId);
+        $action = $this->actionManager->getAction($playerId, $actionId);
+        $dog = DogCard::from($this->dogCards->getCard($action->additionalArgs->dogId));
+        return [
+            "action" => $action,
+            "dog" => $dog,
+            "resources" => DogPark::$instance->playerManager->getResources($playerId)
         ];
     }
 

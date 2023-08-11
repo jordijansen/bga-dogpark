@@ -79,6 +79,7 @@ const ST_ACTION_SWAP = 80;
 const ST_ACTION_SCOUT_START = 81;
 const ST_ACTION_SCOUT = 82;
 const ST_ACTION_MOVE_AUTO_WALKER = 83;
+const ST_ACTION_CRAFTY = 84;
 
 const ST_GAME_END = 99;
 
@@ -96,7 +97,7 @@ const ACT_PLACE_DOG_ON_LEAD_PAY_RESOURCES = 'placeDogOnLeadPayResources';
 const ACT_CONFIRM_SELECTION = 'confirmSelection';
 const ACT_CHANGE_SELECTION = 'changeSelection';
 const ACT_MOVE_WALKER = 'moveWalker';
-const ACT_WALKING_ADDITIONAL_ACTION = 'walkingAdditionalAction';
+const ACT_ADDITIONAL_ACTION = 'additionalAction';
 const ACT_CONFIRM_WALKING = 'confirmWalking';
 const ACT_UNDO = 'undo';
 
@@ -105,6 +106,8 @@ const ACT_SCOUT_REPLACE = 'scoutReplace';
 const ACT_SCOUT_END = 'scoutEnd';
 const ACT_MOVE_AUTO_WALKER = 'moveAutoWalker';
 const ACT_CANCEL = 'cancel';
+
+const ACT_CRAFTY_CONFIRM = 'craftyConfirm';
 
 /**
  * Locations
@@ -158,6 +161,15 @@ const WALKING_PAY_REPUTATION_DENY = 'WALKING_PAY_REPUTATION_DENY';
 const WALKING_GAIN_LOCATION_BONUS = 'WALKING_GAIN_LOCATION_BONUS';
 const WALKING_GAIN_LEAVING_THE_PARK_BONUS = 'WALKING_GAIN_LEAVING_THE_PARK_BONUS';
 
+const USE_DOG_ABILITY = 'USE_DOG_ABILITY';
+
+/**
+ * DOG ABILITIES
+ */
+const EAGER = 'eager';
+const CRAFTY = 'crafty';
+
+const SELECTION_ABILITIES = [EAGER, CRAFTY];
 
 /**
  * Stats

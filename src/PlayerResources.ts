@@ -25,7 +25,7 @@ class PlayerResources {
         }
     }
 
-    public async payResourcesForDog(playerId: number, dog: DogCard, resources: string[]) {
+    public async payResourcesToDog(playerId: number, dog: DogCard, resources: string[]) {
         resources.forEach(resource => this.playerResourceStocks[playerId][resource].decValue(1));
 
         for (const resource of resources) {

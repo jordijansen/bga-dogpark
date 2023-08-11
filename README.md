@@ -12,9 +12,7 @@
 - Forecast Cards
 
 Dog Card Abilities
-Selection
-- Crafty
-- Eager
+
 Walking
 - Go Fetch!
 - Obedient
@@ -35,6 +33,13 @@ Final Scoring
 - Scout Action
 - Auto Walker(s)
 - Selection what if no (or only 1 player) can walk any dogs?
+
+Dog Card Abilities:
+Selection
+- Crafty
+- Eager
+
+
 
 
 # RULES

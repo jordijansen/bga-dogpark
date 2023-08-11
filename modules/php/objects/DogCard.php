@@ -3,6 +3,7 @@ namespace objects;
 use DogPark;
 
 include("dogtraits/Eager.php");
+include("dogtraits/Crafty.php");
 
 for($i = 1; $i<=163;$i++)
 {
@@ -17,17 +18,21 @@ class DogCard extends Card {
      */
     public array $breeds;
     public array $costs;
-
     public array $resourcesOnCard;
+    public string $ability;
+    public string $abilityTitle;
+    public string $abilityText;
 
     public function __construct($dbCard)
     {
         parent::__construct($dbCard);
-        $dogInfo = DogPark::$instance->DOG_CARDS[intval($this->typeArg)];
 
-        $this->name = $dogInfo['name'];
-        $this->breeds = $dogInfo['breeds'];
-        $this->costs = $dogInfo['costs'];
+        $this->name = clienttranslate('');
+        $this->breeds = [];
+        $this->costs = [];
+        $this->ability = '';
+        $this->abilityTitle = '';
+        $this->abilityText = '';
 
         $this->resourcesOnCard = DogPark::$instance->dogManager->getDogResources($this->id);
     }
@@ -49,5 +54,29 @@ class DogCard extends Card {
             return new $class($dbCard);
         }
         return new DogCard($dbCard);
+    }
+
+    protected function getAbilityTitle() : string
+    {
+        return '';
+    }
+
+    protected function getAbilityText() : string
+    {
+        return '';
+    }
+    protected function getAbility() : string
+    {
+        return '';
+    }
+
+    public function isAbilityAutoResolve() : bool
+    {
+        return false;
+    }
+
+    public function isAbilityOptional() : bool
+    {
+        return false;
     }
 }

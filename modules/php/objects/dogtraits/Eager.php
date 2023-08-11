@@ -4,13 +4,24 @@ namespace objects\dogtraits;
 
 trait Eager
 {
-    function getEagerResource()
+    public string $eagerResource;
+
+    protected function getAbility() : string
     {
-        return null;
+        return EAGER;
+    }
+    protected function getAbilityTitle() : string
+    {
+        return _('Eager');
     }
 
-    function activateEager()
+    protected function getAbilityText() : string
     {
+        return sprintf(_("During <b>SELECTION</b>, when you place this dog on the Lead, gain _icon-%s_."), $this->eagerResource);
+    }
 
+    public function isAbilityAutoResolve() : bool
+    {
+        return true;
     }
 }

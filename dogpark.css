@@ -666,6 +666,7 @@ body > .card {
 }
 #dp-player-areas .dp-player-area .dp-player-area-kennel, #dp-own-player-area .dp-player-area .dp-player-area-kennel {
   width: 850px;
+  min-height: 266px;
 }
 
 .dp-token {
@@ -1956,16 +1957,16 @@ html .whiteblock, .mode_3d #game_play_area_background .whiteblock {
   border-radius: 10px;
 }
 
-#dp-pay-costs {
+#dp-pay-costs, #dp-exchange-resources {
   display: inline-block;
 }
-#dp-pay-costs .dp-dog-cost-pay-row {
+#dp-pay-costs .dp-dog-cost-pay-row, #dp-exchange-resources .dp-dog-cost-pay-row {
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 8px;
 }
-#dp-pay-costs .dp-dog-cost-pay-row .bgabutton {
+#dp-pay-costs .dp-dog-cost-pay-row .bgabutton, #dp-exchange-resources .dp-dog-cost-pay-row .bgabutton {
   margin: 5px 0;
 }
 

@@ -172,6 +172,7 @@ trait StateTrait
             $walker = $this->playerManager->getWalker($autoWalker->id);
             if (substr($walker->location, 0, 5) === "field") {
                 $leftOverDog = current($this->dogField->getDogCards());
+                $this->dogWalkers->moveCard($walker->id, LOCATION_PLAYER, $autoWalker->id);
                 $this->dogManager->recruitDog($autoWalker->id, $leftOverDog->id, 0, $walker->id);
             }
         }
@@ -215,9 +216,6 @@ trait StateTrait
 
         //this is needed when starting private parallel states; players will be transitioned to initialprivate state defined in master state
         $this->gamestate->initializePrivateStateForAllActivePlayers();
-    }
-
-    function stSelectionPlaceDogOnLeadAfter($playerId) {
     }
 
     function stSelectionEnd() {

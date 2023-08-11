@@ -2,6 +2,7 @@
 
 namespace commands;
 
+use actions\AdditionalAction;
 use DogPark;
 use objects\DogCard;
 
@@ -13,12 +14,14 @@ class PlaceDogOnLeadCommand extends BaseCommand
      * @var string[]
      */
     private $resources;
+    private string $additionalActionId;
 
     public function __construct(int $playerId, int $dogId, array $resources)
     {
         $this->playerId = $playerId;
         $this->dogId = $dogId;
         $this->resources = $resources;
+        $this->additionalActionId = AdditionalAction::newId();
     }
 
     public function do()
@@ -36,6 +39,16 @@ class PlaceDogOnLeadCommand extends BaseCommand
             'dog' => $dog,
             'resources' => $this->resources
         ]);
+
+        if (in_array($dog->ability, SELECTION_ABILITIES)) {
+            $action = new AdditionalAction(USE_DOG_ABILITY, (object) [
+                "dogId" => $this->dogId,
+                "dogName" => $dog->name,
+                "abilityTitle" => $dog->abilityTitle
+            ], $dog->isAbilityOptional());
+            $action->id = $this->additionalActionId;
+            DogPark::$instance->actionManager->addAction($this->playerId, $action);
+        }
     }
 
     public function undo()
@@ -54,5 +67,6 @@ class PlaceDogOnLeadCommand extends BaseCommand
             'resources' => $this->resources
         ]);
 
+        DogPark::$instance->actionManager->removeAction($this->playerId, $this->additionalActionId);
     }
 }

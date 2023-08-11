@@ -214,6 +214,7 @@ $selectionStates = [
         "args" => "argSelectionPlaceDogOnLead",
         "possibleactions" => [
             ACT_PLACE_DOG_ON_LEAD,
+            ACT_ADDITIONAL_ACTION,
             ACT_CONFIRM_SELECTION,
             ACT_UNDO
         ],
@@ -232,19 +233,6 @@ $selectionStates = [
         ],
         "transitions" => [
             'placeDogOnLeadAfter' => ST_SELECTION_PLACE_DOG_ON_LEAD_AFTER,
-        ]
-    ],
-    ST_SELECTION_PLACE_DOG_ON_LEAD_AFTER => [
-        "name" => "selectionPlaceDogOnLeadAfter",
-        "descriptionmyturn" => clienttranslate('Select (${numberOfDogsOnlead}/${maxNumberOfDogs}): ${you} must perform additional abilities'),
-        "type" => "private",
-        "action" => "stSelectionPlaceDogOnLeadAfter",
-        "args" => "argSelectionPlaceDogOnLeadAfter",
-        "possibleactions" => [
-            ACT_CONFIRM_SELECTION,
-            ACT_UNDO
-        ],
-        "transitions" => [
         ]
     ],
     ST_SELECTION_END => [
@@ -292,7 +280,7 @@ $walkingStates = [
         "args" => "argWalkingMoveWalkerAfter",
         "type" => "activeplayer",
         "possibleactions" => [
-            ACT_WALKING_ADDITIONAL_ACTION,
+            ACT_ADDITIONAL_ACTION,
             ACT_CONFIRM_WALKING,
             ACT_UNDO
         ],
@@ -382,6 +370,18 @@ $actionStates = [
         "transitions" => [
             // We use jump to state to get out of this state.
         ],
+    ],
+    ST_ACTION_CRAFTY => [
+        "name" => "actionCrafty",
+        "descriptionmyturn" => clienttranslate('Crafty: ${you} may exchange a resource'),
+        "type" => "private",
+        "args" => "argActionCrafty",
+        "possibleactions" => [
+            ACT_CRAFTY_CONFIRM,
+            ACT_CANCEL,
+        ],
+        "transitions" => [
+        ]
     ],
 ];
 

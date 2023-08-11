@@ -2,7 +2,6 @@
 
 namespace objects;
 
-use BgaUserException;
 use DogPark;
 
 class AutoWalker

@@ -52,6 +52,7 @@
     "src/ui/DogOfferDial.ts",
     "src/ui/DogPayCosts.ts",
     "src/ui/ChooseObjectives.ts",
+    "src/ui/ExchangeResources.ts",
     "src/DogField.ts",
     "src/DogWalkPark.ts",
     "src/PlayerArea.ts",

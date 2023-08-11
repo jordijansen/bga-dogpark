@@ -3,6 +3,7 @@
 namespace traits;
 use actions\AdditionalAction;
 use BgaUserException;
+use commands\CraftyDogAbilityCommand;
 use commands\EndScoutCommand;
 use commands\GainLeavingTheParkBonusCommand;
 use commands\GainLocationBonusCommand;
@@ -11,6 +12,7 @@ use commands\PayReputationForLocationCommand;
 use commands\PlaceDogOnLeadCommand;
 use commands\ScoutCommand;
 use commands\SwapCommand;
+use commands\EagerDogAbilityCommand;
 use objects\DogCard;
 use objects\DogWalker;
 use objects\ObjectiveCard;
@@ -167,12 +169,7 @@ trait ActionTrait
         $command = new PlaceDogOnLeadCommand($playerId, $dogId, $resources);
         $this->commandManager->addCommand($playerId, $command);
 
-        $dogHasSelectionAbility = false;
-        if ($dogHasSelectionAbility) {
-            $this->gamestate->setPrivateState($playerId, ST_SELECTION_PLACE_DOG_ON_LEAD_AFTER);
-        } else {
-            $this->gamestate->setPrivateState($playerId, ST_SELECTION_PLACE_DOG_ON_LEAD);
-        }
+        $this->gamestate->setPrivateState($playerId, ST_SELECTION_PLACE_DOG_ON_LEAD);
     }
 
     function confirmSelection() {
@@ -250,46 +247,48 @@ trait ActionTrait
         $this->gamestate->nextState("");
     }
 
-    function walkingAdditionalAction($actionId) {
-        $this->checkAction(ACT_WALKING_ADDITIONAL_ACTION);
-        $playerId = $this->getActivePlayerId();
-        $action = $this->actionManager->getAction($this->getActivePlayerId(), $actionId);
+    function additionalAction($actionId) {
+        $this->checkAction(ACT_ADDITIONAL_ACTION);
+        $playerId = $this->getCurrentPlayerId();
+        $action = $this->actionManager->getAction($playerId, $actionId);
         if ($action == null) {
             throw new BgaUserException("Action not found!");
         }
 
-        $refreshCurrentState = true;
         if ($action->type == WALKING_GAIN_LOCATION_BONUS) {
             $this->commandManager->addCommand($playerId, new GainLocationBonusCommand($playerId, $actionId));
             if ($action->additionalArgs->bonusType == SWAP) {
-                $refreshCurrentState = false;
                 $this->setGlobalVariable(STATE_AFTER_SWAP, ST_WALKING_MOVE_WALKER_AFTER);
                 $this->setGlobalVariable(CURRENT_ACTION_ID, $actionId);
                 $this->gamestate->jumpToState(ST_ACTION_SWAP);
             } else if ($action->additionalArgs->bonusType == SCOUT) {
-                $refreshCurrentState = false;
                 $this->setGlobalVariable(STATE_AFTER_SCOUT, ST_WALKING_MOVE_WALKER_AFTER);
                 $this->setGlobalVariable(CURRENT_ACTION_ID, $actionId);
                 $this->gamestate->jumpToState(ST_ACTION_SCOUT_START);
             }
         } else if ($action->type == WALKING_PAY_REPUTATION_ACCEPT) {
             $this->commandManager->addCommand($playerId, new PayReputationForLocationCommand($playerId, $actionId));
+            $this->gamestate->jumpToState(ST_WALKING_MOVE_WALKER_AFTER);
         } else if ($action->type == WALKING_PAY_REPUTATION_DENY) {
             $this->commandManager->addCommand($playerId, new PayReputationForLocationCommand($playerId, $actionId));
+            $this->gamestate->jumpToState(ST_WALKING_MOVE_WALKER_AFTER);
         } else if ($action->type == WALKING_GAIN_LEAVING_THE_PARK_BONUS) {
             if ($action->additionalArgs->bonusType == SWAP) {
-                $refreshCurrentState = false;
                 $this->setGlobalVariable(STATE_AFTER_SWAP, ST_WALKING_MOVE_WALKER_AFTER);
                 $this->setGlobalVariable(CURRENT_ACTION_ID, $actionId);
                 $this->gamestate->jumpToState(ST_ACTION_SWAP);
             } else {
                 $this->commandManager->addCommand($playerId, new GainLeavingTheParkBonusCommand($playerId, $actionId));
+                $this->gamestate->jumpToState(ST_WALKING_MOVE_WALKER_AFTER);
             }
-        }
-
-        if ($refreshCurrentState) {
-            // Default go back to same state so possible actions are refreshed.
-            $this->gamestate->jumpToState(ST_WALKING_MOVE_WALKER_AFTER);
+        } else if ($action->type == USE_DOG_ABILITY) {
+            $dog = DogCard::from($this->dogCards->getCard($action->additionalArgs->dogId));
+            if ($dog->ability == EAGER) {
+                $this->commandManager->addCommand($playerId, new EagerDogAbilityCommand($playerId, $actionId));
+            } else if ($dog->ability == CRAFTY) {
+                $this->setGlobalVariable(CURRENT_ACTION_ID .$playerId, $actionId);
+                $this->gamestate->setPrivateState($playerId, ST_ACTION_CRAFTY);
+            }
         }
     }
 
@@ -366,6 +365,21 @@ trait ActionTrait
         $nrOfPlaces = intval($this->getGlobalVariable(MOVE_AUTO_WALKER_STEPS));
 
         $autoWalker->moveWalkerToLocation($walker->id, $locationId, $nrOfPlaces);
+    }
+
+    function confirmCrafty($resource) {
+        $this->checkAction(ACT_CRAFTY_CONFIRM);
+        $playerId = $this->getCurrentPlayerId();
+
+        $actionId = $this->getGlobalVariable(CURRENT_ACTION_ID .$playerId);
+        $this->commandManager->addCommand($playerId, new CraftyDogAbilityCommand($playerId, $actionId, $resource));
+    }
+
+    function cancelCrafty() {
+        $this->checkAction(ACT_CANCEL);
+        $playerId = $this->getCurrentPlayerId();
+
+        $this->gamestate->setPrivateState($playerId, ST_SELECTION_PLACE_DOG_ON_LEAD);
     }
 
     function undoLast() {

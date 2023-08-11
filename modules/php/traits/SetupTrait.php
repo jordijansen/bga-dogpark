@@ -47,7 +47,7 @@ trait SetupTrait
         foreach ($autoWalkers as $autoWalker) {
             self::DbQuery("INSERT INTO extra_player (player_id) VALUES ($autoWalker->id)");
         }
-        
+
         $this->playerManager->setInitialPlayerOder();
         $this->playerManager->setInitialResources();
 
@@ -78,8 +78,8 @@ trait SetupTrait
     private function createDogCards() {
         $cards = array();
         // Load BASE_GAME dogs
-        foreach ($this->DOG_CARDS[BASE_GAME] as $id => $DOG_CARD) {
-            $cards[] = array( 'type' => BASE_GAME, 'type_arg' => $id, 'nbr' => 1);
+        for($i = 1; $i < 163; $i++) {
+            $cards[] = array( 'type' => BASE_GAME, 'type_arg' => $i, 'nbr' => 1);
         }
 
         $this->dogCards->createCards($cards, LOCATION_DECK);

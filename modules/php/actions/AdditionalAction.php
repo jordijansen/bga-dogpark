@@ -22,10 +22,9 @@ class AdditionalAction {
         $this->canBeUndone = $canBeUndone;
     }
 
-    private static function newId() {
+    public static function newId() {
         return vsprintf( '%s%s_%s_%s_%s_%s%s%s', str_split(bin2hex(random_bytes(16)), 4) );
     }
-
 
     /**
      * @param $dbObjects

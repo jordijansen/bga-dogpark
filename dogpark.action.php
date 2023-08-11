@@ -135,12 +135,12 @@ class action_dogpark extends APP_GameAction
         self::ajaxResponse();
     }
 
-    public function walkingAdditionalAction()
+    public function additionalAction()
     {
         self::setAjaxMode();
 
         $actionId = self::getArg("actionId", AT_alphanum, true);
-        $this->game->walkingAdditionalAction($actionId);
+        $this->game->additionalAction($actionId);
 
         self::ajaxResponse();
     }
@@ -200,6 +200,25 @@ class action_dogpark extends APP_GameAction
 
         $locationId = self::getArg("locationId", AT_posint, true);
         $this->game->moveAutoWalker($locationId);
+
+        self::ajaxResponse();
+    }
+
+    public function confirmCrafty()
+    {
+        self::setAjaxMode();
+
+        $resource = self::getArg("resource", AT_alphanum, true);
+        $this->game->confirmCrafty($resource);
+
+        self::ajaxResponse();
+    }
+
+    public function cancelCrafty()
+    {
+        self::setAjaxMode();
+
+        $this->game->cancelCrafty();
 
         self::ajaxResponse();
     }

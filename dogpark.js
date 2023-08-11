@@ -2719,6 +2719,82 @@ var ChooseObjectives = /** @class */ (function () {
     };
     return ChooseObjectives;
 }());
+var ExchangeResources = /** @class */ (function () {
+    function ExchangeResources(elementId, resources, targetResource, onCancel, onConfirm) {
+        this.elementId = elementId;
+        this.resources = resources;
+        this.targetResource = targetResource;
+        this.onCancel = onCancel;
+        this.onConfirm = onConfirm;
+        this.remainingResources = { stick: 0, ball: 0, treat: 0, toy: 0 };
+        this.selectedPayment = 'placeholder';
+        dojo.place('<div id="dp-exchange-resources-wrapper"></div>', $(this.elementId));
+        this.resetSelection();
+        this.updateUi();
+    }
+    ExchangeResources.prototype.resetSelection = function () {
+        this.remainingResources = __assign({}, this.resources);
+        this.selectedPayment = 'placeholder';
+    };
+    ExchangeResources.prototype.updateUi = function () {
+        var _this = this;
+        var wrapperElement = $('dp-exchange-resources-wrapper');
+        dojo.empty(wrapperElement);
+        if (this.selectedPayment == 'placeholder') {
+            dojo.place(this.createResourceButtons(), wrapperElement);
+            Object.entries(this.remainingResources)
+                .forEach(function (_a) {
+                var resource = _a[0], nr = _a[1];
+                return dojo.connect($("dp-dog-cost-pay-".concat(resource, "-button")), 'onclick', function () { return _this.useResource(resource); });
+            });
+        }
+        dojo.place(this.createCostRow(), wrapperElement);
+        dojo.place(this.createMainButtons(), wrapperElement);
+        if (this.selectedPayment != 'placeholder') {
+            dojo.connect($("dp-dog-cost-pay-reset-button"), 'onclick', function () {
+                _this.resetSelection();
+                _this.updateUi();
+            });
+        }
+        dojo.connect($("dp-dog-cost-pay-cancel-button"), 'onclick', function () { _this.onCancel(); });
+        dojo.connect($("dp-dog-cost-pay-confirm-button"), 'onclick', function () { _this.onConfirm(_this.selectedPayment); });
+    };
+    ExchangeResources.prototype.createCostRow = function () {
+        var result = "<div class=\"dp-dog-cost-pay-row\">".concat(_('Discard'), "<i class=\"fa fa-long-arrow-right\" aria-hidden=\"true\"></i>").concat(_('Gain'), "</div>");
+        result += "<div class=\"dp-dog-cost-pay-row\"><span class=\"dp-token-token\" data-type=\"".concat(this.selectedPayment, "\"></span><i class=\"fa fa-long-arrow-right\" aria-hidden=\"true\"></i>");
+        result += "<span class=\"dp-token-token\" data-type=\"".concat(this.targetResource, "\"></span>");
+        result += '</div>';
+        return result;
+    };
+    ExchangeResources.prototype.createResourceButtons = function () {
+        var _this = this;
+        var result = "<div class=\"dp-dog-cost-pay-row\">";
+        Object.entries(this.remainingResources)
+            .forEach(function (_a) {
+            var resource = _a[0], nr = _a[1];
+            var disabled = _this.remainingResources[resource] <= 0;
+            result += "<a id=\"dp-dog-cost-pay-".concat(resource, "-button\" class=\"bgabutton bgabutton_blue ").concat(disabled ? 'disabled' : '', "\"><span class=\"dp-token-token\" data-type=\"").concat(resource, "\"></span></a>");
+        });
+        result += '</div>';
+        return result;
+    };
+    ExchangeResources.prototype.createMainButtons = function () {
+        var result = "<div class=\"dp-dog-cost-pay-row\">";
+        var disabled = this.selectedPayment == 'placeholder';
+        result += "<a id=\"dp-dog-cost-pay-confirm-button\" class=\"bgabutton bgabutton_blue ".concat(disabled ? 'disabled' : '', "\">").concat(_('Confirm'), "</a>");
+        if (this.selectedPayment != 'placeholder') {
+            result += "<a id=\"dp-dog-cost-pay-reset-button\" class=\"bgabutton bgabutton_gray\">".concat(_('Reset'), "</a>");
+        }
+        result += "<a id=\"dp-dog-cost-pay-cancel-button\" class=\"bgabutton bgabutton_gray\">".concat(_('Cancel'), "</a>");
+        result += '</div>';
+        return result;
+    };
+    ExchangeResources.prototype.useResource = function (resource) {
+        this.selectedPayment = resource;
+        this.updateUi();
+    };
+    return ExchangeResources;
+}());
 var DogField = /** @class */ (function () {
     function DogField(game) {
         this.game = game;
@@ -3039,7 +3115,7 @@ var PlayerResources = /** @class */ (function () {
             }
         }
     };
-    PlayerResources.prototype.payResourcesForDog = function (playerId, dog, resources) {
+    PlayerResources.prototype.payResourcesToDog = function (playerId, dog, resources) {
         return __awaiter(this, void 0, void 0, function () {
             var _i, resources_1, resource, token;
             var _this = this;
@@ -3294,6 +3370,9 @@ var DogPark = /** @class */ (function () {
             case 'actionMoveAutoWalker':
                 this.enteringActionMoveAutoWalker(args.args);
                 break;
+            case 'actionCrafty':
+                this.enteringActionCrafty(args.args);
+                break;
         }
     };
     DogPark.prototype.enteringChooseObjectives = function () {
@@ -3340,10 +3419,9 @@ var DogPark = /** @class */ (function () {
     };
     DogPark.prototype.enteringSelectionPlaceDogOnLeadSelectResources = function (args) {
         var _this = this;
-        this.gamedatas.gamestate.descriptionmyturn = dojo.string.substitute(_('Select resources for ${dogName}'), { dogName: args.dog.name });
-        this.gamedatas.gamestate.descriptionmyturn = this.gamedatas.gamestate.descriptionmyturn + '<br /><div id="dp-pay-costs"></div>';
+        this.gamedatas.gamestate.descriptionmyturn = dojo.string.substitute(_(this.gamedatas.gamestate.private_state.descriptionmyturn), __assign(__assign({}, args), { you: 'you' })) + '<br /><div id="dp-pay-costs"></div>';
         this.updatePageTitle();
-        this.currentPlayerPayCosts = new DogPayCosts("dp-pay-costs", args.resources, args.dog, function () {
+        new DogPayCosts("dp-pay-costs", args.resources, args.dog, function () {
             dojo.destroy('dp-pay-costs');
             _this.takeNoLockAction('placeDogOnLeadCancel');
         }, function (resources) {
@@ -3376,6 +3454,18 @@ var DogPark = /** @class */ (function () {
             this.dogWalkPark.enterWalkerSpotsSelection(args.possibleParkLocationIds, function (locationId) { _this.takeAction('moveAutoWalker', { locationId: locationId }); });
         }
     };
+    DogPark.prototype.enteringActionCrafty = function (args) {
+        var _this = this;
+        this.gamedatas.gamestate.descriptionmyturn = this.gamedatas.gamestate.private_state.descriptionmyturn + '<br /><div id="dp-exchange-resources"></div>';
+        this.updatePageTitle();
+        new ExchangeResources("dp-exchange-resources", args.resources, args.dog.craftyResource, function () {
+            dojo.destroy('dp-exchange-resources');
+            _this.takeNoLockAction('cancelCrafty');
+        }, function (resource) {
+            dojo.destroy('dp-exchange-resources');
+            _this.takeNoLockAction('confirmCrafty', { resource: resource });
+        });
+    };
     DogPark.prototype.onLeavingState = function (stateName) {
         log('Leaving state: ' + stateName);
         switch (stateName) {
@@ -3391,10 +3481,13 @@ var DogPark = /** @class */ (function () {
                 break;
             case 'actionSwap':
                 this.leavingActionSwap();
+                break;
             case 'actionScout':
                 this.leavingActionScout();
+                break;
             case 'actionMoveAutoWalker':
                 this.leavingActionMoveAutoWalker();
+                break;
         }
     };
     DogPark.prototype.leavingSelectionPlaceDogOnLead = function () {
@@ -3447,14 +3540,14 @@ var DogPark = /** @class */ (function () {
                     break;
                 case 'selectionPlaceDogOnLead':
                     var selectionPlaceDogOnLeadArgs_1 = args;
-                    this.addActionButton('confirmSelection', _("Confirm Selection"), function () { return _this.confirmSelection(selectionPlaceDogOnLeadArgs_1); });
-                    if (selectionPlaceDogOnLeadArgs_1.numberOfDogsOnlead < 1 && Object.keys(selectionPlaceDogOnLeadArgs_1.dogs).length > 1) {
-                        dojo.addClass('confirmSelection', 'disabled');
+                    this.addAdditionalActionButtons(args.additionalActions);
+                    if (selectionPlaceDogOnLeadArgs_1.numberOfDogsOnlead > 0 && selectionPlaceDogOnLeadArgs_1.additionalActions.every(function (action) { return action.optional; })) {
+                        this.addActionButton('confirmSelection', _("Confirm Selection"), function () { return _this.confirmSelection(selectionPlaceDogOnLeadArgs_1); });
                     }
                     break;
                 case 'walkingMoveWalkerAfter':
                     var walkingMoveWalkerAfterArgs = args;
-                    this.addWalkingAdditionalActionButtons(walkingMoveWalkerAfterArgs);
+                    this.addAdditionalActionButtons(args.additionalActions);
                     if (walkingMoveWalkerAfterArgs.additionalActions.every(function (action) { return action.optional; })) {
                         this.addActionButton('confirmWalking', _("Confirm Walking"), function () { return _this.confirmWalking(); });
                     }
@@ -3488,34 +3581,37 @@ var DogPark = /** @class */ (function () {
             }
         }
     };
-    DogPark.prototype.addWalkingAdditionalActionButtons = function (args) {
+    DogPark.prototype.addAdditionalActionButtons = function (additionalActions) {
         var _this = this;
-        if (args.additionalActions && args.additionalActions.length > 0) {
-            args.additionalActions.forEach(function (additionalAction) {
+        if (additionalActions && additionalActions.length > 0) {
+            additionalActions.forEach(function (additionalAction) {
                 switch (additionalAction.type) {
                     case 'WALKING_PAY_REPUTATION_ACCEPT':
-                        _this.addActionButton("payReputationAccept", dojo.string.substitute(_('Pay ${resourceType} to unlock location bonus(es)'), { resourceType: _this.tokenIcon('reputation') }), function () { return _this.walkingAdditionalAction(additionalAction); }, null, null, 'gray');
+                        _this.addActionButton("payReputationAccept", dojo.string.substitute(_('Pay ${resourceType} to unlock location bonus(es)'), { resourceType: _this.tokenIcon('reputation') }), function () { return _this.additionalAction(additionalAction); }, null, null, 'gray');
                         break;
                     case 'WALKING_PAY_REPUTATION_DENY':
-                        _this.addActionButton("payReputationDeny", _('Skip location bonuses'), function () { return _this.walkingAdditionalAction(additionalAction); }, null, null, 'gray');
+                        _this.addActionButton("payReputationDeny", _('Skip location bonuses'), function () { return _this.additionalAction(additionalAction); }, null, null, 'gray');
                         break;
                     case 'WALKING_GAIN_LOCATION_BONUS':
-                        _this.addActionButton("gainLocationBonus".concat(additionalAction.id), dojo.string.substitute(_('Gain location bonus ${resourceType}'), { resourceType: _this.tokenIcon(additionalAction.additionalArgs['bonusType']) }), function () { return _this.walkingAdditionalAction(additionalAction); }, null, null, 'gray');
+                        _this.addActionButton("gainLocationBonus".concat(additionalAction.id), dojo.string.substitute(_('Gain location bonus ${resourceType}'), { resourceType: _this.tokenIcon(additionalAction.additionalArgs['bonusType']) }), function () { return _this.additionalAction(additionalAction); }, null, null, 'gray');
                         break;
                     case 'WALKING_GAIN_LEAVING_THE_PARK_BONUS':
-                        _this.addActionButton("gainLeavingPark".concat(additionalAction.id), dojo.string.substitute(_('Gain leaving the park bonus ${resourceType}'), { resourceType: _this.tokenIcons(additionalAction.additionalArgs['bonusType'], additionalAction.additionalArgs['amount']) }), function () { return _this.walkingAdditionalAction(additionalAction); }, null, null, 'gray');
+                        _this.addActionButton("gainLeavingPark".concat(additionalAction.id), dojo.string.substitute(_('Gain leaving the park bonus ${resourceType}'), { resourceType: _this.tokenIcons(additionalAction.additionalArgs['bonusType'], additionalAction.additionalArgs['amount']) }), function () { return _this.additionalAction(additionalAction); }, null, null, 'gray');
+                        break;
+                    case 'USE_DOG_ABILITY':
+                        _this.addActionButton("useDogAbility".concat(additionalAction.id), dojo.string.substitute('<b>${dogName}</b>: ${abilityTitle}', { dogName: _(additionalAction.additionalArgs['dogName']), abilityTitle: _(additionalAction.additionalArgs['abilityTitle']) }), function () { return _this.additionalAction(additionalAction); }, null, null, 'gray');
                         break;
                 }
             });
         }
     };
-    DogPark.prototype.walkingAdditionalAction = function (args) {
+    DogPark.prototype.additionalAction = function (additionalAction) {
         var _this = this;
-        if (args.canBeUndone) {
-            this.takeAction('walkingAdditionalAction', { actionId: args.id });
+        if (additionalAction.canBeUndone) {
+            this.takeNoLockAction('additionalAction', { actionId: additionalAction.id });
         }
         else {
-            this.wrapInConfirm(function () { return _this.takeAction('walkingAdditionalAction', { actionId: args.id }); });
+            this.wrapInConfirm(function () { return _this.takeNoLockAction('additionalAction', { actionId: additionalAction.id }); });
         }
     };
     DogPark.prototype.confirmObjective = function () {
@@ -3692,6 +3788,7 @@ var DogPark = /** @class */ (function () {
             ['playerSwaps', undefined],
             ['playerScoutReplaces', undefined],
             ['undoPlayerScoutReplaces', undefined],
+            ['activateDogAbility', undefined]
             // ['shortTime', 1],
             // ['fixedTime', 1000]
         ];
@@ -3746,7 +3843,7 @@ var DogPark = /** @class */ (function () {
     DogPark.prototype.notif_dogPlacedOnLead = function (args) {
         var _this = this;
         return this.playerArea.moveDogsToLead(args.playerId, [args.dog])
-            .then(function () { return _this.playerResources.payResourcesForDog(args.playerId, args.dog, args.resources); })
+            .then(function () { return _this.playerResources.payResourcesToDog(args.playerId, args.dog, args.resources); })
             .then(function () { return _this.dogCardManager.addResourceToDog(args.dog.id, 'walked'); });
     };
     DogPark.prototype.notif_undoDogPlacedOnLead = function (args) {
@@ -3850,6 +3947,16 @@ var DogPark = /** @class */ (function () {
     DogPark.prototype.notif_undoPlayerScoutReplaces = function (args) {
         this.dogField.addDogCardsToField([args.scoutDog]);
         return this.dogField.addDogCardsToScoutedField([args.fieldDog]);
+    };
+    DogPark.prototype.notif_activateDogAbility = function (args) {
+        var promises = [];
+        if (args.gainedResources) {
+            promises.push(this.playerResources.gainResourcesFromDog(args.playerId, args.dog, args.gainedResources));
+        }
+        if (args.lostResources) {
+            promises.push(this.playerResources.payResourcesToDog(args.playerId, args.dog, args.lostResources));
+        }
+        return Promise.all(promises);
     };
     DogPark.prototype.format_string_recursive = function (log, args) {
         try {

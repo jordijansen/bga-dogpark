@@ -4,7 +4,7 @@ interface DogCard extends Card {
     breeds: string[],
     costs: {stick: number, ball: number, treat: number, toy: number}
     resourcesOnCard: {stick: string, ball: string, treat: string, toy: string, walked: string}
-
+    craftyResource?: string
 }
 
 interface LocationBonusCard extends Card {
@@ -66,11 +66,16 @@ interface DogParkGameData extends GameData {
 }
 
 // ARGS
+interface AdditionalAction {
+    id: string, type: string, additionalArgs: any[], optional: boolean, canBeUndone: boolean
+}
+
 interface RecruitmentOfferArgs {
     maxOfferValue: number
 }
 
 interface SelectionPlaceDogOnLeadArgs {
+    additionalActions: AdditionalAction[],
     maxNumberOfDogs: number
     numberOfDogsOnlead: number,
     dogs: {[dogId: number]: DogCard},
@@ -87,7 +92,7 @@ interface WalkingMoveWalkerArgs {
 
 interface WalkingMoveWalkerAfterArgs {
     locationId: number,
-    additionalActions: [{id: string, type: string, additionalArgs: any[], optional: boolean, canBeUndone: boolean}]
+    additionalActions: AdditionalAction[],
 }
 
 interface ActionSwapArgs {
@@ -102,6 +107,13 @@ interface ActionScoutArgs {
 interface ActionMoveAutoWalkerArgs {
     possibleParkLocationIds: number[]
 }
+
+interface ActionCraftyArgs {
+    action: AdditionalAction,
+    dog: DogCard,
+    resources: {stick: number, ball: number, treat: number, toy: number}
+}
+
 
 // NOTIFS
 interface NotifObjectivesChosen {
@@ -219,6 +231,13 @@ interface NotifPlayerScouts {
 interface NotifPlayerScoutReplaces {
     scoutDog: DogCard,
     fieldDog: DogCard
+}
+
+interface NotifActivateDogAbility {
+    playerId: number,
+    dog: DogCard,
+    gainedResources?: string[],
+    lostResources?: string[]
 }
 
 

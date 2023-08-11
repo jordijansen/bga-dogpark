@@ -163,6 +163,10 @@ abstract class Table extends APP_GameClass {
         return 1;
     }
 
+    function getCurrentPlayerId() {
+        return 1;
+    }
+
     function getActivePlayerName() {
         return "player1";
     }
