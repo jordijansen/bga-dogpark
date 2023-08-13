@@ -92,6 +92,16 @@ class DogManager extends APP_DbObject
         DogPark::$instance->setGlobalVariable(USED_WALK_ABILITIES, $usedDogIds);
     }
 
+    public function getSocialButterflyDogOnLead($playerId) {
+        $dogsOnLead = DogCard::fromArray(DogPark::$instance->dogCards->getCardsInLocation(LOCATION_LEAD, $playerId));
+        foreach ($dogsOnLead as $dog) {
+            if ($dog->ability == SOCIAL_BUTTERFLY) {
+                return $dog;
+            }
+        }
+        return null;
+    }
+
     public function getDogResources($dogId) {
         return current($this->getCollectionFromDB("SELECT dog_walked as walked, dog_stick as stick, dog_ball as ball, dog_treat as treat, dog_toy as toy FROM dog WHERE card_id = ". $dogId));
     }

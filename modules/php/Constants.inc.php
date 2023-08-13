@@ -171,8 +171,9 @@ const USE_DOG_ABILITY = 'USE_DOG_ABILITY';
 const EAGER = 'eager';
 const CRAFTY = 'crafty';
 const GO_FETCH = 'gofetch';
-const OBEDIENT = 'Obedient';
-const PLAYMATE = 'Playmate';
+const OBEDIENT = 'obedient';
+const PLAYMATE = 'playmate';
+const SOCIAL_BUTTERFLY = 'socialbutterfly';
 
 const SELECTION_ABILITIES = [EAGER, CRAFTY];
 const WALKING_ABILITIES = [GO_FETCH];

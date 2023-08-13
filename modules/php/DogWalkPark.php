@@ -1,6 +1,7 @@
 <?php
 
 
+use actions\AdditionalAction;
 use objects\DogWalker;
 use objects\LocationBonus;
 use objects\LocationBonusCard;
@@ -148,5 +149,12 @@ class DogWalkPark extends APP_DbObject
     public function removeExtraLocationBonus(int $locationId, $bonus)
     {
         self::DbQuery("DELETE FROM `extra_location_bonus` WHERE location_id = $locationId AND bonus = '$bonus';");
+    }
+
+    public function createLocationBonusActions($playerId, $locationId, $originActionId = null) {
+        $locationBonuses = $this->getLocationBonuses($locationId);
+        $extraLocationBonuses = $this->getExtraLocationBonuses($locationId);
+        DogPark::$instance->actionManager->addActions($playerId, array_map(fn($bonus) => new AdditionalAction(WALKING_GAIN_LOCATION_BONUS, (object) ["bonusType" => $bonus, "extraBonus" => false],in_array($bonus, [SWAP, SCOUT]), $bonus != SCOUT, $originActionId), $locationBonuses));
+        DogPark::$instance->actionManager->addActions($playerId, array_map(fn($bonus) => new AdditionalAction(WALKING_GAIN_LOCATION_BONUS, (object) ["bonusType" => $bonus, "extraBonus" => true], in_array($bonus, [SWAP, SCOUT]), $bonus != SCOUT, $originActionId), $extraLocationBonuses));
     }
 }

@@ -33,10 +33,7 @@ class PayReputationForLocationCommand extends BaseCommand
                 'score' => DogPark::$instance->getPlayerScore($this->playerId)
             ]);
 
-            $locationBonuses = DogPark::$instance->dogWalkPark->getLocationBonuses($locationId);
-            $extraLocationBonuses = DogPark::$instance->dogWalkPark->getExtraLocationBonuses($locationId);
-            DogPark::$instance->actionManager->addActions($this->playerId, array_map(fn($bonus) => new AdditionalAction(WALKING_GAIN_LOCATION_BONUS, (object) ["bonusType" => $bonus, "extraBonus" => false]), $locationBonuses));
-            DogPark::$instance->actionManager->addActions($this->playerId, array_map(fn($bonus) => new AdditionalAction(WALKING_GAIN_LOCATION_BONUS, (object) ["bonusType" => $bonus, "extraBonus" => true]), $extraLocationBonuses));
+            DogPark::$instance->dogWalkPark->createLocationBonusActions($this->playerId, $locationId);
         } else {
             DogPark::$instance->notifyAllPlayers('gameLog', clienttranslate('${player_name} skips location bonus(es)'),[
                 'playerId' => $this->playerId,

@@ -14,6 +14,7 @@ use commands\PayReputationForLocationCommand;
 use commands\PlaceDogOnLeadCommand;
 use commands\PlaymateDogAbilityCommand;
 use commands\ScoutCommand;
+use commands\SocialButterflyDogAbilityCommand;
 use commands\SwapCommand;
 use commands\EagerDogAbilityCommand;
 use objects\DogCard;
@@ -224,12 +225,20 @@ trait ActionTrait
         $this->commandManager->addCommand($playerId, new MoveWalkerCommand($playerId, $walker->id, $walker->locationArg, $locationId));
 
         $this->actionManager->clear($playerId);
-        // TODO SOCIAL BUTTERFLY YOU DON'T NEED TO PAY REPUTATION
         if (sizeof($otherWalkersInLocation) > 0) {
-            if ($this->getPlayerScore($playerId) > 0) {
-                $this->actionManager->addAction($playerId, new AdditionalAction(WALKING_PAY_REPUTATION_ACCEPT, (object) ["accepted" => true]));
+            $firstSocialButterflyDog = $this->dogManager->getSocialButterflyDogOnLead($playerId);
+            if ($firstSocialButterflyDog != null) {
+                $this->actionManager->addAction($playerId, new AdditionalAction(USE_DOG_ABILITY, (object) [
+                    "dogId" => $firstSocialButterflyDog->id,
+                    "dogName" => $firstSocialButterflyDog->name,
+                    "abilityTitle" => $firstSocialButterflyDog->abilityTitle
+                ], $firstSocialButterflyDog->isAbilityOptional(), true));
+            } else {
+                if ($this->getPlayerScore($playerId) > 0) {
+                    $this->actionManager->addAction($playerId, new AdditionalAction(WALKING_PAY_REPUTATION_ACCEPT, (object) ["accepted" => true]));
+                }
+                $this->actionManager->addAction($playerId, new AdditionalAction(WALKING_PAY_REPUTATION_DENY, (object) ["accepted" => false]));
             }
-            $this->actionManager->addAction($playerId, new AdditionalAction(WALKING_PAY_REPUTATION_DENY, (object) ["accepted" => false]));
         } else if ($locationId > 90) {
             if ($locationId == 91) {
                 $this->actionManager->addAction($playerId, new AdditionalAction(WALKING_GAIN_LEAVING_THE_PARK_BONUS, (object) ["bonusType" => REPUTATION, "amount" => 3]));
@@ -241,10 +250,7 @@ trait ActionTrait
                 $this->actionManager->addActions($playerId, [$action1, $action2]);
             }
         } else {
-            $locationBonuses = $this->dogWalkPark->getLocationBonuses($locationId);
-            $extraLocationBonuses = $this->dogWalkPark->getExtraLocationBonuses($locationId);
-            $this->actionManager->addActions($playerId, array_map(fn($bonus) => new AdditionalAction(WALKING_GAIN_LOCATION_BONUS, (object) ["bonusType" => $bonus, "extraBonus" => false], in_array($bonus, [SWAP, SCOUT]), $bonus != SCOUT), $locationBonuses));
-            $this->actionManager->addActions($playerId, array_map(fn($bonus) => new AdditionalAction(WALKING_GAIN_LOCATION_BONUS, (object) ["bonusType" => $bonus, "extraBonus" => true], in_array($bonus, [SWAP, SCOUT]), $bonus != SCOUT), $extraLocationBonuses));
+            $this->dogWalkPark->createLocationBonusActions($playerId, $locationId);
         }
 
         $this->gamestate->nextState("");
@@ -299,6 +305,8 @@ trait ActionTrait
                 $this->commandManager->addCommand($playerId, new ObedientDogAbilityCommand($playerId, $actionId));
             } else if ($dog->ability == PLAYMATE) {
                 $this->commandManager->addCommand($playerId, new PlaymateDogAbilityCommand($playerId, $actionId));
+            } else if ($dog->ability == SOCIAL_BUTTERFLY) {
+                $this->commandManager->addCommand($playerId, new SocialButterflyDogAbilityCommand($playerId, $actionId));
             }
         }
     }
