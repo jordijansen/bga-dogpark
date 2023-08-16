@@ -15,6 +15,7 @@ include("dogtraits/PackDog.php");
 include("dogtraits/RaringToGo.php");
 include("dogtraits/Sociable.php");
 include("dogtraits/BallHog.php");
+include("dogtraits/StickChaser.php");
 
 
 for($i = 1; $i<=163;$i++)

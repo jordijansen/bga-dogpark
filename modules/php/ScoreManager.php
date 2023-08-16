@@ -50,6 +50,8 @@ class ScoreManager
                 $result[$scoringDog->id] = sizeof(array_keys($breeds));
             } else if ($scoringDog->ability == BALL_HOG) {
                 $result[$scoringDog->id] = $scoringDog->resourcesOnCard['ball'];
+            } else if ($scoringDog->ability == STICK_CHASER) {
+                $result[$scoringDog->id] = $scoringDog->resourcesOnCard['stick'];
             }
         }
         return $result;
