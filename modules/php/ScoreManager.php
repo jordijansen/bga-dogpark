@@ -52,6 +52,8 @@ class ScoreManager
                 $result[$scoringDog->id] = $scoringDog->resourcesOnCard['ball'];
             } else if ($scoringDog->ability == STICK_CHASER) {
                 $result[$scoringDog->id] = $scoringDog->resourcesOnCard['stick'];
+            } else if ($scoringDog->ability == TOY_COLLECTOR) {
+                $result[$scoringDog->id] = $scoringDog->resourcesOnCard['toy'] * 2;
             }
         }
         return $result;
