@@ -26,6 +26,7 @@
 -->
 <div id="dp-game">
     <div id="dp-choose-objectives"></div>
+    <div id="dp-final-scoring-pad-wrapper"></div>
     <div id="dp-game-board-wrapper" style="order: 10;">
         <div id="dp-game-board-main">
             <div id="dp-game-board-round-tracker" class="dp-board" style="order: 0;">

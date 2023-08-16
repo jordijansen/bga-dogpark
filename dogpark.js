@@ -2795,6 +2795,63 @@ var ExchangeResources = /** @class */ (function () {
     };
     return ExchangeResources;
 }());
+var FinalScoringPad = /** @class */ (function () {
+    function FinalScoringPad(game, elementId) {
+        this.game = game;
+        this.elementId = elementId;
+        this.scoringPadRows = [
+            { key: 'parkBoardScore', label: _('_icon-reputation_ during game') },
+            { key: 'dogFinalScoringScore', label: _('_icon-reputation_ from dogs with <b>FINAL SCORING</b> abilities') },
+            { key: 'breedExpertAwardScore', label: _('_icon-reputation_ from won Breed Expert awards') },
+            { key: 'objectiveCardScore', label: _('_icon-reputation_ from completed Objective Card') },
+            { key: 'remainingResourcesScore', label: _('Remaining resources = _icon-reputation_ for every 5') },
+            { key: 'score', label: _('Total _icon-reputation_') }
+        ];
+    }
+    FinalScoringPad.prototype.setUp = function (gamedatas) {
+        if (gamedatas.scoreBreakdown) {
+            this.showPad(gamedatas.scoreBreakdown, false);
+        }
+    };
+    FinalScoringPad.prototype.showPad = function (scoreBreakdown, animate) {
+        dojo.place(this.createPad(scoreBreakdown, animate), $(this.elementId));
+        if (animate) {
+            var elementsToReveal_1 = document.getElementById('dp-final-scoring-pad').querySelectorAll('.reveal-score-value');
+            var currentIndex_1 = 0;
+            return new Promise(function (resolve, reject) {
+                var interval = setInterval(function () {
+                    var element = elementsToReveal_1[currentIndex_1];
+                    element.style.opacity = '1';
+                    currentIndex_1++;
+                    if (currentIndex_1 >= elementsToReveal_1.length) {
+                        clearInterval(interval);
+                        resolve('');
+                    }
+                }, 500);
+            });
+        }
+        return Promise.resolve('');
+    };
+    FinalScoringPad.prototype.createPad = function (scoreBreakdown, animate) {
+        var _this = this;
+        var result = "\n            <div id=\"dp-final-scoring-pad\" class=\"dp-board\">\n                    <table>\n                        <thead>\n                        <th></th>\n";
+        Object.keys(scoreBreakdown).forEach(function (playerId) {
+            result += "<th style=\"color: #".concat(_this.game.getPlayer(Number(playerId)).color, "\">").concat(_this.game.getPlayer(Number(playerId)).name, "</th>");
+        });
+        result += "</thead><tbody>";
+        this.scoringPadRows.forEach(function (row) {
+            result += "<tr>";
+            result += "<td>".concat(_this.game.formatWithIcons(row.label), "</td>");
+            Object.keys(scoreBreakdown).forEach(function (playerId) {
+                result += "<td class=\"reveal-score-value\" style=\"opacity: ".concat(animate ? 0 : 1, ";\">").concat(scoreBreakdown[playerId][row.key], " ").concat(row.key == 'breedExpertAwardScore' ? '<span class="breed-expert-additional-text">(' + scoreBreakdown[playerId]['scoreAux'] + '&uarr;)*</span>' : '', "</td>");
+            });
+            result += "</tr>";
+        });
+        result += "</tbody>\n                    </table>\n                    <p class=\"dp-final-scoring-pad-tiebreaker-explanation\">* ".concat(_('If there is a tie, the player who won the highest value Breed Expert award wins. If this is a tie, the winning players share the victory.'), "</p>\n                </div>");
+        return result;
+    };
+    return FinalScoringPad;
+}());
 var DogField = /** @class */ (function () {
     function DogField(game) {
         this.game = game;
@@ -3305,6 +3362,7 @@ var DogPark = /** @class */ (function () {
         this.playerArea = new PlayerArea(this);
         this.playerResources = new PlayerResources(this);
         this.roundTracker = new RoundTracker(this);
+        this.finalScoringPad = new FinalScoringPad(this, 'dp-final-scoring-pad-wrapper');
     }
     /*
         setup:
@@ -3329,6 +3387,7 @@ var DogPark = /** @class */ (function () {
         this.playerResources.setUp(gamedatas);
         this.breedExpertAwardManager.setUp(gamedatas);
         this.forecastManager.setUp(gamedatas);
+        this.finalScoringPad.setUp(gamedatas);
         this.zoomManager = new AutoZoomManager('dp-game', 'dp-zoom-level');
         this.animationManager = new AnimationManager(this, { duration: ANIMATION_MS });
         dojo.connect($('dp-game-board-side-toggle-button'), 'onclick', function () { return dojo.toggleClass('dp-game-board-side', 'hide-side-bar'); });
@@ -4001,7 +4060,10 @@ var DogPark = /** @class */ (function () {
         return Promise.all(args.objectiveCards.map(function (objectiveCard) { return _this.objectiveCardManager.updateCardInformations(objectiveCard); }));
     };
     DogPark.prototype.notif_finalScoringRevealed = function (args) {
-        return Promise.resolve();
+        var _this = this;
+        return this.finalScoringPad.showPad(args.scoreBreakDown, true).then(function () {
+            Object.keys(args.scoreBreakDown).forEach(function (playerId) { return _this.setScore(Number(playerId), args.scoreBreakDown[playerId]['score']); });
+        });
     };
     DogPark.prototype.format_string_recursive = function (log, args) {
         try {
@@ -4030,6 +4092,13 @@ var DogPark = /** @class */ (function () {
         this.inherited(arguments);
         this.gamedatas.autoWalkers.forEach(function (autoWalker) {
             _this.playerArea.initAutoWalkers(autoWalker);
+        });
+    };
+    DogPark.prototype.formatWithIcons = function (description) {
+        var _this = this;
+        //@ts-ignore
+        return bga_format(_(description), {
+            '_': function (t) { return _this.tokenIcon(t.replace('icon-', '')); }
         });
     };
     return DogPark;

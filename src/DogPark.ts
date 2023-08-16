@@ -26,6 +26,7 @@ class DogPark implements DogParkGame {
     // UI elements
     private currentPlayerOfferDial: DogOfferDial;
     private currentPlayerChooseObjectives: ChooseObjectives;
+    private finalScoringPad: FinalScoringPad
 
     // Managers
     public dogCardManager: DogCardManager;
@@ -59,6 +60,8 @@ class DogPark implements DogParkGame {
         this.playerArea = new PlayerArea(this);
         this.playerResources = new PlayerResources(this);
         this.roundTracker = new RoundTracker(this);
+
+        this.finalScoringPad = new FinalScoringPad(this, 'dp-final-scoring-pad-wrapper')
     }
 
     /*
@@ -86,6 +89,7 @@ class DogPark implements DogParkGame {
         this.playerResources.setUp(gamedatas);
         this.breedExpertAwardManager.setUp(gamedatas);
         this.forecastManager.setUp(gamedatas);
+        this.finalScoringPad.setUp(gamedatas);
 
         this.zoomManager = new AutoZoomManager('dp-game', 'dp-zoom-level')
         this.animationManager = new AnimationManager(this, {duration: ANIMATION_MS})
@@ -779,7 +783,9 @@ class DogPark implements DogParkGame {
     }
 
     private notif_finalScoringRevealed(args: NotifFinalScoringRevealed) {
-        return Promise.resolve();
+        return this.finalScoringPad.showPad(args.scoreBreakDown, true).then(() => {
+            Object.keys(args.scoreBreakDown).forEach(playerId => this.setScore(Number(playerId), args.scoreBreakDown[playerId]['score']))
+        });
     }
 
     public format_string_recursive(log: string, args: any) {
@@ -810,6 +816,13 @@ class DogPark implements DogParkGame {
         (this as any).inherited(arguments);
         this.gamedatas.autoWalkers.forEach(autoWalker => {
             this.playerArea.initAutoWalkers(autoWalker);
+        });
+    }
+
+    public formatWithIcons(description) {
+        //@ts-ignore
+        return bga_format(_(description), {
+            '_': (t) => this.tokenIcon(t.replace('icon-', ''))
         });
     }
 

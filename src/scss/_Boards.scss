@@ -379,3 +379,55 @@
     }
   }
 }
+
+#dp-final-scoring-pad-wrapper {
+  display: flex;
+  justify-content: center;
+  #dp-final-scoring-pad {
+    background-image: url("img/dogpark-score-pad.jpg");
+    height: 422px;
+    width: 800px;
+    margin: 10px;
+    table {
+      th {
+        height: 68px;
+        width: 118px;
+        text-align: center;
+        font-weight: bold;
+      }
+      th:nth-child(1) {
+        width: 194px;
+      }
+
+      tr {
+        td {
+          text-align: center;
+          height: 54px;
+          font-family: cursive;
+          font-size: 20px;
+          transition: opacity 0.5s ease-in;
+          .breed-expert-additional-text {
+            font-size: 14px;
+          }
+        }
+        td:nth-child(1) {
+          font-family: serif;
+          text-align: right;
+          padding: 0 5px;
+          font-size: 14px;
+        }
+
+        &:last-child {
+          td {
+            font-weight: bold;
+          }
+        }
+      }
+    }
+    .dp-final-scoring-pad-tiebreaker-explanation {
+      font-family: cursive;
+      text-align: center;
+      font-size: 13px;
+    }
+  }
+}

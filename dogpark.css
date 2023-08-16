@@ -669,6 +669,50 @@ body > .card {
   min-height: 266px;
 }
 
+#dp-final-scoring-pad-wrapper {
+  display: flex;
+  justify-content: center;
+}
+#dp-final-scoring-pad-wrapper #dp-final-scoring-pad {
+  background-image: url("img/dogpark-score-pad.jpg");
+  height: 422px;
+  width: 800px;
+  margin: 10px;
+}
+#dp-final-scoring-pad-wrapper #dp-final-scoring-pad table th {
+  height: 68px;
+  width: 118px;
+  text-align: center;
+  font-weight: bold;
+}
+#dp-final-scoring-pad-wrapper #dp-final-scoring-pad table th:nth-child(1) {
+  width: 194px;
+}
+#dp-final-scoring-pad-wrapper #dp-final-scoring-pad table tr td {
+  text-align: center;
+  height: 54px;
+  font-family: cursive;
+  font-size: 20px;
+  transition: opacity 0.5s ease-in;
+}
+#dp-final-scoring-pad-wrapper #dp-final-scoring-pad table tr td .breed-expert-additional-text {
+  font-size: 14px;
+}
+#dp-final-scoring-pad-wrapper #dp-final-scoring-pad table tr td:nth-child(1) {
+  font-family: serif;
+  text-align: right;
+  padding: 0 5px;
+  font-size: 14px;
+}
+#dp-final-scoring-pad-wrapper #dp-final-scoring-pad table tr:last-child td {
+  font-weight: bold;
+}
+#dp-final-scoring-pad-wrapper #dp-final-scoring-pad .dp-final-scoring-pad-tiebreaker-explanation {
+  font-family: cursive;
+  text-align: center;
+  font-size: 13px;
+}
+
 .dp-token {
   filter: drop-shadow(1px 1px 1px black);
   -webkit-filter: drop-shadow(1px 1px 1px black);
@@ -1837,8 +1881,8 @@ body > .card {
 }
 
 .dp-dog-card-token-stock {
-  width: 130px;
-  padding-top: 50px;
+  width: 160px;
+  height: 190px;
   float: right;
   align-items: center;
 }

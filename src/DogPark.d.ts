@@ -63,7 +63,7 @@ interface DogParkGameData extends GameData {
     field: { nrOfFields: number, dogs: DogCard[], scoutedDogs: DogCard[], walkers: DogWalker[] }
     park: { walkers: DogWalker[], locationBonusCards: LocationBonusCard[], extraLocationBonuses: LocationBonus[]}
     autoWalkers: AutoWalker[],
-    scoreBreakdown: FinalScoringBreakdown
+    scoreBreakdown?: FinalScoringBreakdown
 }
 
 interface FinalScoringBreakdown {
