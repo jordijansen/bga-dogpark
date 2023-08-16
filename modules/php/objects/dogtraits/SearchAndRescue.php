@@ -2,23 +2,21 @@
 
 namespace objects\dogtraits;
 
-trait Crafty
+trait SearchAndRescue
 {
-    public string $craftyResource;
-
     protected function getAbility() : string
     {
-        return CRAFTY;
+        return SEARCH_AND_RESCUE;
     }
 
     protected function getAbilityTitle() : string
     {
-        return _('Crafty');
+        return _('Search and Rescue');
     }
 
     protected function getAbilityText() : string
     {
-        return sprintf(_("During <b>SELECTION</b>, when you place this dog on the Lead, you may discard 1 _icon-all-resources_ to gain up to 1 _icon-%s_."), $this->craftyResource);
+        return _("When <b>WALKING</b> this dog, whenever you _icon-scout_, you may immediately _icon-swap_.");
     }
 
     public function isAbilityOptional() : bool

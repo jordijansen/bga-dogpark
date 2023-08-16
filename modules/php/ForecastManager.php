@@ -46,7 +46,7 @@ class ForecastManager
     public function getCurrentRoundMaxNumberOfDogsForSelection(): int
     {
         $currentForecast = $this->getCurrentForecastCard();
-        if ($currentForecast->id == 11) {
+        if ($currentForecast->typeArg == 11) {
             // Forecast card 11 allows players to place 4 dogs on their lead during selection instead of 3.
             return 4;
         }

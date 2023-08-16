@@ -226,7 +226,7 @@ trait ActionTrait
 
         $this->actionManager->clear($playerId);
         if (sizeof($otherWalkersInLocation) > 0) {
-            $firstSocialButterflyDog = $this->dogManager->getSocialButterflyDogOnLead($playerId);
+            $firstSocialButterflyDog = $this->dogManager->getFirstDogOnLeadWithAbility($playerId, SOCIAL_BUTTERFLY);
             if ($firstSocialButterflyDog != null) {
                 $this->actionManager->addAction($playerId, new AdditionalAction(USE_DOG_ABILITY, (object) [
                     "dogId" => $firstSocialButterflyDog->id,
@@ -307,6 +307,10 @@ trait ActionTrait
                 $this->commandManager->addCommand($playerId, new PlaymateDogAbilityCommand($playerId, $actionId));
             } else if ($dog->ability == SOCIAL_BUTTERFLY) {
                 $this->commandManager->addCommand($playerId, new SocialButterflyDogAbilityCommand($playerId, $actionId));
+            } else if ($dog->ability == SEARCH_AND_RESCUE) {
+                $this->setGlobalVariable(STATE_AFTER_SWAP, ST_WALKING_MOVE_WALKER_AFTER);
+                $this->setGlobalVariable(CURRENT_ACTION_ID, $actionId);
+                $this->gamestate->jumpToState(ST_ACTION_SWAP);
             }
         }
     }
@@ -371,7 +375,7 @@ trait ActionTrait
         $this->checkAction(ACT_SCOUT_END);
 
         $playerId = $this->getActivePlayerId();
-        $this->commandManager->addCommand($playerId, new EndScoutCommand());
+        $this->commandManager->addCommand($playerId, new EndScoutCommand($playerId, $this->getGlobalVariable(CURRENT_ACTION_ID)));
 
         $this->gamestate->jumpToState(intval($this->getGlobalVariable(STATE_AFTER_SCOUT)));
     }

@@ -14,9 +14,6 @@
 
 Dog Card Abilities
 
-Walking
-- Search and Rescue
-
 Final Scoring
 - Ball Hog
 - Pack Dog
@@ -41,6 +38,7 @@ Walking
 - Obedient
 - Playmate
 - Social Butterfly
+- Search and Rescue
 
 
 

@@ -48,7 +48,7 @@ class GoFetchDogAbilityCommand extends BaseCommand
         $resources = [$dog->goFetchBonusResource];
         DogPark::$instance->playerManager->payResources($this->playerId, $resources);
 
-        DogPark::$instance->dogManager->undoWalkingAdditionalActioinForDogsOnLead($this->playerId, $this->actionId);
+        DogPark::$instance->dogManager->undoWalkingAdditionalActionForDogsOnLead($this->playerId, $this->actionId);
 
         DogPark::$instance->notifyAllPlayers('activateDogAbility', clienttranslate('Undo: ${player_name} activates <b>${dogName}: ${abilityTitle}</b>'),[
             'playerId' => $this->playerId,

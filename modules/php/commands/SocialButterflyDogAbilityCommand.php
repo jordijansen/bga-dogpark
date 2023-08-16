@@ -44,7 +44,7 @@ class SocialButterflyDogAbilityCommand extends BaseCommand
         $dog = DogCard::from(DogPark::$instance->dogCards->getCard($action->additionalArgs->dogId));
         DogPark::$instance->actionManager->unmarkActionPerformed($this->playerId, $this->actionId);
 
-        DogPark::$instance->dogManager->undoWalkingAdditionalActioinForDogsOnLead($this->playerId, $this->actionId);
+        DogPark::$instance->dogManager->undoWalkingAdditionalActionForDogsOnLead($this->playerId, $this->actionId);
 
         DogPark::$instance->notifyAllPlayers('activateDogAbility', clienttranslate('Undo: ${player_name} activates <b>${dogName}: ${abilityTitle}</b>'),[
             'playerId' => $this->playerId,

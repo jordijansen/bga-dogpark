@@ -82,7 +82,7 @@ class DogManager extends APP_DbObject
         }
     }
 
-    public function undoWalkingAdditionalActioinForDogsOnLead($playerId, $originActionId) {
+    public function undoWalkingAdditionalActionForDogsOnLead($playerId, $originActionId) {
         $usedDogIds = DogPark::$instance->getGlobalVariable(USED_WALK_ABILITIES);
         $originatedActions = DogPark::$instance->actionManager->getActionsForOriginActionId($playerId, $originActionId);
         foreach ($originatedActions as $originatedAction) {
@@ -92,10 +92,10 @@ class DogManager extends APP_DbObject
         DogPark::$instance->setGlobalVariable(USED_WALK_ABILITIES, $usedDogIds);
     }
 
-    public function getSocialButterflyDogOnLead($playerId) {
+    public function getFirstDogOnLeadWithAbility($playerId, $ability) {
         $dogsOnLead = DogCard::fromArray(DogPark::$instance->dogCards->getCardsInLocation(LOCATION_LEAD, $playerId));
         foreach ($dogsOnLead as $dog) {
-            if ($dog->ability == SOCIAL_BUTTERFLY) {
+            if ($dog->ability == $ability) {
                 return $dog;
             }
         }

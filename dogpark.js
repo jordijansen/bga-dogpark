@@ -3862,6 +3862,11 @@ var DogPark = /** @class */ (function () {
                 this.dogWalkPark.resourceSpots[args.locationId].removeCard(this.dogWalkPark.resourceSpots[args.locationId].getCards().find(function (token) { return token.type === args.resource; }));
             }
         }
+        else if (['swap', 'scout'].includes(args.resource)) {
+            if (!!args.extraBonus) {
+                this.dogWalkPark.resourceSpots[args.locationId].removeCard(this.dogWalkPark.resourceSpots[args.locationId].getCards().find(function (token) { return token.type === args.resource; }));
+            }
+        }
         else if (['ball', 'stick', 'treat', 'toy'].includes(args.resource)) {
             return this.playerResources.gainResourceFromLocation(args.playerId, args.locationId, args.resource, args.extraBonus);
         }

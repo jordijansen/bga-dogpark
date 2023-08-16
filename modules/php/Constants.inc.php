@@ -174,6 +174,7 @@ const GO_FETCH = 'gofetch';
 const OBEDIENT = 'obedient';
 const PLAYMATE = 'playmate';
 const SOCIAL_BUTTERFLY = 'socialbutterfly';
+const SEARCH_AND_RESCUE = 'searchandrescue';
 
 const SELECTION_ABILITIES = [EAGER, CRAFTY];
 const WALKING_ABILITIES = [GO_FETCH];

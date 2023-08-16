@@ -65,7 +65,7 @@ class GainLocationBonusCommand extends BaseCommand
             DogPark::$instance->updatePlayerScore($this->playerId, $playerScore - 1);
         }
 
-        DogPark::$instance->dogManager->undoWalkingAdditionalActioinForDogsOnLead($this->playerId, $this->originActionId);
+        DogPark::$instance->dogManager->undoWalkingAdditionalActionForDogsOnLead($this->playerId, $this->originActionId);
 
         DogPark::$instance->notifyAllPlayers('undoPlayerGainsLocationBonusResource', clienttranslate('Undo: Location Bonus: ${player_name} gains ${resource}'),[
             'playerId' => $this->playerId,

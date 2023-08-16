@@ -48,7 +48,7 @@ class ObedientDogAbilityCommand extends BaseCommand
         $score = DogPark::$instance->getPlayerScore($this->playerId);
         DogPark::$instance->updatePlayerScore($this->playerId, $score - 1);
 
-        DogPark::$instance->dogManager->undoWalkingAdditionalActioinForDogsOnLead($this->playerId, $this->actionId);
+        DogPark::$instance->dogManager->undoWalkingAdditionalActionForDogsOnLead($this->playerId, $this->actionId);
 
         DogPark::$instance->notifyAllPlayers('activateDogAbility', clienttranslate('Undo: ${player_name} activates <b>${dogName}: ${abilityTitle}</b>'),[
             'playerId' => $this->playerId,
