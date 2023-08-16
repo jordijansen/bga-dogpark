@@ -170,11 +170,14 @@ const USE_DOG_ABILITY = 'USE_DOG_ABILITY';
  */
 const EAGER = 'eager';
 const CRAFTY = 'crafty';
+
 const GO_FETCH = 'gofetch';
 const OBEDIENT = 'obedient';
 const PLAYMATE = 'playmate';
 const SOCIAL_BUTTERFLY = 'socialbutterfly';
 const SEARCH_AND_RESCUE = 'searchandrescue';
+
+const PACK_DOG = 'packdog';
 
 const SELECTION_ABILITIES = [EAGER, CRAFTY];
 const WALKING_ABILITIES = [GO_FETCH];

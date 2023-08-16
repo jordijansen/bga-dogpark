@@ -11,6 +11,8 @@ include("dogtraits/Playmate.php");
 include("dogtraits/SocialButterfly.php");
 include("dogtraits/SearchAndRescue.php");
 
+include("dogtraits/PackDog.php");
+
 
 for($i = 1; $i<=163;$i++)
 {

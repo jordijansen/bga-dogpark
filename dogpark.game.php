@@ -78,6 +78,7 @@ require_once('modules/php/PlayerManager.php');
 require_once('modules/php/DogBreedExpertAwardManager.php');
 require_once('modules/php/ForecastManager.php');
 require_once('modules/php/ActionManager.php');
+require_once('modules/php/ScoreManager.php');
 
 class DogPark extends Table
 {
@@ -107,6 +108,7 @@ class DogPark extends Table
     public DogBreedExpertAwardManager $breedExpertAwardManager;
     public ForecastManager $forecastManager;
     public ActionManager $actionManager;
+    public ScoreManager $scoreManager;
 
     function __construct( )
 	{
@@ -150,6 +152,7 @@ class DogPark extends Table
         $this->breedExpertAwardManager = new DogBreedExpertAwardManager();
         $this->forecastManager = new ForecastManager();
         $this->actionManager = new ActionManager();
+        $this->scoreManager = new ScoreManager();
     }
 	
     protected function getGameName( )

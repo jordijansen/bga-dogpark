@@ -15,10 +15,9 @@
 Dog Card Abilities
 
 Final Scoring
-- Ball Hog
-- Pack Dog
 - Raring to Go
 - Sociable
+- Ball Hog
 - Stick Chaser
 - Toy Collector
 - Treat Lover
@@ -39,6 +38,8 @@ Walking
 - Playmate
 - Social Butterfly
 - Search and Rescue
+Final Scoring
+- Pack Dog
 
 
 

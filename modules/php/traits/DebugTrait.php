@@ -1,6 +1,7 @@
 <?php
 
 namespace traits;
+use DogPark;
 use objects\DogCard;
 
 trait DebugTrait
@@ -20,5 +21,10 @@ trait DebugTrait
         } else {
             throw new \BgaUserException("Card not found in deck");
         }
+    }
+
+    function finalScoring() {
+        $result = DogPark::$instance->scoreManager->getScoreBreakDown();
+        var_dump(json_encode($result));
     }
 }
