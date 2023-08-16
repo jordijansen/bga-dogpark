@@ -180,6 +180,10 @@ const SEARCH_AND_RESCUE = 'searchandrescue';
 const PACK_DOG = 'packdog';
 const RARING_TO_GO = 'raringtogo';
 const SOCIABLE = 'sociable';
+const BALL_HOG = 'ballhog';
+const STICK_CHASER = 'stickchaser';
+const TOY_COLLECTOR = 'toycollector';
+const TREAT_LOVER = 'treatlover';
 
 const SELECTION_ABILITIES = [EAGER, CRAFTY];
 const WALKING_ABILITIES = [GO_FETCH];

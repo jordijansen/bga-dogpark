@@ -48,6 +48,8 @@ class ScoreManager
                     }
                 }
                 $result[$scoringDog->id] = sizeof(array_keys($breeds));
+            } else if ($scoringDog->ability == BALL_HOG) {
+                $result[$scoringDog->id] = $scoringDog->resourcesOnCard['ball'];
             }
         }
         return $result;
