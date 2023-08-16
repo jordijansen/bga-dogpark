@@ -39,7 +39,7 @@ class ScoreManager
                 }
                 $result[$scoringDog->id] = $count * 2;
             } else if ($scoringDog->ability == RARING_TO_GO) {
-                $result[$scoringDog->id] = $scoringDog->resourcesOnCard['walked'] * 2;
+                $result[$scoringDog->id] = $scoringDog->resourcesOnCard[WALKED] * 2;
             } else if ($scoringDog->ability == SOCIABLE) {
                 $breeds = [];
                 foreach ($playerDogs as $dog) {
@@ -49,11 +49,13 @@ class ScoreManager
                 }
                 $result[$scoringDog->id] = sizeof(array_keys($breeds));
             } else if ($scoringDog->ability == BALL_HOG) {
-                $result[$scoringDog->id] = $scoringDog->resourcesOnCard['ball'];
+                $result[$scoringDog->id] = $scoringDog->resourcesOnCard[RESOURCE_BALL];
             } else if ($scoringDog->ability == STICK_CHASER) {
-                $result[$scoringDog->id] = $scoringDog->resourcesOnCard['stick'];
+                $result[$scoringDog->id] = $scoringDog->resourcesOnCard[RESOURCE_STICK];
             } else if ($scoringDog->ability == TOY_COLLECTOR) {
-                $result[$scoringDog->id] = $scoringDog->resourcesOnCard['toy'] * 2;
+                $result[$scoringDog->id] = $scoringDog->resourcesOnCard[RESOURCE_TOY] * 2;
+            } else if ($scoringDog->ability == TREAT_LOVER) {
+                $result[$scoringDog->id] = $scoringDog->resourcesOnCard[RESOURCE_TREAT] * 2;
             }
         }
         return $result;
