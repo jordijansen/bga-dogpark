@@ -2,20 +2,20 @@
 
 namespace objects\dogtraits;
 
-trait RaringToGo
+trait Sociable
 {
     protected function getAbility() : string
     {
-        return RARING_TO_GO;
+        return SOCIABLE;
     }
 
     protected function getAbilityTitle() : string
     {
-        return _('Raring to Go');
+        return _('Sociable');
     }
 
     protected function getAbilityText() : string
     {
-        return _('During <b>FINAL SCORING</b>, gain 2 _icon-reputation_ for each _icon-walked_ on this dog.');
+        return _('During <b>FINAL SCORING</b>, gain 1 _icon-reputation_ for each breed category represented in your Kennel.');
     }
 }

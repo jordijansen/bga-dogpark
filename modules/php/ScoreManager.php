@@ -40,6 +40,14 @@ class ScoreManager
                 $result[$scoringDog->id] = $count * 2;
             } else if ($scoringDog->ability == RARING_TO_GO) {
                 $result[$scoringDog->id] = $scoringDog->resourcesOnCard['walked'] * 2;
+            } else if ($scoringDog->ability == SOCIABLE) {
+                $breeds = [];
+                foreach ($playerDogs as $dog) {
+                    foreach ($dog->breeds as $breed) {
+                        $breeds[$breed] = 1;
+                    }
+                }
+                $result[$scoringDog->id] = sizeof(array_keys($breeds));
             }
         }
         return $result;

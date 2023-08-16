@@ -179,6 +179,7 @@ const SEARCH_AND_RESCUE = 'searchandrescue';
 
 const PACK_DOG = 'packdog';
 const RARING_TO_GO = 'raringtogo';
+const SOCIABLE = 'sociable';
 
 const SELECTION_ABILITIES = [EAGER, CRAFTY];
 const WALKING_ABILITIES = [GO_FETCH];
