@@ -1837,8 +1837,8 @@ body > .card {
 }
 
 .dp-dog-card-token-stock {
-  width: 160px;
-  height: 190px;
+  width: 130px;
+  padding-top: 50px;
   float: right;
   align-items: center;
 }

@@ -4,6 +4,7 @@ namespace objects\dogtraits;
 
 trait TreatLover
 {
+    public int $maxResources = 3;
     protected function getAbility() : string
     {
         return TREAT_LOVER;

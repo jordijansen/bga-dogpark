@@ -3789,7 +3789,10 @@ var DogPark = /** @class */ (function () {
             ['playerSwaps', undefined],
             ['playerScoutReplaces', undefined],
             ['undoPlayerScoutReplaces', undefined],
-            ['activateDogAbility', undefined]
+            ['activateDogAbility', undefined],
+            ['playerAssignsResources', undefined],
+            ['revealObjectiveCards', undefined],
+            ['finalScoringRevealed', undefined]
             // ['shortTime', 1],
             // ['fixedTime', 1000]
         ];
@@ -3966,6 +3969,39 @@ var DogPark = /** @class */ (function () {
             this.setScore(args.playerId, args.score);
         }
         return Promise.all(promises);
+    };
+    DogPark.prototype.notif_playerAssignsResources = function (args) {
+        return __awaiter(this, void 0, void 0, function () {
+            var _i, _a, resource;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0:
+                        _i = 0, _a = args.resourcesAdded;
+                        _b.label = 1;
+                    case 1:
+                        if (!(_i < _a.length)) return [3 /*break*/, 5];
+                        resource = _a[_i];
+                        return [4 /*yield*/, this.playerResources.payResourcesToDog(args.playerId, args.dog, [resource])];
+                    case 2:
+                        _b.sent();
+                        return [4 /*yield*/, this.dogCardManager.addResourceToDog(args.dog.id, resource)];
+                    case 3:
+                        _b.sent();
+                        _b.label = 4;
+                    case 4:
+                        _i++;
+                        return [3 /*break*/, 1];
+                    case 5: return [2 /*return*/];
+                }
+            });
+        });
+    };
+    DogPark.prototype.notif_revealObjectiveCards = function (args) {
+        var _this = this;
+        return Promise.all(args.objectiveCards.map(function (objectiveCard) { return _this.objectiveCardManager.updateCardInformations(objectiveCard); }));
+    };
+    DogPark.prototype.notif_finalScoringRevealed = function (args) {
+        return Promise.resolve();
     };
     DogPark.prototype.format_string_recursive = function (log, args) {
         try {

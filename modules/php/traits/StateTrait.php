@@ -490,4 +490,85 @@ trait StateTrait
 
         $this->gamestate->nextState( "");
     }
+
+    //////////////////////////////////
+    // FINAL SCORING
+    //////////////////////////////////
+    function stFinalScoring() {
+        // Assign resources to dogs
+        $playerIdsInOrder = $this->playerManager->getPlayerIdsInTurnOrder();
+        foreach ($playerIdsInOrder as $playerOrderNo => $player) {
+            $playerId = intval($player['player_id']);
+
+            $dogsInKennel = DogCard::fromArray($this->dogCards->getCardsInLocation(LOCATION_PLAYER, $playerId));
+            foreach ($dogsInKennel as $dogInKennel) {
+                $resourceToAdd = null;
+                if ($dogInKennel->ability == STICK_CHASER) {
+                    $resourceToAdd = RESOURCE_STICK;
+                } else if ($dogInKennel->ability == TOY_COLLECTOR) {
+                    $resourceToAdd = RESOURCE_TOY;
+                } else if ($dogInKennel->ability == BALL_HOG) {
+                    $resourceToAdd = RESOURCE_BALL;
+                } else if ($dogInKennel->ability == TREAT_LOVER) {
+                    $resourceToAdd = RESOURCE_TREAT;
+                }
+
+                if ($resourceToAdd != null) {
+                    $playerResources = $this->playerManager->getResources($playerId);
+                    $nrOfResourcesToAdd = min($playerResources[$resourceToAdd], $dogInKennel->maxResources);
+
+                    $resources = [];
+                    for ($i = 0; $i < $nrOfResourcesToAdd; $i++) {
+                        $resources[] = $resourceToAdd;
+                    }
+
+                    if (sizeof($resources) > 0) {
+                        $this->playerManager->payResources($playerId, $resources);
+                        $this->dogManager->addResources($dogInKennel->id, $resourceToAdd, $nrOfResourcesToAdd);
+                        $this->notifyAllPlayers('playerAssignsResources', clienttranslate('${player_name} assigns ${nrOfResourcesAdded} ${resourceType} to <b>${dogName}</b>'),[
+                            'playerId' => $playerId,
+                            'player_name' => $this->getPlayerName($playerId),
+                            'dogName' => $dogInKennel->name,
+                            'nrOfResourcesAdded' => sizeof($resources),
+                            'resourceType' => $resourceToAdd,
+                            'resourcesAdded' => $resources,
+                            'dog' => DogCard::from($this->dogCards->getCard($dogInKennel->id))
+                        ]);
+                    }
+                }
+            }
+        }
+
+        // Award Breed Expert
+        $breedExpertAwardResults = $this->breedExpertAwardManager->getExpertAwardsWinners();
+        foreach ($breedExpertAwardResults as $playerId => $breedExpertCards) {
+            foreach ($breedExpertCards as $breedExpertCard) {
+                $this->notifyAllPlayers('playerWinsBreedExpert', clienttranslate('${player_name} wins ${breed} Breed Expert and gains ${reputation} reputation'),[
+                    'playerId' => $playerId,
+                    'player_name' => $this->getPlayerName($playerId),
+                    'breed' => $breedExpertCard->type,
+                    'reputation' => $breedExpertCard->reputation,
+                ]);
+            }
+        }
+
+        if ($this->getPlayersNumber() > 1) {
+            // Reveal Objective Cards
+            $this->setGlobalVariable(OBJECTIVES_REVEALED, true);
+            $objectiveCards = ObjectiveCard::fromArray($this->objectiveCards->getCardsInLocation(LOCATION_SELECTED));
+            $this->notifyAllPlayers('revealObjectiveCards', clienttranslate('Objective Cards revealed'),[
+                'objectiveCards' => $objectiveCards,
+            ]);
+        }
+
+        $scoreBreakDown = $this->scoreManager->getScoreBreakDown($breedExpertAwardResults);
+        $this->setGlobalVariable(FINAL_SCORING_BREAKDOWN, $scoreBreakDown);
+        $this->notifyAllPlayers('finalScoringRevealed', '',[
+            'scoreBreakDown' => $scoreBreakDown,
+        ]);
+
+        $this->gamestate->nextState("");
+    }
+
+
 }

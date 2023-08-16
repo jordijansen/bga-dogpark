@@ -576,7 +576,10 @@ class DogPark implements DogParkGame {
             ['playerSwaps', undefined],
             ['playerScoutReplaces', undefined],
             ['undoPlayerScoutReplaces', undefined],
-            ['activateDogAbility', undefined]
+            ['activateDogAbility', undefined],
+            ['playerAssignsResources', undefined],
+            ['revealObjectiveCards', undefined],
+            ['finalScoringRevealed', undefined]
             // ['shortTime', 1],
             // ['fixedTime', 1000]
         ];
@@ -762,6 +765,21 @@ class DogPark implements DogParkGame {
         }
 
         return Promise.all(promises);
+    }
+
+    private async notif_playerAssignsResources(args: NotifPlayerAssignsResources) {
+        for (const resource of args.resourcesAdded) {
+            await this.playerResources.payResourcesToDog(args.playerId, args.dog, [resource])
+            await this.dogCardManager.addResourceToDog(args.dog.id, resource as any)
+        }
+    }
+
+    private notif_revealObjectiveCards(args: NotifRevealObjectiveCards) {
+        return Promise.all(args.objectiveCards.map(objectiveCard => this.objectiveCardManager.updateCardInformations(objectiveCard)));
+    }
+
+    private notif_finalScoringRevealed(args) {
+        return Promise.resolve();
     }
 
     public format_string_recursive(log: string, args: any) {

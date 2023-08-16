@@ -108,8 +108,13 @@ class DogManager extends APP_DbObject
 
     public function addResource(int $dogId, string $resource)
     {
+        $this->addResources($dogId, $resource, 1);
+    }
+
+    public function addResources(int $dogId, string $resource, int $amount)
+    {
         $columnName = 'dog_' .$resource;
-        self::DbQuery("UPDATE dog SET $columnName = $columnName + 1 WHERE card_id = ".$dogId);
+        self::DbQuery("UPDATE dog SET $columnName = $columnName + $amount WHERE card_id = ".$dogId);
     }
 
     public function removeResource(int $dogId, string $resource)

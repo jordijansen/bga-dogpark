@@ -2,6 +2,8 @@
 
 
 use objects\BreedExpertCard;
+use objects\DogCard;
+use objects\LocationBonusCard;
 
 class DogBreedExpertAwardManager
 {
@@ -25,5 +27,52 @@ class DogBreedExpertAwardManager
     public function getExpertAwards(): array
     {
         return BreedExpertCard::fromArray(DogPark::$instance->breedCards->getCardsInLocation(LOCATION_BREED_EXPERT_AWARDS, null, 'card_location_arg'));
+    }
+
+    public function getExpertAwardsWinners(): array
+    {
+        $playerBreedCounts = [];
+        $playerIdsInOrder = DogPark::$instance->playerManager->getPlayerIdsInTurnOrder();
+        foreach ($playerIdsInOrder as $playerOrderNo => $player) {
+            $playerId = intval($player['player_id']);
+            $playerDogs = DogCard::fromArray(DogPark::$instance->dogCards->getCardsInLocation(LOCATION_PLAYER, $playerId));
+            $playerBreeds = array_merge(...array_map(fn($dog) => $dog->breeds, $playerDogs));
+            $playerBreedCounts[$playerId] = array_count_values($playerBreeds);
+        }
+
+        $autoWalkers = DogPark::$instance->getAutoWalkers();
+        foreach ($autoWalkers as $autoWalker) {
+            $playerDogs = DogCard::fromArray(DogPark::$instance->dogCards->getCardsInLocation(LOCATION_PLAYER, $autoWalker->id));
+            $playerBreeds = array_merge(...array_map(fn($dog) => $dog->breeds, $playerDogs));
+            $playerBreedCounts[$autoWalker->id] = array_count_values($playerBreeds);
+        }
+
+        $result = [];
+        $expertAwards = $this->getExpertAwards();
+        foreach ($expertAwards as $expertAward) {
+            $breed = $expertAward->type;
+            $winners = [];
+            $highestCount = 0;
+            foreach ($playerBreedCounts as $playerId => $playerBreedCount) {
+                if (array_key_exists($breed, $playerBreedCount)) {
+                    if ($playerBreedCount[$breed] > $highestCount) {
+                        $winners = [$playerId];
+                        $highestCount = $playerBreedCount[$breed];
+                    } else if ($playerBreedCount[$breed] == $highestCount) {
+                        $winners[] = $playerId;
+                    }
+                }
+            }
+
+            foreach ($winners as $winnerId) {
+                if (array_key_exists($winnerId, $result)) {
+                    $result[$winnerId] = [...$result[$winnerId], $expertAward];
+                } else {
+                    $result[$winnerId] = [$expertAward];
+                }
+            }
+
+        }
+        return $result;
     }
 }

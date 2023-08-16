@@ -9,8 +9,8 @@ trait DebugTrait
 
     function jumpState()
     {
-        $this->setGlobalVariable(USED_WALK_ABILITIES, []);
-        $this->gamestate->jumpToState(40);
+        $this->setGlobalVariable(OBJECTIVES_REVEALED, false);
+        $this->gamestate->jumpToState(ST_FINAL_SCORING);
     }
 
     function placeInKennel($playerId, $dogTypeId) {

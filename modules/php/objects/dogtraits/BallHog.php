@@ -4,6 +4,7 @@ namespace objects\dogtraits;
 
 trait BallHog
 {
+    public int $maxResources = 6;
     protected function getAbility() : string
     {
         return BALL_HOG;

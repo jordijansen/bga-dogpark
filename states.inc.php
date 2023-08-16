@@ -311,7 +311,7 @@ $homeTimeStates = [
         "action" => "stHomeTime",
         "transitions" => [
             "nextRound" => ST_RECRUITMENT_START,
-            "endGame" => ST_GAME_END // TODO ENDGAME SCORING
+            "endGame" => ST_FINAL_SCORING
         ]
     ],
 ];
@@ -385,7 +385,34 @@ $actionStates = [
     ],
 ];
 
-$machinestates = $basicGameStates + $setupStates + $recruitmentStates + $selectionStates + $walkingStates + $homeTimeStates + $actionStates;
+//////////////////////////////////
+// FINAL SCORING
+//////////////////////////////////
+$endGameStates = [
+    ST_FINAL_SCORING => [
+        "name" => "finalScoring",
+        "description" => clienttranslate('Final Scoring'),
+        "type" => "game",
+        "action" => "stFinalScoring",
+        "transitions" => [
+            "" => ST_CATCH_STATE
+        ]
+    ],
+    ST_CATCH_STATE => [
+        "name" => "catchState",
+        "description" => clienttranslate('Catch State'),
+        "descriptionmyturn" => clienttranslate('Catch State'),
+        "type" => "activeplayer",
+        "possibleactions" => [
+        ],
+        "transitions" => [
+        ],
+    ],
+];
+
+
+
+$machinestates = $basicGameStates + $setupStates + $recruitmentStates + $selectionStates + $walkingStates + $homeTimeStates + $actionStates + $endGameStates;
 
 
 

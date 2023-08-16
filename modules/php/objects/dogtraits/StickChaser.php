@@ -4,6 +4,7 @@ namespace objects\dogtraits;
 
 trait StickChaser
 {
+    public int $maxResources = 6;
     protected function getAbility() : string
     {
         return STICK_CHASER;

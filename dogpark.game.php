@@ -182,16 +182,19 @@ class DogPark extends Table
         $result['players'] = self::getCollectionFromDb( $sql );
 
         $offerValueRevealed = $this->getGlobalVariable(OFFER_VALUE_REVEALED);
+        $objectivesRevealed = $this->getGlobalVariable(OBJECTIVES_REVEALED);
+
         foreach($result['players'] as $playerId => &$player) {
+            $hideInfo = $playerId != $current_player_id && $objectivesRevealed == false;
             $player['orderNo'] = $this->playerManager->getPlayerCustomOrderNo($playerId);
             $player['walker'] = $this->playerManager->getWalker($playerId);
             $player['kennelDogs'] = DogCard::fromArray($this->dogCards->getCardsInLocation(LOCATION_PLAYER, $playerId));
             $player['leadDogs'] = DogCard::fromArray($this->dogCards->getCardsInLocation(LOCATION_LEAD, $playerId));
             $player['offerValue'] = $current_player_id == $playerId || $offerValueRevealed ? $this->playerManager->getPlayerOfferValue($playerId) : 0;
             $player['resources'] = $this->playerManager->getResources($playerId);
-            $player['objectives'] = ObjectiveCard::fromArray($this->objectiveCards->getCardsInLocation(LOCATION_PLAYER, $playerId), $playerId != $current_player_id);
+            $player['objectives'] = ObjectiveCard::fromArray($this->objectiveCards->getCardsInLocation(LOCATION_PLAYER, $playerId), $hideInfo);
             $player['selectedObjectiveCardId'] = $this->getGlobalVariable(OBJECTIVE_ID_ .$playerId);
-            $player['chosenObjective'] = current(ObjectiveCard::fromArray($this->objectiveCards->getCardsInLocation(LOCATION_SELECTED, $playerId), $playerId != $current_player_id));
+            $player['chosenObjective'] = current(ObjectiveCard::fromArray($this->objectiveCards->getCardsInLocation(LOCATION_SELECTED, $playerId), $hideInfo));
         }
 
         $result['currentRound'] = intval($this->getGlobalVariable(CURRENT_ROUND));

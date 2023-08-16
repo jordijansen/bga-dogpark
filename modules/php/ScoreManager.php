@@ -2,29 +2,37 @@
 
 
 use objects\DogCard;
+use objects\ObjectiveCard;
 
 class ScoreManager
 {
     public function __construct() {}
 
-    public function getScoreBreakDown()
+    public function getScoreBreakDown($breedExpertAwardResults)
     {
         $result = [];
         $players = DogPark::$instance->loadPlayersBasicInfos();
         foreach ($players as $playerId => $player) {
-            $result[$playerId] = $this->getPlayerScoreBreakDown($playerId);
+            $result[$playerId] = $this->getPlayerScoreBreakDown($playerId, $breedExpertAwardResults);
         }
         return $result;
     }
 
-    private function getPlayerScoreBreakDown($playerId) {
+    private function getPlayerScoreBreakDown($playerId, $breedExpertAwardResults) {
         $result = [];
+        $result['dogFinalScoring'] = $this->getPlayerDogFinalScore($playerId);
+
         $result['parkBoardScore'] = DogPark::$instance->getPlayerScore($playerId);
-        $result['dogFinalScoring'] = $this->getPlayerDogFinalScoring($playerId);
+        $result['dogFinalScoringScore'] = array_sum(array_values($result['dogFinalScoring']));
+        $result['breedExpertAwardScore'] = $this->getPlayerBreedExpertAwardScore($playerId, $breedExpertAwardResults);
+        $result['objectiveCardScore'] = $this->getPlayerObjectiveCardScore($playerId, $breedExpertAwardResults);
+        $result['remainingResourcesScore'] = $this->getPlayerRemainingResourcesScore($playerId);
+
+        $result['total'] = $result['parkBoardScore'] + $result['dogFinalScoringScore'] + $result['breedExpertAwardScore'] + $result['objectiveCardScore'] + $result['remainingResourcesScore'];
         return $result;
     }
 
-    private function getPlayerDogFinalScoring($playerId)
+    private function getPlayerDogFinalScore($playerId)
     {
         $result = [];
         $playerDogs = DogCard::fromArray(DogPark::$instance->dogCards->getCardsInLocation(LOCATION_PLAYER, $playerId));
@@ -49,9 +57,9 @@ class ScoreManager
                 }
                 $result[$scoringDog->id] = sizeof(array_keys($breeds));
             } else if ($scoringDog->ability == BALL_HOG) {
-                $result[$scoringDog->id] = $scoringDog->resourcesOnCard[RESOURCE_BALL];
+                $result[$scoringDog->id] = intval($scoringDog->resourcesOnCard[RESOURCE_BALL]);
             } else if ($scoringDog->ability == STICK_CHASER) {
-                $result[$scoringDog->id] = $scoringDog->resourcesOnCard[RESOURCE_STICK];
+                $result[$scoringDog->id] = intval($scoringDog->resourcesOnCard[RESOURCE_STICK]);
             } else if ($scoringDog->ability == TOY_COLLECTOR) {
                 $result[$scoringDog->id] = $scoringDog->resourcesOnCard[RESOURCE_TOY] * 2;
             } else if ($scoringDog->ability == TREAT_LOVER) {
@@ -59,5 +67,72 @@ class ScoreManager
             }
         }
         return $result;
+    }
+
+    private function getPlayerBreedExpertAwardScore($playerId, $breedExpertAwardResults)
+    {
+        $score = 0;
+        $playerAwards = $breedExpertAwardResults[$playerId];
+        foreach ($playerAwards as $playerAward) {
+            $score += $playerAward->reputation;
+        }
+        return $score;
+    }
+
+    private function getPlayerRemainingResourcesScore($playerId)
+    {
+        $totalResourceCount = 0;
+        $playerResources = DogPark::$instance->playerManager->getResources($playerId);
+        foreach ($playerResources as $resource => $count) {
+            $totalResourceCount = $totalResourceCount + $count;
+        }
+        return floor($totalResourceCount / 5);
+    }
+
+    private function getPlayerObjectiveCardScore($playerId, $breedExpertAwardResults)
+    {
+        $objectiveCard = current(ObjectiveCard::fromArray(DogPark::$instance->objectiveCards->getCardsInLocation(LOCATION_SELECTED, $playerId)));
+        $playerDogs = DogCard::fromArray(DogPark::$instance->dogCards->getCardsInLocation(LOCATION_PLAYER, $playerId));
+        $playerBreeds = array_merge(...array_map(fn($dog) => $dog->breeds, $playerDogs));
+        $playerBreedCounts = array_count_values($playerBreeds);
+        if ($objectiveCard->typeArg == 1) {
+            $breedsWith4OrMoreDogs = array_filter(array_values($playerBreedCounts), function ($i) { return $i >= 4;});
+            return sizeof($breedsWith4OrMoreDogs) > 0 ? 7 : 0;
+        } else if ($objectiveCard->typeArg == 2) {
+            $playerDogsWith2OrMoreWalkedTokens = array_filter($playerDogs, function ($dog) { return $dog->resourcesOnCard[WALKED] >= 2;});
+            return sizeof($playerDogsWith2OrMoreWalkedTokens) >= 3 ? 7 : 0;
+        } else if ($objectiveCard->typeArg == 3) {
+            $walkedCount = 0;
+            foreach ($playerDogs as $dog) {
+                $walkedCount = $walkedCount + $dog->resourcesOnCard[WALKED];
+            }
+            return $walkedCount >= 10 ? 7 : 0;
+        } else if ($objectiveCard->typeArg == 4) {
+            $playerAwards = $breedExpertAwardResults[$playerId];
+            $objectiveThreshold = DogPark::$instance->getPlayersNumber() <= 3 ? 4 : 3;
+            return sizeof($playerAwards) >= $objectiveThreshold ? 7 : 0;
+        } else if ($objectiveCard->typeArg == 5) {
+            $walkedDogs = array_filter($playerDogs, function ($dog) { return $dog->resourcesOnCard[WALKED] >= 1;});
+            return sizeof($walkedDogs) >= 7 ? 7 : 0;
+        } else if ($objectiveCard->typeArg == 6) {
+            $playerDogsWith2OrMoreWalkedTokens = array_filter($playerDogs, function ($dog) { return $dog->resourcesOnCard[WALKED] >= 2;});
+            return sizeof($playerDogsWith2OrMoreWalkedTokens) >= 2 ? 3 : 0;
+        } else if ($objectiveCard->typeArg == 7) {
+            $breedsWith3OrMoreDogs = array_filter(array_values($playerBreedCounts), function ($i) { return $i >= 3;});
+            return sizeof($breedsWith3OrMoreDogs) > 0 ? 3 : 0;
+        } else if ($objectiveCard->typeArg == 8) {
+            // WARNING WILL THIS CAUSE PROBLEMS WITH NEW TRICKS EXP???
+            $nrOfBreedsInKennel = sizeof(array_keys($playerBreedCounts));
+            return $nrOfBreedsInKennel >= 4 ? 3 : 0;
+        } else if ($objectiveCard->typeArg == 9) {
+            $playerAwards = $breedExpertAwardResults[$playerId];
+            $objectiveThreshold = DogPark::$instance->getPlayersNumber() <= 3 ? 3 : 2;
+            return sizeof($playerAwards) >= $objectiveThreshold ? 3 : 0;
+        } else if ($objectiveCard->typeArg == 10) {
+            $walkedDogs = array_filter($playerDogs, function ($dog) { return $dog->resourcesOnCard[WALKED] >= 1;});
+            return sizeof($walkedDogs) >= 6 ? 3 : 0;
+        }
+
+        throw new BgaUserException('Scoring Card not implemented');
     }
 }

@@ -241,5 +241,16 @@ interface NotifActivateDogAbility {
     score?: number
 }
 
+interface NotifPlayerAssignsResources {
+    playerId: number,
+    resourcesAdded: string[]
+    dog: DogCard,
+    resources: {stick: number, ball: number, treat: number, toy: number},
+}
+
+interface NotifRevealObjectiveCards {
+    objectiveCards: Card[]
+}
+
 
 
