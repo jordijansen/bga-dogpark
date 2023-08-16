@@ -235,6 +235,8 @@ class DogPark extends Table
             ];
         }
 
+        $result['scoreBreakdown'] = $this->getGlobalVariable(FINAL_SCORING_BREAKDOWN);
+
         return $result;
     }
 

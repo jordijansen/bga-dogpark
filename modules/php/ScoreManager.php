@@ -28,7 +28,14 @@ class ScoreManager
         $result['objectiveCardScore'] = $this->getPlayerObjectiveCardScore($playerId, $breedExpertAwardResults);
         $result['remainingResourcesScore'] = $this->getPlayerRemainingResourcesScore($playerId);
 
-        $result['total'] = $result['parkBoardScore'] + $result['dogFinalScoringScore'] + $result['breedExpertAwardScore'] + $result['objectiveCardScore'] + $result['remainingResourcesScore'];
+        $result['score'] = $result['parkBoardScore'] + $result['dogFinalScoringScore'] + $result['breedExpertAwardScore'] + $result['objectiveCardScore'] + $result['remainingResourcesScore'];
+        $result['scoreAux'] = 0;
+        foreach ($breedExpertAwardResults[$playerId] as $breedExpertCard) {
+            // Highest value breedExpertAward is tiebreaker
+            if ($breedExpertCard->reputation > $result['scoreAux']) {
+                $result['scoreAux'] = $breedExpertCard->reputation;
+            }
+        }
         return $result;
     }
 

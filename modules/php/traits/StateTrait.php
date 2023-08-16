@@ -567,6 +567,10 @@ trait StateTrait
             'scoreBreakDown' => $scoreBreakDown,
         ]);
 
+        foreach ($scoreBreakDown as $playerId => $scores) {
+            $this->updatePlayerScoreAndAux($playerId, $scores['score'], $scores['scoreAux']);
+        }
+
         $this->gamestate->nextState("");
     }
 

@@ -778,7 +778,7 @@ class DogPark implements DogParkGame {
         return Promise.all(args.objectiveCards.map(objectiveCard => this.objectiveCardManager.updateCardInformations(objectiveCard)));
     }
 
-    private notif_finalScoringRevealed(args) {
+    private notif_finalScoringRevealed(args: NotifFinalScoringRevealed) {
         return Promise.resolve();
     }
 

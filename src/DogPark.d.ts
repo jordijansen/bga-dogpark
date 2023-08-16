@@ -62,7 +62,21 @@ interface DogParkGameData extends GameData {
     forecastCards: Card[],
     field: { nrOfFields: number, dogs: DogCard[], scoutedDogs: DogCard[], walkers: DogWalker[] }
     park: { walkers: DogWalker[], locationBonusCards: LocationBonusCard[], extraLocationBonuses: LocationBonus[]}
-    autoWalkers: AutoWalker[]
+    autoWalkers: AutoWalker[],
+    scoreBreakdown: FinalScoringBreakdown
+}
+
+interface FinalScoringBreakdown {
+    [playerId: number]: {
+        breedExpertAwardScore: number,
+        dogFinalScoring: {[dogId: number]: number},
+        dogFinalScoringScore: number,
+        objectiveCardScore: number,
+        parkBoardScore: number,
+        remainingResourcesScore: number,
+        score: number,
+        scoreAux: number
+    }
 }
 
 // ARGS
@@ -250,6 +264,10 @@ interface NotifPlayerAssignsResources {
 
 interface NotifRevealObjectiveCards {
     objectiveCards: Card[]
+}
+
+interface NotifFinalScoringRevealed {
+    scoreBreakDown: FinalScoringBreakdown
 }
 
 
