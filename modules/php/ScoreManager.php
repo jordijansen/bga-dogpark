@@ -38,6 +38,8 @@ class ScoreManager
                     }
                 }
                 $result[$scoringDog->id] = $count * 2;
+            } else if ($scoringDog->ability == RARING_TO_GO) {
+                $result[$scoringDog->id] = $scoringDog->resourcesOnCard['walked'] * 2;
             }
         }
         return $result;

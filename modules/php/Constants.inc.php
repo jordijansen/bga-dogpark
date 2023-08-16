@@ -178,6 +178,7 @@ const SOCIAL_BUTTERFLY = 'socialbutterfly';
 const SEARCH_AND_RESCUE = 'searchandrescue';
 
 const PACK_DOG = 'packdog';
+const RARING_TO_GO = 'raringtogo';
 
 const SELECTION_ABILITIES = [EAGER, CRAFTY];
 const WALKING_ABILITIES = [GO_FETCH];

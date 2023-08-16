@@ -15,7 +15,6 @@
 Dog Card Abilities
 
 Final Scoring
-- Raring to Go
 - Sociable
 - Ball Hog
 - Stick Chaser
@@ -40,6 +39,7 @@ Walking
 - Search and Rescue
 Final Scoring
 - Pack Dog
+- Raring to Go
 
 
 
