@@ -127,5 +127,21 @@ trait ArgsTrait
             "nrOfPlaces" => $nrOfPlaces
         ];
     }
+
+    function argActionGainResourcesPrivate($playerId): array
+    {
+        $actionId = $this->getGlobalVariable(CURRENT_ACTION_ID .$playerId);
+        $action = $this->actionManager->getAction($playerId, $actionId);
+        $forecastCardType = $action->additionalArgs->forecastCardTypeArg;
+
+        $nrOfResourcesToGain = intval($this->getGlobalVariable(GAIN_RESOURCES_NR_OF_RESOURCES .$playerId));
+        $resourceOptions = $this->getGlobalVariable(GAIN_RESOURCES_RESOURCE_OPTIONS .$playerId);
+
+        return [
+            "forecastCardType" => $forecastCardType,
+            "nrOfResourcesToGain" => $nrOfResourcesToGain,
+            "resourceOptions" => $resourceOptions
+        ];
+    }
     
 }

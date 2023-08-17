@@ -2852,6 +2852,79 @@ var FinalScoringPad = /** @class */ (function () {
     };
     return FinalScoringPad;
 }());
+var GainResources = /** @class */ (function () {
+    function GainResources(elementId, nrOfResourcesToGain, resourceOptions, onCancel, onConfirm) {
+        this.elementId = elementId;
+        this.nrOfResourcesToGain = nrOfResourcesToGain;
+        this.resourceOptions = resourceOptions;
+        this.onCancel = onCancel;
+        this.onConfirm = onConfirm;
+        this.selectedResources = [];
+        dojo.place('<div id="dp-gain-resources-wrapper"></div>', $(this.elementId));
+        this.resetSelection();
+        this.updateUi();
+    }
+    GainResources.prototype.resetSelection = function () {
+        this.selectedResources = [];
+        for (var i = 0; i < this.nrOfResourcesToGain; i++) {
+            this.selectedResources.push('placeholder');
+        }
+    };
+    GainResources.prototype.updateUi = function () {
+        var _this = this;
+        var wrapperElement = $('dp-gain-resources-wrapper');
+        dojo.empty(wrapperElement);
+        if (this.selectedResources.includes('placeholder')) {
+            dojo.place(this.createResourceButtons(), wrapperElement);
+            this.resourceOptions.forEach(function (resource) { return dojo.connect($("dp-dog-cost-pay-".concat(resource, "-button")), 'onclick', function () { return _this.useResource(resource); }); });
+        }
+        dojo.place(this.createCostRow(), wrapperElement);
+        dojo.place(this.createMainButtons(), wrapperElement);
+        if (this.selectedResources.some(function (value) { return value != 'placeholder'; })) {
+            dojo.connect($("dp-dog-cost-pay-reset-button"), 'onclick', function () {
+                _this.resetSelection();
+                _this.updateUi();
+            });
+        }
+        dojo.connect($("dp-dog-cost-pay-cancel-button"), 'onclick', function () { _this.onCancel(); });
+        dojo.connect($("dp-dog-cost-pay-confirm-button"), 'onclick', function () { _this.onConfirm(_this.selectedResources); });
+    };
+    GainResources.prototype.createCostRow = function () {
+        var result = "<div class=\"dp-dog-cost-pay-row\">".concat(_('Gain'), "</div>");
+        result += "<div class=\"dp-dog-cost-pay-row\">";
+        this.selectedResources.forEach(function (resource) {
+            result += "<span class=\"dp-token-token\" data-type=\"".concat(resource, "\"></span>");
+        });
+        result += '</div>';
+        return result;
+    };
+    GainResources.prototype.createResourceButtons = function () {
+        var result = "<div class=\"dp-dog-cost-pay-row\">";
+        this.resourceOptions
+            .forEach(function (resource) {
+            result += "<a id=\"dp-dog-cost-pay-".concat(resource, "-button\" class=\"bgabutton bgabutton_blue\"><span class=\"dp-token-token\" data-type=\"").concat(resource, "\"></span></a>");
+        });
+        result += '</div>';
+        return result;
+    };
+    GainResources.prototype.createMainButtons = function () {
+        var result = "<div class=\"dp-dog-cost-pay-row\">";
+        var disabled = this.selectedResources.includes('placeholder');
+        result += "<a id=\"dp-dog-cost-pay-confirm-button\" class=\"bgabutton bgabutton_blue ".concat(disabled ? 'disabled' : '', "\">").concat(_('Confirm'), "</a>");
+        if (this.selectedResources.some(function (value) { return value != 'placeholder'; })) {
+            result += "<a id=\"dp-dog-cost-pay-reset-button\" class=\"bgabutton bgabutton_gray\">".concat(_('Reset'), "</a>");
+        }
+        result += "<a id=\"dp-dog-cost-pay-cancel-button\" class=\"bgabutton bgabutton_gray\">".concat(_('Cancel'), "</a>");
+        result += '</div>';
+        return result;
+    };
+    GainResources.prototype.useResource = function (resource) {
+        var index = this.selectedResources.indexOf('placeholder');
+        this.selectedResources[index] = resource;
+        this.updateUi();
+    };
+    return GainResources;
+}());
 var DogField = /** @class */ (function () {
     function DogField(game) {
         this.game = game;
@@ -3432,6 +3505,11 @@ var DogPark = /** @class */ (function () {
             case 'actionCrafty':
                 this.enteringActionCrafty(args.args);
                 break;
+            case 'actionGainResourcesPrivate':
+                this.gamedatas.gamestate.descriptionmyturn = _(this.gamedatas.gamestate.private_state.descriptionmyturn) + '<br /><div id="dp-gain-resources"></div>';
+                this.updatePageTitle();
+                this.enteringGainResources(args.args);
+                break;
         }
     };
     DogPark.prototype.enteringChooseObjectives = function () {
@@ -3515,7 +3593,7 @@ var DogPark = /** @class */ (function () {
     };
     DogPark.prototype.enteringActionCrafty = function (args) {
         var _this = this;
-        this.gamedatas.gamestate.descriptionmyturn = this.gamedatas.gamestate.private_state.descriptionmyturn + '<br /><div id="dp-exchange-resources"></div>';
+        this.gamedatas.gamestate.descriptionmyturn = _(this.gamedatas.gamestate.private_state.descriptionmyturn) + '<br /><div id="dp-exchange-resources"></div>';
         this.updatePageTitle();
         new ExchangeResources("dp-exchange-resources", args.resources, args.dog.craftyResource, function () {
             dojo.destroy('dp-exchange-resources');
@@ -3523,6 +3601,16 @@ var DogPark = /** @class */ (function () {
         }, function (resource) {
             dojo.destroy('dp-exchange-resources');
             _this.takeNoLockAction('confirmCrafty', { resource: resource });
+        });
+    };
+    DogPark.prototype.enteringGainResources = function (args) {
+        var _this = this;
+        new GainResources("dp-gain-resources", args.nrOfResourcesToGain, args.resourceOptions, function () {
+            dojo.destroy('dp-gain-resources');
+            _this.takeNoLockAction('cancelGainResources');
+        }, function (resources) {
+            dojo.destroy('dp-gain-resources');
+            _this.takeNoLockAction('confirmGainResources', { resources: JSON.stringify(resources) });
         });
     };
     DogPark.prototype.onLeavingState = function (stateName) {
@@ -3660,6 +3748,9 @@ var DogPark = /** @class */ (function () {
                         break;
                     case 'USE_DOG_ABILITY':
                         _this.addActionButton("useDogAbility".concat(additionalAction.id), dojo.string.substitute('<b>${dogName}</b>: ${abilityTitle}', { dogName: _(additionalAction.additionalArgs['dogName']), abilityTitle: _(additionalAction.additionalArgs['abilityTitle']) }), function () { return _this.additionalAction(additionalAction); }, null, null, buttonColor);
+                        break;
+                    case 'USE_FORECAST_ABILITY':
+                        _this.addActionButton("useForecastAbility".concat(additionalAction.id), _('Use Forecast Card'), function () { return _this.additionalAction(additionalAction); }, null, null, buttonColor);
                         break;
                 }
             });
@@ -3832,6 +3923,7 @@ var DogPark = /** @class */ (function () {
             ['dogPlacedOnLead', undefined],
             ['undoDogPlacedOnLead', 1],
             ['playerGainsResources', undefined],
+            ['undoPlayerGainsResources', undefined],
             ['playerGainsLocationBonusResource', undefined],
             ['undoPlayerGainsLocationBonusResource', undefined],
             ['moveWalkers', undefined],
@@ -3916,6 +4008,9 @@ var DogPark = /** @class */ (function () {
     };
     DogPark.prototype.notif_playerGainsResources = function (args) {
         return this.playerResources.gainResources(args.playerId, args.resources);
+    };
+    DogPark.prototype.notif_undoPlayerGainsResources = function (args) {
+        return this.playerResources.payResources(args.playerId, args.resources);
     };
     DogPark.prototype.notif_playerGainsLocationBonusResource = function (args) {
         if (args.resource === 'reputation') {

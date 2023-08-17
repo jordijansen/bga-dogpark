@@ -140,6 +140,11 @@ class DogPark implements DogParkGame {
             case 'actionCrafty':
                 this.enteringActionCrafty(args.args as ActionCraftyArgs)
                 break;
+            case 'actionGainResourcesPrivate':
+                this.gamedatas.gamestate.descriptionmyturn = _(this.gamedatas.gamestate.private_state.descriptionmyturn) + '<br /><div id="dp-gain-resources"></div>';
+                (this as any).updatePageTitle();
+                this.enteringGainResources(args.args);
+                break;
         }
     }
 
@@ -227,7 +232,7 @@ class DogPark implements DogParkGame {
     }
 
     private enteringActionCrafty(args: ActionCraftyArgs) {
-        this.gamedatas.gamestate.descriptionmyturn = this.gamedatas.gamestate.private_state.descriptionmyturn + '<br /><div id="dp-exchange-resources"></div>';
+        this.gamedatas.gamestate.descriptionmyturn = _(this.gamedatas.gamestate.private_state.descriptionmyturn) + '<br /><div id="dp-exchange-resources"></div>';
         (this as any).updatePageTitle();
         new ExchangeResources("dp-exchange-resources", args.resources, args.dog.craftyResource, () => {
             dojo.destroy('dp-exchange-resources');
@@ -235,6 +240,16 @@ class DogPark implements DogParkGame {
         }, (resource) => {
             dojo.destroy('dp-exchange-resources');
             this.takeNoLockAction('confirmCrafty', {resource})
+        });
+    }
+
+    private enteringGainResources(args: {nrOfResourcesToGain: number, resourceOptions: string[]}) {
+        new GainResources("dp-gain-resources", args.nrOfResourcesToGain, args.resourceOptions, () => {
+            dojo.destroy('dp-gain-resources');
+            this.takeNoLockAction('cancelGainResources')
+        }, (resources) => {
+            dojo.destroy('dp-gain-resources');
+            this.takeNoLockAction('confirmGainResources', {resources: JSON.stringify(resources)})
         });
     }
 
@@ -365,22 +380,25 @@ class DogPark implements DogParkGame {
             additionalActions.forEach(additionalAction => {
                 const buttonColor = additionalAction.optional ? 'gray' : 'blue';
                 switch (additionalAction.type) {
-                   case 'WALKING_PAY_REPUTATION_ACCEPT':
-                       (this as any).addActionButton(`payReputationAccept`, dojo.string.substitute(_('Pay ${resourceType} to unlock location bonus(es)'), { resourceType: this.tokenIcon('reputation') }), () => this.additionalAction(additionalAction), null, null, buttonColor);
-                       break;
-                   case 'WALKING_PAY_REPUTATION_DENY':
-                       (this as any).addActionButton(`payReputationDeny`, _('Skip location bonuses'), () => this.additionalAction(additionalAction), null, null, buttonColor);
-                       break;
-                   case 'WALKING_GAIN_LOCATION_BONUS':
-                       (this as any).addActionButton(`gainLocationBonus${additionalAction.id}`, dojo.string.substitute(_('Gain location bonus ${resourceType}'), { resourceType: this.tokenIcon(additionalAction.additionalArgs['bonusType']) }), () => this.additionalAction(additionalAction), null, null, buttonColor);
+                    case 'WALKING_PAY_REPUTATION_ACCEPT':
+                        (this as any).addActionButton(`payReputationAccept`, dojo.string.substitute(_('Pay ${resourceType} to unlock location bonus(es)'), { resourceType: this.tokenIcon('reputation') }), () => this.additionalAction(additionalAction), null, null, buttonColor);
                         break;
-                   case 'WALKING_GAIN_LEAVING_THE_PARK_BONUS':
-                       (this as any).addActionButton(`gainLeavingPark${additionalAction.id}`, dojo.string.substitute(_('Gain leaving the park bonus ${resourceType}'), { resourceType: this.tokenIcons(additionalAction.additionalArgs['bonusType'], additionalAction.additionalArgs['amount']) }), () => this.additionalAction(additionalAction), null, null, buttonColor);
-                       break;
-                   case 'USE_DOG_ABILITY':
-                       (this as any).addActionButton(`useDogAbility${additionalAction.id}`, dojo.string.substitute('<b>${dogName}</b>: ${abilityTitle}', { dogName: _(additionalAction.additionalArgs['dogName']), abilityTitle: _(additionalAction.additionalArgs['abilityTitle']) }), () => this.additionalAction(additionalAction), null, null, buttonColor);
-                       break;
-               }
+                    case 'WALKING_PAY_REPUTATION_DENY':
+                        (this as any).addActionButton(`payReputationDeny`, _('Skip location bonuses'), () => this.additionalAction(additionalAction), null, null, buttonColor);
+                        break;
+                    case 'WALKING_GAIN_LOCATION_BONUS':
+                        (this as any).addActionButton(`gainLocationBonus${additionalAction.id}`, dojo.string.substitute(_('Gain location bonus ${resourceType}'), { resourceType: this.tokenIcon(additionalAction.additionalArgs['bonusType']) }), () => this.additionalAction(additionalAction), null, null, buttonColor);
+                         break;
+                    case 'WALKING_GAIN_LEAVING_THE_PARK_BONUS':
+                        (this as any).addActionButton(`gainLeavingPark${additionalAction.id}`, dojo.string.substitute(_('Gain leaving the park bonus ${resourceType}'), { resourceType: this.tokenIcons(additionalAction.additionalArgs['bonusType'], additionalAction.additionalArgs['amount']) }), () => this.additionalAction(additionalAction), null, null, buttonColor);
+                        break;
+                    case 'USE_DOG_ABILITY':
+                        (this as any).addActionButton(`useDogAbility${additionalAction.id}`, dojo.string.substitute('<b>${dogName}</b>: ${abilityTitle}', { dogName: _(additionalAction.additionalArgs['dogName']), abilityTitle: _(additionalAction.additionalArgs['abilityTitle']) }), () => this.additionalAction(additionalAction), null, null, buttonColor);
+                        break;
+                    case 'USE_FORECAST_ABILITY':
+                        (this as any).addActionButton(`useForecastAbility${additionalAction.id}`, _('Use Forecast Card'), () => this.additionalAction(additionalAction), null, null, buttonColor);
+                        break;
+                }
             });
         }
     }
@@ -564,6 +582,7 @@ class DogPark implements DogParkGame {
             ['dogPlacedOnLead', undefined],
             ['undoDogPlacedOnLead', 1],
             ['playerGainsResources', undefined],
+            ['undoPlayerGainsResources', undefined],
             ['playerGainsLocationBonusResource', undefined],
             ['undoPlayerGainsLocationBonusResource', undefined],
             ['moveWalkers', undefined],
@@ -656,6 +675,10 @@ class DogPark implements DogParkGame {
 
     private notif_playerGainsResources(args: NotifPlayerGainsResources) {
         return this.playerResources.gainResources(args.playerId, args.resources);
+    }
+
+    private notif_undoPlayerGainsResources(args: NotifPlayerGainsResources) {
+        return this.playerResources.payResources(args.playerId, args.resources);
     }
 
     private notif_playerGainsLocationBonusResource(args: NotifPlayerGainsLocationBonusResource) {

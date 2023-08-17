@@ -383,6 +383,18 @@ $actionStates = [
         "transitions" => [
         ]
     ],
+    ST_ACTION_GAIN_RESOURCES_PRIVATE => [
+        "name" => "actionGainResourcesPrivate",
+        "descriptionmyturn" => clienttranslate('Forecast Card: ${you} may gain resource(s)'),
+        "type" => "private",
+        "args" => "argActionGainResourcesPrivate",
+        "possibleactions" => [
+            ACT_GAIN_RESOURCES_CONFIRM,
+            ACT_CANCEL,
+        ],
+        "transitions" => [
+        ]
+    ],
 ];
 
 //////////////////////////////////

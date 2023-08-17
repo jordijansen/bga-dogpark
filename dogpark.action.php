@@ -223,6 +223,26 @@ class action_dogpark extends APP_GameAction
         self::ajaxResponse();
     }
 
+    public function confirmGainResources()
+    {
+        self::setAjaxMode();
+
+        $resources = self::getArg('resources', AT_json, true);
+        $this->validateJSonAlphaNum($resources, 'resources');
+        $this->game->confirmGainResources($resources);
+
+        self::ajaxResponse();
+    }
+
+    public function cancelGainResources()
+    {
+        self::setAjaxMode();
+
+        $this->game->cancelGainResources();
+
+        self::ajaxResponse();
+    }
+
     public function undoLast()
     {
         self::setAjaxMode();

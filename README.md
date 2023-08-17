@@ -1,27 +1,29 @@
 # bga-dogpark
 
 # TODO
-- Final Scoring
-  - General
-  - Objective Cards
-  - Scoring pad animations
 - Solo Mode
   - Solo Mode Objectives
   - Solo Ratings shown as target
 - Variants & Options
 - Forecast Cards
 - Move scouted cards area under park
+- Tooltips
+  - DOG CARD
+  - OBJECTIVE CARDS
+  - FORECAST CARDS
+- Feedback Jack
 
-Dog Card Abilities
-
-Final Scoring
-- Treat Lover
 
 # Done
 - Swap Action (+ LEAD token if leaving park bonus)
 - Scout Action
 - Auto Walker(s)
 - Selection what if no (or only 1 player) can walk any dogs?
+- Final Scoring
+  - General
+  - Objective Cards
+  - Scoring pad animations
+
 
 Dog Card Abilities:
 Selection
@@ -40,6 +42,8 @@ Final Scoring
 - Ball Hog
 - Stick Chaser
 - Toy Collector
+- Treat Lover
+
 
 
 

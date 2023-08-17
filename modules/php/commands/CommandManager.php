@@ -13,11 +13,11 @@ class CommandManager extends APP_DbObject
 
     function addCommand(int $playerId, BaseCommand $command)
     {
-        $command->do();
-
         $jsonObject = json_encode(ReflectionUtils::extractAllPropertyValues($command));
         $className = (new ReflectionClass($command))->getShortName();
         $this->DbQuery("INSERT INTO `command_log`(`player_id`, `name`, `value`) VALUES ($playerId, '$className', '$jsonObject')");
+
+        $command->do();
     }
 
     function hasCommands(int $playerId): bool
@@ -48,8 +48,8 @@ class CommandManager extends APP_DbObject
 
     public function removeCommand($id) {
         $command = $this->toCommandObject($id);
-        $command->undo();
         $this->DbQuery("DELETE FROM `command_log` WHERE id = " .$id);
+        $command->undo();
         return $command;
     }
 

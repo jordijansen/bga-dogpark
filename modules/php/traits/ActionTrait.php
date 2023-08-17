@@ -3,6 +3,7 @@
 namespace traits;
 use actions\AdditionalAction;
 use BgaUserException;
+use commands\GainResourcesCommand;
 use commands\CraftyDogAbilityCommand;
 use commands\EndScoutCommand;
 use commands\GainLeavingTheParkBonusCommand;
@@ -312,6 +313,12 @@ trait ActionTrait
                 $this->setGlobalVariable(CURRENT_ACTION_ID, $actionId);
                 $this->gamestate->jumpToState(ST_ACTION_SWAP);
             }
+        } else if ($action->type == USE_FORECAST_ABILITY) {
+            $forecastCardType = $action->additionalArgs->forecastCardTypeArg;
+            if ($forecastCardType == 1) {
+                $this->setGlobalVariable(CURRENT_ACTION_ID .$playerId, $actionId);
+                $this->gamestate->setPrivateState($playerId, ST_ACTION_GAIN_RESOURCES_PRIVATE);
+            }
         }
     }
 
@@ -404,6 +411,38 @@ trait ActionTrait
 
         $this->gamestate->setPrivateState($playerId, ST_SELECTION_PLACE_DOG_ON_LEAD);
     }
+
+    function confirmGainResources($resources) {
+        $this->checkAction(ACT_CANCEL);
+        $playerId = $this->getCurrentPlayerId();
+
+        $nrOfResourcesToGain = intval($this->getGlobalVariable(GAIN_RESOURCES_NR_OF_RESOURCES .$playerId));
+        $resourceOptions = $this->getGlobalVariable(GAIN_RESOURCES_RESOURCE_OPTIONS .$playerId);
+
+        if (sizeof($resources) != $nrOfResourcesToGain) {
+            throw new BgaUserException('Incorrect amount of resources supplied');
+        }
+        $validResources = array_filter($resources, function($resource) use ($resourceOptions) {return in_array($resource, $resourceOptions);});
+        if (sizeof($validResources) != sizeof($resources)) {
+            throw new BgaUserException('Invalid resources supplied');
+        }
+
+        $actionId = $this->getGlobalVariable(CURRENT_ACTION_ID .$playerId);
+        $action = $this->actionManager->getAction($playerId, $actionId);
+        if ($action->additionalArgs->forecastCardTypeArg == 1) {
+            $this->commandManager->addCommand($playerId, new GainResourcesCommand($playerId, $actionId, $resources, clienttranslate('${player_name} activates the current round Forecast Card'), clienttranslate('Undo: ${player_name} activates the current round Forecast Card')));
+        }
+    }
+
+    function cancelGainResources() {
+        $this->checkAction(ACT_CANCEL);
+        $playerId = $this->getCurrentPlayerId();
+
+        if ($this->gamestate->state()['name'] == 'selectionActions') {
+            $this->gamestate->setPrivateState($playerId, ST_SELECTION_PLACE_DOG_ON_LEAD);
+        }
+    }
+
 
     function undoLast() {
         $this->checkAction(ACT_UNDO);

@@ -54,6 +54,7 @@
     "src/ui/ChooseObjectives.ts",
     "src/ui/ExchangeResources.ts",
     "src/ui/FinalScoringPad.ts",
+    "src/ui/GainResources.ts",
     "src/DogField.ts",
     "src/DogWalkPark.ts",
     "src/PlayerArea.ts",

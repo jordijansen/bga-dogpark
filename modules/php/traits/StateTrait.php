@@ -1,6 +1,7 @@
 <?php
 
 namespace traits;
+use actions\AdditionalAction;
 use objects\BreedExpertCard;
 use objects\DogCard;
 use objects\DogWalker;
@@ -206,6 +207,26 @@ trait StateTrait
             'round' => intval($this->getGlobalVariable(CURRENT_ROUND)),
             'newPhase' => PHASE_SELECTION
         ]);
+
+        // During SELECTION, gain 1 Location Bonus for each GUNDOG in your Kennel or on your Lead.
+        if ($this->forecastManager->getCurrentForecastCard()->typeArg == 1) {
+            // WARNING PROBLEMS WITH NEW TRICKS?
+            $players = $this->playerManager->getPlayerIdsInTurnOrder();
+            foreach ($players as $orderNo => $player) {
+                $playerId = intval($player['player_id']);
+                $dogs = DogCard::fromArray($this->dogCards->getCardsInLocation(LOCATION_PLAYER, $playerId));
+                $gundogs = array_filter($dogs,  function ($dog) { return in_array(BREED_GUNDOG, $dog->breeds);});
+                if (sizeof($gundogs) > 0) {
+                    $this->setGlobalVariable(GAIN_RESOURCES_NR_OF_RESOURCES .$playerId, sizeof($gundogs));
+                    $locationBonuses = array_filter($this->dogWalkPark->getAllLocationBonuses(), function ($locationBonus) { return !in_array($locationBonus->bonus, [BLOCK, SWAP, SCOUT]);});
+                    $this->setGlobalVariable(GAIN_RESOURCES_RESOURCE_OPTIONS .$playerId, array_values(array_map(function ($locationBonus) {return $locationBonus->bonus;}, $locationBonuses)));
+
+                    $this->actionManager->addAction($playerId, new AdditionalAction(USE_FORECAST_ABILITY, (object) [
+                        "forecastCardTypeArg" => 1
+                    ], false, true));
+                }
+            }
+        }
 
         $this->gamestate->nextState("playerTurns");
     }
