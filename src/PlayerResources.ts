@@ -43,6 +43,14 @@ class PlayerResources {
         }
     }
 
+    public async gainResourcesFromForecastCard(playerId: number, foreCastCard: Card, resources: string[]) {
+        resources.forEach(resource => this.playerResourceStocks[playerId][resource].incValue(1));
+        for (const resource of resources) {
+            let token = this.game.tokenManager.createToken(resource as any)
+            await this.playerResourceStocks[playerId][resource].addCard(token, {fromElement: this.game.forecastManager.getCardElement(foreCastCard)})
+        }
+    }
+
     public async gainResourceFromLocation(playerId: number, locationId: number, resource: string, extraBonus: boolean) {
         this.playerResourceStocks[playerId][resource].incValue(1);
         const stock = this.game.dogWalkPark.resourceSpots[locationId];
@@ -68,6 +76,7 @@ class PlayerResources {
     public async payResources(playerId: number, resources: string[]) {
         resources.forEach(resource => this.playerResourceStocks[playerId][resource].decValue(1));
     }
+
 
 
 }

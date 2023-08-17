@@ -255,6 +255,14 @@ interface NotifActivateDogAbility {
     score?: number
 }
 
+interface NotifActivateForecastCard {
+    playerId: number,
+    forecastCard: Card,
+    gainedResources?: string[],
+    lostResources?: string[],
+    score?: number
+}
+
 interface NotifPlayerAssignsResources {
     playerId: number,
     resourcesAdded: string[]

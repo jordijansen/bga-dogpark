@@ -54,7 +54,7 @@ class CraftyDogAbilityCommand extends BaseCommand
         DogPark::$instance->playerManager->gainResources($this->playerId, $gainedResources);
         DogPark::$instance->playerManager->payResources($this->playerId, $lostResources);
 
-        DogPark::$instance->notifyAllPlayers('activateDogAbility', clienttranslate('Undo: ${player_name} activates <b>${dogName}: ${abilityTitle}</b>'),[
+        DogPark::$instance->notifyAllPlayers('activateDogAbility', clienttranslate('Undo: <s>${player_name} activates <b>${dogName}: ${abilityTitle}</b></s>'),[
             'playerId' => $this->playerId,
             'player_name' => DogPark::$instance->getPlayerName($this->playerId),
             'dog' => $dog,

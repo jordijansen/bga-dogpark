@@ -59,7 +59,7 @@ class GainLeavingTheParkBonusCommand extends BaseCommand
             throw new BgaUserException("Not supported yet");
         }
 
-        DogPark::$instance->notifyAllPlayers('playerLeavesThePark', clienttranslate('Undo: ${player_name} leaves the park and gains ${resource}'),[
+        DogPark::$instance->notifyAllPlayers('playerLeavesThePark', clienttranslate('Undo: <s>${player_name} leaves the park and gains ${resource}</s>'),[
             'playerId' => $this->playerId,
             'player_name' => DogPark::$instance->getPlayerName($this->playerId),
             'resource' => $bonusType,

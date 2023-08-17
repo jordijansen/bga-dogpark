@@ -40,6 +40,17 @@ class PlaceDogOnLeadCommand extends BaseCommand
             'resources' => $this->resources
         ]);
 
+        if (DogPark::$instance->forecastManager->getCurrentForecastCard()->typeArg == 6 && in_array(BREED_HOUND, $dog->breeds)) {
+            // During SELECTION, gain 2 reputation for each HOUND you place on the Lead.
+            DogPark::$instance->updatePlayerScore($this->playerId, DogPark::$instance->getPlayerScore($this->playerId) + 2);
+            DogPark::$instance->notifyAllPlayers('activateForecastCard', clienttranslate('${player_name} activates the current round Forecast Card and gains 2 reputation'), [
+                'playerId' => $this->playerId,
+                'player_name' => DogPark::$instance->getPlayerName($this->playerId),
+                'forecastCard' => DogPark::$instance->forecastManager->getCurrentForecastCard(),
+                'score' => DogPark::$instance->getPlayerScore($this->playerId)
+            ]);
+        }
+
         if (in_array($dog->ability, SELECTION_ABILITIES)) {
             DogPark::$instance->actionManager->addAction($this->playerId, new AdditionalAction(USE_DOG_ABILITY, (object) [
                 "dogId" => $this->dogId,
@@ -56,7 +67,19 @@ class PlaceDogOnLeadCommand extends BaseCommand
         DogPark::$instance->dogManager->removeResource($this->dogId, WALKED);
 
         $dog = DogCard::from(DogPark::$instance->dogCards->getCard($this->dogId));
-        DogPark::$instance->notifyAllPlayers('undoDogPlacedOnLead',clienttranslate('Undo: ${player_name} places <b>${dogName}</b> on lead'),[
+        if (DogPark::$instance->forecastManager->getCurrentForecastCard()->typeArg == 6 && in_array(BREED_HOUND, $dog->breeds)) {
+            // During SELECTION, gain 2 reputation for each HOUND you place on the Lead.
+            DogPark::$instance->updatePlayerScore($this->playerId, DogPark::$instance->getPlayerScore($this->playerId) - 2);
+            DogPark::$instance->notifyAllPlayers('activateForecastCard', clienttranslate('Undo: <s>${player_name} activates the current round Forecast Card and gains 2 reputation</s>'), [
+                'playerId' => $this->playerId,
+                'player_name' => DogPark::$instance->getPlayerName($this->playerId),
+                'forecastCard' => DogPark::$instance->forecastManager->getCurrentForecastCard(),
+                'score' => DogPark::$instance->getPlayerScore($this->playerId)
+            ]);
+        }
+
+        $dog = DogCard::from(DogPark::$instance->dogCards->getCard($this->dogId));
+        DogPark::$instance->notifyAllPlayers('undoDogPlacedOnLead',clienttranslate('Undo: <s>${player_name} places <b>${dogName}</b> on lead</s>'),[
             'i18n' => ['dogName'],
             'playerId' => $this->playerId,
             'player_name' => DogPark::$instance->getPlayerName($this->playerId),

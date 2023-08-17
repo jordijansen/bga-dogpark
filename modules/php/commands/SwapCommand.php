@@ -71,7 +71,7 @@ class SwapCommand extends BaseCommand
 
         $fieldDog = DogCard::from(DogPark::$instance->dogCards->getCard($this->fieldDogId));
         $kennelDog = DogCard::from(DogPark::$instance->dogCards->getCard($this->kennelDogId));
-        DogPark::$instance->notifyAllPlayers('playerSwaps', clienttranslate('Undo: ${player_name} swaps <b>${kennelDogName}</b> with <b>${fieldDogName}</b>'),[
+        DogPark::$instance->notifyAllPlayers('playerSwaps', clienttranslate('Undo: <s>${player_name} swaps <b>${kennelDogName}</b> with <b>${fieldDogName}</b></s>'),[
             'playerId' => $this->playerId,
             'player_name' => DogPark::$instance->getPlayerName($this->playerId),
             'kennelDog' => $fieldDog,

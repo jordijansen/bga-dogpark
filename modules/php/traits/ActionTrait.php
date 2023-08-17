@@ -430,7 +430,7 @@ trait ActionTrait
         $actionId = $this->getGlobalVariable(CURRENT_ACTION_ID .$playerId);
         $action = $this->actionManager->getAction($playerId, $actionId);
         if ($action->additionalArgs->forecastCardTypeArg == 1) {
-            $this->commandManager->addCommand($playerId, new GainResourcesCommand($playerId, $actionId, $resources, clienttranslate('${player_name} activates the current round Forecast Card'), clienttranslate('Undo: ${player_name} activates the current round Forecast Card')));
+            $this->commandManager->addCommand($playerId, new GainResourcesCommand($playerId, $actionId, $resources, clienttranslate('${player_name} activates the current round Forecast Card'), clienttranslate('Undo: <s>${player_name} activates the current round Forecast Card<s>')));
         }
     }
 

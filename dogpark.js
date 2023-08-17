@@ -3297,6 +3297,32 @@ var PlayerResources = /** @class */ (function () {
             });
         });
     };
+    PlayerResources.prototype.gainResourcesFromForecastCard = function (playerId, foreCastCard, resources) {
+        return __awaiter(this, void 0, void 0, function () {
+            var _i, resources_3, resource, token;
+            var _this = this;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        resources.forEach(function (resource) { return _this.playerResourceStocks[playerId][resource].incValue(1); });
+                        _i = 0, resources_3 = resources;
+                        _a.label = 1;
+                    case 1:
+                        if (!(_i < resources_3.length)) return [3 /*break*/, 4];
+                        resource = resources_3[_i];
+                        token = this.game.tokenManager.createToken(resource);
+                        return [4 /*yield*/, this.playerResourceStocks[playerId][resource].addCard(token, { fromElement: this.game.forecastManager.getCardElement(foreCastCard) })];
+                    case 2:
+                        _a.sent();
+                        _a.label = 3;
+                    case 3:
+                        _i++;
+                        return [3 /*break*/, 1];
+                    case 4: return [2 /*return*/];
+                }
+            });
+        });
+    };
     PlayerResources.prototype.gainResourceFromLocation = function (playerId, locationId, resource, extraBonus) {
         return __awaiter(this, void 0, void 0, function () {
             var stock, token, token;
@@ -3324,17 +3350,17 @@ var PlayerResources = /** @class */ (function () {
     };
     PlayerResources.prototype.gainResources = function (playerId, resources, fromElementId) {
         return __awaiter(this, void 0, void 0, function () {
-            var _i, resources_3, resource, token;
+            var _i, resources_4, resource, token;
             var _this = this;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         resources.forEach(function (resource) { return _this.playerResourceStocks[playerId][resource].incValue(1); });
-                        _i = 0, resources_3 = resources;
+                        _i = 0, resources_4 = resources;
                         _a.label = 1;
                     case 1:
-                        if (!(_i < resources_3.length)) return [3 /*break*/, 4];
-                        resource = resources_3[_i];
+                        if (!(_i < resources_4.length)) return [3 /*break*/, 4];
+                        resource = resources_4[_i];
                         token = this.game.tokenManager.createToken(resource);
                         return [4 /*yield*/, this.playerResourceStocks[playerId][resource].addCard(token)];
                     case 2:
@@ -3923,7 +3949,6 @@ var DogPark = /** @class */ (function () {
             ['dogPlacedOnLead', undefined],
             ['undoDogPlacedOnLead', 1],
             ['playerGainsResources', undefined],
-            ['undoPlayerGainsResources', undefined],
             ['playerGainsLocationBonusResource', undefined],
             ['undoPlayerGainsLocationBonusResource', undefined],
             ['moveWalkers', undefined],
@@ -3941,6 +3966,7 @@ var DogPark = /** @class */ (function () {
             ['playerScoutReplaces', undefined],
             ['undoPlayerScoutReplaces', undefined],
             ['activateDogAbility', undefined],
+            ['activateForecastCard', undefined],
             ['playerAssignsResources', undefined],
             ['revealObjectiveCards', undefined],
             ['finalScoringRevealed', undefined]
@@ -4008,9 +4034,6 @@ var DogPark = /** @class */ (function () {
     };
     DogPark.prototype.notif_playerGainsResources = function (args) {
         return this.playerResources.gainResources(args.playerId, args.resources);
-    };
-    DogPark.prototype.notif_undoPlayerGainsResources = function (args) {
-        return this.playerResources.payResources(args.playerId, args.resources);
     };
     DogPark.prototype.notif_playerGainsLocationBonusResource = function (args) {
         if (args.resource === 'reputation') {
@@ -4118,6 +4141,19 @@ var DogPark = /** @class */ (function () {
         }
         if (args.lostResources) {
             promises.push(this.playerResources.payResourcesToDog(args.playerId, args.dog, args.lostResources));
+        }
+        if (args.score) {
+            this.setScore(args.playerId, args.score);
+        }
+        return Promise.all(promises);
+    };
+    DogPark.prototype.notif_activateForecastCard = function (args) {
+        var promises = [];
+        if (args.gainedResources) {
+            promises.push(this.playerResources.gainResourcesFromForecastCard(args.playerId, args.forecastCard, args.gainedResources));
+        }
+        if (args.lostResources) {
+            promises.push(this.playerResources.payResources(args.playerId, args.lostResources));
         }
         if (args.score) {
             this.setScore(args.playerId, args.score);

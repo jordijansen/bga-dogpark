@@ -582,7 +582,6 @@ class DogPark implements DogParkGame {
             ['dogPlacedOnLead', undefined],
             ['undoDogPlacedOnLead', 1],
             ['playerGainsResources', undefined],
-            ['undoPlayerGainsResources', undefined],
             ['playerGainsLocationBonusResource', undefined],
             ['undoPlayerGainsLocationBonusResource', undefined],
             ['moveWalkers', undefined],
@@ -600,6 +599,7 @@ class DogPark implements DogParkGame {
             ['playerScoutReplaces', undefined],
             ['undoPlayerScoutReplaces', undefined],
             ['activateDogAbility', undefined],
+            ['activateForecastCard', undefined],
             ['playerAssignsResources', undefined],
             ['revealObjectiveCards', undefined],
             ['finalScoringRevealed', undefined]
@@ -675,10 +675,6 @@ class DogPark implements DogParkGame {
 
     private notif_playerGainsResources(args: NotifPlayerGainsResources) {
         return this.playerResources.gainResources(args.playerId, args.resources);
-    }
-
-    private notif_undoPlayerGainsResources(args: NotifPlayerGainsResources) {
-        return this.playerResources.payResources(args.playerId, args.resources);
     }
 
     private notif_playerGainsLocationBonusResource(args: NotifPlayerGainsLocationBonusResource) {
@@ -786,6 +782,21 @@ class DogPark implements DogParkGame {
         }
         if (args.lostResources) {
             promises.push(this.playerResources.payResourcesToDog(args.playerId, args.dog, args.lostResources));
+        }
+        if (args.score) {
+            this.setScore(args.playerId, args.score);
+        }
+
+        return Promise.all(promises);
+    }
+
+    private notif_activateForecastCard(args: NotifActivateForecastCard) {
+        const promises = [];
+        if (args.gainedResources) {
+            promises.push(this.playerResources.gainResourcesFromForecastCard(args.playerId, args.forecastCard, args.gainedResources));
+        }
+        if (args.lostResources) {
+            promises.push(this.playerResources.payResources(args.playerId, args.lostResources));
         }
         if (args.score) {
             this.setScore(args.playerId, args.score);

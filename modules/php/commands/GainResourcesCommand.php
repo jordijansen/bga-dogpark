@@ -4,6 +4,7 @@ namespace commands;
 
 use actions\AdditionalAction;
 use DogPark;
+use ForecastManager;
 use objects\DogCard;
 
 class GainResourcesCommand extends BaseCommand
@@ -29,10 +30,11 @@ class GainResourcesCommand extends BaseCommand
 
         DogPark::$instance->playerManager->gainResources($this->playerId, $this->resources);
 
-        DogPark::$instance->notifyAllPlayers('playerGainsResources', $this->doLogMessage, [
+        DogPark::$instance->notifyAllPlayers('activateForecastCard', $this->doLogMessage, [
             'playerId' => $this->playerId,
             'player_name' => DogPark::$instance->getPlayerName($this->playerId),
-            'resources' => $this->resources
+            'forecastCard' => DogPark::$instance->forecastManager->getCurrentForecastCard(),
+            'gainedResources' => $this->resources
         ]);
 
         DogPark::$instance->gamestate->setPrivateState($this->playerId, ST_SELECTION_PLACE_DOG_ON_LEAD);
@@ -44,10 +46,11 @@ class GainResourcesCommand extends BaseCommand
 
         DogPark::$instance->playerManager->payResources($this->playerId, $this->resources);
 
-        DogPark::$instance->notifyAllPlayers('undoPlayerGainsResources', $this->undoLogMessage, [
+        DogPark::$instance->notifyAllPlayers('activateForecastCard', $this->undoLogMessage, [
             'playerId' => $this->playerId,
             'player_name' => DogPark::$instance->getPlayerName($this->playerId),
-            'resources' => $this->resources
+            'forecastCard' => DogPark::$instance->forecastManager->getCurrentForecastCard(),
+            'lostResources' => $this->resources
         ]);
 
         DogPark::$instance->gamestate->setPrivateState($this->playerId, ST_SELECTION_PLACE_DOG_ON_LEAD);

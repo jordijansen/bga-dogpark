@@ -56,7 +56,7 @@ class PayReputationForLocationCommand extends BaseCommand
             $playerScore = DogPark::$instance->getPlayerScore($this->playerId);
             DogPark::$instance->updatePlayerScore($this->playerId, $playerScore + 1);
 
-            DogPark::$instance->notifyAllPlayers('playerPaysReputationForLocation', clienttranslate('Undo: ${player_name} pays ${icon_resource} to unlock location bonus(es)'),[
+            DogPark::$instance->notifyAllPlayers('playerPaysReputationForLocation', clienttranslate('Undo: <s>${player_name} pays ${icon_resource} to unlock location bonus(es)</s>'),[
                 'playerId' => $this->playerId,
                 'player_name' => DogPark::$instance->getPlayerName($this->playerId),
                 'icon_resource' => 'reputation',
@@ -65,7 +65,7 @@ class PayReputationForLocationCommand extends BaseCommand
 
             DogPark::$instance->actionManager->clear($this->playerId);
         } else {
-            DogPark::$instance->notifyAllPlayers('gameLog', clienttranslate('Undo: ${player_name} skips location bonus(es)'),[
+            DogPark::$instance->notifyAllPlayers('gameLog', clienttranslate('Undo: <s>${player_name} skips location bonus(es)</s>'),[
                 'playerId' => $this->playerId,
                 'player_name' => DogPark::$instance->getPlayerName($this->playerId)
             ]);
