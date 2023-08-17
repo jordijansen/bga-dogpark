@@ -389,6 +389,8 @@ trait StateTrait
             'newPhase' => PHASE_HOME_TIME
         ]);
 
+        $foreCastCard = $this->forecastManager->getCurrentForecastCard();
+
         $playerIdsInOrder = $this->playerManager->getPlayerIdsInTurnOrder();
         foreach ($playerIdsInOrder as $playerOrderNo => $player) {
             $playerId = intval($player['player_id']);
@@ -407,20 +409,27 @@ trait StateTrait
                 'score' => $this->getPlayerScore($playerId)
             ]);
 
-            //2. Lose 1 Reputation for each Dog without a Walked token in their Kennel.
-            $dogsInKennel = DogCard::fromArray($this->dogCards->getCardsInLocation(LOCATION_PLAYER, $playerId));
-            $unwalkedDogsInKennel = array_filter($dogsInKennel, function ($dog) { return $dog->resourcesOnCard['walked'] == 0;});
-            $reputationLost = sizeof($unwalkedDogsInKennel);
-            $playerScore = $this->getPlayerScore($playerId);
-            $this->updatePlayerScore($playerId, $playerScore - $reputationLost);
+            //2. Lose Reputation for each Dog without a Walked token in their Kennel.
+            if ($foreCastCard->typeArg != 9) { // During HOME TIME, Dogs without WALKED token do not lose 1 reputation.
+                $dogsInKennel = DogCard::fromArray($this->dogCards->getCardsInLocation(LOCATION_PLAYER, $playerId));
+                $unwalkedDogsInKennel = array_filter($dogsInKennel, function ($dog) { return $dog->resourcesOnCard['walked'] == 0;});
+                $reputationLostPerDog = 1;
+                if ($foreCastCard->typeArg == 8) { // During HOME TIME, Dogs without WALKED token lose 2 reputation instead of 1.
+                    $reputationLostPerDog = 2;
+                }
+                $playerScore = $this->getPlayerScore($playerId);
+                $reputationLost = sizeof($unwalkedDogsInKennel) * $reputationLostPerDog;
+                $this->updatePlayerScore($playerId, $playerScore - $reputationLost);
 
-            $this->notifyAllPlayers('playerLosesReputation', clienttranslate('${player_name} loses ${reputationLost} reputation for not walking ${nrOfDogsUnwalked} dog(s)'), [
-                'playerId' => $playerId,
-                'player_name' => $this->getPlayerName($playerId),
-                'reputationLost' => $reputationLost,
-                'nrOfDogsUnwalked' => sizeof($unwalkedDogsInKennel),
-                'score' => $this->getPlayerScore($playerId)
-            ]);
+                $this->notifyAllPlayers('playerLosesReputation', clienttranslate('${player_name} loses ${reputationLost} reputation for not walking ${nrOfDogsUnwalked} dog(s)'), [
+                    'playerId' => $playerId,
+                    'player_name' => $this->getPlayerName($playerId),
+                    'reputationLost' => $reputationLost,
+                    'nrOfDogsUnwalked' => sizeof($unwalkedDogsInKennel),
+                    'score' => $this->getPlayerScore($playerId)
+                ]);
+            }
+
 
             //3. Return the Dogs on the Lead to their Kennel
             $dogIdsInLead = array_map(function ($dog) {return $dog->id;}, $dogsOnlead);
@@ -457,7 +466,6 @@ trait StateTrait
         }
 
         // 1. The current Forecast card is flipped over.
-        $foreCastCard = $this->forecastManager->getCurrentForecastCard();
         $foreCastCard->typeArg = null;
         $this->notifyAllPlayers('flipForecastCard', '',[
             'foreCastCard' => $foreCastCard

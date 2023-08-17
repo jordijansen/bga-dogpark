@@ -103,10 +103,16 @@ trait UtilsTrait
     }
 
     function updatePlayerScoreAndAux(int $playerId, int $playerScore, int $playerScoreAux = 0) {
+        if ($playerScore < 0) {
+            $playerScore = 0;
+        }
         $this->DbQuery("UPDATE player SET player_score = ".$playerScore.", player_score_aux = ".$playerScoreAux." WHERE player_id = ". $playerId);
     }
 
     function updatePlayerScore(int $playerId, int $playerScore) {
+        if ($playerScore < 0) {
+            $playerScore = 0;
+        }
         $this->DbQuery("UPDATE player SET player_score = ".$playerScore." WHERE player_id = ". $playerId);
     }
 }
