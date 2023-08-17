@@ -46,6 +46,12 @@ class SwapCommand extends BaseCommand
             DogPark::$instance->actionManager->markActionPerformed($this->playerId, $action->additionalArgs->leavingTheParkOtherActionId);
         }
 
+        if (DogPark::$instance->forecastManager->getCurrentForecastCard()->typeArg == 10) {
+            // During THIS ROUND, whenever you wap, place WALKED token on the newly acquired Dog in your Kennel.
+            // If combined with leaving the park bonus, you get two walked tokens (per the FAQ back of rulebook)
+            DogPark::$instance->dogManager->addResource($fieldDog->id, WALKED);
+        }
+
         $fieldDog = DogCard::from(DogPark::$instance->dogCards->getCard($this->fieldDogId));
         $kennelDog = DogCard::from(DogPark::$instance->dogCards->getCard($this->kennelDogId));
         DogPark::$instance->notifyAllPlayers('playerSwaps', clienttranslate('${player_name} swaps <b>${kennelDogName}</b> with <b>${fieldDogName}</b>'),[
