@@ -90,10 +90,11 @@ class action_dogpark extends APP_GameAction
         self::setAjaxMode();
 
         $dogId = self::getArg("dogId", AT_posint, true);
+        $isFreePlacement = self::getArg('isFreePlacement', AT_bool, true);
         $resources = self::getArg('resources', AT_json, true);
         $this->validateJSonAlphaNum($resources, 'resources');
 
-        $this->game->placeDogOnLeadPayResources($dogId, $resources);
+        $this->game->placeDogOnLeadPayResources($dogId, $resources, $isFreePlacement);
 
         self::ajaxResponse();
     }

@@ -195,12 +195,13 @@ class DogPark implements DogParkGame {
     private enteringSelectionPlaceDogOnLeadSelectResources(args: SelectionPlaceDogOnLeadSelectResourcesArgs) {
         this.gamedatas.gamestate.descriptionmyturn = dojo.string.substitute(_(this.gamedatas.gamestate.private_state.descriptionmyturn), {...args, you: 'you'}) + '<br /><div id="dp-pay-costs"></div>';
         (this as any).updatePageTitle();
-        new DogPayCosts("dp-pay-costs", args.resources, args.dog, () => {
+        new DogPayCosts("dp-pay-costs", args.resources, args.dog, args.freeDogsOnLead > 0, () => {
             dojo.destroy('dp-pay-costs');
             this.takeNoLockAction('placeDogOnLeadCancel')
-        }, (resources) => {
+        }, (resources, isFreePlacement) => {
+            console.log('onConfirm')
             dojo.destroy('dp-pay-costs');
-            this.takeNoLockAction('placeDogOnLeadPayResources', {dogId: args.dog.id, resources: JSON.stringify(resources)})
+            this.takeNoLockAction('placeDogOnLeadPayResources', {dogId: args.dog.id, isFreePlacement, resources: JSON.stringify(resources)})
         });
     }
 

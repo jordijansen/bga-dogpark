@@ -42,20 +42,24 @@ class DogManager extends APP_DbObject
         DogPark::$instance->dogCards->moveCard($dogId, LOCATION_PLAYER, $playerId);
     }
 
-    public function getDogsForSelection($playerId)
+    public function getDogsForSelection($playerId, $hasFreeDogsOnLead = false)
     {
         $allDogs = DogCard::fromArray(DogPark::$instance->dogCards->getCardsInLocation(LOCATION_PLAYER, $playerId));
         $dogsForSelection = [];
         $resources = DogPark::$instance->playerManager->getResources($playerId);
         foreach ($allDogs as $dog) {
-            $resourcesForDog = $resources;
-            foreach ($dog->costs as $costType => $cost) {
-                $resourcesForDog[$costType] = $resourcesForDog[$costType] - $cost;
-            }
-            $missingResources = abs(array_sum(array_filter($resourcesForDog, function ($r) { return $r < 0;})));
-            $remainingResources = array_sum(array_filter($resourcesForDog, function ($r) { return $r > 0;}));
-            if ($missingResources == 0 || floor($remainingResources / 2) >= $missingResources) {
+            if ($hasFreeDogsOnLead) {
                 $dogsForSelection[$dog->id] = $dog;
+            } else {
+                $resourcesForDog = $resources;
+                foreach ($dog->costs as $costType => $cost) {
+                    $resourcesForDog[$costType] = $resourcesForDog[$costType] - $cost;
+                }
+                $missingResources = abs(array_sum(array_filter($resourcesForDog, function ($r) { return $r < 0;})));
+                $remainingResources = array_sum(array_filter($resourcesForDog, function ($r) { return $r > 0;}));
+                if ($missingResources == 0 || floor($remainingResources / 2) >= $missingResources) {
+                    $dogsForSelection[$dog->id] = $dog;
+                }
             }
         }
         return $dogsForSelection;

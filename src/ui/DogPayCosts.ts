@@ -7,8 +7,9 @@ class DogPayCosts {
     constructor(private elementId: string,
                 private resources: {stick: number, ball: number, treat: number, toy: number},
                 private dog: DogCard,
+                private canBePlacedForFree: boolean,
                 private onCancel: () => void,
-                private onConfirm: (resources: string[]) => void) {
+                private onConfirm: (resources: string[], isFreePlacement: boolean) => void) {
         dojo.place('<div id="dp-dog-cost-pay-wrapper"></div>', $(this.elementId))
 
         this.resetSelection();
@@ -52,8 +53,10 @@ class DogPayCosts {
         }
 
         dojo.connect($(`dp-dog-cost-pay-cancel-button`), 'onclick', () => { this.onCancel(); });
-        dojo.connect($(`dp-dog-cost-pay-confirm-button`), 'onclick', () => { this.onConfirm(this.selectedPayment.map(costRow => costRow.payUsing).flat()); });
-
+        dojo.connect($(`dp-dog-cost-pay-confirm-button`), 'onclick', () => { this.onConfirm(this.selectedPayment.map(costRow => costRow.payUsing).flat(), false); });
+        if (this.canBePlacedForFree) {
+            dojo.connect($(`dp-dog-cost-free-button`), 'onclick', () => { this.onConfirm([], true); });
+        }
     }
 
     private createCostRows() {
@@ -83,6 +86,9 @@ class DogPayCosts {
     private createMainButtons() {
         let result = `<div class="dp-dog-cost-pay-row">`;
         const disabled = this.selectedPayment.map(costRow => costRow.payUsing).filter(payment => payment.includes('placeholder')).length > 0;
+        if (this.canBePlacedForFree) {
+            result += `<a id="dp-dog-cost-free-button" class="bgabutton bgabutton_blue">${_('Place for Free (Forecast Card)')}</a>`
+        }
         result += `<a id="dp-dog-cost-pay-confirm-button" class="bgabutton bgabutton_blue ${disabled ? 'disabled' : ''}">${_('Confirm')}</a>`
         if (this.initiallyMissingResources) {
             result += `<a id="dp-dog-cost-pay-reset-button" class="bgabutton bgabutton_gray">${_('Reset')}</a>`

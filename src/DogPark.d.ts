@@ -92,12 +92,14 @@ interface SelectionPlaceDogOnLeadArgs {
     additionalActions: AdditionalAction[],
     maxNumberOfDogs: number
     numberOfDogsOnlead: number,
+    freeDogsOnLead: number,
     dogs: {[dogId: number]: DogCard},
 }
 
 interface SelectionPlaceDogOnLeadSelectResourcesArgs {
     dog: DogCard,
-    resources: {stick: number, ball: number, treat: number, toy: number}
+    resources: {stick: number, ball: number, treat: number, toy: number},
+    freeDogsOnLead: number
 }
 
 interface WalkingMoveWalkerArgs {

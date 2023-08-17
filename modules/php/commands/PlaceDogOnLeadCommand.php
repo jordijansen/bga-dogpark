@@ -15,18 +15,26 @@ class PlaceDogOnLeadCommand extends BaseCommand
      */
     private $resources;
     private string $originActionId;
+    private bool $isFreePlacement;
 
-    public function __construct(int $playerId, int $dogId, array $resources)
+    public function __construct(int $playerId, int $dogId, array $resources, bool $isFreePlacement)
     {
         $this->playerId = $playerId;
         $this->dogId = $dogId;
         $this->resources = $resources;
+        $this->isFreePlacement = $isFreePlacement;
         $this->originActionId = AdditionalAction::newId();
     }
 
     public function do()
     {
-        DogPark::$instance->playerManager->payResources($this->playerId, $this->resources);
+        if (!$this->isFreePlacement) {
+            DogPark::$instance->playerManager->payResources($this->playerId, $this->resources);
+        } else {
+            $freeDogsOnLead = DogPark::$instance->getGlobalVariable(FREE_DOG_ON_LEAD .$this->playerId);
+            $freeDogsOnLead = $freeDogsOnLead != null ? $freeDogsOnLead - 1 : 1;
+            DogPark::$instance->setGlobalVariable(FREE_DOG_ON_LEAD .$this->playerId, $freeDogsOnLead);
+        }
         DogPark::$instance->dogCards->moveCard($this->dogId, LOCATION_LEAD, $this->playerId);
         DogPark::$instance->dogManager->addResource($this->dogId, WALKED);
 
@@ -49,6 +57,16 @@ class PlaceDogOnLeadCommand extends BaseCommand
                 'forecastCard' => DogPark::$instance->forecastManager->getCurrentForecastCard(),
                 'score' => DogPark::$instance->getPlayerScore($this->playerId)
             ]);
+        } else if (DogPark::$instance->forecastManager->getCurrentForecastCard()->typeArg == 3 && in_array(BREED_PASTORAL, $dog->breeds)) {
+            // During SELECTION, when you place a PASTORAL dog on the Lead, you may place another dog without paying the walking cost.
+            $freeDogsOnLead = DogPark::$instance->getGlobalVariable(FREE_DOG_ON_LEAD .$this->playerId);
+            $freeDogsOnLead = $freeDogsOnLead != null ? $freeDogsOnLead + 1 : 1;
+            DogPark::$instance->setGlobalVariable(FREE_DOG_ON_LEAD .$this->playerId, $freeDogsOnLead);
+            DogPark::$instance->notifyAllPlayers('activateForecastCard', clienttranslate('${player_name} activates the current round Forecast Card and may place a dog on the lead for free'), [
+                'playerId' => $this->playerId,
+                'player_name' => DogPark::$instance->getPlayerName($this->playerId),
+                'forecastCard' => DogPark::$instance->forecastManager->getCurrentForecastCard()
+            ]);
         }
 
         if (in_array($dog->ability, SELECTION_ABILITIES)) {
@@ -62,7 +80,13 @@ class PlaceDogOnLeadCommand extends BaseCommand
 
     public function undo()
     {
-        DogPark::$instance->playerManager->gainResources($this->playerId, $this->resources);
+        if (!$this->isFreePlacement) {
+            DogPark::$instance->playerManager->gainResources($this->playerId, $this->resources);
+        } else {
+            $freeDogsOnLead = DogPark::$instance->getGlobalVariable(FREE_DOG_ON_LEAD .$this->playerId);
+            $freeDogsOnLead = $freeDogsOnLead != null ? $freeDogsOnLead + 1 : 1;
+            DogPark::$instance->setGlobalVariable(FREE_DOG_ON_LEAD .$this->playerId, $freeDogsOnLead);
+        }
         DogPark::$instance->dogCards->moveCard($this->dogId, LOCATION_PLAYER, $this->playerId);
         DogPark::$instance->dogManager->removeResource($this->dogId, WALKED);
 
@@ -75,6 +99,16 @@ class PlaceDogOnLeadCommand extends BaseCommand
                 'player_name' => DogPark::$instance->getPlayerName($this->playerId),
                 'forecastCard' => DogPark::$instance->forecastManager->getCurrentForecastCard(),
                 'score' => DogPark::$instance->getPlayerScore($this->playerId)
+            ]);
+        } else if (DogPark::$instance->forecastManager->getCurrentForecastCard()->typeArg == 3 && in_array(BREED_PASTORAL, $dog->breeds)) {
+            // During SELECTION, when you place a PASTORAL dog on the Lead, you may place another dog without paying the walking cost.
+            $freeDogsOnLead = DogPark::$instance->getGlobalVariable(FREE_DOG_ON_LEAD .$this->playerId);
+            $freeDogsOnLead = $freeDogsOnLead != null ? $freeDogsOnLead - 1 : 0;
+            DogPark::$instance->setGlobalVariable(FREE_DOG_ON_LEAD .$this->playerId, $freeDogsOnLead);
+            DogPark::$instance->notifyAllPlayers('activateForecastCard', clienttranslate('Undo: <s>${player_name} activates the current round Forecast Card and may place a dog on the lead for free</s>'), [
+                'playerId' => $this->playerId,
+                'player_name' => DogPark::$instance->getPlayerName($this->playerId),
+                'forecastCard' => DogPark::$instance->forecastManager->getCurrentForecastCard()
             ]);
         }
 

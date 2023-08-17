@@ -141,7 +141,10 @@ trait ActionTrait
 
         $playerId = $this->getCurrentPlayerId();
 
-        $dogsForSelection = $this->dogManager->getDogsForSelection($playerId);
+        $freeDogsOnLead = $this->getGlobalVariable(FREE_DOG_ON_LEAD .$playerId);
+        $freeDogsOnLead = $freeDogsOnLead != null ? $freeDogsOnLead : 0;
+
+        $dogsForSelection = $this->dogManager->getDogsForSelection($playerId, $freeDogsOnLead > 0);
         if (!array_key_exists($dogId, $dogsForSelection)) {
             throw new BgaUserException("This dog is not available for selection");
         }
@@ -158,10 +161,17 @@ trait ActionTrait
         $this->gamestate->setPrivateState($playerId, ST_SELECTION_PLACE_DOG_ON_LEAD);
     }
 
-    function placeDogOnLeadPayResources($dogId, $resources) {
+    function placeDogOnLeadPayResources($dogId, $resources, $isFreePlacement) {
         $playerId = $this->getCurrentPlayerId();
 
-        $dogsForSelection = $this->dogManager->getDogsForSelection($playerId);
+        $freeDogsOnLead = $this->getGlobalVariable(FREE_DOG_ON_LEAD .$playerId);
+        $freeDogsOnLead = $freeDogsOnLead != null ? $freeDogsOnLead : 0;
+        if ($freeDogsOnLead <= 0 && $isFreePlacement) {
+            throw new BgaUserException("You can't place for free");
+        }
+
+        $dogsForSelection = $this->dogManager->getDogsForSelection($playerId, $freeDogsOnLead > 0);
+
         if (!array_key_exists($dogId, $dogsForSelection)) {
             throw new BgaUserException("This dog is not available for selection");
         }
@@ -171,7 +181,7 @@ trait ActionTrait
             throw new BgaUserException("You can't add any more dogs");
         }
 
-        $command = new PlaceDogOnLeadCommand($playerId, $dogId, $resources);
+        $command = new PlaceDogOnLeadCommand($playerId, $dogId, $resources, $isFreePlacement);
         $this->commandManager->addCommand($playerId, $command);
 
         $this->gamestate->setPrivateState($playerId, ST_SELECTION_PLACE_DOG_ON_LEAD);

@@ -2576,10 +2576,11 @@ var DogOfferDial = /** @class */ (function () {
     return DogOfferDial;
 }());
 var DogPayCosts = /** @class */ (function () {
-    function DogPayCosts(elementId, resources, dog, onCancel, onConfirm) {
+    function DogPayCosts(elementId, resources, dog, canBePlacedForFree, onCancel, onConfirm) {
         this.elementId = elementId;
         this.resources = resources;
         this.dog = dog;
+        this.canBePlacedForFree = canBePlacedForFree;
         this.onCancel = onCancel;
         this.onConfirm = onConfirm;
         this.remainingResources = { stick: 0, ball: 0, treat: 0, toy: 0 };
@@ -2628,7 +2629,10 @@ var DogPayCosts = /** @class */ (function () {
             });
         }
         dojo.connect($("dp-dog-cost-pay-cancel-button"), 'onclick', function () { _this.onCancel(); });
-        dojo.connect($("dp-dog-cost-pay-confirm-button"), 'onclick', function () { _this.onConfirm(_this.selectedPayment.map(function (costRow) { return costRow.payUsing; }).flat()); });
+        dojo.connect($("dp-dog-cost-pay-confirm-button"), 'onclick', function () { _this.onConfirm(_this.selectedPayment.map(function (costRow) { return costRow.payUsing; }).flat(), false); });
+        if (this.canBePlacedForFree) {
+            dojo.connect($("dp-dog-cost-free-button"), 'onclick', function () { _this.onConfirm([], true); });
+        }
     };
     DogPayCosts.prototype.createCostRows = function () {
         var result = "<div class=\"dp-dog-cost-pay-row\">".concat(_('Cost'), "<i class=\"fa fa-long-arrow-right\" aria-hidden=\"true\"></i>").concat(_('Pay using'), "</div>");
@@ -2656,6 +2660,9 @@ var DogPayCosts = /** @class */ (function () {
     DogPayCosts.prototype.createMainButtons = function () {
         var result = "<div class=\"dp-dog-cost-pay-row\">";
         var disabled = this.selectedPayment.map(function (costRow) { return costRow.payUsing; }).filter(function (payment) { return payment.includes('placeholder'); }).length > 0;
+        if (this.canBePlacedForFree) {
+            result += "<a id=\"dp-dog-cost-free-button\" class=\"bgabutton bgabutton_blue\">".concat(_('Place for Free (Forecast Card)'), "</a>");
+        }
         result += "<a id=\"dp-dog-cost-pay-confirm-button\" class=\"bgabutton bgabutton_blue ".concat(disabled ? 'disabled' : '', "\">").concat(_('Confirm'), "</a>");
         if (this.initiallyMissingResources) {
             result += "<a id=\"dp-dog-cost-pay-reset-button\" class=\"bgabutton bgabutton_gray\">".concat(_('Reset'), "</a>");
@@ -3584,12 +3591,13 @@ var DogPark = /** @class */ (function () {
         var _this = this;
         this.gamedatas.gamestate.descriptionmyturn = dojo.string.substitute(_(this.gamedatas.gamestate.private_state.descriptionmyturn), __assign(__assign({}, args), { you: 'you' })) + '<br /><div id="dp-pay-costs"></div>';
         this.updatePageTitle();
-        new DogPayCosts("dp-pay-costs", args.resources, args.dog, function () {
+        new DogPayCosts("dp-pay-costs", args.resources, args.dog, args.freeDogsOnLead > 0, function () {
             dojo.destroy('dp-pay-costs');
             _this.takeNoLockAction('placeDogOnLeadCancel');
-        }, function (resources) {
+        }, function (resources, isFreePlacement) {
+            console.log('onConfirm');
             dojo.destroy('dp-pay-costs');
-            _this.takeNoLockAction('placeDogOnLeadPayResources', { dogId: args.dog.id, resources: JSON.stringify(resources) });
+            _this.takeNoLockAction('placeDogOnLeadPayResources', { dogId: args.dog.id, isFreePlacement: isFreePlacement, resources: JSON.stringify(resources) });
         });
     };
     DogPark.prototype.enteringWalkingMoveWalker = function (args) {

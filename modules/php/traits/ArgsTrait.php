@@ -42,12 +42,15 @@ trait ArgsTrait
 
     function argSelectionPlaceDogOnLead($playerId): array
     {
+        $freeDogsOnLead = $this->getGlobalVariable(FREE_DOG_ON_LEAD .$playerId);
+        $freeDogsOnLead = $freeDogsOnLead != null ? $freeDogsOnLead : 0;
+
         return [
             "canCancelMoves" => DogPark::$instance->commandManager->hasCommands($playerId),
             "playerId" => $playerId,
             "maxNumberOfDogs" => DogPark::$instance->forecastManager->getCurrentRoundMaxNumberOfDogsForSelection(),
             "numberOfDogsOnlead" => sizeof(DogPark::$instance->dogCards->getCardsInLocation(LOCATION_LEAD, $playerId)),
-            "dogs" => DogPark::$instance->dogManager->getDogsForSelection($playerId),
+            "dogs" => DogPark::$instance->dogManager->getDogsForSelection($playerId, $freeDogsOnLead > 0),
             "additionalActions" => $this->actionManager->getActions($playerId, true)
         ];
     }
@@ -56,6 +59,8 @@ trait ArgsTrait
     {
         $dogId = $this->getGlobalVariable(SELECTION_DOG_ID_ . $playerId);
         $dog = DogCard::from($this->dogCards->getCard($dogId));
+        $freeDogsOnLead = $this->getGlobalVariable(FREE_DOG_ON_LEAD .$playerId);
+        $freeDogsOnLead = $freeDogsOnLead != null ? $freeDogsOnLead : 0;
 
         return [
             "playerId" => $playerId,
@@ -63,7 +68,8 @@ trait ArgsTrait
             "dogName" => $dog->name,
             "maxNumberOfDogs" => DogPark::$instance->forecastManager->getCurrentRoundMaxNumberOfDogsForSelection(),
             "numberOfDogsOnlead" => sizeof(DogPark::$instance->dogCards->getCardsInLocation(LOCATION_LEAD, $playerId)),
-            "resources" => DogPark::$instance->playerManager->getResources($playerId)
+            "resources" => DogPark::$instance->playerManager->getResources($playerId),
+            "freeDogsOnLead" => $freeDogsOnLead
         ];
     }
 
