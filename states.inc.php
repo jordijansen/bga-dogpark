@@ -174,6 +174,7 @@ $recruitmentStates = [
         "type" => "game",
         "action" => "stRecruitmentEnd",
         "transitions" => [
+            'gainResourcesForecastCard' => ST_ACTION_GAIN_RESOURCES,
             'recruitmentStart' => ST_RECRUITMENT_START,
             'recruitmentEnd' => ST_SELECTION_START
         ]
@@ -395,6 +396,20 @@ $actionStates = [
         "transitions" => [
         ]
     ],
+    ST_ACTION_GAIN_RESOURCES => [
+        "name" => "actionGainResources",
+        "description" => clienttranslate('Waiting for players to gain resources'),
+        "descriptionmyturn" => clienttranslate('Forecast Card: ${you} may gain resource(s)'),
+        "type" => "multipleactiveplayer",
+        "args" => "argActionGainResources",
+        "possibleactions" => [
+            ACT_GAIN_RESOURCES_CONFIRM,
+            ACT_CANCEL,
+        ],
+        "transitions" => [
+            'recruitment' => ST_RECRUITMENT_END
+        ]
+    ]
 ];
 
 //////////////////////////////////

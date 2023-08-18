@@ -11,7 +11,7 @@ class Dog101 extends DogCard {
     {
         parent::__construct($dbCard);
         $this->name = clienttranslate('Briard');
-        $this->breeds = [BREED_UTILITY];
+        $this->breeds = [BREED_PASTORAL];
         $this->costs = [RESOURCE_STICK => 2];
         $this->ability = $this->getAbility();
         $this->abilityTitle = $this->getAbilityTitle();

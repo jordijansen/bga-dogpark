@@ -5,6 +5,7 @@ class GainResources {
     constructor(private elementId: string,
                 private nrOfResourcesToGain: number,
                 private resourceOptions: string[],
+                private canCancel: boolean,
                 private onCancel: () => void,
                 private onConfirm: (resources: string[]) => void) {
         dojo.place('<div id="dp-gain-resources-wrapper"></div>', $(this.elementId))
@@ -38,7 +39,9 @@ class GainResources {
             });
         }
 
-        dojo.connect($(`dp-dog-cost-pay-cancel-button`), 'onclick', () => { this.onCancel(); });
+        if (this.canCancel) {
+            dojo.connect($(`dp-dog-cost-pay-cancel-button`), 'onclick', () => { this.onCancel(); });
+        }
         dojo.connect($(`dp-dog-cost-pay-confirm-button`), 'onclick', () => { this.onConfirm(this.selectedResources); });
 
     }
@@ -71,7 +74,9 @@ class GainResources {
         if (this.selectedResources.some(value => value != 'placeholder')) {
             result += `<a id="dp-dog-cost-pay-reset-button" class="bgabutton bgabutton_gray">${_('Reset')}</a>`
         }
-        result += `<a id="dp-dog-cost-pay-cancel-button" class="bgabutton bgabutton_gray">${_('Cancel')}</a>`
+        if (this.canCancel) {
+            result += `<a id="dp-dog-cost-pay-cancel-button" class="bgabutton bgabutton_gray">${_('Cancel')}</a>`
+        }
 
         result += '</div>';
         return result;

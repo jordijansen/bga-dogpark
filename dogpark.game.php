@@ -51,7 +51,7 @@ require_once('modules/php/commands/GoFetchDogAbilityCommand.php');
 require_once('modules/php/commands/ObedientDogAbilityCommand.php');
 require_once('modules/php/commands/PlaymateDogAbilityCommand.php');
 require_once('modules/php/commands/SocialButterflyDogAbilityCommand.php');
-require_once('modules/php/commands/GainResourcesCommand.php');
+require_once('modules/php/commands/ActivateForecastCardCommand.php');
 
 require_once('modules/php/objects/Card.php');
 require_once('modules/php/objects/BreedExpertCard.php');

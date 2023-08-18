@@ -9,8 +9,8 @@ trait DebugTrait
 
     function jumpState()
     {
-        $this->setGlobalVariable(OBJECTIVES_REVEALED, false);
-        $this->gamestate->jumpToState(ST_FINAL_SCORING);
+        $this->setGlobalVariable(GAIN_RESOURCES_PLAYER_IDS, []);
+//        $this->gamestate->jumpToState(ST_FINAL_SCORING);
     }
 
     function placeInKennel($playerId, $dogTypeId) {

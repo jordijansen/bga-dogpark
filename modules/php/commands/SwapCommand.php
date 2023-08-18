@@ -2,6 +2,7 @@
 
 namespace commands;
 
+use actions\AdditionalAction;
 use DogPark;
 use objects\DogCard;
 
@@ -46,10 +47,15 @@ class SwapCommand extends BaseCommand
             DogPark::$instance->actionManager->markActionPerformed($this->playerId, $action->additionalArgs->leavingTheParkOtherActionId);
         }
 
-        if (DogPark::$instance->forecastManager->getCurrentForecastCard()->typeArg == 10) {
+        $forecastCard = DogPark::$instance->forecastManager->getCurrentForecastCard();
+        if ($forecastCard->typeArg == 10) {
             // During THIS ROUND, whenever you wap, place WALKED token on the newly acquired Dog in your Kennel.
             // If combined with leaving the park bonus, you get two walked tokens (per the FAQ back of rulebook)
             DogPark::$instance->dogManager->addResource($fieldDog->id, WALKED);
+        } else if ($forecastCard->typeArg == 7 && in_array(BREED_UTILITY, $fieldDog->breeds)) {
+            DogPark::$instance->actionManager->addAction($this->playerId, new AdditionalAction(USE_FORECAST_ABILITY, (object) [
+                "forecastCardTypeArg" => 7
+            ], false, true, $this->actionId));
         }
 
         $fieldDog = DogCard::from(DogPark::$instance->dogCards->getCard($this->fieldDogId));
@@ -85,6 +91,8 @@ class SwapCommand extends BaseCommand
             'fieldDog' => $kennelDog,
             'fieldDogName' => $fieldDog->name,
         ]);
+
+        DogPark::$instance->actionManager->removeActionsForOriginActionId($this->playerId, $this->actionId);
 
         $action = DogPark::$instance->actionManager->getAction($this->playerId, $this->actionId);
         DogPark::$instance->actionManager->unmarkActionPerformed($this->playerId, $this->actionId);

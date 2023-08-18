@@ -2,6 +2,7 @@
 
 namespace traits;
 use actions\AdditionalAction;
+use commands\ActivateForecastCardCommand;
 use objects\BreedExpertCard;
 use objects\DogCard;
 use objects\DogWalker;
@@ -49,6 +50,7 @@ trait StateTrait
             $newPhaseLabel = clienttranslate('Round ${round}: entering new Phase: Recruitment (2/2)');
         }
         $this->setGlobalVariable(CURRENT_PHASE, $newPhase);
+        $this->setGlobalVariable(GAIN_RESOURCES_PLAYER_IDS, []);
 
         $this->notifyAllPlayers('newPhase', $newPhaseLabel, [
             'round' => intval($this->getGlobalVariable(CURRENT_ROUND)),
@@ -183,16 +185,26 @@ trait StateTrait
 
     function stRecruitmentEnd()
     {
-        $newDogCards = $this->dogField->fillField();
-        $this->notifyAllPlayers('fieldRefilled', clienttranslate('The field is refilled with dog cards'), [
-            "dogs" => $newDogCards
-        ]);
+        $playerIds = $this->getGlobalVariable(GAIN_RESOURCES_PLAYER_IDS);
+        if ($this->forecastManager->getCurrentForecastCard()->typeArg == 7 && sizeof($playerIds) > 0) {
+            foreach ($playerIds as $playerId) {
+                $this->setGlobalVariable(GAIN_RESOURCES_NR_OF_RESOURCES .$playerId, 1);
+                $this->setGlobalVariable(GAIN_RESOURCES_RESOURCE_OPTIONS .$playerId, [RESOURCE_STICK, RESOURCE_BALL, RESOURCE_TREAT, RESOURCE_TOY]);
+            }
 
+            $this->setGlobalVariable(STATE_AFTER_GAIN_RESOURCES, ST_RECRUITMENT_END);
 
-        if ($this->getGlobalVariable(CURRENT_PHASE) == PHASE_RECRUITMENT_1) {
-            $this->gamestate->nextState("recruitmentStart");
+            $this->gamestate->setPlayersMultiactive($playerIds, 'gainResourcesForecastCard', true);
+            $this->gamestate->nextState('gainResourcesForecastCard');
         } else {
-            $this->gamestate->nextState("recruitmentEnd");
+            $newDogCards = $this->dogField->fillField();
+            $this->notifyAllPlayers('fieldRefilled', clienttranslate('The field is refilled with dog cards'), [
+                "dogs" => $newDogCards
+            ]);
+
+            $nextState = $this->getGlobalVariable(CURRENT_PHASE) == PHASE_RECRUITMENT_1 ? "recruitmentStart" : "recruitmentEnd";
+
+            $this->gamestate->nextState($nextState);
         }
     }
 
@@ -227,6 +239,8 @@ trait StateTrait
                 }
             }
         }
+
+        $this->commandManager->clearCommands();
 
         $this->gamestate->nextState("playerTurns");
     }

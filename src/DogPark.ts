@@ -96,6 +96,8 @@ class DogPark implements DogParkGame {
 
         dojo.connect($('dp-game-board-side-toggle-button'), 'onclick', () => dojo.toggleClass('dp-game-board-side', 'hide-side-bar'));
 
+        dojo.place('<div id="custom-actions"></div>', $('maintitlebar_content'), 'last')
+
         this.setupNotifications();
         log( "Ending game setup" );
     }
@@ -141,35 +143,37 @@ class DogPark implements DogParkGame {
                 this.enteringActionCrafty(args.args as ActionCraftyArgs)
                 break;
             case 'actionGainResourcesPrivate':
-                this.gamedatas.gamestate.descriptionmyturn = _(this.gamedatas.gamestate.private_state.descriptionmyturn) + '<br /><div id="dp-gain-resources"></div>';
-                (this as any).updatePageTitle();
+            case 'actionGainResources':
                 this.enteringGainResources(args.args);
                 break;
+
         }
     }
 
     private enteringChooseObjectives() {
-        this.currentPlayerChooseObjectives = new ChooseObjectives(this, "dp-choose-objectives");
-        this.currentPlayerChooseObjectives.enter();
+        if ((this as any).isCurrentPlayerActive()) {
+            this.currentPlayerChooseObjectives = new ChooseObjectives(this, "dp-choose-objectives");
+            this.currentPlayerChooseObjectives.enter();
+        }
     }
 
     private enteringRecruitmentOffer(args: RecruitmentOfferArgs) {
         if ((this as any).isCurrentPlayerActive()) {
             if (args.maxOfferValue > 0) {
                 this.dogField.setDogSelectionModeField('single');
-                this.gamedatas.gamestate.descriptionmyturn = this.gamedatas.gamestate.descriptionmyturn + '<br />' + _('Select a dog and offer value (reputation cost)') + '<br />';
-                this.gamedatas.gamestate.descriptionmyturn = this.gamedatas.gamestate.descriptionmyturn + '<div id="dp-offer-dial-controls-wrapper"></div>';
-                (this as any).updatePageTitle();
                 this.currentPlayerOfferDial = new DogOfferDial({
                     elementId: 'dp-current-player-offer-dial',
-                    parentId: 'dp-offer-dial-controls-wrapper',
+                    parentId: 'custom-actions',
                     player: this.getPlayer(this.getPlayerId()),
                     initialValue: 1,
                     maxOfferValue: args.maxOfferValue,
-                    readOnly: false
+                    readOnly: false,
+                    onConfirm: () => {
+                        this.placeOfferOnDog();
+                    }
                 });
             } else {
-                this.gamedatas.gamestate.descriptionmyturn = this.gamedatas.gamestate.descriptionmyturn + '<br />' + _('Insufficient reputation to place an offer') + '<br />';
+                this.gamedatas.gamestate.descriptionmyturn = _(this.gamedatas.gamestate.descriptionmyturn) + '<br />' + _('Insufficient reputation to place an offer') + '<br />';
                 (this as any).updatePageTitle();
             }
         }
@@ -193,16 +197,15 @@ class DogPark implements DogParkGame {
     }
 
     private enteringSelectionPlaceDogOnLeadSelectResources(args: SelectionPlaceDogOnLeadSelectResourcesArgs) {
-        this.gamedatas.gamestate.descriptionmyturn = dojo.string.substitute(_(this.gamedatas.gamestate.private_state.descriptionmyturn), {...args, you: 'you'}) + '<br /><div id="dp-pay-costs"></div>';
-        (this as any).updatePageTitle();
-        new DogPayCosts("dp-pay-costs", args.resources, args.dog, args.freeDogsOnLead > 0, () => {
-            dojo.destroy('dp-pay-costs');
-            this.takeNoLockAction('placeDogOnLeadCancel')
-        }, (resources, isFreePlacement) => {
-            console.log('onConfirm')
-            dojo.destroy('dp-pay-costs');
-            this.takeNoLockAction('placeDogOnLeadPayResources', {dogId: args.dog.id, isFreePlacement, resources: JSON.stringify(resources)})
-        });
+        if ((this as any).isCurrentPlayerActive()) {
+            new DogPayCosts("custom-actions", args.resources, args.dog, args.freeDogsOnLead > 0, () => {
+                dojo.empty('custom-actions');
+                this.takeNoLockAction('placeDogOnLeadCancel')
+            }, (resources, isFreePlacement) => {
+                dojo.empty('custom-actions');
+                this.takeNoLockAction('placeDogOnLeadPayResources', {dogId: args.dog.id, isFreePlacement, resources: JSON.stringify(resources)})
+            });
+        }
     }
 
     private enteringWalkingMoveWalker(args: WalkingMoveWalkerArgs) {
@@ -233,25 +236,27 @@ class DogPark implements DogParkGame {
     }
 
     private enteringActionCrafty(args: ActionCraftyArgs) {
-        this.gamedatas.gamestate.descriptionmyturn = _(this.gamedatas.gamestate.private_state.descriptionmyturn) + '<br /><div id="dp-exchange-resources"></div>';
-        (this as any).updatePageTitle();
-        new ExchangeResources("dp-exchange-resources", args.resources, args.dog.craftyResource, () => {
-            dojo.destroy('dp-exchange-resources');
-            this.takeNoLockAction('cancelCrafty')
-        }, (resource) => {
-            dojo.destroy('dp-exchange-resources');
-            this.takeNoLockAction('confirmCrafty', {resource})
-        });
+        if ((this as any).isCurrentPlayerActive()) {
+            new ExchangeResources("custom-actions", args.resources, args.dog.craftyResource, () => {
+                dojo.empty('custom-actions');
+                this.takeNoLockAction('cancelCrafty')
+            }, (resource) => {
+                dojo.empty('custom-actions');
+                this.takeNoLockAction('confirmCrafty', {resource})
+            });
+        }
     }
 
-    private enteringGainResources(args: {nrOfResourcesToGain: number, resourceOptions: string[]}) {
-        new GainResources("dp-gain-resources", args.nrOfResourcesToGain, args.resourceOptions, () => {
-            dojo.destroy('dp-gain-resources');
-            this.takeNoLockAction('cancelGainResources')
-        }, (resources) => {
-            dojo.destroy('dp-gain-resources');
-            this.takeNoLockAction('confirmGainResources', {resources: JSON.stringify(resources)})
-        });
+    private enteringGainResources(args: {nrOfResourcesToGain: number, resourceOptions: string[], canCancel: boolean}) {
+        if ((this as any).isCurrentPlayerActive()) {
+            new GainResources('custom-actions', args.nrOfResourcesToGain, args.resourceOptions, args.canCancel, () => {
+                dojo.empty('custom-actions');
+                this.takeNoLockAction('cancelGainResources')
+            }, (resources) => {
+                dojo.empty('custom-actions');
+                this.takeNoLockAction('confirmGainResources', {resources: JSON.stringify(resources)})
+            });
+        }
     }
 
     public onLeavingState(stateName: string) {
@@ -261,6 +266,7 @@ class DogPark implements DogParkGame {
             case 'recruitmentOffer':
             case 'recruitmentTakeDog':
                 this.dogField.setDogSelectionModeField('none');
+                dojo.empty('custom-actions');
                 break;
             case 'selectionPlaceDogOnLead':
                 this.leavingSelectionPlaceDogOnLead();
@@ -323,9 +329,7 @@ class DogPark implements DogParkGame {
                     (this as any).addActionButton('confirmObjective', _("Confirm objective"), () => this.confirmObjective());
                     break;
                 case 'recruitmentOffer':
-                    if (args.maxOfferValue > 0) {
-                        (this as any).addActionButton('placeOfferOnDog', _("Confirm"), () => this.placeOfferOnDog());
-                    } else {
+                    if (args.maxOfferValue == 0) {
                         (this as any).addActionButton('skipPlaceOfferOnDog', _("Skip"), () => this.skipPlaceOfferOnDog());
                     }
                     break;
@@ -334,9 +338,10 @@ class DogPark implements DogParkGame {
                     break;
                 case 'selectionPlaceDogOnLead':
                     const selectionPlaceDogOnLeadArgs = args as SelectionPlaceDogOnLeadArgs;
-                    this.addAdditionalActionButtons(args.additionalActions)
-                    if (selectionPlaceDogOnLeadArgs.numberOfDogsOnlead > 0 && selectionPlaceDogOnLeadArgs.additionalActions.every(action => action.optional)) {
-                        (this as any).addActionButton('confirmSelection', _("Confirm Selection"), () => this.confirmSelection(selectionPlaceDogOnLeadArgs));
+                    this.addAdditionalActionButtons(args.additionalActions);
+                    (this as any).addActionButton('confirmSelection', _("Confirm Selection"), () => this.confirmSelection(selectionPlaceDogOnLeadArgs));
+                    if ((selectionPlaceDogOnLeadArgs.numberOfDogsOnlead < 1 && Object.keys(selectionPlaceDogOnLeadArgs.dogs).length >= 1) || selectionPlaceDogOnLeadArgs.additionalActions.some(action => !action.optional)) {
+                        dojo.addClass('confirmSelection', 'disabled');
                     }
                     break;
                 case 'walkingMoveWalkerAfter':

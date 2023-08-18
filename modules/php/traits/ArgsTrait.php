@@ -4,7 +4,6 @@ namespace traits;
 use DogPark;
 use objects\DogCard;
 use objects\DogWalker;
-use objects\ObjectiveCard;
 
 trait ArgsTrait
 {
@@ -146,7 +145,24 @@ trait ArgsTrait
         return [
             "forecastCardType" => $forecastCardType,
             "nrOfResourcesToGain" => $nrOfResourcesToGain,
-            "resourceOptions" => $resourceOptions
+            "resourceOptions" => $resourceOptions,
+            'canCancel' => true
+        ];
+    }
+
+    function argActionGainResources(): array
+    {
+        $playerId = intval($this->getCurrentPlayerId());
+
+        // WORKAROUND -> GLOBAL VARIABLES ARE NOT AVAILABLE AT THIS POINT, BUT ARE WITH A REFRESH.
+        $nrOfResourcesToGain = 1;
+        $resourceOptions = [RESOURCE_STICK, RESOURCE_BALL, RESOURCE_TOY, RESOURCE_TREAT];
+
+        return [
+            'playerId' => $playerId,
+            'nrOfResourcesToGain' => $nrOfResourcesToGain,
+            'resourceOptions' => $resourceOptions,
+            'canCancel' => false
         ];
     }
     

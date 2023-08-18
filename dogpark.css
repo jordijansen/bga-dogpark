@@ -2001,16 +2001,13 @@ html .whiteblock, .mode_3d #game_play_area_background .whiteblock {
   border-radius: 10px;
 }
 
-#dp-pay-costs, #dp-exchange-resources, #dp-gain-resources {
-  display: inline-block;
-}
-#dp-pay-costs .dp-dog-cost-pay-row, #dp-exchange-resources .dp-dog-cost-pay-row, #dp-gain-resources .dp-dog-cost-pay-row {
+#custom-actions .dp-dog-cost-pay-row {
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 8px;
 }
-#dp-pay-costs .dp-dog-cost-pay-row .bgabutton, #dp-exchange-resources .dp-dog-cost-pay-row .bgabutton, #dp-gain-resources .dp-dog-cost-pay-row .bgabutton {
+#custom-actions .dp-dog-cost-pay-row .bgabutton {
   margin: 5px 0;
 }
 

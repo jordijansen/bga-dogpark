@@ -27,6 +27,10 @@ class DogManager extends APP_DbObject
             $newScore = $playerScore - $reputationCost;
             DogPark::$instance->updatePlayerScore($playerId, $newScore);
 
+            if (in_array(BREED_UTILITY, $dogCard->breeds)) {
+                DogPark::$instance->setGlobalVariable(GAIN_RESOURCES_PLAYER_IDS, [...DogPark::$instance->getGlobalVariable(GAIN_RESOURCES_PLAYER_IDS), $playerId]);
+            }
+
             $args['player_name'] = DogPark::$instance->getPlayerName($playerId);
             $args['reputationCost'] = $reputationCost;
             $args['score'] = $newScore;

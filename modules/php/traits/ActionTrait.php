@@ -3,7 +3,7 @@
 namespace traits;
 use actions\AdditionalAction;
 use BgaUserException;
-use commands\GainResourcesCommand;
+use commands\ActivateForecastCardCommand;
 use commands\CraftyDogAbilityCommand;
 use commands\EndScoutCommand;
 use commands\GainLeavingTheParkBonusCommand;
@@ -328,6 +328,15 @@ trait ActionTrait
             if ($forecastCardType == 1) {
                 $this->setGlobalVariable(CURRENT_ACTION_ID .$playerId, $actionId);
                 $this->gamestate->setPrivateState($playerId, ST_ACTION_GAIN_RESOURCES_PRIVATE);
+            } else if ($forecastCardType == 7) {
+                $this->setGlobalVariable(GAIN_RESOURCES_NR_OF_RESOURCES .$playerId, 1);
+                $this->setGlobalVariable(GAIN_RESOURCES_RESOURCE_OPTIONS .$playerId, [RESOURCE_STICK, RESOURCE_BALL, RESOURCE_TREAT, RESOURCE_TOY]);
+                $this->setGlobalVariable(STATE_AFTER_GAIN_RESOURCES, ST_WALKING_MOVE_WALKER_AFTER);
+                $this->setGlobalVariable(GAIN_RESOURCES_PLAYER_IDS, [$playerId]);
+                $this->setGlobalVariable(CURRENT_ACTION_ID .$playerId, $actionId);
+
+                $this->gamestate->setPlayersMultiactive([$playerId], '');
+                $this->gamestate->jumpToState(ST_ACTION_GAIN_RESOURCES);
             }
         }
     }
@@ -423,7 +432,7 @@ trait ActionTrait
     }
 
     function confirmGainResources($resources) {
-        $this->checkAction(ACT_CANCEL);
+        $this->checkAction(ACT_GAIN_RESOURCES_CONFIRM);
         $playerId = $this->getCurrentPlayerId();
 
         $nrOfResourcesToGain = intval($this->getGlobalVariable(GAIN_RESOURCES_NR_OF_RESOURCES .$playerId));
@@ -432,15 +441,33 @@ trait ActionTrait
         if (sizeof($resources) != $nrOfResourcesToGain) {
             throw new BgaUserException('Incorrect amount of resources supplied');
         }
+
         $validResources = array_filter($resources, function($resource) use ($resourceOptions) {return in_array($resource, $resourceOptions);});
         if (sizeof($validResources) != sizeof($resources)) {
             throw new BgaUserException('Invalid resources supplied');
         }
 
-        $actionId = $this->getGlobalVariable(CURRENT_ACTION_ID .$playerId);
-        $action = $this->actionManager->getAction($playerId, $actionId);
-        if ($action->additionalArgs->forecastCardTypeArg == 1) {
-            $this->commandManager->addCommand($playerId, new GainResourcesCommand($playerId, $actionId, $resources, clienttranslate('${player_name} activates the current round Forecast Card'), clienttranslate('Undo: <s>${player_name} activates the current round Forecast Card<s>')));
+        $forecastCard = $this->forecastManager->getCurrentForecastCard();
+        if ($forecastCard->typeArg == 1) {
+            $actionId = $this->getGlobalVariable(CURRENT_ACTION_ID .$playerId);
+            $this->commandManager->addCommand($playerId, new ActivateForecastCardCommand($playerId, $actionId, $resources, 0, clienttranslate('${player_name} activates the current round Forecast Card gaining ${gainedResources}'), clienttranslate('Undo: <s>${player_name} activates the current round Forecast Card gaining ${lostResources}<s>')));
+            $this->gamestate->setPrivateState($playerId, ST_SELECTION_PLACE_DOG_ON_LEAD);
+        } else if ($forecastCard->typeArg == 7) {
+            $currentPhase = $this->getGlobalVariable(CURRENT_PHASE);
+            if ($currentPhase == PHASE_RECRUITMENT_1 || $currentPhase == PHASE_RECRUITMENT_2) {
+                $this->commandManager->addCommand($playerId, new ActivateForecastCardCommand($playerId, null, $resources, 1, clienttranslate('${player_name} activates the current round Forecast Card gaining ${gainedResources} and ${gainedReputation} reputation'), clienttranslate('Undo: <s>${player_name} activates the current round Forecast Card gaining ${lostResources} and ${lostReputation} reputation<s>')));
+
+                $playerIds = $this->getGlobalVariable(GAIN_RESOURCES_PLAYER_IDS, true);
+                $playerIds = array_filter($playerIds, function ($i) use ($playerId) { return $i != $playerId;});
+                $this->setGlobalVariable(GAIN_RESOURCES_PLAYER_IDS, $playerIds);
+
+                $this->gamestate->setPlayerNonMultiactive($playerId, 'recruitment');
+            } else if ($currentPhase == PHASE_WALKING) {
+                $actionId = $this->getGlobalVariable(CURRENT_ACTION_ID .$playerId);
+                $this->commandManager->addCommand($playerId, new ActivateForecastCardCommand($playerId, $actionId, $resources, 1, clienttranslate('${player_name} activates the current round Forecast Card gaining ${gainedResources} and ${gainedReputation} reputation'), clienttranslate('Undo: <s>${player_name} activates the current round Forecast Card gaining ${lostResources} and ${lostReputation} reputation<s>')));
+                $this->gamestate->jumpToState(intval($this->getGlobalVariable(STATE_AFTER_GAIN_RESOURCES)));
+            }
+
         }
     }
 
