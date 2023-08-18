@@ -311,6 +311,7 @@ $homeTimeStates = [
         "type" => "game",
         "action" => "stHomeTime",
         "transitions" => [
+            'gainResourcesForecastCard' => ST_ACTION_GAIN_RESOURCES,
             "nextRound" => ST_RECRUITMENT_START,
             "endGame" => ST_FINAL_SCORING
         ]
@@ -407,7 +408,8 @@ $actionStates = [
             ACT_CANCEL,
         ],
         "transitions" => [
-            'recruitment' => ST_RECRUITMENT_END
+            'recruitment' => ST_RECRUITMENT_END,
+            'homeTime' => ST_HOME_TIME
         ]
     ]
 ];

@@ -49,9 +49,9 @@ trait StateTrait
             $newPhase = PHASE_RECRUITMENT_2;
             $newPhaseLabel = clienttranslate('Round ${round}: entering new Phase: Recruitment (2/2)');
         }
-        $this->setGlobalVariable(CURRENT_PHASE, $newPhase);
         $this->setGlobalVariable(GAIN_RESOURCES_PLAYER_IDS, []);
 
+        $this->setGlobalVariable(CURRENT_PHASE, $newPhase);
         $this->notifyAllPlayers('newPhase', $newPhaseLabel, [
             'round' => intval($this->getGlobalVariable(CURRENT_ROUND)),
             'newPhase' => $newPhase
@@ -397,119 +397,180 @@ trait StateTrait
 
     function stHomeTime() {
         $currentRound = intval($this->getGlobalVariable(CURRENT_ROUND));
+        $currentPhase = $this->getGlobalVariable(CURRENT_PHASE);
 
-        $this->notifyAllPlayers('newPhase', clienttranslate('Round ${round}: entering new Phase: Home Time'), [
-            'round' => $currentRound,
-            'newPhase' => PHASE_HOME_TIME
-        ]);
-
-        $foreCastCard = $this->forecastManager->getCurrentForecastCard();
+        $shouldCheckForeCast = false;
+        if ($currentPhase != PHASE_HOME_TIME) {
+            // This runs only the first time
+            $shouldCheckForeCast = true;
+            $this->setGlobalVariable(CURRENT_PHASE, PHASE_HOME_TIME);
+            $this->notifyAllPlayers('newPhase', clienttranslate('Round ${round}: entering new Phase: Home Time'), [
+                'round' => $currentRound,
+                'newPhase' => PHASE_HOME_TIME
+            ]);
+        }
 
         $playerIdsInOrder = $this->playerManager->getPlayerIdsInTurnOrder();
-        foreach ($playerIdsInOrder as $playerOrderNo => $player) {
-            $playerId = intval($player['player_id']);
-
-            //1. Gain 2 Reputation for each Dog on their Lead.
-            $dogsOnlead = DogCard::fromArray($this->dogCards->getCardsInLocation(LOCATION_LEAD, $playerId));
-            $reputationGained = sizeof($dogsOnlead) * 2;
-            $playerScore = $this->getPlayerScore($playerId);
-            $this->updatePlayerScore($playerId, $playerScore + $reputationGained);
-
-            $this->notifyAllPlayers('playerGainsReputation', clienttranslate('${player_name} receives ${reputationGained} reputation for walking ${nrOfDogsWalked} dog(s)'), [
-                'playerId' => $playerId,
-                'player_name' => $this->getPlayerName($playerId),
-                'reputationGained' => $reputationGained,
-                'nrOfDogsWalked' => sizeof($dogsOnlead),
-                'score' => $this->getPlayerScore($playerId)
-            ]);
-
-            //2. Lose Reputation for each Dog without a Walked token in their Kennel.
-            if ($foreCastCard->typeArg != 9) { // During HOME TIME, Dogs without WALKED token do not lose 1 reputation.
+        $foreCastCard = $this->forecastManager->getCurrentForecastCard();
+        // Before actually doing home time we need to check if forecast abilities are triggered.
+        $playerIdsThatNeedToPickResources = [];
+        if ($shouldCheckForeCast && in_array($foreCastCard->typeArg, [2,4,5])) {
+            foreach ($playerIdsInOrder as $playerOrderNo => $player) {
+                $playerId = intval($player['player_id']);
+                $dogsOnLead = DogCard::fromArray($this->dogCards->getCardsInLocation(LOCATION_LEAD, $playerId));
                 $dogsInKennel = DogCard::fromArray($this->dogCards->getCardsInLocation(LOCATION_PLAYER, $playerId));
-                $unwalkedDogsInKennel = array_filter($dogsInKennel, function ($dog) { return $dog->resourcesOnCard['walked'] == 0;});
-                $reputationLostPerDog = 1;
-                if ($foreCastCard->typeArg == 8) { // During HOME TIME, Dogs without WALKED token lose 2 reputation instead of 1.
-                    $reputationLostPerDog = 2;
-                }
-                $playerScore = $this->getPlayerScore($playerId);
-                $reputationLost = sizeof($unwalkedDogsInKennel) * $reputationLostPerDog;
-                $this->updatePlayerScore($playerId, $playerScore - $reputationLost);
+                $playerDogs = [...$dogsOnLead, ...$dogsInKennel];
 
-                $this->notifyAllPlayers('playerLosesReputation', clienttranslate('${player_name} loses ${reputationLost} reputation for not walking ${nrOfDogsUnwalked} dog(s)'), [
+                if ($foreCastCard->typeArg == 2) {
+                    $terrierDogs = array_filter($playerDogs, function ($playerDog) { return in_array(BREED_TERRIER, $playerDog->breeds);});
+                    if (sizeof($terrierDogs) > 0) {
+                        $playerIdsThatNeedToPickResources[] = $playerId;
+                        $this->setGlobalVariable(GAIN_RESOURCES_NR_OF_RESOURCES .$playerId, sizeof($terrierDogs) * 2);
+                        $this->setGlobalVariable(GAIN_RESOURCES_REPUTATION .$playerId, 0);
+                        $this->setGlobalVariable(GAIN_RESOURCES_RESOURCE_OPTIONS .$playerId, [RESOURCE_STICK, RESOURCE_BALL, RESOURCE_TREAT, RESOURCE_TOY]);
+                        $this->setGlobalVariable(STATE_AFTER_GAIN_RESOURCES, ST_HOME_TIME);
+                    }
+                } else if ($foreCastCard->typeArg == 4) {
+                    $workingDogs = array_filter($playerDogs, function ($playerDog) { return in_array(BREED_WORKING, $playerDog->breeds);});
+                    if (sizeof($workingDogs) > 0) {
+                        $playerIdsThatNeedToPickResources[] = $playerId;
+                        $this->setGlobalVariable(GAIN_RESOURCES_NR_OF_RESOURCES .$playerId, sizeof($workingDogs));
+                        $this->setGlobalVariable(GAIN_RESOURCES_REPUTATION .$playerId, sizeof($workingDogs));
+                        $this->setGlobalVariable(GAIN_RESOURCES_RESOURCE_OPTIONS .$playerId, [RESOURCE_STICK, RESOURCE_BALL, RESOURCE_TREAT, RESOURCE_TOY]);
+                        $this->setGlobalVariable(STATE_AFTER_GAIN_RESOURCES, ST_HOME_TIME);
+                    }
+                } else if ($foreCastCard->typeArg == 5) {
+                    $toyDogs = array_filter($playerDogs, function ($playerDog) { return in_array(BREED_TOY, $playerDog->breeds);});
+                    if (sizeof($toyDogs) > 0) {
+                        $gainedReputation = sizeof($toyDogs) * 3;
+                        $this->updatePlayerScore($playerId, $this->getPlayerScore($playerId) + $gainedReputation);
+                        $this->notifyAllPlayers('activateForecastCard', clienttranslate('${player_name} activates the current round Forecast Card gaining ${gainedReputation} reputation'), [
+                            'playerId' => $playerId,
+                            'player_name' => $this->getPlayerName($playerId),
+                            'forecastCard' => $foreCastCard,
+                            'gainedReputation' => $gainedReputation,
+                            'score' => $this->getPlayerScore($playerId)
+                        ]);
+                    }
+                }
+            }
+        }
+
+        if (sizeof($playerIdsThatNeedToPickResources) > 0) {
+            $this->gamestate->setPlayersMultiactive($playerIdsThatNeedToPickResources, 'gainResourcesForecastCard', true);
+            $this->gamestate->jumpToState(ST_ACTION_GAIN_RESOURCES);
+        } else {
+            $this->commandManager->clearCommands();
+
+            foreach ($playerIdsInOrder as $playerOrderNo => $player) {
+                $playerId = intval($player['player_id']);
+
+                //1. Gain 2 Reputation for each Dog on their Lead.
+                $dogsOnlead = DogCard::fromArray($this->dogCards->getCardsInLocation(LOCATION_LEAD, $playerId));
+                $gainedReputation = sizeof($dogsOnlead) * 2;
+                $playerScore = $this->getPlayerScore($playerId);
+                $this->updatePlayerScore($playerId, $playerScore + $gainedReputation);
+
+                $this->notifyAllPlayers('playerGainsReputation', clienttranslate('${player_name} receives ${reputationGained} reputation for walking ${nrOfDogsWalked} dog(s)'), [
                     'playerId' => $playerId,
                     'player_name' => $this->getPlayerName($playerId),
-                    'reputationLost' => $reputationLost,
-                    'nrOfDogsUnwalked' => sizeof($unwalkedDogsInKennel),
+                    'reputationGained' => $gainedReputation,
+                    'nrOfDogsWalked' => sizeof($dogsOnlead),
                     'score' => $this->getPlayerScore($playerId)
+                ]);
+
+                //2. Lose Reputation for each Dog without a Walked token in their Kennel.
+                if ($foreCastCard->typeArg != 9) { // During HOME TIME, Dogs without WALKED token do not lose 1 reputation.
+                    $dogsInKennel = DogCard::fromArray($this->dogCards->getCardsInLocation(LOCATION_PLAYER, $playerId));
+                    $unwalkedDogsInKennel = array_filter($dogsInKennel, function ($dog) {
+                        return $dog->resourcesOnCard['walked'] == 0;
+                    });
+                    $reputationLostPerDog = 1;
+                    if ($foreCastCard->typeArg == 8) { // During HOME TIME, Dogs without WALKED token lose 2 reputation instead of 1.
+                        $reputationLostPerDog = 2;
+                    }
+                    $playerScore = $this->getPlayerScore($playerId);
+                    $reputationLost = sizeof($unwalkedDogsInKennel) * $reputationLostPerDog;
+                    $this->updatePlayerScore($playerId, $playerScore - $reputationLost);
+
+                    $this->notifyAllPlayers('playerLosesReputation', clienttranslate('${player_name} loses ${reputationLost} reputation for not walking ${nrOfDogsUnwalked} dog(s)'), [
+                        'playerId' => $playerId,
+                        'player_name' => $this->getPlayerName($playerId),
+                        'reputationLost' => $reputationLost,
+                        'nrOfDogsUnwalked' => sizeof($unwalkedDogsInKennel),
+                        'score' => $this->getPlayerScore($playerId)
+                    ]);
+                }
+
+
+                //3. Return the Dogs on the Lead to their Kennel
+                $dogIdsInLead = array_map(function ($dog) {
+                    return $dog->id;
+                }, $dogsOnlead);
+                $this->dogCards->moveCards($dogIdsInLead, LOCATION_PLAYER, $playerId);
+
+                $this->notifyAllPlayers('moveDogsToKennel', clienttranslate('${player_name} lead dogs are returned to kennel'), [
+                    'playerId' => $playerId,
+                    'player_name' => $this->getPlayerName($playerId),
+                    'dogs' => DogCard::fromArray($this->dogCards->getCards($dogIdsInLead))
+                ]);
+
+                // 4. Return their Walker to their Lead
+                $walkerId = $this->playerManager->getWalkerId($playerId);
+                $this->dogWalkers->moveCard($walkerId, LOCATION_PLAYER, $playerId);
+
+                $this->notifyAllPlayers('moveWalkerBackToPlayer', clienttranslate('${player_name} walker returns home'), [
+                    'playerId' => $playerId,
+                    'player_name' => $this->getPlayerName($playerId),
+                    'walker' => DogWalker::from($this->dogWalkers->getCard($walkerId))
                 ]);
             }
 
+            // Remove autowalkers from park
+            $autoWalkers = $this->getAutoWalkers();
+            foreach ($autoWalkers as $autoWalker) {
+                $walkerId = $this->playerManager->getWalkerId($autoWalker->id);
+                $this->dogWalkers->moveCard($walkerId, LOCATION_PLAYER, $autoWalker->id);
 
-            //3. Return the Dogs on the Lead to their Kennel
-            $dogIdsInLead = array_map(function ($dog) {return $dog->id;}, $dogsOnlead);
-            $this->dogCards->moveCards($dogIdsInLead, LOCATION_PLAYER, $playerId);
+                $this->notifyAllPlayers('moveWalkerBackToPlayer', clienttranslate('${autoWalkerName} returns home'), [
+                    'playerId' => $autoWalker->id,
+                    'autoWalkerName' => $autoWalker->name,
+                    'walker' => DogWalker::from($this->dogWalkers->getCard($walkerId))
+                ]);
+            }
 
-            $this->notifyAllPlayers('moveDogsToKennel', clienttranslate('${player_name} lead dogs are returned to kennel'),[
-                'playerId' => $playerId,
-                'player_name' => $this->getPlayerName($playerId),
-                'dogs' => DogCard::fromArray($this->dogCards->getCards($dogIdsInLead))
+            // 1. The current Forecast card is flipped over.
+            $foreCastCard->typeArg = null;
+            $this->notifyAllPlayers('flipForecastCard', '', [
+                'foreCastCard' => $foreCastCard
             ]);
 
-            // 4. Return their Walker to their Lead
-            $walkerId = $this->playerManager->getWalkerId($playerId);
-            $this->dogWalkers->moveCard($walkerId, LOCATION_PLAYER, $playerId);
+            // 2. Tokens from this round’s Location Bonus card are returned to the general supply. A new Location Bonus card is revealed and new tokens are placed accordingly.
+            $this->dogWalkPark->drawLocationBonusCardAndFillPark();
+            $locationBonuses = $this->dogWalkPark->getAllLocationBonuses();
+            $locationBonusCards = $this->dogWalkPark->getLocationBonusCards();
+            $locationBonusCard = end($locationBonusCards);
 
-            $this->notifyAllPlayers('moveWalkerBackToPlayer', clienttranslate('${player_name} walker returns home'),[
-                'playerId' => $playerId,
-                'player_name' => $this->getPlayerName($playerId),
-                'walker' => DogWalker::from($this->dogWalkers->getCard($walkerId))
+            $this->notifyAllPlayers('newLocationBonusCardDrawn', clienttranslate('The park is replenished with new bonuses'), [
+                'locationBonuses' => $locationBonuses,
+                'locationBonusCard' => $locationBonusCard
             ]);
-        }
 
-        // Remove autowalkers from park
-        $autoWalkers = $this->getAutoWalkers();
-        foreach ($autoWalkers as $autoWalker) {
-            $walkerId = $this->playerManager->getWalkerId($autoWalker->id);
-            $this->dogWalkers->moveCard($walkerId, LOCATION_PLAYER, $autoWalker->id);
-
-            $this->notifyAllPlayers('moveWalkerBackToPlayer', clienttranslate('${autoWalkerName} returns home'),[
-                'playerId' => $autoWalker->id,
-                'autoWalkerName' => $autoWalker->name,
-                'walker' => DogWalker::from($this->dogWalkers->getCard($walkerId))
+            // 4. The First Walker token is passed clockwise.
+            $newFirstPlayerId = $this->playerManager->passFirstPlayerMarker();
+            $this->notifyAllPlayers('newFirstWalker', clienttranslate('${player_name} becomes the new First Walker'), [
+                'playerId' => $newFirstPlayerId,
+                'player_name' => $this->getPlayerName($newFirstPlayerId),
             ]);
-        }
 
-        // 1. The current Forecast card is flipped over.
-        $foreCastCard->typeArg = null;
-        $this->notifyAllPlayers('flipForecastCard', '',[
-            'foreCastCard' => $foreCastCard
-        ]);
+            // 3. The round tracker is moved onto the next round.
+            if ($currentRound < 4) {
+                $this->setGlobalVariable(CURRENT_ROUND, $currentRound + 1);
 
-        // 2. Tokens from this round’s Location Bonus card are returned to the general supply. A new Location Bonus card is revealed and new tokens are placed accordingly.
-        $this->dogWalkPark->drawLocationBonusCardAndFillPark();
-        $locationBonuses = $this->dogWalkPark->getAllLocationBonuses();
-        $locationBonusCards = $this->dogWalkPark->getLocationBonusCards();
-        $locationBonusCard = end($locationBonusCards);
-
-        $this->notifyAllPlayers('newLocationBonusCardDrawn', clienttranslate('The park is replenished with new bonuses'),[
-            'locationBonuses' => $locationBonuses,
-            'locationBonusCard' => $locationBonusCard
-        ]);
-
-        // 4. The First Walker token is passed clockwise.
-        $newFirstPlayerId = $this->playerManager->passFirstPlayerMarker();
-        $this->notifyAllPlayers('newFirstWalker', clienttranslate('${player_name} becomes the new First Walker'),[
-            'playerId' => $newFirstPlayerId,
-            'player_name' => $this->getPlayerName($newFirstPlayerId),
-        ]);
-
-        // 3. The round tracker is moved onto the next round.
-        if ($currentRound < 4) {
-            $this->setGlobalVariable(CURRENT_ROUND, $currentRound + 1);
-
-            $this->gamestate->nextState( "nextRound");
-        } else {
-            $this->gamestate->nextState( "endGame");
+                $this->gamestate->nextState("nextRound");
+            } else {
+                $this->gamestate->nextState("endGame");
+            }
         }
     }
 

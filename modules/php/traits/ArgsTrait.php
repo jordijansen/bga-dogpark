@@ -154,9 +154,8 @@ trait ArgsTrait
     {
         $playerId = intval($this->getCurrentPlayerId());
 
-        // WORKAROUND -> GLOBAL VARIABLES ARE NOT AVAILABLE AT THIS POINT, BUT ARE WITH A REFRESH.
-        $nrOfResourcesToGain = 1;
-        $resourceOptions = [RESOURCE_STICK, RESOURCE_BALL, RESOURCE_TOY, RESOURCE_TREAT];
+        $nrOfResourcesToGain = intval($this->getGlobalVariable(GAIN_RESOURCES_NR_OF_RESOURCES .$playerId));
+        $resourceOptions = $this->getGlobalVariable(GAIN_RESOURCES_RESOURCE_OPTIONS .$playerId);
 
         return [
             'playerId' => $playerId,
