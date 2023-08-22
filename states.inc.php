@@ -424,7 +424,7 @@ $endGameStates = [
         "type" => "game",
         "action" => "stFinalScoring",
         "transitions" => [
-            "" => ST_CATCH_STATE
+            "" => ST_GAME_END
         ]
     ],
     ST_CATCH_STATE => [

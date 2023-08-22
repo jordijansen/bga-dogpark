@@ -55,10 +55,7 @@
     }
 
     #dp-game-board-park-wrapper {
-      width: 1000px;
-      height: 570px;
-      background-image: url("img/dogpark-board-park.jpg");
-      background-size: cover;
+      position: relative;
 
       #dp-game-board-park-location-card-deck {
         position: absolute;
@@ -66,8 +63,16 @@
         left: 20px;
       }
 
+      #dp-game-board-field-scout-wrapper {
+        margin-bottom: 0;
+        display: none;
+      }
 
       #dp-game-board-park {
+        width: 1000px;
+        height: 570px;
+        background-image: url("img/dogpark-board-park.jpg");
+        background-size: cover;
         display: flex;
         align-items: end;
 

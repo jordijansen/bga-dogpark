@@ -2997,12 +2997,22 @@ var DogField = /** @class */ (function () {
     };
     DogField.prototype.addDogCardsToScoutedField = function (scoutedDogs) {
         this.scoutedDogStock.removeAll();
-        return this.scoutedDogStock.addCards(scoutedDogs);
+        var promise = this.scoutedDogStock.addCards(scoutedDogs);
+        this.showHideScoutField();
+        return promise;
+    };
+    DogField.prototype.showHideScoutField = function () {
+        if (this.scoutedDogStock.getCards().length > 0) {
+            $('dp-game-board-field-scout-wrapper').style.display = 'block';
+        }
+        else {
+            $('dp-game-board-field-scout-wrapper').style.display = 'none';
+        }
     };
     DogField.prototype.addDogCardsToField = function (dogs) {
         var _this = this;
         return dogs.filter(function (dog) { return dog.location === 'field'; })
-            .map(function (dog) { return _this.dogStocks[dog.locationArg].addCard(dog); });
+            .map(function (dog) { return _this.dogStocks[dog.locationArg].addCard(dog).then(function () { return _this.showHideScoutField(); }); });
     };
     DogField.prototype.addWalkersToField = function (walkers) {
         var _this = this;
@@ -3375,27 +3385,19 @@ var PlayerResources = /** @class */ (function () {
             });
         });
     };
-    PlayerResources.prototype.gainResourceFromLocation = function (playerId, locationId, resource, extraBonus) {
+    PlayerResources.prototype.gainResourceFromLocation = function (playerId, locationId, resource) {
         return __awaiter(this, void 0, void 0, function () {
-            var stock, token, token;
+            var stock, token;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         this.playerResourceStocks[playerId][resource].incValue(1);
                         stock = this.game.dogWalkPark.resourceSpots[locationId];
-                        if (!extraBonus) return [3 /*break*/, 2];
-                        token = stock.getCards().find(function (token) { return token.type === resource; });
-                        return [4 /*yield*/, this.playerResourceStocks[playerId][resource].addCard(token)];
-                    case 1:
-                        _a.sent();
-                        return [3 /*break*/, 4];
-                    case 2:
                         token = this.game.tokenManager.createToken(resource);
                         return [4 /*yield*/, this.playerResourceStocks[playerId][resource].addCard(token, { fromStock: stock })];
-                    case 3:
+                    case 1:
                         _a.sent();
-                        _a.label = 4;
-                    case 4: return [2 /*return*/];
+                        return [2 /*return*/];
                 }
             });
         });
@@ -4095,17 +4097,9 @@ var DogPark = /** @class */ (function () {
     DogPark.prototype.notif_playerGainsLocationBonusResource = function (args) {
         if (args.resource === 'reputation') {
             this.setScore(args.playerId, args.score);
-            if (!!args.extraBonus) {
-                this.dogWalkPark.resourceSpots[args.locationId].removeCard(this.dogWalkPark.resourceSpots[args.locationId].getCards().find(function (token) { return token.type === args.resource; }));
-            }
-        }
-        else if (['swap', 'scout'].includes(args.resource)) {
-            if (!!args.extraBonus) {
-                this.dogWalkPark.resourceSpots[args.locationId].removeCard(this.dogWalkPark.resourceSpots[args.locationId].getCards().find(function (token) { return token.type === args.resource; }));
-            }
         }
         else if (['ball', 'stick', 'treat', 'toy'].includes(args.resource)) {
-            return this.playerResources.gainResourceFromLocation(args.playerId, args.locationId, args.resource, args.extraBonus);
+            return this.playerResources.gainResourceFromLocation(args.playerId, args.locationId, args.resource);
         }
         return Promise.resolve();
     };
@@ -4114,22 +4108,16 @@ var DogPark = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        if (!args.extraBonus) return [3 /*break*/, 2];
-                        return [4 /*yield*/, this.dogWalkPark.resourceSpots[args.locationId].addCard(this.tokenManager.createToken(args.resource))];
-                    case 1:
-                        _a.sent();
-                        _a.label = 2;
-                    case 2:
-                        if (!(args.resource === 'reputation')) return [3 /*break*/, 3];
+                        if (!(args.resource === 'reputation')) return [3 /*break*/, 1];
                         this.setScore(args.playerId, args.score);
-                        return [3 /*break*/, 5];
-                    case 3:
-                        if (!['ball', 'stick', 'treat', 'toy'].includes(args.resource)) return [3 /*break*/, 5];
+                        return [3 /*break*/, 3];
+                    case 1:
+                        if (!['ball', 'stick', 'treat', 'toy'].includes(args.resource)) return [3 /*break*/, 3];
                         return [4 /*yield*/, this.playerResources.payResources(args.playerId, [args.resource])];
-                    case 4:
+                    case 2:
                         _a.sent();
-                        _a.label = 5;
-                    case 5: return [2 /*return*/];
+                        _a.label = 3;
+                    case 3: return [2 /*return*/];
                 }
             });
         });

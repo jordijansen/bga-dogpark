@@ -37,15 +37,15 @@
 
                 </div>
             </div>
-            <div id="dp-game-board-park-wrapper" class="dp-board" style="order: 10;" >
-                <div id="dp-game-board-park">
+            <div id="dp-game-board-park-wrapper" style="order: 10;" >
+                <div id="dp-game-board-park" class="dp-board">
 
                 </div>
                 <div id="dp-game-board-park-location-card-deck"></div>
+                <div id="dp-game-board-field-scout-wrapper" class="whiteblock"></div>
             </div>
             <div id="dp-game-board-field-wrapper" style="order: 11;">
                 <div id="dp-game-board-field" class="dp-board"></div>
-                <div id="dp-game-board-field-scout-wrapper" class="whiteblock"></div>
             </div>
         </div>
         <div id="dp-game-board-side" class="dp-board hide-side-bar">
@@ -54,7 +54,7 @@
 
                 </div>
             </div>
-            <div id="dp-game-board-side-toggle-button">Awards</div>
+            <div id="dp-game-board-side-toggle-button">{breedExpertLabel}</div>
         </div>
     </div>
     <div id="dp-own-player-area" style="order: 11;">

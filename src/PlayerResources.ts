@@ -51,17 +51,12 @@ class PlayerResources {
         }
     }
 
-    public async gainResourceFromLocation(playerId: number, locationId: number, resource: string, extraBonus: boolean) {
+    public async gainResourceFromLocation(playerId: number, locationId: number, resource: string) {
         this.playerResourceStocks[playerId][resource].incValue(1);
         const stock = this.game.dogWalkPark.resourceSpots[locationId];
 
-        if (extraBonus) {
-            const token = stock.getCards().find(token => token.type === resource);
-            await this.playerResourceStocks[playerId][resource].addCard(token)
-        } else  {
-            const token = this.game.tokenManager.createToken(resource as any)
-            await this.playerResourceStocks[playerId][resource].addCard(token, {fromStock: stock})
-        }
+        const token = this.game.tokenManager.createToken(resource as any)
+        await this.playerResourceStocks[playerId][resource].addCard(token, {fromStock: stock})
     }
 
     public async gainResources(playerId: number, resources: string[], fromElementId?: string) {

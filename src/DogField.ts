@@ -20,12 +20,22 @@ class DogField {
 
     public addDogCardsToScoutedField(scoutedDogs: DogCard[]) {
         this.scoutedDogStock.removeAll();
-        return this.scoutedDogStock.addCards(scoutedDogs);
+        const promise = this.scoutedDogStock.addCards(scoutedDogs);
+        this.showHideScoutField();
+        return promise;
+    }
+
+    private showHideScoutField() {
+        if (this.scoutedDogStock.getCards().length > 0) {
+            $('dp-game-board-field-scout-wrapper').style.display = 'block';
+        } else {
+            $('dp-game-board-field-scout-wrapper').style.display = 'none';
+        }
     }
 
     public addDogCardsToField(dogs: DogCard[]) {
         return dogs.filter(dog => dog.location === 'field')
-            .map(dog => this.dogStocks[dog.locationArg].addCard(dog))
+            .map(dog => this.dogStocks[dog.locationArg].addCard(dog).then(() => this.showHideScoutField()))
     }
 
     public addWalkersToField(walkers: DogWalker[]) {

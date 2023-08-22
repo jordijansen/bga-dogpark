@@ -181,7 +181,6 @@ interface NotifPlayerGainsLocationBonusResource {
     playerId: number,
     resource: string,
     locationId: number,
-    extraBonus: boolean,
     score: number
 }
 

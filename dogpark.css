@@ -375,17 +375,22 @@ body > .card {
   margin-left: 35px;
 }
 #dp-game-board-wrapper #dp-game-board-main #dp-game-board-park-wrapper {
-  width: 1000px;
-  height: 570px;
-  background-image: url("img/dogpark-board-park.jpg");
-  background-size: cover;
+  position: relative;
 }
 #dp-game-board-wrapper #dp-game-board-main #dp-game-board-park-wrapper #dp-game-board-park-location-card-deck {
   position: absolute;
   top: 20px;
   left: 20px;
 }
+#dp-game-board-wrapper #dp-game-board-main #dp-game-board-park-wrapper #dp-game-board-field-scout-wrapper {
+  margin-bottom: 0;
+  display: none;
+}
 #dp-game-board-wrapper #dp-game-board-main #dp-game-board-park-wrapper #dp-game-board-park {
+  width: 1000px;
+  height: 570px;
+  background-image: url("img/dogpark-board-park.jpg");
+  background-size: cover;
   display: flex;
   align-items: end;
 }
@@ -2052,6 +2057,7 @@ html .whiteblock, .mode_3d #game_play_area_background .whiteblock {
 
 .dp-help-button-wrapper {
   position: absolute;
+  z-index: 10;
   bottom: -34px;
   right: 10px;
   height: 35px;

@@ -337,9 +337,9 @@ trait StateTrait
         if (sizeof($playerWalkersNotInLeavingParkSpace) == 0) {
             // All players have left the park (and potentially only auto walkers remain)
             $this->gamestate->nextState( "end");
-        } else if (sizeof($walkersInLeavingParkSpace) > 0 && sizeof($playerWalkersNotInLeavingParkSpace) == 1) {
+        } else if (sizeof($walkersInLeavingParkSpace) > 0 && sizeof($walkersNotInLeavingParkSpace) == 1) {
             // There is only one player walker remaining in the park and no autowalkers
-            $lastWalker = current($playerWalkersNotInLeavingParkSpace);
+            $lastWalker = current($walkersNotInLeavingParkSpace);
             $playerId = $lastWalker->typeArg;
 
             $playerScore = $this->getPlayerScore($playerId);

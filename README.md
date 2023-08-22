@@ -5,14 +5,9 @@
   - Solo Mode Objectives
   - Solo Ratings shown as target
 - Variants & Options
-- Forecast Cards
-- Move scouted cards area under park
 - Tooltips
-  - DOG CARD
   - OBJECTIVE CARDS
   - FORECAST CARDS
-- Feedback Jack
-- Don't remove token!?
 
 
 # Done
@@ -24,6 +19,10 @@
   - General
   - Objective Cards
   - Scoring pad animations
+- Forecast Cards
+- Move scouted cards area under park
+- Tooltips
+  - DOG CARD
 
 
 Dog Card Abilities:

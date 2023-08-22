@@ -689,23 +689,13 @@ class DogPark implements DogParkGame {
     private notif_playerGainsLocationBonusResource(args: NotifPlayerGainsLocationBonusResource) {
         if (args.resource === 'reputation') {
             this.setScore(args.playerId, args.score);
-            if (!!args.extraBonus) {
-                this.dogWalkPark.resourceSpots[args.locationId].removeCard(this.dogWalkPark.resourceSpots[args.locationId].getCards().find(token => token.type === args.resource))
-            }
-        } else if (['swap', 'scout'].includes(args.resource)) {
-            if (!!args.extraBonus) {
-                this.dogWalkPark.resourceSpots[args.locationId].removeCard(this.dogWalkPark.resourceSpots[args.locationId].getCards().find(token => token.type === args.resource))
-            }
         } else if (['ball', 'stick', 'treat', 'toy'].includes(args.resource)){
-            return this.playerResources.gainResourceFromLocation(args.playerId, args.locationId, args.resource, args.extraBonus);
+            return this.playerResources.gainResourceFromLocation(args.playerId, args.locationId, args.resource);
         }
         return Promise.resolve();
     }
 
     private async notif_undoPlayerGainsLocationBonusResource(args: NotifPlayerGainsLocationBonusResource) {
-        if (args.extraBonus) {
-            await this.dogWalkPark.resourceSpots[args.locationId].addCard(this.tokenManager.createToken(args.resource as any))
-        }
         if (args.resource === 'reputation') {
             this.setScore(args.playerId, args.score);
         } else if (['ball', 'stick', 'treat', 'toy'].includes(args.resource)){

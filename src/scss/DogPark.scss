@@ -110,6 +110,7 @@ html, .mode_3d #game_play_area_background {
 
 .dp-help-button-wrapper {
   position: absolute;
+  z-index: 10;
   bottom: -34px;
   right: 10px;
   height: 35px;

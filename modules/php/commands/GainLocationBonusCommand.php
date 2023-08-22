@@ -24,10 +24,6 @@ class GainLocationBonusCommand extends BaseCommand
         $bonusType = $action->additionalArgs->bonusType;
         $locationId = DogPark::$instance->playerManager->getWalker($this->playerId)->locationArg;
 
-        if ($action->additionalArgs->extraBonus) {
-            DogPark::$instance->dogWalkPark->removeExtraLocationBonus($locationId, $bonusType);
-        }
-
         if (in_array($bonusType, [RESOURCE_STICK, RESOURCE_BALL, RESOURCE_TREAT, RESOURCE_TOY])) {
             DogPark::$instance->playerManager->gainResources($this->playerId, [$bonusType]);
         } else if ($bonusType == REPUTATION) {
@@ -53,10 +49,6 @@ class GainLocationBonusCommand extends BaseCommand
         $action = DogPark::$instance->actionManager->getAction($this->playerId, $this->actionId);
         $bonusType = $action->additionalArgs->bonusType;
         $locationId = DogPark::$instance->playerManager->getWalker($this->playerId)->locationArg;
-
-        if ($action->additionalArgs->extraBonus) {
-            DogPark::$instance->dogWalkPark->addExtraLocationBonus($locationId, $bonusType);
-        }
 
         if (in_array($bonusType, [RESOURCE_STICK, RESOURCE_BALL, RESOURCE_TREAT, RESOURCE_TOY])) {
             DogPark::$instance->playerManager->payResources($this->playerId, [$bonusType]);
