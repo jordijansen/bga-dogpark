@@ -2,6 +2,8 @@ interface DogCard extends Card {
 
     name: string,
     breeds: string[],
+    abilityTitle: string,
+    abilityText: string,
     costs: {stick: number, ball: number, treat: number, toy: number}
     resourcesOnCard: {stick: string, ball: string, treat: string, toy: string, walked: string}
     craftyResource?: string
@@ -28,6 +30,7 @@ interface LocationBonus {
 }
 
 interface DogParkGame extends Game {
+    helpDialogManager: HelpDialogManager,
     locationBonusCardManager: LocationBonusCardManager;
     dogCardManager: DogCardManager;
     dogWalkerManager: DogWalkerManager;
@@ -41,6 +44,7 @@ interface DogParkGame extends Game {
     getPlayer(playerId: number): DogParkPlayer;
     isReadOnly(): boolean;
     setTooltipToClass(className: string, html: string): void;
+    formatWithIcons(description: string): string
 }
 
 interface DogParkPlayer extends Player {

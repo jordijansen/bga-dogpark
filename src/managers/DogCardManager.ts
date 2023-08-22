@@ -25,7 +25,13 @@ class DogCardManager extends CardManager<DogCard> {
                 div.appendChild(cardTokenStockElement);
                 this.cardTokenStocks[card.id] = new LineStock<Token>(dogParkGame.tokenManager, $(cardTokenStockElement.id), {gap: '2px'})
 
+                const helpButtonElement = document.createElement("div");
+                helpButtonElement.classList.add('dp-help-button-wrapper')
+                helpButtonElement.innerHTML = `<i id="dp-help-dog-${card.id}" class="dp-help-button fa fa-question-circle"  aria-hidden="true" data-help-type="dog" data-help-type-arg="${card.typeArg}"></i>`
+                div.appendChild(helpButtonElement);
                 this.addInitialResourcesToDog(card);
+
+                dojo.connect($(`dp-help-dog-${card.id}`), 'onclick', (event) => this.dogParkGame.helpDialogManager.showDogHelpDialog(event, card));
             },
             setupFrontDiv: (card: DogCard, div: HTMLElement) => {
                 div.id = `${this.getId(card)}-front`;

@@ -49,6 +49,7 @@
     "src/managers/DogWalkerManager.ts",
     "src/managers/TokenManager.ts",
     "src/managers/LocationBonusCardManager.ts",
+    "src/managers/HelpDialogManager.ts",
     "src/ui/DogOfferDial.ts",
     "src/ui/DogPayCosts.ts",
     "src/ui/ChooseObjectives.ts",

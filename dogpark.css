@@ -2050,4 +2050,41 @@ html .whiteblock, .mode_3d #game_play_area_background .whiteblock {
   height: 168.6px;
 }
 
+.dp-help-button-wrapper {
+  position: absolute;
+  bottom: -34px;
+  right: 10px;
+  height: 35px;
+  display: flex;
+  justify-content: end;
+}
+.dp-help-button-wrapper .dp-help-button {
+  height: 35px;
+  width: 35px;
+  opacity: 0.7;
+  border-radius: 0 0 5px 5px;
+  background-color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+.dp-help-dialog-content {
+  display: flex;
+  flex-direction: row;
+}
+.dp-help-dialog-content .dp-help-dialog-content-left {
+  padding-right: 10px;
+}
+.dp-help-dialog-content .dp-help-dialog-content-right {
+  width: 234px;
+}
+.dp-help-dialog-content .dp-help-dialog-content-right .dog-card-art {
+  border-radius: 5px;
+  box-shadow: 1px 1px 2px 1px rgba(0, 0, 0, 0.5);
+  height: 319px;
+  width: 234px;
+}
+
 /*# sourceMappingURL=dogpark.css.map */

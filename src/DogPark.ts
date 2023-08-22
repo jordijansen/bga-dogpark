@@ -36,6 +36,7 @@ class DogPark implements DogParkGame {
     public forecastManager: ForecastManager;
     public objectiveCardManager: ObjectiveCardManager;
     public locationBonusCardManager: LocationBonusCardManager;
+    public helpDialogManager: HelpDialogManager;
 
     // Modules
     private dogField: DogField;
@@ -82,6 +83,8 @@ class DogPark implements DogParkGame {
         log('gamedatas', gamedatas);
 
         // Setup modules
+        this.helpDialogManager = new HelpDialogManager(this);
+
         this.dogField.setUp(gamedatas);
         this.dogWalkPark.setUp(gamedatas);
         this.playerArea.setUp(gamedatas);
@@ -841,7 +844,7 @@ class DogPark implements DogParkGame {
     }
 
     public tokenIcon(type: string) {
-        return `<div class="dp-token-token small" data-type="${type}"></div>`
+        return `<span class="dp-token-token small" data-type="${type}"></span>`
     }
 
     public tokenIcons(type: string, nrOfIcons: number) {

@@ -2291,7 +2291,12 @@ var DogCardManager = /** @class */ (function (_super) {
                 cardTokenStockElement.classList.add('dp-dog-card-token-stock');
                 div.appendChild(cardTokenStockElement);
                 _this.cardTokenStocks[card.id] = new LineStock(dogParkGame.tokenManager, $(cardTokenStockElement.id), { gap: '2px' });
+                var helpButtonElement = document.createElement("div");
+                helpButtonElement.classList.add('dp-help-button-wrapper');
+                helpButtonElement.innerHTML = "<i id=\"dp-help-dog-".concat(card.id, "\" class=\"dp-help-button fa fa-question-circle\"  aria-hidden=\"true\" data-help-type=\"dog\" data-help-type-arg=\"").concat(card.typeArg, "\"></i>");
+                div.appendChild(helpButtonElement);
                 _this.addInitialResourcesToDog(card);
+                dojo.connect($("dp-help-dog-".concat(card.id)), 'onclick', function (event) { return _this.dogParkGame.helpDialogManager.showDogHelpDialog(event, card); });
             },
             setupFrontDiv: function (card, div) {
                 div.id = "".concat(_this.getId(card), "-front");
@@ -2525,6 +2530,38 @@ var LocationBonusCardManager = /** @class */ (function (_super) {
     LocationBonusCardManager.CARD_HEIGHT = 195;
     return LocationBonusCardManager;
 }(CardManager));
+var HelpDialogManager = /** @class */ (function () {
+    function HelpDialogManager(dogParkGame) {
+        this.dogParkGame = dogParkGame;
+        this.dialogId = 'dpHelpDialogId';
+    }
+    HelpDialogManager.prototype.showDogHelpDialog = function (event, card) {
+        dojo.stopEvent(event);
+        this.dialog = new ebg.popindialog();
+        this.dialog.create(this.dialogId);
+        this.dialog.setTitle("<i class=\"fa fa-question-circle\" aria-hidden=\"true\"></i> ".concat(_(card.name)));
+        var html = "<div class=\"dp-help-dialog-content\"><div class=\"dp-help-dialog-content-left\">";
+        html += "<p><b>".concat(_('Breed(s):'), "</b> ").concat(card.breeds.map(function (breed) { return _(breed); }).join(', '), "</p>");
+        html += "<p><b>".concat(_('Walking cost:'), "</b> ").concat(this.dogParkGame.formatWithIcons(Object.entries(card.costs).map(function (_a) {
+            var resource = _a[0], quantity = _a[1];
+            var result = [];
+            for (var i = 0; i < quantity; i++) {
+                result.push("_icon-".concat(resource, "_"));
+            }
+            return result.join(' ');
+        }).join('')), "</p>");
+        html += "<p><b>".concat(_(card.abilityTitle), "</b></p>");
+        html += "<p>".concat(this.dogParkGame.formatWithIcons(_(card.abilityText)), "</p>");
+        html += "</div>";
+        html += "<div class=\"dp-help-dialog-content-right\">";
+        html += "<div class=\"dog-card-art dog-card-art-".concat(card.typeArg, "\"></div>");
+        html += "</div>";
+        html += "</div>";
+        this.dialog.setContent(html);
+        this.dialog.show();
+    };
+    return HelpDialogManager;
+}());
 var DogOfferDial = /** @class */ (function () {
     function DogOfferDial(settings) {
         var _this = this;
@@ -3494,6 +3531,7 @@ var DogPark = /** @class */ (function () {
         log("Starting game setup");
         log('gamedatas', gamedatas);
         // Setup modules
+        this.helpDialogManager = new HelpDialogManager(this);
         this.dogField.setUp(gamedatas);
         this.dogWalkPark.setUp(gamedatas);
         this.playerArea.setUp(gamedatas);
@@ -4228,7 +4266,7 @@ var DogPark = /** @class */ (function () {
         return this.inherited(arguments);
     };
     DogPark.prototype.tokenIcon = function (type) {
-        return "<div class=\"dp-token-token small\" data-type=\"".concat(type, "\"></div>");
+        return "<span class=\"dp-token-token small\" data-type=\"".concat(type, "\"></span>");
     };
     DogPark.prototype.tokenIcons = function (type, nrOfIcons) {
         var tokens = [];
