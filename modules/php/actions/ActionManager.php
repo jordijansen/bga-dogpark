@@ -1,26 +1,34 @@
 <?php
 
-use actions\AdditionalAction;
+namespace actions;
+
+use DogPark;
 
 class ActionManager
 {
-    function addAction($playerId, $action) {
+    function addAction($playerId, $action)
+    {
         $existingActions = $this->getActions($playerId);
-        DogPark::$instance->setGlobalVariable(ADDITIONAL_ACTIONS_ .$playerId, [...$existingActions, $action]);
+        DogPark::$instance->setGlobalVariable(ADDITIONAL_ACTIONS_ . $playerId, [...$existingActions, $action]);
     }
-    function addActions($playerId, $actions) {
+
+    function addActions($playerId, $actions)
+    {
         $existingActions = $this->getActions($playerId);
-        DogPark::$instance->setGlobalVariable(ADDITIONAL_ACTIONS_ .$playerId, [...$existingActions, ...$actions]);
+        DogPark::$instance->setGlobalVariable(ADDITIONAL_ACTIONS_ . $playerId, [...$existingActions, ...$actions]);
     }
 
     /**
      * @return AdditionalAction[]
      */
-    function getActions($playerId, $includeOnlyUnperformed = false) {
-        $actions = DogPark::$instance->getGlobalVariable(ADDITIONAL_ACTIONS_ .$playerId);
+    function getActions($playerId, $includeOnlyUnperformed = false)
+    {
+        $actions = DogPark::$instance->getGlobalVariable(ADDITIONAL_ACTIONS_ . $playerId);
         $actions = AdditionalAction::fromArray($actions);
         if ($includeOnlyUnperformed) {
-            $actions = array_filter($actions, function($action) {return $action->performed == false;});
+            $actions = array_filter($actions, function ($action) {
+                return $action->performed == false;
+            });
         }
         return [...$actions];
     }
@@ -39,21 +47,23 @@ class ActionManager
     public function removeAction($playerId, $actionId)
     {
         $actions = $this->getActions($playerId);
-        $newActions = array_filter($actions, function ($action) use($actionId){ return strcmp($action->id, $actionId) !== 0;});
-        DogPark::$instance->setGlobalVariable(ADDITIONAL_ACTIONS_ .$playerId, [...$newActions]);
+        $newActions = array_filter($actions, function ($action) use ($actionId) {
+            return strcmp($action->id, $actionId) !== 0;
+        });
+        DogPark::$instance->setGlobalVariable(ADDITIONAL_ACTIONS_ . $playerId, [...$newActions]);
     }
 
     public function clear(int $playerId)
     {
-        DogPark::$instance->deleteGlobalVariable(ADDITIONAL_ACTIONS_ .$playerId);
+        DogPark::$instance->deleteGlobalVariable(ADDITIONAL_ACTIONS_ . $playerId);
     }
 
     public function markActionPerformed(int $playerId, string $actionId)
     {
-       $action = $this->getAction($playerId, $actionId);
-       $this->removeAction($playerId, $actionId);
-       $action->performed = true;
-       $this->addAction($playerId, $action);
+        $action = $this->getAction($playerId, $actionId);
+        $this->removeAction($playerId, $actionId);
+        $action->performed = true;
+        $this->addAction($playerId, $action);
     }
 
     public function unmarkActionPerformed(int $playerId, string $actionId)
@@ -78,7 +88,9 @@ class ActionManager
     public function getActionsForOriginActionId(int $playerId, string $originActionId): array
     {
         $actions = $this->getActions($playerId);
-        return array_filter($actions, function($action) use($originActionId) {return $action->originActionId == $originActionId;});
+        return array_filter($actions, function ($action) use ($originActionId) {
+            return $action->originActionId == $originActionId;
+        });
     }
 
 }

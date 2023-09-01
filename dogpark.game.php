@@ -14,15 +14,12 @@
   *
   */
 
+use actions\ActionManager;
 use commands\CommandManager;
-
 use managers\DogField;
 use managers\DogManager;
 use managers\PlayerManager;
-
 use objects\DogCard;
-use objects\DogWalker;
-
 use objects\ObjectiveCard;
 use traits\ActionTrait;
 use traits\ArgsTrait;
@@ -78,7 +75,7 @@ require_once('modules/php/DogManager.php');
 require_once('modules/php/PlayerManager.php');
 require_once('modules/php/DogBreedExpertAwardManager.php');
 require_once('modules/php/ForecastManager.php');
-require_once('modules/php/ActionManager.php');
+require_once('modules/php/actions/ActionManager.php');
 require_once('modules/php/ScoreManager.php');
 
 class DogPark extends Table

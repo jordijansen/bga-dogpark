@@ -13,32 +13,32 @@
 $gameinfos = array( 
 
 // Name of the game in English (will serve as the basis for translation) 
-'game_name' => "My Great Game",
+'game_name' => "Dog Park",
 
 // Game designer (or game designers, separated by commas)
-'designer' => 'John Doe',       
+'designer' => 'Lottie Hazell, Jack Hazell',
 
 // Game artist (or game artists, separated by commas)
-'artist' => 'Jane Doe',         
+'artist' => 'Kate Avery, Holly Exley, Dann May',
 
 // Year of FIRST publication of this game. Can be negative.
-'year' => 2000,                 
+'year' => 2022,
 
 // Game publisher (use empty string if there is no publisher)
-'publisher' => 'My Publishing Company',                     
+'publisher' => 'Birdwood Games',
 
 // Url of game publisher website
-'publisher_website' => 'http://www.mypublishingcompany.com/',   
+'publisher_website' => 'https://www.birdwoodgames.co.uk/',
 
 // Board Game Geek ID of the publisher
-'publisher_bgg_id' => 1234,
+'publisher_bgg_id' => 48073,
 
 // Board game geek ID of the game
 'bgg_id' => 331401,
 
 
 // Players configuration that can be played (ex: 2 to 4 players)
-'players' => array( 1,2,3,4 ),
+'players' => [1,2,3,4],
 
 // Suggest players to play with this number of players. Must be null if there is no such advice, or if there is only one possible player configuration.
 // NB: the automatic lobby will try first the lowest number of players if this is not specified. So you _have to_ specify this parameter if the lowest player number is not compatible with the default options.
@@ -67,7 +67,7 @@ $gameinfos = array(
 // Note: if you are NOT using any tie breaker, leave the empty string.
 //
 // Example: 'tie_breaker_description' => totranslate( "Number of remaining cards in hand" ),
-'tie_breaker_description' => "",
+'tie_breaker_description' => totranslate('If there is a tie, the player who won the highest value Breed Expert award wins. If this is a tie, the winning players share the victory.'),
 
 // If in the game, all losers are equal (no score to rank them or explicit in the rules that losers are not ranked between them), set this to true 
 // The game end result will display "Winner" for the 1st player and "Loser" for all other players
@@ -88,13 +88,13 @@ $gameinfos = array(
 'language_dependency' => false,
 
 // Complexity of the game, from 0 (extremely simple) to 5 (extremely complex)
-'complexity' => 3,    
+'complexity' => 2,
 
 // Luck of the game, from 0 (absolutely no luck in this game) to 5 (totally luck driven)
-'luck' => 3,    
+'luck' => 2,
 
 // Strategy of the game, from 0 (no strategy can be setup) to 5 (totally based on strategy)
-'strategy' => 3,    
+'strategy' => 4,
 
 // Diplomacy of the game, from 0 (no interaction in this game) to 5 (totally based on interaction and discussion between players)
 'diplomacy' => 3,    
@@ -132,9 +132,8 @@ $gameinfos = array(
 // Each paragraph must be wrapped with totranslate() for translation and should not contain html (plain text without formatting).
 // A good length for this text is between 100 and 150 words (about 6 to 9 lines on a standard display)
 'presentation' => array(
-//    totranslate("This wonderful game is about geometric shapes!"),
-//    totranslate("It was awarded best triangle game of the year in 2005 and nominated for the Spiel des Jahres."),
-//    ...
+    totranslate("Collect and walk all your favorite dogs in this beautiful, card-driven game."),
+    totranslate("Players are Dog Walkers recruiting 8 Dogs into their Kennel over 4 rounds. Each round, players have the opportunity to walk up to 3 of their Dogs through the Dog Park alongside their fellow players. In the Park, players will collect resources and earn Reputation. At the end of each round, players will earn Reputation for the Dogs they have walked and lose Reputation for any unwalked Dogs in their Kennel. The goal is to have the most Reputation at the end of the game. Players can build their Reputation by walking their Dogs, scoring in the Breed Expert awards, and completing their Objective."),
 ),
 
 //////// BGA SANDBOX ONLY PARAMETERS (DO NOT MODIFY)

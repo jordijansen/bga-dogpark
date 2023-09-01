@@ -8,6 +8,10 @@
 - Tooltips
   - OBJECTIVE CARDS
   - FORECAST CARDS
+- Zombie Turn
+- Game Progression percentage
+- Stats
+- Game log
 
 
 # Done

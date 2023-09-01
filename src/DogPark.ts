@@ -672,9 +672,13 @@ class DogPark implements DogParkGame {
     }
 
     private notif_dogPlacedOnLead(args: NotifDogPlacedOnLead) {
-        return this.playerArea.moveDogsToLead(args.playerId, [args.dog])
+        const promise = this.playerArea.moveDogsToLead(args.playerId, [args.dog])
             .then(() => this.playerResources.payResourcesToDog(args.playerId, args.dog, args.resources))
             .then(() => this.dogCardManager.addResourceToDog(args.dog.id, 'walked'));
+        if (args.playerId == this.getPlayerId()) {
+            return promise;
+        }
+        return Promise.resolve();
     }
     private notif_undoDogPlacedOnLead(args: NotifDogPlacedOnLead) {
         this.playerResources.gainResourcesFromDog(args.playerId, args.dog, args.resources);
@@ -785,8 +789,11 @@ class DogPark implements DogParkGame {
         if (args.score) {
             this.setScore(args.playerId, args.score);
         }
+        if (args.playerId == this.getPlayerId()) {
+            return Promise.all(promises);
+        }
+        return Promise.resolve();
 
-        return Promise.all(promises);
     }
 
     private notif_activateForecastCard(args: NotifActivateForecastCard) {
@@ -801,7 +808,10 @@ class DogPark implements DogParkGame {
             this.setScore(args.playerId, args.score);
         }
 
-        return Promise.all(promises);
+        if (args.playerId == this.getPlayerId()) {
+            return Promise.all(promises);
+        }
+        return Promise.resolve();
     }
 
     private async notif_playerAssignsResources(args: NotifPlayerAssignsResources) {
