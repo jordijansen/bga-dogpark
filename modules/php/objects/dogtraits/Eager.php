@@ -17,7 +17,7 @@ trait Eager
 
     protected function getAbilityText() : string
     {
-        return sprintf(_("During <b>SELECTION</b>, when you place this dog on the Lead, gain _icon-%s_."), $this->eagerResource);
+        return sprintf(_("During <b>SELECTION</b>, when you place this dog on the Lead, gain <icon-%s>."), $this->eagerResource);
     }
 
 }

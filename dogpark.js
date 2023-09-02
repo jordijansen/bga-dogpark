@@ -2293,7 +2293,8 @@ var DogCardManager = /** @class */ (function (_super) {
                 _this.cardTokenStocks[card.id] = new LineStock(dogParkGame.tokenManager, $(cardTokenStockElement.id), { gap: '2px' });
                 var helpButtonElement = document.createElement("div");
                 helpButtonElement.classList.add('dp-help-button-wrapper');
-                helpButtonElement.innerHTML = "<i id=\"dp-help-dog-".concat(card.id, "\" class=\"dp-help-button fa fa-question-circle\"  aria-hidden=\"true\" data-help-type=\"dog\" data-help-type-arg=\"").concat(card.typeArg, "\"></i>");
+                helpButtonElement.classList.add('position-floating-bottom');
+                helpButtonElement.innerHTML = "<i id=\"dp-help-dog-".concat(card.id, "\" class=\"dp-help-button fa fa-question-circle\"  aria-hidden=\"true\"></i>");
                 div.appendChild(helpButtonElement);
                 _this.addInitialResourcesToDog(card);
                 dojo.connect($("dp-help-dog-".concat(card.id)), 'onclick', function (event) { return _this.dogParkGame.helpDialogManager.showDogHelpDialog(event, card); });
@@ -2383,6 +2384,14 @@ var ObjectiveCardManager = /** @class */ (function (_super) {
             getId: function (card) { return "dp-objective-card-".concat(card.id); },
             setupDiv: function (card, div) {
                 div.classList.add('blackjack-size-landscape');
+                if (_this.isCardVisible(card)) {
+                    var helpButtonElement = document.createElement("div");
+                    helpButtonElement.classList.add('dp-help-button-wrapper');
+                    helpButtonElement.classList.add('position-top-right');
+                    helpButtonElement.innerHTML = "<i id=\"dp-help-objective-".concat(card.id, "\" class=\"dp-help-button fa fa-question-circle\"  aria-hidden=\"true\"></i>");
+                    div.appendChild(helpButtonElement);
+                    dojo.connect($("dp-help-objective-".concat(card.id)), 'onclick', function (event) { return _this.dogParkGame.helpDialogManager.showObjectiveHelpDialog(event, card); });
+                }
             },
             setupBackDiv: function (card, div) {
                 div.id = "".concat(_this.getId(card), "-back");
@@ -2412,6 +2421,12 @@ var ForecastManager = /** @class */ (function (_super) {
             getId: function (card) { return "dp-forecast-".concat(card.id); },
             setupDiv: function (card, div) {
                 div.classList.add('mini-size-landscape');
+                var helpButtonElement = document.createElement("div");
+                helpButtonElement.classList.add('dp-help-button-wrapper');
+                helpButtonElement.classList.add('position-floating-right');
+                helpButtonElement.innerHTML = "<i id=\"dp-help-forecast-".concat(card.id, "\" class=\"dp-help-button fa fa-question-circle\"  aria-hidden=\"true\"></i>");
+                div.appendChild(helpButtonElement);
+                dojo.connect($("dp-help-forecast-".concat(card.id)), 'onclick', function (event) { return _this.dogParkGame.helpDialogManager.showForecastHelpDialog(event, card); });
             },
             setupFrontDiv: function (card, div) {
                 div.id = "".concat(_this.getId(card), "-front");
@@ -2536,27 +2551,51 @@ var HelpDialogManager = /** @class */ (function () {
         this.dialogId = 'dpHelpDialogId';
     }
     HelpDialogManager.prototype.showDogHelpDialog = function (event, card) {
-        dojo.stopEvent(event);
-        this.dialog = new ebg.popindialog();
-        this.dialog.create(this.dialogId);
-        this.dialog.setTitle("<i class=\"fa fa-question-circle\" aria-hidden=\"true\"></i> ".concat(_(card.name)));
         var html = "<div class=\"dp-help-dialog-content\"><div class=\"dp-help-dialog-content-left\">";
-        html += "<p><b>".concat(_('Breed(s):'), "</b> ").concat(card.breeds.map(function (breed) { return _(breed); }).join(', '), "</p>");
-        html += "<p><b>".concat(_('Walking cost:'), "</b> ").concat(this.dogParkGame.formatWithIcons(Object.entries(card.costs).map(function (_a) {
-            var resource = _a[0], quantity = _a[1];
-            var result = [];
-            for (var i = 0; i < quantity; i++) {
-                result.push("_icon-".concat(resource, "_"));
-            }
-            return result.join(' ');
-        }).join('')), "</p>");
+        html += "<div class=\"dog-card-art dog-card-art-".concat(card.typeArg, "\"></div>");
+        html += "</div>";
+        html += "<div class=\"dp-help-dialog-content-right\">";
+        html += "<p>".concat(dojo.string.substitute(_('<b>Breed(s)</b>: ${breeds}'), { breeds: card.breeds.map(function (breed) { return _(breed).toUpperCase(); }).join(', ') }), "</p>");
+        html += "<p>".concat(dojo.string.substitute(_('<b>Walking cost</b>: ${cost}'), { cost: this.dogParkGame.formatWithIcons(Object.entries(card.costs).map(function (_a) {
+                var resource = _a[0], quantity = _a[1];
+                var result = [];
+                for (var i = 0; i < quantity; i++) {
+                    result.push("<icon-".concat(resource, ">"));
+                }
+                return result.join(' ');
+            }).join('')) }), "</p>");
         html += "<p><b>".concat(_(card.abilityTitle), "</b></p>");
         html += "<p>".concat(this.dogParkGame.formatWithIcons(_(card.abilityText)), "</p>");
         html += "</div>";
+        html += "</div>";
+        this.showDialog(event, card.name, html);
+    };
+    HelpDialogManager.prototype.showObjectiveHelpDialog = function (event, card) {
+        var html = "<div class=\"dp-help-dialog-content\"><div class=\"dp-help-dialog-content-left\">";
+        html += "<div class=\"objective-art objective-art-".concat(card.typeArg, "\"></div>");
+        html += "</div>";
         html += "<div class=\"dp-help-dialog-content-right\">";
-        html += "<div class=\"dog-card-art dog-card-art-".concat(card.typeArg, "\"></div>");
+        html += "<p>".concat(dojo.string.substitute(_('<b>Type</b>: ${type}'), { type: _(card.type).toUpperCase() }), "</p>");
+        html += "<p>".concat(this.dogParkGame.formatWithIcons(_(card.description)), "</p>");
         html += "</div>";
         html += "</div>";
+        this.showDialog(event, card.name, html);
+    };
+    HelpDialogManager.prototype.showForecastHelpDialog = function (event, card) {
+        var html = "<div class=\"dp-help-dialog-content\"><div class=\"dp-help-dialog-content-left\">";
+        html += "<div class=\"forecast-art forecast-art-".concat(card.typeArg, "\"></div>");
+        html += "</div>";
+        html += "<div class=\"dp-help-dialog-content-right\">";
+        html += "<p>".concat(this.dogParkGame.formatWithIcons(_(card.description)), "</p>");
+        html += "</div>";
+        html += "</div>";
+        this.showDialog(event, dojo.string.substitute(_('Round ${roundNumber} Forecast Card'), { roundNumber: card.locationArg }), html);
+    };
+    HelpDialogManager.prototype.showDialog = function (event, title, html) {
+        dojo.stopEvent(event);
+        this.dialog = new ebg.popindialog();
+        this.dialog.create(this.dialogId);
+        this.dialog.setTitle("<i class=\"fa fa-question-circle\" aria-hidden=\"true\"></i> ".concat(_(title)));
         this.dialog.setContent(html);
         this.dialog.show();
     };
@@ -2847,12 +2886,12 @@ var FinalScoringPad = /** @class */ (function () {
         this.game = game;
         this.elementId = elementId;
         this.scoringPadRows = [
-            { key: 'parkBoardScore', label: _('_icon-reputation_ during game') },
-            { key: 'dogFinalScoringScore', label: _('_icon-reputation_ from dogs with <b>FINAL SCORING</b> abilities') },
-            { key: 'breedExpertAwardScore', label: _('_icon-reputation_ from won Breed Expert awards') },
-            { key: 'objectiveCardScore', label: _('_icon-reputation_ from completed Objective Card') },
-            { key: 'remainingResourcesScore', label: _('Remaining resources = _icon-reputation_ for every 5') },
-            { key: 'score', label: _('Total _icon-reputation_') }
+            { key: 'parkBoardScore', label: _('<icon-reputation> during game') },
+            { key: 'dogFinalScoringScore', label: _('<icon-reputation> from dogs with <b>FINAL SCORING</b> abilities') },
+            { key: 'breedExpertAwardScore', label: _('<icon-reputation> from won Breed Expert awards') },
+            { key: 'objectiveCardScore', label: _('<icon-reputation> from completed Objective Card') },
+            { key: 'remainingResourcesScore', label: _('Remaining resources = <icon-reputation> for every 5') },
+            { key: 'score', label: _('Total <icon-reputation>') }
         ];
     }
     FinalScoringPad.prototype.setUp = function (gamedatas) {
@@ -3456,20 +3495,23 @@ var RoundTracker = /** @class */ (function () {
         this.setFocus(phase);
     };
     RoundTracker.prototype.resetFocus = function () {
-        $('dp-game-board-wrapper').style.order = 10;
-        $('dp-own-player-area').style.order = 11;
-        $('dp-player-areas').style.order = 12;
         $('dp-game-board-park-wrapper').style.order = 10;
         $('dp-game-board-field-wrapper').style.order = 11;
+        $('dp-own-player-area').style.order = 12;
     };
     RoundTracker.prototype.setFocus = function (phase) {
         switch (phase) {
             case 'PHASE_RECRUITMENT_1':
             case 'PHASE_RECRUITMENT_2':
                 $('dp-game-board-field-wrapper').style.order = 2;
+                $('dp-own-player-area').style.order = 3;
                 break;
             case 'PHASE_SELECTION':
                 $('dp-own-player-area').style.order = 1;
+                break;
+            case 'PHASE_WALKING':
+                $('dp-game-board-park-wrapper').style.order = 1;
+                $('dp-own-player-area').style.order = 2;
                 break;
         }
     };
@@ -3725,9 +3767,7 @@ var DogPark = /** @class */ (function () {
         }
     };
     DogPark.prototype.leavingSelectionPlaceDogOnLead = function () {
-        if (this.isCurrentPlayerActive()) {
-            this.playerArea.setSelectionModeForKennel('none', this.getPlayerId());
-        }
+        this.playerArea.setSelectionModeForKennel('none', this.getPlayerId());
     };
     DogPark.prototype.leavingWalkingMoveWalker = function () {
         if (this.isCurrentPlayerActive()) {
@@ -4082,9 +4122,13 @@ var DogPark = /** @class */ (function () {
     };
     DogPark.prototype.notif_dogPlacedOnLead = function (args) {
         var _this = this;
-        return this.playerArea.moveDogsToLead(args.playerId, [args.dog])
+        var promise = this.playerArea.moveDogsToLead(args.playerId, [args.dog])
             .then(function () { return _this.playerResources.payResourcesToDog(args.playerId, args.dog, args.resources); })
             .then(function () { return _this.dogCardManager.addResourceToDog(args.dog.id, 'walked'); });
+        if (args.playerId == this.getPlayerId()) {
+            return promise;
+        }
+        return Promise.resolve();
     };
     DogPark.prototype.notif_undoDogPlacedOnLead = function (args) {
         this.playerResources.gainResourcesFromDog(args.playerId, args.dog, args.resources);
@@ -4190,7 +4234,10 @@ var DogPark = /** @class */ (function () {
         if (args.score) {
             this.setScore(args.playerId, args.score);
         }
-        return Promise.all(promises);
+        if (args.playerId == this.getPlayerId()) {
+            return Promise.all(promises);
+        }
+        return Promise.resolve();
     };
     DogPark.prototype.notif_activateForecastCard = function (args) {
         var promises = [];
@@ -4203,7 +4250,10 @@ var DogPark = /** @class */ (function () {
         if (args.score) {
             this.setScore(args.playerId, args.score);
         }
-        return Promise.all(promises);
+        if (args.playerId == this.getPlayerId()) {
+            return Promise.all(promises);
+        }
+        return Promise.resolve();
     };
     DogPark.prototype.notif_playerAssignsResources = function (args) {
         return __awaiter(this, void 0, void 0, function () {
@@ -4272,10 +4322,18 @@ var DogPark = /** @class */ (function () {
     };
     DogPark.prototype.formatWithIcons = function (description) {
         var _this = this;
-        //@ts-ignore
-        return bga_format(_(description), {
-            '_': function (t) { return _this.tokenIcon(t.replace('icon-', '')); }
+        var tags = description.match(/<[^>]*?>/g);
+        console.log(description);
+        tags.forEach(function (originalTag) {
+            if (originalTag.includes('icon-')) {
+                var tag = '';
+                tag = originalTag.replace('<', '');
+                tag = tag.replace('>', '');
+                var resultTag = _this.tokenIcon(tag.replace('icon-', ''));
+                description = description.replace(originalTag, resultTag);
+            }
         });
+        return description;
     };
     return DogPark;
 }());

@@ -16,7 +16,7 @@ trait SearchAndRescue
 
     protected function getAbilityText() : string
     {
-        return _("When <b>WALKING</b> this dog, whenever you _icon-scout_, you may immediately _icon-swap_.");
+        return _("When <b>WALKING</b> this dog, whenever you <icon-scout>, you may immediately <icon-swap>.");
     }
 
     public function isAbilityOptional() : bool

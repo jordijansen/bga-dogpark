@@ -17,6 +17,6 @@ trait Obedient
 
     protected function getAbilityText() : string
     {
-        return sprintf(_("When <b>WALKING</b> this dog, whenever you gain 1 or more _icon-%s_, gain 1 _icon-reputation_. Activates once per movement."), $this->obedientResource);
+        return sprintf(_("When <b>WALKING</b> this dog, whenever you gain 1 or more <icon-%s>, gain 1 <icon-reputation>. Activates once per movement."), $this->obedientResource);
     }
 }

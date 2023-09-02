@@ -51,6 +51,11 @@ $this->RESOURCES = [
     RESOURCE_TOY    => clienttranslate('toy'),
 ];
 
+$this->OBJECTIVE_CARD_TYPES = [
+  OBJECTIVE_STANDARD => clienttranslate('standard'),
+  OBJECTIVE_EXPERIENCED => clienttranslate('experienced')
+];
+
 $this->BREED_EXPERT_CARDS = [
     1 => BREED_GUNDOG   ,
     2 => BREED_HOUND    ,
@@ -63,17 +68,17 @@ $this->BREED_EXPERT_CARDS = [
 
 $this->FORECAST_CARDS = [
     BASE_GAME => [
-        1 => [],
-        2 => [],
-        3 => [],
-        4 => [],
-        5 => [],
-        6 => [],
-        7 => [],
-        8 => [],
-        9 => [],
-        10 => [],
-        11 => [],
+        1 =>    ['description' => clienttranslate('During <b>SELECTION<b>, gain 1 Location Bonus for each <b>GUNDOG</b> in your Kennel or on your Lead. (Excludes <icon-swap> and <icon-scout>).')],
+        2 =>    ['description' => clienttranslate('During <b>HOME TIME<b>, gain 2 <icon-all-resources> for each <b>TERRIER</b> in your Kennel or on your Lead.')],
+        3 =>    ['description' => clienttranslate('During <b>SELECTION</b>, when you place a <b>PASTORAL</b> dog on the Lead, you may place another dog without paying the walking cost.')],
+        4 =>    ['description' => clienttranslate('During <b>HOME TIME</b>, gain 1 <icon-reputation> and 1 <icon-all-resources> for each <b>WORKING</b> dog in your Kennel or on your Lead.')],
+        5 =>    ['description' => clienttranslate('During <b>HOME TIME</b>, gain 3 <icon-reputation> for each <b>TOY</b> dog in your Kennel or on your Lead.')],
+        6 =>    ['description' => clienttranslate('During <b>SELECTION</b>, gain 2 <icon-reputation> for each <b>HOUND</b> you place on the Lead.')],
+        7 =>    ['description' => clienttranslate('During <b>THIS ROUND</b>, gain 1 <icon-reputation> and 1 <icon-all-resources> for each <b>UTILITY</b> dog placed into your Kennel.')],
+        8 =>    ['description' => clienttranslate('During <b>HOME TIME</b>, Dogs without <icon-walked> lose 2 <icon-reputation> instead of 1 <icon-reputation>.')],
+        9 =>    ['description' => clienttranslate('During <b>HOME TIME</b>, Dogs without <icon-walked> do not lose 1 <icon-reputation>.')],
+        10 =>   ['description' => clienttranslate('During <b>THIS ROUND</b>, whenever you <icon-swap>, place <icon-walked> on the newly acquired Dog in your Kennel.')],
+        11 =>   ['description' => clienttranslate('During <b>THIS ROUND</b>, you may walk 4 Dogs if you are able to pay the required walking cost. <i>This card can only be placed in the 2nd, 3rd, or 4th position on the round tracker.</i>')],
     ]
 ];
 
@@ -127,18 +132,14 @@ $this->LOCATION_BONUS_CARDS = [
 ];
 
 $this->OBJECTIVE_CARDS = [
-    OBJECTIVE_EXPERIENCED => [
-        1 => [],
-        2 => [],
-        3 => [],
-        4 => [],
-        5 => []
-    ],
-    OBJECTIVE_STANDARD => [
-        6 => [],
-        7 => [],
-        8 => [],
-        9 => [],
-        10 => []
-    ],
+    1 =>    ['type' => OBJECTIVE_EXPERIENCED, 'name' => clienttranslate('Four of a Kind'), 'description' => clienttranslate('During <b>FINAL SCORING</b>, gain 7 <icon-reputation> if you have at least 4 Dogs of 1 breed category in your kennel, e.g. 4 GUNDOGS. <i>You may only score this objective once. Only for use in a 4 player game.</i>')],
+    2 =>    ['type' => OBJECTIVE_EXPERIENCED, 'name' => clienttranslate('Super Stamina'), 'description' => clienttranslate('During <b>FINAL SCORING</b>, gain 7 <icon-reputation> if you have 3 different Dogs who have at least 2 <icon-walked> each.')],
+    3 =>    ['type' => OBJECTIVE_EXPERIENCED, 'name' => clienttranslate('Seasoned Walker'), 'description' => clienttranslate('During <b>FINAL SCORING</b>, gain 7 <icon-reputation> if you have at least 10 <icon-walked> across your Kennel.')],
+    4 =>    ['type' => OBJECTIVE_EXPERIENCED, 'name' => clienttranslate('Expert Collector'), 'description' => clienttranslate('During <b>FINAL SCORING</b>, gain 7 <icon-reputation> if you have won at least 3 Breed Expert awards (4 player game) or 4 Breed Expert awards (2 and 3 player game). <i>Any awards where the victory is shared will still count towards this objective.</i>')],
+    5 =>    ['type' => OBJECTIVE_EXPERIENCED, 'name' => clienttranslate('Well Walked Kennel'), 'description' => clienttranslate('During <b>FINAL SCORING</b>, gain 7 <icon-reputation> if you have <icon-walked> on at least 7 different Dogs.')],
+    6 =>    ['type' => OBJECTIVE_STANDARD, 'name' => clienttranslate('High Energy'), 'description' => clienttranslate('During <b>FINAL SCORING</b>, gain 3 <icon-reputation> if you have 2 different Dogs who have at least 2 <icon-walked> each.')],
+    7 =>    ['type' => OBJECTIVE_STANDARD, 'name' => clienttranslate('Three of a Kind'), 'description' => clienttranslate('During <b>FINAL SCORING</b>, gain 3 <icon-reputation> if you have at least 3 Dogs of 1 breed category in your Kennel, e.g. 3 HOUNDS. <i>You may only score this objective once.</i>')],
+    8 =>    ['type' => OBJECTIVE_STANDARD, 'name' => clienttranslate('Kennel Diversity'), 'description' => clienttranslate('During <b>FINAL SCORING</b>, gain 3 <icon-reputation> if you have at least 1 Dog of 4 breed categories in your Kennel, e.g. 1 GUNDOG, 1 HOUND, 1 TERRIER ,and 1 PASTORAL Dog. <i>You may only score this objective once.</i>')],
+    9 =>    ['type' => OBJECTIVE_STANDARD, 'name' => clienttranslate('Capable Collector'), 'description' => clienttranslate('During <b>FINAL SCORING</b>, gain 3 <icon-reputation> if you have won at least 2 Breed Expert awards (4 player game) or 3 Breed Expert awards (2 and 3 player game). <i>Any awards where the victory is shared will still count towards this objective.</i>')],
+    10 =>   ['type' => OBJECTIVE_STANDARD, 'name' => clienttranslate('Walked Kennel'), 'description' => clienttranslate('During <b>FINAL SCORING</b>, gain 3 <icon-reputation> if you have <icon-walked> on at least 6 different Dogs.')],
 ];

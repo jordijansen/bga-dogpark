@@ -111,16 +111,38 @@ html, .mode_3d #game_play_area_background {
 .dp-help-button-wrapper {
   position: absolute;
   z-index: 10;
-  bottom: -34px;
-  right: 10px;
   height: 35px;
   display: flex;
   justify-content: end;
+
+  &.position-floating-bottom {
+    bottom: -34px;
+    right: 10px;
+    .dp-help-button {
+      border-radius: 0 0 5px 5px;
+    }
+  }
+
+  &.position-floating-right {
+    top: 10px;
+    right: -34px;
+    .dp-help-button {
+      border-radius: 0 5px 5px 0;
+    }
+  }
+
+  &.position-top-right {
+    top: 5px;
+    right: 5px;
+    .dp-help-button {
+      border-radius: 5px;
+    }
+  }
+
   .dp-help-button {
     height: 35px;
     width: 35px;
     opacity: 0.7;
-    border-radius: 0 0 5px 5px;
     background-color: white;
     display: flex;
     justify-content: center;
@@ -132,17 +154,33 @@ html, .mode_3d #game_play_area_background {
 .dp-help-dialog-content {
   display: flex;
   flex-direction: row;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 15px;
   .dp-help-dialog-content-left {
-    padding-right: 10px;
-  }
-  .dp-help-dialog-content-right {
-    width: $blackjack-size-width-large;
     .dog-card-art {
       border-radius: 5px;
       box-shadow: 1px 1px 2px 1px rgba(0, 0, 0, 0.5);
       height: $blackjack-size-height-large;
       width: $blackjack-size-width-large;
     }
+    .objective-art {
+      border-radius: 5px;
+      box-shadow: 1px 1px 2px 1px rgba(0, 0, 0, 0.5);
+      height: $blackjack-size-landscape-height-large;
+      width: $blackjack-size-landscape-width-large;
+    }
+    .forecast-art {
+      border-radius: 5px;
+      box-shadow: 1px 1px 2px 1px rgba(0, 0, 0, 0.5);
+      height: $mini-size-landscape-height-large;
+      width: $mini-size-landscape-width-large;
+    }
+  }
+  .dp-help-dialog-content-right {
+    flex: 1;
+    min-width: $blackjack-size-width-large;
+
   }
 }
 

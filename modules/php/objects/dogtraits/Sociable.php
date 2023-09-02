@@ -16,6 +16,6 @@ trait Sociable
 
     protected function getAbilityText() : string
     {
-        return _('During <b>FINAL SCORING</b>, gain 1 _icon-reputation_ for each breed category represented in your Kennel.');
+        return _('During <b>FINAL SCORING</b>, gain 1 <icon-reputation> for each breed category represented in your Kennel.');
     }
 }

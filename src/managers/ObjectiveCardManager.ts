@@ -1,4 +1,4 @@
-class ObjectiveCardManager extends CardManager<Card> {
+class ObjectiveCardManager extends CardManager<ObjectiveCard> {
 
     public static CARD_HEIGHT = 195;
     public static CARD_WIDTH = 266;
@@ -6,15 +6,25 @@ class ObjectiveCardManager extends CardManager<Card> {
     constructor(private dogParkGame: DogParkGame) {
         super(dogParkGame, {
             getId: (card) => `dp-objective-card-${card.id}`,
-            setupDiv: (card: Card, div: HTMLElement) => {
+            setupDiv: (card, div: HTMLElement) => {
                 div.classList.add('blackjack-size-landscape')
+
+                if (this.isCardVisible(card)) {
+                    const helpButtonElement = document.createElement("div");
+                    helpButtonElement.classList.add('dp-help-button-wrapper')
+                    helpButtonElement.classList.add('position-top-right')
+                    helpButtonElement.innerHTML = `<i id="dp-help-objective-${card.id}" class="dp-help-button fa fa-question-circle"  aria-hidden="true"></i>`
+                    div.appendChild(helpButtonElement);
+
+                    dojo.connect($(`dp-help-objective-${card.id}`), 'onclick', (event) => this.dogParkGame.helpDialogManager.showObjectiveHelpDialog(event, card));
+                }
             },
-            setupBackDiv: (card: Card, div: HTMLElement) => {
+            setupBackDiv: (card, div: HTMLElement) => {
                 div.id = `${this.getId(card)}-back`;
                 div.classList.add(`objective-art`)
                 div.classList.add(`objective-art-background`)
             },
-            setupFrontDiv: (card: Card, div: HTMLElement) => {
+            setupFrontDiv: (card, div: HTMLElement) => {
                 div.id = `${this.getId(card)}-front`;
                 div.classList.add(`objective-art`)
                 div.classList.add(`objective-art-${card.typeArg}`)

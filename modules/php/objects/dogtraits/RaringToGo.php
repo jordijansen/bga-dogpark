@@ -16,6 +16,6 @@ trait RaringToGo
 
     protected function getAbilityText() : string
     {
-        return _('During <b>FINAL SCORING</b>, gain 2 _icon-reputation_ for each _icon-walked_ on this dog.');
+        return _('During <b>FINAL SCORING</b>, gain 2 <icon-reputation> for each <icon-walked> on this dog.');
     }
 }

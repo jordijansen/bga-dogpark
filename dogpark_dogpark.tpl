@@ -27,7 +27,7 @@
 <div id="dp-game">
     <div id="dp-choose-objectives"></div>
     <div id="dp-final-scoring-pad-wrapper"></div>
-    <div id="dp-game-board-wrapper" style="order: 10;">
+    <div id="dp-game-board-wrapper">
         <div id="dp-game-board-main">
             <div id="dp-game-board-round-tracker" class="dp-board" style="order: 0;">
                 <div id="dp-round-tracker-track">
@@ -47,6 +47,8 @@
             <div id="dp-game-board-field-wrapper" style="order: 11;">
                 <div id="dp-game-board-field" class="dp-board"></div>
             </div>
+            <div id="dp-own-player-area" style="order: 12;">
+            </div>
         </div>
         <div id="dp-game-board-side" class="dp-board hide-side-bar">
             <div id="dp-game-board-breed-expert-awards" class="dp-board">
@@ -57,9 +59,7 @@
             <div id="dp-game-board-side-toggle-button">{breedExpertLabel}</div>
         </div>
     </div>
-    <div id="dp-own-player-area" style="order: 11;">
-    </div>
-    <div id="dp-player-areas" style="order: 12;">
+    <div id="dp-player-areas">
     </div>
 </div>
 

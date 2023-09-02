@@ -18,6 +18,6 @@ trait GoFetch
 
     protected function getAbilityText() : string
     {
-        return sprintf(_("When <b>WALKING</b> this dog, whenever you gain 1 or more _icon-%s_, gain _icon-%s_. Activates once per movement."), $this->goFetchResource, $this->goFetchBonusResource);
+        return sprintf(_("When <b>WALKING</b> this dog, whenever you gain 1 or more <icon-%s>, gain <icon-%s>. Activates once per movement."), $this->goFetchResource, $this->goFetchBonusResource);
     }
 }

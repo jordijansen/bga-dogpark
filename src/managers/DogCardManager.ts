@@ -27,7 +27,8 @@ class DogCardManager extends CardManager<DogCard> {
 
                 const helpButtonElement = document.createElement("div");
                 helpButtonElement.classList.add('dp-help-button-wrapper')
-                helpButtonElement.innerHTML = `<i id="dp-help-dog-${card.id}" class="dp-help-button fa fa-question-circle"  aria-hidden="true" data-help-type="dog" data-help-type-arg="${card.typeArg}"></i>`
+                helpButtonElement.classList.add('position-floating-bottom')
+                helpButtonElement.innerHTML = `<i id="dp-help-dog-${card.id}" class="dp-help-button fa fa-question-circle"  aria-hidden="true"></i>`
                 div.appendChild(helpButtonElement);
                 this.addInitialResourcesToDog(card);
 

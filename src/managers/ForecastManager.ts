@@ -1,4 +1,4 @@
-class ForecastManager extends CardManager<Card> {
+class ForecastManager extends CardManager<ForecastCard> {
 
     public static CARD_WIDTH = 195;
     public static CARD_HEIGHT = 142;
@@ -8,15 +8,23 @@ class ForecastManager extends CardManager<Card> {
     constructor(private dogParkGame: DogParkGame) {
         super(dogParkGame, {
             getId: (card) => `dp-forecast-${card.id}`,
-            setupDiv: (card: Card, div: HTMLElement) => {
+            setupDiv: (card, div: HTMLElement) => {
                 div.classList.add('mini-size-landscape')
+
+                const helpButtonElement = document.createElement("div");
+                helpButtonElement.classList.add('dp-help-button-wrapper')
+                helpButtonElement.classList.add('position-floating-right')
+                helpButtonElement.innerHTML = `<i id="dp-help-forecast-${card.id}" class="dp-help-button fa fa-question-circle"  aria-hidden="true"></i>`
+                div.appendChild(helpButtonElement);
+
+                dojo.connect($(`dp-help-forecast-${card.id}`), 'onclick', (event) => this.dogParkGame.helpDialogManager.showForecastHelpDialog(event, card));
             },
-            setupFrontDiv: (card: Card, div: HTMLElement) => {
+            setupFrontDiv: (card, div: HTMLElement) => {
                 div.id = `${this.getId(card)}-front`;
                 div.classList.add(`forecast-art`)
                 div.classList.add(`forecast-art-${card.typeArg}`)
             },
-            setupBackDiv: (card: Card, div: HTMLElement) => {
+            setupBackDiv: (card, div: HTMLElement) => {
                 div.id = `${this.getId(card)}-back`;
                 div.classList.add(`forecast-art`)
                 div.classList.add(`forecast-art-background`)

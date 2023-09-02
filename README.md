@@ -5,13 +5,12 @@
   - Solo Mode Objectives
   - Solo Ratings shown as target
 - Variants & Options
-- Tooltips
-  - OBJECTIVE CARDS
-  - FORECAST CARDS
 - Zombie Turn
 - Game Progression percentage
 - Stats
 - Game log
+- Jump To
+- Player Aid
 
 
 # Done
@@ -27,6 +26,8 @@
 - Move scouted cards area under park
 - Tooltips
   - DOG CARD
+  - OBJECTIVE CARDS
+  - FORECAST CARDS
 
 
 Dog Card Abilities:

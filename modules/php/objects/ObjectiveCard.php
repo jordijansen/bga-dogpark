@@ -1,11 +1,18 @@
 <?php
 namespace objects;
 
+use DogPark;
+
 class ObjectiveCard extends Card {
 
+    public ?string $name;
+    public ?string $description;
     public function __construct($dbCard)
     {
         parent::__construct($dbCard);
+
+        $this->name = DogPark::$instance->OBJECTIVE_CARDS[$this->typeArg]['name'];
+        $this->description = DogPark::$instance->OBJECTIVE_CARDS[$this->typeArg]['description'];
     }
 
     /**
@@ -23,6 +30,8 @@ class ObjectiveCard extends Card {
         if ($hideInfo) {
             $objectiveCard->type = '';
             $objectiveCard->typeArg = null;
+            $objectiveCard->name = null;
+            $objectiveCard->description = null;
         }
         return $objectiveCard;
     }

@@ -290,9 +290,7 @@ class DogPark implements DogParkGame {
     }
 
     private leavingSelectionPlaceDogOnLead() {
-        if ((this as any).isCurrentPlayerActive()) {
-            this.playerArea.setSelectionModeForKennel('none', this.getPlayerId());
-        }
+        this.playerArea.setSelectionModeForKennel('none', this.getPlayerId());
     }
 
     private leavingWalkingMoveWalker() {
@@ -863,10 +861,17 @@ class DogPark implements DogParkGame {
     }
 
     public formatWithIcons(description) {
-        //@ts-ignore
-        return bga_format(_(description), {
-            '_': (t) => this.tokenIcon(t.replace('icon-', ''))
-        });
+        const tags = description.match(/<[^>]*?>/g);
+        console.log(description);
+        tags.forEach(originalTag => {
+            if (originalTag.includes('icon-')) {
+                let tag = '';
+                tag = originalTag.replace('<', '')
+                tag = tag.replace('>', '');
+                const resultTag = this.tokenIcon(tag.replace('icon-', ''));
+                description = description.replace(originalTag, resultTag)
+            }
+        })
+        return description;
     }
-
 }

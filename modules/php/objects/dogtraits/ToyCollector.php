@@ -17,6 +17,6 @@ trait ToyCollector
 
     protected function getAbilityText() : string
     {
-        return _('During <b>FINAL SCORING</b>, gain 2 _icon-reputation_ for each leftover _icon-toy_ assigned to this dog. Max. 6 _icon-reputation_.');
+        return _('During <b>FINAL SCORING</b>, gain 2 <icon-reputation> for each leftover <icon-toy> assigned to this dog. Max. 6 <icon-reputation>.');
     }
 }

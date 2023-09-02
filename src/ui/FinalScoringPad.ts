@@ -1,12 +1,12 @@
 class FinalScoringPad {
 
     private scoringPadRows = [
-        { key: 'parkBoardScore',  label: _('_icon-reputation_ during game') },
-        { key: 'dogFinalScoringScore',  label: _('_icon-reputation_ from dogs with <b>FINAL SCORING</b> abilities') },
-        { key: 'breedExpertAwardScore',  label: _('_icon-reputation_ from won Breed Expert awards') },
-        { key: 'objectiveCardScore',  label: _('_icon-reputation_ from completed Objective Card') },
-        { key: 'remainingResourcesScore',  label: _('Remaining resources = _icon-reputation_ for every 5') },
-        { key: 'score',  label: _('Total _icon-reputation_') }
+        { key: 'parkBoardScore',  label: _('<icon-reputation> during game') },
+        { key: 'dogFinalScoringScore',  label: _('<icon-reputation> from dogs with <b>FINAL SCORING</b> abilities') },
+        { key: 'breedExpertAwardScore',  label: _('<icon-reputation> from won Breed Expert awards') },
+        { key: 'objectiveCardScore',  label: _('<icon-reputation> from completed Objective Card') },
+        { key: 'remainingResourcesScore',  label: _('Remaining resources = <icon-reputation> for every 5') },
+        { key: 'score',  label: _('Total <icon-reputation>') }
     ];
     constructor(private game: DogPark,
                 private elementId: string) {

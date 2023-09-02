@@ -9,6 +9,15 @@ interface DogCard extends Card {
     craftyResource?: string
 }
 
+interface ObjectiveCard extends Card {
+    name: string,
+    description: string,
+}
+
+interface ForecastCard extends Card {
+    description: string,
+}
+
 interface LocationBonusCard extends Card {
     bonusesOnLocation: {[locationId: number]: []}
 }
@@ -276,7 +285,7 @@ interface NotifPlayerAssignsResources {
 }
 
 interface NotifRevealObjectiveCards {
-    objectiveCards: Card[]
+    objectiveCards: ObjectiveCard[]
 }
 
 interface NotifFinalScoringRevealed {

@@ -17,7 +17,7 @@ trait Playmate
 
     protected function getAbilityText() : string
     {
-        return sprintf(_("When <b>WALKING</b> this dog, whenever you gain 1 or more _icon-%s_, you may _icon-swap_. Activates once per movement."), $this->playmateResource);
+        return sprintf(_("When <b>WALKING</b> this dog, whenever you gain 1 or more <icon-%s>, you may <icon-swap>. Activates once per movement."), $this->playmateResource);
     }
 
     public function isAbilityOptional() : bool

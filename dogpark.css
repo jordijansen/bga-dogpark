@@ -556,7 +556,6 @@ body > .card {
 }
 #dp-game-board-wrapper #dp-game-board-side {
   display: flex;
-  align-items: center;
 }
 @media only screen and (max-width: 1614px) {
   #dp-game-board-wrapper #dp-game-board-side {
@@ -565,6 +564,7 @@ body > .card {
     left: -10px;
     transition: left 0.5s ease-in-out;
     z-index: 1;
+    align-items: center;
   }
   #dp-game-board-wrapper #dp-game-board-side.hide-side-bar {
     left: -327px;
@@ -617,6 +617,11 @@ body > .card {
 .label-wrapper.vertical h2 {
   padding: 10px 5px;
   margin: 0 10px 0 0;
+}
+
+#dp-own-player-area .dp-player-area {
+  flex: 1;
+  align-items: center;
 }
 
 #dp-player-areas, #dp-own-player-area {
@@ -792,7 +797,7 @@ body > .card {
 
 .dp-token-token {
   background-image: url("img/dogpark-tokens.png");
-  background-size: 1000% auto;
+  background-size: 1100% auto;
   width: 52.5px;
   height: 45px;
   display: inline-block;
@@ -806,40 +811,43 @@ body > .card {
   background-position: 0 0;
 }
 .dp-token-token[data-type=reputation] {
-  background-position: 11.1111111111% 0;
+  background-position: 10% 0;
 }
 .dp-token-token[data-type=toy] {
-  background-position: 22.2222222222% 0;
+  background-position: 20% 0;
 }
 .dp-token-token[data-type=ball] {
-  background-position: 33.3333333333% 0;
+  background-position: 30% 0;
 }
 .dp-token-token[data-type=treat] {
-  background-position: 44.4444444444% 0;
+  background-position: 40% 0;
 }
 .dp-token-token[data-type=stick] {
-  background-position: 55.5555555556% 0;
+  background-position: 50% 0;
 }
 .dp-token-token[data-type=scout] {
-  background-position: 66.6666666667% 0;
+  background-position: 60% 0;
 }
 .dp-token-token[data-type=swap] {
-  background-position: 77.7777777778% 0;
+  background-position: 70% 0;
 }
 .dp-token-token[data-type=block] {
-  background-position: 88.8888888889% 0;
+  background-position: 80% 0;
 }
 .dp-token-token[data-type=placeholder] {
+  background-position: 90% 0;
+}
+.dp-token-token[data-type=all-resources] {
   background-position: 100% 0;
 }
 
 .fa.fa-star {
   vertical-align: bottom;
   background-image: url("img/dogpark-tokens.png");
-  background-size: 1000% auto;
+  background-size: 1100% auto;
   width: 22.16px;
   height: 19px;
-  background-position: 11.1111111111% 0;
+  background-position: 10% 0;
 }
 .fa.fa-star:before {
   content: unset;
@@ -2058,17 +2066,35 @@ html .whiteblock, .mode_3d #game_play_area_background .whiteblock {
 .dp-help-button-wrapper {
   position: absolute;
   z-index: 10;
-  bottom: -34px;
-  right: 10px;
   height: 35px;
   display: flex;
   justify-content: end;
+}
+.dp-help-button-wrapper.position-floating-bottom {
+  bottom: -34px;
+  right: 10px;
+}
+.dp-help-button-wrapper.position-floating-bottom .dp-help-button {
+  border-radius: 0 0 5px 5px;
+}
+.dp-help-button-wrapper.position-floating-right {
+  top: 10px;
+  right: -34px;
+}
+.dp-help-button-wrapper.position-floating-right .dp-help-button {
+  border-radius: 0 5px 5px 0;
+}
+.dp-help-button-wrapper.position-top-right {
+  top: 5px;
+  right: 5px;
+}
+.dp-help-button-wrapper.position-top-right .dp-help-button {
+  border-radius: 5px;
 }
 .dp-help-button-wrapper .dp-help-button {
   height: 35px;
   width: 35px;
   opacity: 0.7;
-  border-radius: 0 0 5px 5px;
   background-color: white;
   display: flex;
   justify-content: center;
@@ -2079,18 +2105,31 @@ html .whiteblock, .mode_3d #game_play_area_background .whiteblock {
 .dp-help-dialog-content {
   display: flex;
   flex-direction: row;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 15px;
 }
-.dp-help-dialog-content .dp-help-dialog-content-left {
-  padding-right: 10px;
-}
-.dp-help-dialog-content .dp-help-dialog-content-right {
-  width: 234px;
-}
-.dp-help-dialog-content .dp-help-dialog-content-right .dog-card-art {
+.dp-help-dialog-content .dp-help-dialog-content-left .dog-card-art {
   border-radius: 5px;
   box-shadow: 1px 1px 2px 1px rgba(0, 0, 0, 0.5);
-  height: 319px;
-  width: 234px;
+  height: 399px;
+  width: 292px;
+}
+.dp-help-dialog-content .dp-help-dialog-content-left .objective-art {
+  border-radius: 5px;
+  box-shadow: 1px 1px 2px 1px rgba(0, 0, 0, 0.5);
+  height: 292px;
+  width: 399px;
+}
+.dp-help-dialog-content .dp-help-dialog-content-left .forecast-art {
+  border-radius: 5px;
+  box-shadow: 1px 1px 2px 1px rgba(0, 0, 0, 0.5);
+  height: 213px;
+  width: 293px;
+}
+.dp-help-dialog-content .dp-help-dialog-content-right {
+  flex: 1;
+  min-width: 292px;
 }
 
 /*# sourceMappingURL=dogpark.css.map */

@@ -138,10 +138,8 @@ trait SetupTrait
 
     private function createObjectiveCards() {
         $cards = array();
-        foreach ($this->OBJECTIVE_CARDS as $objectiveType => $objectiveCards) {
-            foreach ($objectiveCards as $id => $objectiveCard) {
-                $cards[] = array( 'type' => $objectiveType, 'type_arg' => intval($id), 'nbr' => 1);
-            }
+        foreach ($this->OBJECTIVE_CARDS as $id => $objectiveCard) {
+            $cards[] = array( 'type' => $objectiveCard['type'], 'type_arg' => intval($id), 'nbr' => 1);
         }
 
         $this->objectiveCards->createCards($cards, LOCATION_DECK);
