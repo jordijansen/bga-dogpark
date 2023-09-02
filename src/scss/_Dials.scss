@@ -11,8 +11,14 @@
   .bgabutton {
     text-align: center;
     width: 100px;
-    font-size: 30px;
+    font-size: 20px;
   }
+}
+
+.dp-dial-wrapper {
+  height: $offer-dial-size / 2;
+  overflow: hidden;
+  position: relative;
 }
 
 .dp-dial {

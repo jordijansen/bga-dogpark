@@ -234,7 +234,7 @@ interface NotifMoveWalkerBackToPlayer {
 }
 
 interface NotifFlipForecastCard {
-    foreCastCard: Card
+    foreCastCard: ForecastCard
 }
 
 interface NotifNewLocationBonusCardDrawn {

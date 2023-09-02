@@ -1910,7 +1910,13 @@ body > .card {
 #dp-offer-dial-controls-wrapper .bgabutton {
   text-align: center;
   width: 100px;
-  font-size: 30px;
+  font-size: 20px;
+}
+
+.dp-dial-wrapper {
+  height: 72.5px;
+  overflow: hidden;
+  position: relative;
 }
 
 .dp-dial {
