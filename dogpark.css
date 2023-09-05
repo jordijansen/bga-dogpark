@@ -290,6 +290,223 @@ body > .card {
   top: calc((var(--height) + var(--shift)) * var(--order));
 }
 
+:root {
+  --bga-jump-to_eye-url: url("data:image/svg+xml,%3C%3Fxml version='1.0' encoding='UTF-8'%3F%3E%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 20 20'%3E%3Ctitle%3E eye %3C/title%3E%3Cpath d='M10 7.5a2.5 2.5 0 1 0 2.5 2.5A2.5 2.5 0 0 0 10 7.5zm0 7a4.5 4.5 0 1 1 4.5-4.5 4.5 4.5 0 0 1-4.5 4.5zM10 3C3 3 0 10 0 10s3 7 10 7 10-7 10-7-3-7-10-7z'/%3E%3C/svg%3E%0A");
+}
+
+#bga-jump-to_controls {
+  position: fixed;
+  top: 50vh;
+  z-index: 5;
+  user-select: none;
+}
+
+#bga-jump-to_controls.folded .bga-jump-to_link:not(.toggle) {
+  display: none;
+}
+
+#bga-jump-to_controls .bga-jump-to_link {
+  position: relative;
+  border-width: 2px;
+  border-style: solid;
+  border-color: var(--color);
+  margin: 10px 0;
+  width: fit-content;
+  cursor: pointer;
+  height: 22px;
+  padding: 2px 5px;
+  background: white;
+  color: var(--color);
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+#bga-jump-to_controls .bga-jump-to_link .bga-jump-to_avatar {
+  width: 20px;
+  height: 20px;
+  background-color: #fff;
+  outline: 1px solid #6a6a6a;
+  border-radius: 50%;
+  background-image: var(--avatar-url);
+  display: inline-block;
+  background-size: cover;
+}
+
+#bga-jump-to_controls .bga-jump-to_link .bga-jump-to_label {
+  background: var(--colorback);
+}
+
+#bga-jump-to_controls .bga-jump-to_link.round-point {
+  border-radius: 0 11px 11px 0;
+  padding-right: 11px;
+}
+
+#bga-jump-to_controls .bga-jump-to_link.hexa-point {
+  border-right-width: 0;
+}
+
+#bga-jump-to_controls .bga-jump-to_link.hexa-point::before {
+  width: 0;
+  height: 0;
+  border-top: 15px solid transparent;
+  border-bottom: 15px solid transparent;
+  border-left-width: 11px;
+  border-left-style: solid;
+  content: "";
+  position: absolute;
+  right: -11px;
+  top: -2px;
+}
+
+#bga-jump-to_controls .bga-jump-to_link.hexa-point::after {
+  width: 0;
+  height: 0;
+  border-top: 13px solid transparent;
+  border-bottom: 13px solid transparent;
+  border-left: 9px solid white;
+  content: "";
+  position: absolute;
+  right: -9px;
+  top: 0px;
+}
+
+#bga-jump-to_controls .bga-jump-to_link.triangle-point {
+  border-right-width: 0;
+}
+
+#bga-jump-to_controls .bga-jump-to_link.triangle-point::before {
+  width: 0;
+  height: 0;
+  border-top: 15px solid transparent;
+  border-bottom: 15px solid transparent;
+  border-left-width: 15px;
+  border-left-style: solid;
+  content: "";
+  position: absolute;
+  right: -15px;
+  top: -2px;
+}
+
+#bga-jump-to_controls .bga-jump-to_link.triangle-point::after {
+  width: 0;
+  height: 0;
+  border-top: 13px solid transparent;
+  border-bottom: 13px solid transparent;
+  border-left: 13px solid white;
+  content: "";
+  position: absolute;
+  right: -13px;
+  top: 0px;
+}
+
+#bga-jump-to_controls .bga-jump-to_link .eye {
+  width: 20px;
+  height: 20px;
+  mask: var(--bga-jump-to_eye-url) no-repeat center/contain;
+  -webkit-mask: var(--bga-jump-to_eye-url) no-repeat center/contain;
+  background: black;
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-color: var(--color);
+  display: inline-block;
+  vertical-align: middle;
+}
+
+#bga-help_buttons {
+  position: fixed;
+  bottom: 12px;
+  left: 5px;
+  display: flex;
+  gap: 10px;
+  z-index: 949;
+  align-items: flex-end;
+}
+
+.bga-help_button {
+  width: 50px;
+  height: 50px;
+  border-radius: 25px;
+  cursor: pointer;
+  box-shadow: 3px 5px 5px 0px rgb(0, 0, 0);
+}
+
+.bga-help_popin-button {
+  --background: black;
+  --color: white;
+  font-weight: bold;
+  font-size: 28pt;
+  background: var(--background);
+  color: var(--color);
+}
+
+.bga-help_expandable-button {
+  overflow: hidden;
+  background-size: contain;
+  background-repeat: no-repeat;
+  transition: width 0.5s, height 0.5s, border-radius 0.5s;
+  display: grid;
+  width: 50px;
+  height: 50px;
+  border-radius: 25px;
+}
+
+.bga-help_expandable-button .bga-help_folded-content {
+  grid-row: 1;
+  grid-column: 1;
+  opacity: 1;
+  width: 50px;
+  height: 50px;
+}
+
+.bga-help_expandable-button .bga-help_unfolded-content {
+  grid-row: 1;
+  grid-column: 1;
+  opacity: 0;
+}
+
+.bga-help_expandable-button[data-folded=false] {
+  width: var(--expanded-width);
+  height: var(--expanded-height);
+  border-radius: var(--expanded-radius);
+}
+
+.bga-help_expandable-button[data-folded=false] .bga-help_folded-content {
+  opacity: 0;
+}
+
+.bga-help_expandable-button[data-folded=false] .bga-help_unfolded-content {
+  opacity: 1;
+}
+
+/* we show help button if user has no mouse ( = no tooltips) */
+@media (hover: hover) {
+  #bga-help_buttons {
+    bottom: 5px;
+  }
+}
+#popin_bgaHelpDialog_contents {
+  max-width: 100vw;
+  overflow-x: auto;
+}
+
+#popin_bgaHelpDialog {
+  --background-color: white;
+  background: var(--background-color);
+  background-repeat: repeat;
+  max-width: 100vw;
+  max-height: 80vh;
+  overflow: hidden;
+}
+
+#help-dialog-content {
+  width: 520px;
+  max-width: 35rem;
+  max-height: calc(80vh - 80px);
+  overflow: auto;
+}
+
 .dp-board {
   filter: drop-shadow(1px 1px 1px black);
   -webkit-filter: drop-shadow(1px 1px 1px black);
@@ -560,11 +777,10 @@ body > .card {
 @media only screen and (max-width: 1614px) {
   #dp-game-board-wrapper #dp-game-board-side {
     position: absolute;
-    top: 25px;
     left: -10px;
     transition: left 0.5s ease-in-out;
     z-index: 1;
-    align-items: center;
+    align-items: start;
   }
   #dp-game-board-wrapper #dp-game-board-side.hide-side-bar {
     left: -327px;
@@ -580,6 +796,7 @@ body > .card {
     text-orientation: upright;
     text-transform: uppercase;
     padding: 5px;
+    margin-top: 10px;
   }
 }
 #dp-game-board-wrapper #dp-game-board-side #dp-game-board-side-toggle-button {
@@ -1842,6 +2059,30 @@ body > .card {
   background-position: 100% 100%;
 }
 
+.player-aid-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.player-aid-wrapper .player-aid-art {
+  background-image: url("img/dogpark-player-aid-cards.jpg");
+  background-size: 400% auto;
+  width: 292px;
+  height: 399px;
+}
+.player-aid-wrapper .player-aid-art.player-aid-art-1 {
+  background-position: 0 0;
+}
+.player-aid-wrapper .player-aid-art.player-aid-art-2 {
+  background-position: 33.3333333333% 0;
+}
+.player-aid-wrapper .player-aid-art.player-aid-art-3 {
+  background-position: 66.6666666666% 0;
+}
+.player-aid-wrapper .player-aid-art.player-aid-art-4 {
+  background-position: 100% 0;
+}
+
 .blackjack-size-portrait {
   display: inline-block;
   position: relative;
@@ -2136,6 +2377,15 @@ html .whiteblock, .mode_3d #game_play_area_background .whiteblock {
 .dp-help-dialog-content .dp-help-dialog-content-right {
   flex: 1;
   min-width: 292px;
+}
+
+#bga-jump-to_controls {
+  left: -2px;
+}
+
+#help-dialog-content {
+  width: unset;
+  max-width: 600px;
 }
 
 /*# sourceMappingURL=dogpark.css.map */

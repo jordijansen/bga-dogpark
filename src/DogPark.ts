@@ -44,6 +44,8 @@ class DogPark implements DogParkGame {
     private playerArea: PlayerArea;
     private roundTracker: RoundTracker;
     private playerResources: PlayerResources;
+    private jumpToManager: JumpToManager;
+    private helpManager: HelpManager;
 
     constructor() {
         // Init Managers
@@ -96,6 +98,38 @@ class DogPark implements DogParkGame {
 
         this.zoomManager = new AutoZoomManager('dp-game', 'dp-zoom-level')
         this.animationManager = new AnimationManager(this, {duration: ANIMATION_MS})
+        this.jumpToManager = new JumpToManager(this, {
+            localStorageFoldedKey: 'dogpark-jumpto-folded',
+            entryClasses: 'round-point',
+            topEntries: [
+                new JumpToEntry(_('Forecast'), 'dp-round-tracker', { 'color': 'darkgray' }),
+                new JumpToEntry(_('Park'), 'dp-game-board-park-wrapper', { 'color': 'darkgray' }),
+                new JumpToEntry(_('Field'), 'dp-game-board-field-wrapper', { 'color': 'darkgray' }),
+            ],
+            playersEntries: [
+                ...this.getOrderedPlayers(Object.values(gamedatas.players)).map(player => new JumpToEntry(player.name, `player-table-${player.id}`, {
+                    'color': '#'+player.color,
+                    'colorback': player.color_back ? '#'+player.color_back : null,
+                    'id': player.id,
+                })),
+                ...this.gamedatas.autoWalkers.map(autoWalker => {return new JumpToEntry(autoWalker.name, `dp-player-area-${autoWalker.id}`, {'color': '#'+autoWalker.color})})
+            ]
+        });
+        this.helpManager = new HelpManager(this, {
+            buttons: [
+                new BgaHelpPopinButton({
+                    title: _("Player Aid"),
+                    html: `
+                        <div class="player-aid-wrapper">
+                            <div class="player-aid-art player-aid-art-1"></div>
+                            <div class="player-aid-art player-aid-art-2"></div>
+                            <div class="player-aid-art player-aid-art-3"></div>
+                            <div class="player-aid-art player-aid-art-4"></div>
+                        </div>
+                    `,
+                })
+            ],
+        });
 
         dojo.connect($('dp-game-board-side-toggle-button'), 'onclick', () => dojo.toggleClass('dp-game-board-side', 'hide-side-bar'));
 
@@ -561,6 +595,12 @@ class DogPark implements DogParkGame {
         } else {
             runnable();
         }
+    }
+
+    private getOrderedPlayers(players: Player[]) {
+        const result = players.sort((a, b) => Number(a.playerNo) - Number(b.playerNo));
+        const playerIndex = result.findIndex(player => Number(player.id) === Number(this.getPlayerId()));
+        return playerIndex > 0 ? [...players.slice(playerIndex), ...players.slice(0, playerIndex)] : players;
     }
 
     ///////////////////////////////////////////////////

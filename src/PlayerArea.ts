@@ -157,7 +157,7 @@ class PlayerArea {
     }
 
     private createPlayerArea(player: DogParkPlayer) {
-        return `<div id="dp-player-area-${player.id}" class="whiteblock dp-player-area" style="background-color: #${player.color};">
+        return `<div id="player-table-${player.id}" class="whiteblock dp-player-area" style="background-color: #${player.color};">
                     <div class="label-wrapper">
                         <h2 style="color: #${player.color};">${player.name}</h2>
                     </div>
@@ -173,7 +173,7 @@ class PlayerArea {
                         <div class="label-wrapper vertical">
                             <h2 style="color: #${player.color};">${_('Kennel')}</h2>
                         </div>
-                        <div id="dp-player-area-${player.id}-kennel" class="dp-player-area-kennel">
+                        <div id="dp-player-area-${player.id}-kennel" class="dp-player-area-kennel"> 
                         </div>
                     </div>
                 </div>`;

@@ -264,11 +264,10 @@
   #dp-game-board-side {
     @media only screen and (max-width: calc(1330px + 284px))  {
       position: absolute;
-      top: 25px;
       left: -10px;
       transition: left 0.5s ease-in-out;
       z-index: 1;
-      align-items: center;
+      align-items: start;
       &.hide-side-bar {
         left: -327px;
       }
@@ -284,6 +283,7 @@
         text-orientation: upright;
         text-transform: uppercase;
         padding: 5px;
+        margin-top: 10px;
       }
     }
 

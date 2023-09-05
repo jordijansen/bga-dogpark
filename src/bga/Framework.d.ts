@@ -86,4 +86,5 @@ interface Player {
     name: string;
     score: string;
     zombie: number;
+    playerNo: number
 }

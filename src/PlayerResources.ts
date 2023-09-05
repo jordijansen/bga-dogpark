@@ -43,7 +43,7 @@ class PlayerResources {
         }
     }
 
-    public async gainResourcesFromForecastCard(playerId: number, foreCastCard: Card, resources: string[]) {
+    public async gainResourcesFromForecastCard(playerId: number, foreCastCard: ForecastCard, resources: string[]) {
         resources.forEach(resource => this.playerResourceStocks[playerId][resource].incValue(1));
         for (const resource of resources) {
             let token = this.game.tokenManager.createToken(resource as any)

@@ -2002,6 +2002,201 @@ function sortFunction() {
         return 0;
     };
 }
+/**
+ * Jump to entry.
+ */
+var JumpToEntry = /** @class */ (function () {
+    function JumpToEntry(
+    /**
+     * Label shown on the entry. For players, it's player name.
+     */
+    label, 
+    /**
+     * HTML Element id, to scroll into view when clicked.
+     */
+    targetId, 
+    /**
+     * Any element that is useful to customize the link.
+     * Basic ones are 'color' and 'colorback'.
+     */
+    data) {
+        if (data === void 0) { data = {}; }
+        this.label = label;
+        this.targetId = targetId;
+        this.data = data;
+    }
+    return JumpToEntry;
+}());
+var JumpToManager = /** @class */ (function () {
+    function JumpToManager(game, settings) {
+        var _a, _b, _c;
+        this.game = game;
+        this.settings = settings;
+        var entries = __spreadArray(__spreadArray([], ((_a = settings === null || settings === void 0 ? void 0 : settings.topEntries) !== null && _a !== void 0 ? _a : []), true), ((_b = settings === null || settings === void 0 ? void 0 : settings.playersEntries) !== null && _b !== void 0 ? _b : this.createEntries(Object.values(game.gamedatas.players))), true);
+        this.createPlayerJumps(entries);
+        var folded = (_c = settings === null || settings === void 0 ? void 0 : settings.defaultFolded) !== null && _c !== void 0 ? _c : false;
+        if (settings === null || settings === void 0 ? void 0 : settings.localStorageFoldedKey) {
+            var localStorageValue = localStorage.getItem(settings.localStorageFoldedKey);
+            if (localStorageValue) {
+                folded = localStorageValue == 'true';
+            }
+        }
+        document.getElementById('bga-jump-to_controls').classList.toggle('folded', folded);
+    }
+    JumpToManager.prototype.createPlayerJumps = function (entries) {
+        var _this = this;
+        var _a, _b, _c, _d;
+        document.getElementById("game_play_area_wrap").insertAdjacentHTML('afterend', "\n        <div id=\"bga-jump-to_controls\">        \n            <div id=\"bga-jump-to_toggle\" class=\"bga-jump-to_link ".concat((_b = (_a = this.settings) === null || _a === void 0 ? void 0 : _a.entryClasses) !== null && _b !== void 0 ? _b : '', " toggle\" style=\"--color: ").concat((_d = (_c = this.settings) === null || _c === void 0 ? void 0 : _c.toggleColor) !== null && _d !== void 0 ? _d : 'black', "\">\n                \u21D4\n            </div>\n        </div>"));
+        document.getElementById("bga-jump-to_toggle").addEventListener('click', function () { return _this.jumpToggle(); });
+        entries.forEach(function (entry) {
+            var _a, _b, _c, _d, _e, _f, _g, _h, _j;
+            var html = "<div id=\"bga-jump-to_".concat(entry.targetId, "\" class=\"bga-jump-to_link ").concat((_b = (_a = _this.settings) === null || _a === void 0 ? void 0 : _a.entryClasses) !== null && _b !== void 0 ? _b : '', "\">");
+            if ((_d = (_c = _this.settings) === null || _c === void 0 ? void 0 : _c.showEye) !== null && _d !== void 0 ? _d : true) {
+                html += "<div class=\"eye\"></div>";
+            }
+            if (((_f = (_e = _this.settings) === null || _e === void 0 ? void 0 : _e.showAvatar) !== null && _f !== void 0 ? _f : true) && ((_g = entry.data) === null || _g === void 0 ? void 0 : _g.id)) {
+                var cssUrl = (_h = entry.data) === null || _h === void 0 ? void 0 : _h.avatarUrl;
+                if (!cssUrl) {
+                    var img = document.getElementById("avatar_".concat(entry.data.id));
+                    var url = img === null || img === void 0 ? void 0 : img.src;
+                    // ? Custom image : Bga Image
+                    //url = url.replace('_32', url.indexOf('data/avatar/defaults') > 0 ? '' : '_184');
+                    if (url) {
+                        cssUrl = "url('".concat(url, "')");
+                    }
+                }
+                if (cssUrl) {
+                    html += "<div class=\"bga-jump-to_avatar\" style=\"--avatar-url: ".concat(cssUrl, ";\"></div>");
+                }
+            }
+            html += "\n                <span class=\"bga-jump-to_label\">".concat(entry.label, "</span>\n            </div>");
+            //
+            document.getElementById("bga-jump-to_controls").insertAdjacentHTML('beforeend', html);
+            var entryDiv = document.getElementById("bga-jump-to_".concat(entry.targetId));
+            Object.getOwnPropertyNames((_j = entry.data) !== null && _j !== void 0 ? _j : []).forEach(function (key) {
+                entryDiv.dataset[key] = entry.data[key];
+                entryDiv.style.setProperty("--".concat(key), entry.data[key]);
+            });
+            entryDiv.addEventListener('click', function () { return _this.jumpTo(entry.targetId); });
+        });
+        var jumpDiv = document.getElementById("bga-jump-to_controls");
+        jumpDiv.style.marginTop = "-".concat(Math.round(jumpDiv.getBoundingClientRect().height / 2), "px");
+    };
+    JumpToManager.prototype.jumpToggle = function () {
+        var _a;
+        var jumpControls = document.getElementById('bga-jump-to_controls');
+        jumpControls.classList.toggle('folded');
+        if ((_a = this.settings) === null || _a === void 0 ? void 0 : _a.localStorageFoldedKey) {
+            localStorage.setItem(this.settings.localStorageFoldedKey, jumpControls.classList.contains('folded').toString());
+        }
+    };
+    JumpToManager.prototype.jumpTo = function (targetId) {
+        document.getElementById(targetId).scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' });
+    };
+    JumpToManager.prototype.getOrderedPlayers = function (unorderedPlayers) {
+        var _this = this;
+        var players = unorderedPlayers.sort(function (a, b) { return Number(a.playerNo) - Number(b.playerNo); });
+        var playerIndex = players.findIndex(function (player) { return Number(player.id) === Number(_this.game.player_id); });
+        var orderedPlayers = playerIndex > 0 ? __spreadArray(__spreadArray([], players.slice(playerIndex), true), players.slice(0, playerIndex), true) : players;
+        return orderedPlayers;
+    };
+    JumpToManager.prototype.createEntries = function (players) {
+        var orderedPlayers = this.getOrderedPlayers(players);
+        return orderedPlayers.map(function (player) { return new JumpToEntry(player.name, "player-table-".concat(player.id), {
+            'color': '#' + player.color,
+            'colorback': player.color_back ? '#' + player.color_back : null,
+            'id': player.id,
+        }); });
+    };
+    return JumpToManager;
+}());
+var BgaHelpButton = /** @class */ (function () {
+    function BgaHelpButton() {
+    }
+    return BgaHelpButton;
+}());
+var BgaHelpPopinButton = /** @class */ (function (_super) {
+    __extends(BgaHelpPopinButton, _super);
+    function BgaHelpPopinButton(settings) {
+        var _this = _super.call(this) || this;
+        _this.settings = settings;
+        return _this;
+    }
+    BgaHelpPopinButton.prototype.add = function (toElement) {
+        var _a;
+        var _this = this;
+        var button = document.createElement('button');
+        (_a = button.classList).add.apply(_a, __spreadArray(['bga-help_button', 'bga-help_popin-button'], (this.settings.buttonExtraClasses ? this.settings.buttonExtraClasses.split(/\s+/g) : []), false));
+        button.innerHTML = "?";
+        if (this.settings.buttonBackground) {
+            button.style.setProperty('--background', this.settings.buttonBackground);
+        }
+        if (this.settings.buttonColor) {
+            button.style.setProperty('--color', this.settings.buttonColor);
+        }
+        toElement.appendChild(button);
+        button.addEventListener('click', function () { return _this.showHelp(); });
+    };
+    BgaHelpPopinButton.prototype.showHelp = function () {
+        var _a, _b, _c;
+        var popinDialog = new window.ebg.popindialog();
+        popinDialog.create('bgaHelpDialog');
+        popinDialog.setTitle(this.settings.title);
+        popinDialog.setContent("<div id=\"help-dialog-content\">".concat((_a = this.settings.html) !== null && _a !== void 0 ? _a : '', "</div>"));
+        (_c = (_b = this.settings).onPopinCreated) === null || _c === void 0 ? void 0 : _c.call(_b, document.getElementById('help-dialog-content'));
+        popinDialog.show();
+    };
+    return BgaHelpPopinButton;
+}(BgaHelpButton));
+var BgaHelpExpandableButton = /** @class */ (function (_super) {
+    __extends(BgaHelpExpandableButton, _super);
+    function BgaHelpExpandableButton(settings) {
+        var _this = _super.call(this) || this;
+        _this.settings = settings;
+        return _this;
+    }
+    BgaHelpExpandableButton.prototype.add = function (toElement) {
+        var _a;
+        var _this = this;
+        var _b, _c, _d, _e, _f, _g, _h, _j;
+        var folded = (_b = this.settings.defaultFolded) !== null && _b !== void 0 ? _b : true;
+        if (this.settings.localStorageFoldedKey) {
+            var localStorageValue = localStorage.getItem(this.settings.localStorageFoldedKey);
+            if (localStorageValue) {
+                folded = localStorageValue == 'true';
+            }
+        }
+        var button = document.createElement('button');
+        button.dataset.folded = folded.toString();
+        (_a = button.classList).add.apply(_a, __spreadArray(['bga-help_button', 'bga-help_expandable-button'], (this.settings.buttonExtraClasses ? this.settings.buttonExtraClasses.split(/\s+/g) : []), false));
+        button.innerHTML = "\n            <div class=\"bga-help_folded-content ".concat(((_c = this.settings.foldedContentExtraClasses) !== null && _c !== void 0 ? _c : '').split(/\s+/g), "\">").concat((_d = this.settings.foldedHtml) !== null && _d !== void 0 ? _d : '', "</div>\n            <div class=\"bga-help_unfolded-content  ").concat(((_e = this.settings.unfoldedContentExtraClasses) !== null && _e !== void 0 ? _e : '').split(/\s+/g), "\">").concat((_f = this.settings.unfoldedHtml) !== null && _f !== void 0 ? _f : '', "</div>\n        ");
+        button.style.setProperty('--expanded-width', (_g = this.settings.expandedWidth) !== null && _g !== void 0 ? _g : 'auto');
+        button.style.setProperty('--expanded-height', (_h = this.settings.expandedHeight) !== null && _h !== void 0 ? _h : 'auto');
+        button.style.setProperty('--expanded-radius', (_j = this.settings.expandedRadius) !== null && _j !== void 0 ? _j : '10px');
+        toElement.appendChild(button);
+        button.addEventListener('click', function () {
+            button.dataset.folded = button.dataset.folded == 'true' ? 'false' : 'true';
+            if (_this.settings.localStorageFoldedKey) {
+                localStorage.setItem(_this.settings.localStorageFoldedKey, button.dataset.folded);
+            }
+        });
+    };
+    return BgaHelpExpandableButton;
+}(BgaHelpButton));
+var HelpManager = /** @class */ (function () {
+    function HelpManager(game, settings) {
+        this.game = game;
+        if (!(settings === null || settings === void 0 ? void 0 : settings.buttons)) {
+            throw new Error('HelpManager need a `buttons` list in the settings.');
+        }
+        var leftSide = document.getElementById('left-side');
+        var buttons = document.createElement('div');
+        buttons.id = "bga-help_buttons";
+        leftSide.appendChild(buttons);
+        settings.buttons.forEach(function (button) { return button.add(buttons); });
+    }
+    return HelpManager;
+}());
 var determineBoardWidth = function () {
     var BOARD_WIDTH = 1000 + 330;
     var BOARD_WIDTH_SLIDING_SIDE_BAR = 1000;
@@ -3307,7 +3502,7 @@ var PlayerArea = /** @class */ (function () {
         this.moveDogsToKennel(Number(autoWalker.id), autoWalker.kennelDogs);
     };
     PlayerArea.prototype.createPlayerArea = function (player) {
-        return "<div id=\"dp-player-area-".concat(player.id, "\" class=\"whiteblock dp-player-area\" style=\"background-color: #").concat(player.color, ";\">\n                    <div class=\"label-wrapper\">\n                        <h2 style=\"color: #").concat(player.color, ";\">").concat(player.name, "</h2>\n                    </div>\n                    <div class=\"dp-player-area-section-wrapper\">\n                        <div class=\"label-wrapper vertical\">\n                            <h2 style=\"color: #").concat(player.color, ";\">").concat(_('Lead'), "</h2>\n                        </div>\n                        <div class=\"dp-lead-board dp-board\" data-color=\"#").concat(player.color, "\">\n                            <div id=\"dp-player-area-").concat(player.id, "-lead\" class=\"dp-lead-board-lead\"></div>\n                        </div>\n                    </div>\n                    <div class=\"dp-player-area-section-wrapper\">\n                        <div class=\"label-wrapper vertical\">\n                            <h2 style=\"color: #").concat(player.color, ";\">").concat(_('Kennel'), "</h2>\n                        </div>\n                        <div id=\"dp-player-area-").concat(player.id, "-kennel\" class=\"dp-player-area-kennel\">\n                        </div>\n                    </div>\n                </div>");
+        return "<div id=\"player-table-".concat(player.id, "\" class=\"whiteblock dp-player-area\" style=\"background-color: #").concat(player.color, ";\">\n                    <div class=\"label-wrapper\">\n                        <h2 style=\"color: #").concat(player.color, ";\">").concat(player.name, "</h2>\n                    </div>\n                    <div class=\"dp-player-area-section-wrapper\">\n                        <div class=\"label-wrapper vertical\">\n                            <h2 style=\"color: #").concat(player.color, ";\">").concat(_('Lead'), "</h2>\n                        </div>\n                        <div class=\"dp-lead-board dp-board\" data-color=\"#").concat(player.color, "\">\n                            <div id=\"dp-player-area-").concat(player.id, "-lead\" class=\"dp-lead-board-lead\"></div>\n                        </div>\n                    </div>\n                    <div class=\"dp-player-area-section-wrapper\">\n                        <div class=\"label-wrapper vertical\">\n                            <h2 style=\"color: #").concat(player.color, ";\">").concat(_('Kennel'), "</h2>\n                        </div>\n                        <div id=\"dp-player-area-").concat(player.id, "-kennel\" class=\"dp-player-area-kennel\"> \n                        </div>\n                    </div>\n                </div>");
     };
     PlayerArea.prototype.createPlayerPanels = function (player) {
         dojo.place("<div id=\"dp-player-resources-".concat(player.id, "\" class=\"dp-player-resources\">\n                            <div id=\"dp-player-dummy-resources-").concat(player.id, "\" style=\"height: 0; width: 0; overflow: hidden;\"></div>\n                          </div>\n                          <div id=\"dp-player-token-wrapper-").concat(player.id, "\" class=\"dp-player-token-wrapper\"></div>\n                          <div id=\"dp-player-objective-card-").concat(player.id, "\"  class=\"dp-player-objective-card\"></div>"), "player_board_".concat(player.id));
@@ -3586,6 +3781,28 @@ var DogPark = /** @class */ (function () {
         this.finalScoringPad.setUp(gamedatas);
         this.zoomManager = new AutoZoomManager('dp-game', 'dp-zoom-level');
         this.animationManager = new AnimationManager(this, { duration: ANIMATION_MS });
+        this.jumpToManager = new JumpToManager(this, {
+            localStorageFoldedKey: 'dogpark-jumpto-folded',
+            entryClasses: 'round-point',
+            topEntries: [
+                new JumpToEntry(_('Forecast'), 'dp-round-tracker', { 'color': 'darkgray' }),
+                new JumpToEntry(_('Park'), 'dp-game-board-park-wrapper', { 'color': 'darkgray' }),
+                new JumpToEntry(_('Field'), 'dp-game-board-field-wrapper', { 'color': 'darkgray' }),
+            ],
+            playersEntries: __spreadArray(__spreadArray([], this.getOrderedPlayers(Object.values(gamedatas.players)).map(function (player) { return new JumpToEntry(player.name, "player-table-".concat(player.id), {
+                'color': '#' + player.color,
+                'colorback': player.color_back ? '#' + player.color_back : null,
+                'id': player.id,
+            }); }), true), this.gamedatas.autoWalkers.map(function (autoWalker) { return new JumpToEntry(autoWalker.name, "dp-player-area-".concat(autoWalker.id), { 'color': '#' + autoWalker.color }); }), true)
+        });
+        this.helpManager = new HelpManager(this, {
+            buttons: [
+                new BgaHelpPopinButton({
+                    title: _("Player Aid"),
+                    html: "\n                        <div class=\"player-aid-wrapper\">\n                            <div class=\"player-aid-art player-aid-art-1\"></div>\n                            <div class=\"player-aid-art player-aid-art-2\"></div>\n                            <div class=\"player-aid-art player-aid-art-3\"></div>\n                            <div class=\"player-aid-art player-aid-art-4\"></div>\n                        </div>\n                    ",
+                })
+            ],
+        });
         dojo.connect($('dp-game-board-side-toggle-button'), 'onclick', function () { return dojo.toggleClass('dp-game-board-side', 'hide-side-bar'); });
         dojo.place('<div id="custom-actions"></div>', $('maintitlebar_content'), 'last');
         this.setupNotifications();
@@ -4022,6 +4239,12 @@ var DogPark = /** @class */ (function () {
         else {
             runnable();
         }
+    };
+    DogPark.prototype.getOrderedPlayers = function (players) {
+        var _this = this;
+        var result = players.sort(function (a, b) { return Number(a.playerNo) - Number(b.playerNo); });
+        var playerIndex = result.findIndex(function (player) { return Number(player.id) === Number(_this.getPlayerId()); });
+        return playerIndex > 0 ? __spreadArray(__spreadArray([], players.slice(playerIndex), true), players.slice(0, playerIndex), true) : players;
     };
     ///////////////////////////////////////////////////
     //// Reaction to cometD notifications

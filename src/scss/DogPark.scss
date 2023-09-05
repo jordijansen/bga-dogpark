@@ -12,6 +12,9 @@
 
 @import '../../node_modules/bga-zoom/bga-zoom';
 @import '../../node_modules/bga-cards/bga-cards';
+@import '../../node_modules/bga-jump-to/bga-jump-to';
+@import '../../node_modules/bga-help/bga-help';
+
 //@import 'LoadingIndicator';
 @import 'Variables';
 @import 'Boards';
@@ -182,5 +185,13 @@ html, .mode_3d #game_play_area_background {
     min-width: $blackjack-size-width-large;
 
   }
+}
+
+#bga-jump-to_controls {
+  left: -2px;
+}
+#help-dialog-content {
+  width: unset;
+  max-width: 600px;
 }
 

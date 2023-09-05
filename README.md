@@ -9,7 +9,6 @@
 - Game Progression percentage
 - Stats
 - Game log
-- Jump To
 - Player Aid
 
 
@@ -24,6 +23,7 @@
   - Scoring pad animations
 - Forecast Cards
 - Move scouted cards area under park
+- Jump To
 - Tooltips
   - DOG CARD
   - OBJECTIVE CARDS

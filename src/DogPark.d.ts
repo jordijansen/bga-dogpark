@@ -271,7 +271,7 @@ interface NotifActivateDogAbility {
 
 interface NotifActivateForecastCard {
     playerId: number,
-    forecastCard: Card,
+    forecastCard: ForecastCard,
     gainedResources?: string[],
     lostResources?: string[],
     score?: number
