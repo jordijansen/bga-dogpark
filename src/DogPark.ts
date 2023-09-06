@@ -131,8 +131,6 @@ class DogPark implements DogParkGame {
             ],
         });
 
-        dojo.connect($('dp-game-board-side-toggle-button'), 'onclick', () => dojo.toggleClass('dp-game-board-side', 'hide-side-bar'));
-
         dojo.place('<div id="custom-actions"></div>', $('maintitlebar_content'), 'last')
 
         this.setupNotifications();

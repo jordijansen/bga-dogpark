@@ -657,6 +657,9 @@ trait StateTrait
         // Award Breed Expert
         $breedExpertAwardResults = $this->breedExpertAwardManager->getExpertAwardsWinners();
         foreach ($breedExpertAwardResults as $playerId => $breedExpertCards) {
+            if (intval($playerId) > 2) {
+                $this->setStat(sizeof($breedExpertCards), PLAYER_BREED_EXPERT_WON, $playerId);
+            }
             foreach ($breedExpertCards as $breedExpertCard) {
                 $this->notifyAllPlayers('playerWinsBreedExpert', clienttranslate('${player_name} wins ${breed} Breed Expert and gains ${reputation} reputation'),[
                     'playerId' => $playerId,
@@ -684,6 +687,13 @@ trait StateTrait
 
         foreach ($scoreBreakDown as $playerId => $scores) {
             $this->updatePlayerScoreAndAux($playerId, $scores['score'], $scores['scoreAux']);
+
+            $this->setStat($scores['parkBoardScore'], PLAYER_PARK_BOARD_REPUTATION, $playerId);
+            $this->setStat($scores['dogFinalScoringScore'], PLAYER_DOGS_FINAL_SCORING_REPUTATION, $playerId);
+            $this->setStat($scores['breedExpertAwardScore'], PLAYER_BREED_EXPERT_REPUTATION, $playerId);
+            $this->setStat($scores['objectiveCardScore'], PLAYER_OBJECTIVE_CARD_REPUTATION, $playerId);
+            $this->setStat($scores['remainingResourcesScore'], PLAYER_REMAINING_RESOURCES_REPUTATION, $playerId);
+
         }
 
         $this->gamestate->nextState("");

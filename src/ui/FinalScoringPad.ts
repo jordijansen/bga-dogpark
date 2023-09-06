@@ -1,15 +1,33 @@
 class FinalScoringPad {
 
     private scoringPadRows = [
-        { key: 'parkBoardScore',  label: _('<icon-reputation> during game') },
-        { key: 'dogFinalScoringScore',  label: _('<icon-reputation> from dogs with <b>FINAL SCORING</b> abilities') },
-        { key: 'breedExpertAwardScore',  label: _('<icon-reputation> from won Breed Expert awards') },
-        { key: 'objectiveCardScore',  label: _('<icon-reputation> from completed Objective Card') },
-        { key: 'remainingResourcesScore',  label: _('Remaining resources = <icon-reputation> for every 5') },
-        { key: 'score',  label: _('Total <icon-reputation>') }
+        { key: 'parkBoardScore',  getLabel: () => this.getLabel('parkBoardScore') },
+        { key: 'dogFinalScoringScore',  getLabel: () => this.getLabel('dogFinalScoringScore') },
+        { key: 'breedExpertAwardScore',  getLabel: () => this.getLabel('breedExpertAwardScore') },
+        { key: 'objectiveCardScore',  getLabel: () => this.getLabel('objectiveCardScore') },
+        { key: 'remainingResourcesScore',  getLabel: () => this.getLabel('remainingResourcesScore') },
+        { key: 'score',  getLabel: () => this.getLabel('score') }
     ];
     constructor(private game: DogPark,
                 private elementId: string) {
+    }
+
+    private getLabel(category: string) {
+        switch (category) {
+            case 'parkBoardScore':
+                return _('<icon-reputation> during game');
+            case 'dogFinalScoringScore':
+                return _('<icon-reputation> from dogs with <b>FINAL SCORING</b> abilities');
+            case 'breedExpertAwardScore':
+                return _('<icon-reputation> from won Breed Expert awards');
+            case 'objectiveCardScore':
+                return _('<icon-reputation> from completed Objective Card')
+            case 'remainingResourcesScore':
+                return _('Remaining resources = <icon-reputation> for every 5')
+            case 'score':
+                return _('Total <icon-reputation>')
+
+        }
     }
 
     setUp(gamedatas: DogParkGameData) {
@@ -55,7 +73,7 @@ class FinalScoringPad {
 
         this.scoringPadRows.forEach(row => {
             result += `<tr>`;
-            result += `<td>${this.game.formatWithIcons(row.label)}</td>`;
+            result += `<td>${this.game.formatWithIcons(row.getLabel())}</td>`;
             Object.keys(scoreBreakdown).forEach(playerId => {
                 result += `<td class="reveal-score-value" style="opacity: ${animate ? 0 : 1};">${scoreBreakdown[playerId][row.key]} ${row.key == 'breedExpertAwardScore' ? '<span class="breed-expert-additional-text">(' +scoreBreakdown[playerId]['scoreAux'] +'&uarr;)*</span>': ''}</td>`
             });
@@ -68,4 +86,6 @@ class FinalScoringPad {
                 </div>`;
         return result;
     }
+
+
 }

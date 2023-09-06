@@ -260,54 +260,6 @@
       }
     }
   }
-
-  #dp-game-board-side {
-    @media only screen and (max-width: calc(1330px + 284px))  {
-      position: absolute;
-      left: -10px;
-      transition: left 0.5s ease-in-out;
-      z-index: 1;
-      align-items: start;
-      &.hide-side-bar {
-        left: -327px;
-      }
-
-      #dp-game-board-side-toggle-button {
-        display: block !important;
-        background: black;
-        color: white;
-        font-size: large;
-        text-align: center;
-        cursor: pointer;
-        writing-mode: vertical-rl;
-        text-orientation: upright;
-        text-transform: uppercase;
-        padding: 5px;
-        margin-top: 10px;
-      }
-    }
-
-    display: flex;
-
-    #dp-game-board-side-toggle-button {
-      display: none;
-    }
-    #dp-game-board-breed-expert-awards {
-      width: 322px;
-      height: 1202px;
-      background-image: url("img/dogpark-board-objectives.jpg");
-      background-size: cover;
-
-      #dp-game-board-breed-expert-awards-stock {
-        padding-top: 120px;
-        padding-right: 50px;
-
-        .slot {
-          height: $mini-size-landscape-height;
-        }
-      }
-    }
-  }
 }
 
 .label-wrapper {
@@ -451,6 +403,52 @@
       font-family: cursive;
       text-align: center;
       font-size: 12px;
+    }
+  }
+}
+
+#dp-game-board-side {
+  position: fixed;
+  top: 150px;
+  left: -10px;
+  transition: left 0.5s ease-in-out;
+  z-index: 1;
+  align-items: center;
+  &.hide-side-bar {
+    left: -327px;
+  }
+
+  #dp-game-board-side-toggle-button {
+    display: block !important;
+    background: black;
+    color: white;
+    font-size: large;
+    text-align: center;
+    cursor: pointer;
+    writing-mode: vertical-rl;
+    text-orientation: upright;
+    text-transform: uppercase;
+    padding: 5px;
+    margin-top: 10px;
+  }
+  display: flex;
+
+  #dp-game-board-side-toggle-button {
+    display: none;
+  }
+  #dp-game-board-breed-expert-awards {
+    width: 322px;
+    height: 1202px;
+    background-image: url("img/dogpark-board-objectives.jpg");
+    background-size: cover;
+
+    #dp-game-board-breed-expert-awards-stock {
+      padding-top: 120px;
+      padding-right: 50px;
+
+      .slot {
+        height: $mini-size-landscape-height;
+      }
     }
   }
 }

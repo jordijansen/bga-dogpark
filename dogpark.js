@@ -2198,12 +2198,7 @@ var HelpManager = /** @class */ (function () {
     return HelpManager;
 }());
 var determineBoardWidth = function () {
-    var BOARD_WIDTH = 1000 + 330;
-    var BOARD_WIDTH_SLIDING_SIDE_BAR = 1000;
-    if (window.getComputedStyle(document.getElementById('dp-game-board-side')).getPropertyValue('position') === 'absolute') {
-        return BOARD_WIDTH_SLIDING_SIDE_BAR;
-    }
-    return BOARD_WIDTH;
+    return 1000;
 };
 var determineMaxZoomLevel = function () {
     var bodycoords = dojo.marginBox("zoom-overall");
@@ -2553,6 +2548,12 @@ var BreedExpertAwardManager = /** @class */ (function (_super) {
         return _this;
     }
     BreedExpertAwardManager.prototype.setUp = function (gameData) {
+        var collapsed = Boolean(window.localStorage.getItem(BreedExpertAwardManager.SIDE_BAR_COLLAPSED_LOCAL_STORAGE_KEY));
+        dojo.place(" <div id=\"dp-game-board-side\" class=\"dp-board ".concat(collapsed ? 'hide-side-bar' : '', "\">\n            <div id=\"dp-game-board-breed-expert-awards\" class=\"dp-board\">\n                <div id=\"dp-game-board-breed-expert-awards-stock\">\n\n                </div>\n            </div>\n            <div id=\"dp-game-board-side-toggle-button\">").concat(_('Breed Expert'), "</div>\n        </div>"), $('pagesection_gameview'));
+        dojo.connect($('dp-game-board-side-toggle-button'), 'onclick', function () {
+            dojo.toggleClass('dp-game-board-side', 'hide-side-bar');
+            window.localStorage.setItem(BreedExpertAwardManager.SIDE_BAR_COLLAPSED_LOCAL_STORAGE_KEY, dojo.hasClass('dp-game-board-side', 'hide-side-bar') + '');
+        });
         this.stock = new SlotStock(this, $('dp-game-board-breed-expert-awards-stock'), {
             slotsIds: [
                 "dp-game-board-breed-expert-awards-slot-1",
@@ -2568,6 +2569,7 @@ var BreedExpertAwardManager = /** @class */ (function (_super) {
         });
         this.stock.addCards(gameData.breedExpertAwards);
     };
+    BreedExpertAwardManager.SIDE_BAR_COLLAPSED_LOCAL_STORAGE_KEY = 'dogpark-side-bar-collapsed';
     BreedExpertAwardManager.CARD_WIDTH = 195;
     BreedExpertAwardManager.CARD_HEIGHT = 142;
     return BreedExpertAwardManager;
@@ -3078,17 +3080,34 @@ var ExchangeResources = /** @class */ (function () {
 }());
 var FinalScoringPad = /** @class */ (function () {
     function FinalScoringPad(game, elementId) {
+        var _this = this;
         this.game = game;
         this.elementId = elementId;
         this.scoringPadRows = [
-            { key: 'parkBoardScore', label: _('<icon-reputation> during game') },
-            { key: 'dogFinalScoringScore', label: _('<icon-reputation> from dogs with <b>FINAL SCORING</b> abilities') },
-            { key: 'breedExpertAwardScore', label: _('<icon-reputation> from won Breed Expert awards') },
-            { key: 'objectiveCardScore', label: _('<icon-reputation> from completed Objective Card') },
-            { key: 'remainingResourcesScore', label: _('Remaining resources = <icon-reputation> for every 5') },
-            { key: 'score', label: _('Total <icon-reputation>') }
+            { key: 'parkBoardScore', getLabel: function () { return _this.getLabel('parkBoardScore'); } },
+            { key: 'dogFinalScoringScore', getLabel: function () { return _this.getLabel('dogFinalScoringScore'); } },
+            { key: 'breedExpertAwardScore', getLabel: function () { return _this.getLabel('breedExpertAwardScore'); } },
+            { key: 'objectiveCardScore', getLabel: function () { return _this.getLabel('objectiveCardScore'); } },
+            { key: 'remainingResourcesScore', getLabel: function () { return _this.getLabel('remainingResourcesScore'); } },
+            { key: 'score', getLabel: function () { return _this.getLabel('score'); } }
         ];
     }
+    FinalScoringPad.prototype.getLabel = function (category) {
+        switch (category) {
+            case 'parkBoardScore':
+                return _('<icon-reputation> during game');
+            case 'dogFinalScoringScore':
+                return _('<icon-reputation> from dogs with <b>FINAL SCORING</b> abilities');
+            case 'breedExpertAwardScore':
+                return _('<icon-reputation> from won Breed Expert awards');
+            case 'objectiveCardScore':
+                return _('<icon-reputation> from completed Objective Card');
+            case 'remainingResourcesScore':
+                return _('Remaining resources = <icon-reputation> for every 5');
+            case 'score':
+                return _('Total <icon-reputation>');
+        }
+    };
     FinalScoringPad.prototype.setUp = function (gamedatas) {
         if (gamedatas.scoreBreakdown) {
             this.showPad(gamedatas.scoreBreakdown, false);
@@ -3122,7 +3141,7 @@ var FinalScoringPad = /** @class */ (function () {
         result += "</thead><tbody>";
         this.scoringPadRows.forEach(function (row) {
             result += "<tr>";
-            result += "<td>".concat(_this.game.formatWithIcons(row.label), "</td>");
+            result += "<td>".concat(_this.game.formatWithIcons(row.getLabel()), "</td>");
             Object.keys(scoreBreakdown).forEach(function (playerId) {
                 result += "<td class=\"reveal-score-value\" style=\"opacity: ".concat(animate ? 0 : 1, ";\">").concat(scoreBreakdown[playerId][row.key], " ").concat(row.key == 'breedExpertAwardScore' ? '<span class="breed-expert-additional-text">(' + scoreBreakdown[playerId]['scoreAux'] + '&uarr;)*</span>' : '', "</td>");
             });
@@ -3828,7 +3847,6 @@ var DogPark = /** @class */ (function () {
                 })
             ],
         });
-        dojo.connect($('dp-game-board-side-toggle-button'), 'onclick', function () { return dojo.toggleClass('dp-game-board-side', 'hide-side-bar'); });
         dojo.place('<div id="custom-actions"></div>', $('maintitlebar_content'), 'last');
         this.setupNotifications();
         log("Ending game setup");

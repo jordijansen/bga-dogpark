@@ -5,12 +5,9 @@
   - Solo Mode Objectives
   - Solo Ratings shown as target
 - Variants & Options
-- Game Progression percentage
-- Stats
 
 Feedback:
 Show breed expert awards real-time, number of mini walkers
-Breed expert scrolling
 Remove scout cards, discard pile at the bottom
 Preference for board positioning, kennel and field position
 Swap + Collar
@@ -41,6 +38,11 @@ Two resource spots one button
 -  Tie mentioned text
 - Add resource counters to player boards as well, button for objective card
 - Zombie Turn
+- Game Progression percentage
+- Stats
+- Breed expert scrolling
+
+
 
 
 Dog Card Abilities:

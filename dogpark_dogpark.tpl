@@ -50,6 +50,7 @@
             <div id="dp-own-player-area" style="order: 12;">
             </div>
         </div>
+        <!--
         <div id="dp-game-board-side" class="dp-board hide-side-bar">
             <div id="dp-game-board-breed-expert-awards" class="dp-board">
                 <div id="dp-game-board-breed-expert-awards-stock">
@@ -58,6 +59,7 @@
             </div>
             <div id="dp-game-board-side-toggle-button">{breedExpertLabel}</div>
         </div>
+        -->
     </div>
     <div id="dp-player-areas">
     </div>

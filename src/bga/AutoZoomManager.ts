@@ -1,11 +1,5 @@
 const determineBoardWidth = () => {
-    const BOARD_WIDTH = 1000 + 330;
-    const BOARD_WIDTH_SLIDING_SIDE_BAR = 1000;
-
-    if (window.getComputedStyle(document.getElementById('dp-game-board-side')).getPropertyValue('position') === 'absolute') {
-        return BOARD_WIDTH_SLIDING_SIDE_BAR;
-    }
-    return BOARD_WIDTH;
+    return 1000;
 }
 
 const determineMaxZoomLevel = () => {

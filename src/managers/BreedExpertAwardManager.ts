@@ -1,5 +1,7 @@
 class BreedExpertAwardManager extends CardManager<Card> {
 
+    public static readonly SIDE_BAR_COLLAPSED_LOCAL_STORAGE_KEY = 'dogpark-side-bar-collapsed';
+
     public static CARD_WIDTH = 195;
     public static CARD_HEIGHT = 142;
 
@@ -22,6 +24,21 @@ class BreedExpertAwardManager extends CardManager<Card> {
     }
 
     public setUp(gameData: DogParkGameData) {
+        const collapsed = Boolean(window.localStorage.getItem(BreedExpertAwardManager.SIDE_BAR_COLLAPSED_LOCAL_STORAGE_KEY));
+        dojo.place(` <div id="dp-game-board-side" class="dp-board ${collapsed ? 'hide-side-bar' : ''}">
+            <div id="dp-game-board-breed-expert-awards" class="dp-board">
+                <div id="dp-game-board-breed-expert-awards-stock">
+
+                </div>
+            </div>
+            <div id="dp-game-board-side-toggle-button">${_('Breed Expert')}</div>
+        </div>`, $('pagesection_gameview'))
+
+        dojo.connect($('dp-game-board-side-toggle-button'), 'onclick', () => {
+            dojo.toggleClass('dp-game-board-side', 'hide-side-bar');
+            window.localStorage.setItem(BreedExpertAwardManager.SIDE_BAR_COLLAPSED_LOCAL_STORAGE_KEY, dojo.hasClass('dp-game-board-side', 'hide-side-bar') + '')
+        });
+
         this.stock = new SlotStock(this, $('dp-game-board-breed-expert-awards-stock'), {
             slotsIds: [
                 `dp-game-board-breed-expert-awards-slot-1`,

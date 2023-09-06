@@ -48,4 +48,43 @@ require_once(__DIR__.'/modules/php/Constants.inc.php');
 
 $stats_type = [
 
+    // Statistics global to table
+    "table" => [
+    ],
+
+    // Statistics existing for each player
+    "player" => [
+        PLAYER_PARK_BOARD_REPUTATION => [
+            "id"=> PLAYER_PARK_BOARD_REPUTATION_ID,
+            "name" => totranslate("Reputation gained during the game"),
+            "type" => "int"
+        ],
+        PLAYER_DOGS_FINAL_SCORING_REPUTATION => [
+            "id"=> PLAYER_DOGS_FINAL_SCORING_REPUTATION_ID,
+            "name" => totranslate("Reputation from dogs with FINAL SCORING abilities"),
+            "type" => "float"
+        ],
+        PLAYER_BREED_EXPERT_WON => [
+            "id"=> PLAYER_BREED_EXPERT_WON_ID,
+            "name" => totranslate("Number of Breed Expert Awards"),
+            "type" => "int"
+        ],
+        PLAYER_BREED_EXPERT_REPUTATION => [
+            "id"=> PLAYER_BREED_EXPERT_REPUTATION_ID,
+            "name" => totranslate("Reputation from Breed Expert Awards"),
+            "type" => "int"
+        ],
+        PLAYER_OBJECTIVE_CARD_REPUTATION => [
+            "id"=> PLAYER_OBJECTIVE_CARD_REPUTATION_ID,
+            "name" => totranslate("Reputation from Objective Card"),
+            "type" => "int"
+        ],
+        PLAYER_REMAINING_RESOURCES_REPUTATION => [
+            "id"=> PLAYER_REMAINING_RESOURCES_REPUTATION_ID,
+            "name" => totranslate("Reputation from remaining resources"),
+            "type" => "int"
+        ]
+    ]
+
 ];
+

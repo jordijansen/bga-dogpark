@@ -42,7 +42,6 @@ class view_dogpark_dogpark extends game_view
 
         /*********** Place your code below:  ************/
 
-        $this->tpl['breedExpertLabel'] = self::_("Breed Expert");
         /*
         
         // Examples: set the value of some element defined in your tpl file like this: {MY_VARIABLE_ELEMENT}
