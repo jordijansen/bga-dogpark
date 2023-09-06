@@ -20,6 +20,7 @@ use managers\DogField;
 use managers\DogManager;
 use managers\PlayerManager;
 use objects\DogCard;
+use objects\DogWalker;
 use objects\ObjectiveCard;
 use traits\ActionTrait;
 use traits\ArgsTrait;
@@ -371,14 +372,39 @@ class DogPark extends Table
     {
         $statename = $state['name'];
 
-        //TODO IMPLEMENT
-        if ($state['type'] === "activeplayer") {
-            switch ($statename) {
-                default:
-                    break;
-            }
-
+        if ($state['type'] === "multipleactiveplayer" || $state['type'] === "private") {
+            $this->gamestate->setPlayerNonMultiactive($active_player, '');
             return;
+        }
+
+        if ($state['type'] === 'activeplayer') {
+            switch ($statename) {
+                case 'recruitmentTakeDog':
+                    $leftOverDog = current($this->dogField->getDogCards());
+                    $this->dogManager->recruitDog($active_player, $leftOverDog->id, 0, $this->playerManager->getWalkerId($active_player));
+                    $this->gamestate->nextState('');
+                    return;
+                case 'walkingMoveWalker':
+                    $this->setGlobalVariable(LAST_WALKED_WALKER_ID, $this->playerManager->getWalkerId($active_player));
+                    $this->gamestate->nextState('');
+                    return;
+                case 'actionSwap':
+                    $this->gamestate->jumpToState(intval($this->getGlobalVariable(STATE_AFTER_SWAP)));
+                    return;
+                case 'actionScout':
+                    $this->gamestate->jumpToState(intval($this->getGlobalVariable(STATE_AFTER_SCOUT)));
+                    return;
+                case 'actionMoveAutoWalker':
+                    $walker = DogWalker::from($this->dogWalkers->getCard(intval($this->getGlobalVariable(LAST_WALKED_WALKER_ID))));
+                    $autoWalker = $this->getAutoWalkers()[$walker->typeArg];
+                    $nrOfPlaces = intval($this->getGlobalVariable(MOVE_AUTO_WALKER_STEPS));
+                    $locationId = current($this->getGlobalVariable(MOVE_AUTO_WALKER_LOCATIONS));
+                    $autoWalker->moveWalkerToLocation($walker->id, $locationId, $nrOfPlaces);
+                    return;
+                default:
+                    $this->gamestate->nextState('');
+                    return;
+            }
         }
 
         throw new feException( "Zombie mode not supported at this game state: ".$statename );

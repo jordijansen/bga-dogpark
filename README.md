@@ -5,7 +5,6 @@
   - Solo Mode Objectives
   - Solo Ratings shown as target
 - Variants & Options
-- Zombie Turn
 - Game Progression percentage
 - Stats
 
@@ -41,6 +40,7 @@ Two resource spots one button
 - The purple lead bord is incorrect
 -  Tie mentioned text
 - Add resource counters to player boards as well, button for objective card
+- Zombie Turn
 
 
 Dog Card Abilities:

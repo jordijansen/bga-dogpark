@@ -160,7 +160,7 @@ class PlayerArea {
     private createPlayerArea(player: DogParkPlayer) {
         return `<div id="player-table-${player.id}" class="whiteblock dp-player-area" style="background-color: #${player.color};">
                     <div id="player-table-${player.id}-resources" class="player-table-resources">
-                        ${['ball', 'stick', 'treat', 'toy'].map(resource => `<span><span class="dp-token-token small" data-type="${resource}"></span><span id="player-table-${resource}-counter-${player.id}" style="vertical-align: middle; padding: 0 5px;"></span></span>`).join('')}
+                        ${['stick', 'ball', 'toy', 'treat'].map(resource => `<span><span class="dp-token-token small" data-type="${resource}"></span><span id="player-table-${resource}-counter-${player.id}" style="vertical-align: middle; padding: 0 5px;"></span></span>`).join('')}
                         ${ this.game.getPlayerId() == Number(player.id) ? `<a id="player-table-objective-button" class="bgabutton bgabutton_gray">${_('Objective')}</a>` : ''}
                     </div>
                     <div class="label-wrapper">
