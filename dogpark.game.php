@@ -251,8 +251,20 @@ class DogPark extends Table
     */
     function getGameProgression()
     {
-        //TODO
-        return 0;
+        $round = $this->getGlobalVariable(CURRENT_ROUND);
+        $phase = $this->getGlobalVariable(CURRENT_PHASE);
+
+        $gameProgression = 25 * (max(intval($round) - 1, 0));
+        if ($phase == PHASE_RECRUITMENT_1) {
+            $gameProgression = $gameProgression + 6;
+        } else if ($phase == PHASE_RECRUITMENT_2) {
+            $gameProgression = $gameProgression + 12;
+        } else if ($phase == PHASE_SELECTION) {
+            $gameProgression = $gameProgression + 18;
+        } else if ($phase == PHASE_WALKING) {
+            $gameProgression = $gameProgression + 24;
+        }
+        return $gameProgression;
     }
 
 

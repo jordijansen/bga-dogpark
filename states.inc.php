@@ -109,7 +109,8 @@ $recruitmentStates = [
         "action" => "stRecruitmentStart",
         "transitions" => [
             "recruitmentOffer" => ST_RECRUITMENT_OFFER
-        ]
+        ],
+        "updateGameProgression" => true
     ],
     ST_RECRUITMENT_OFFER => [
         "name" => "recruitmentOffer",
@@ -177,7 +178,8 @@ $recruitmentStates = [
             'gainResourcesForecastCard' => ST_ACTION_GAIN_RESOURCES,
             'recruitmentStart' => ST_RECRUITMENT_START,
             'recruitmentEnd' => ST_SELECTION_START
-        ]
+        ],
+        "updateGameProgression" => true
     ]
 ];
 
@@ -192,7 +194,8 @@ $selectionStates = [
         "action" => "stSelectionStart",
         "transitions" => [
             'playerTurns' => ST_SELECTION_ACTIONS,
-        ]
+        ],
+        "updateGameProgression" => true
     ],
     ST_SELECTION_ACTIONS => [
         "name" => "selectionActions",
@@ -243,7 +246,8 @@ $selectionStates = [
         "action" => "stSelectionEnd",
         "transitions" => [
             "walking" => ST_WALKING_START
-        ]
+        ],
+        "updateGameProgression" => true
     ],
 ];
 
@@ -259,7 +263,8 @@ $walkingStates = [
         "transitions" => [
             "playerTurn" => ST_WALKING_MOVE_WALKER,
             "skipWalkingPhase" => ST_HOME_TIME
-        ]
+        ],
+        "updateGameProgression" => true
     ],
     ST_WALKING_MOVE_WALKER => [
         "name" => "walkingMoveWalker",
@@ -314,7 +319,8 @@ $homeTimeStates = [
             'gainResourcesForecastCard' => ST_ACTION_GAIN_RESOURCES,
             "nextRound" => ST_RECRUITMENT_START,
             "endGame" => ST_FINAL_SCORING
-        ]
+        ],
+        "updateGameProgression" => true
     ],
 ];
 
@@ -425,7 +431,8 @@ $endGameStates = [
         "action" => "stFinalScoring",
         "transitions" => [
             "" => ST_GAME_END
-        ]
+        ],
+        "updateGameProgression" => true
     ],
     ST_CATCH_STATE => [
         "name" => "catchState",
