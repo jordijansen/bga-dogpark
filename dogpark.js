@@ -3435,7 +3435,9 @@ var PlayerArea = /** @class */ (function () {
         }
     };
     PlayerArea.prototype.moveObjectiveToPlayer = function (playerId, objectiveCard) {
+        var _this = this;
         if (objectiveCard) {
+            dojo.connect($('player-table-objective-button'), 'onclick', function (event) { return _this.game.helpDialogManager.showObjectiveHelpDialog(event, objectiveCard); });
             return this.playerObjective[playerId].addCard(objectiveCard);
         }
         return Promise.resolve(true);
@@ -3502,7 +3504,7 @@ var PlayerArea = /** @class */ (function () {
         this.moveDogsToKennel(Number(autoWalker.id), autoWalker.kennelDogs);
     };
     PlayerArea.prototype.createPlayerArea = function (player) {
-        return "<div id=\"player-table-".concat(player.id, "\" class=\"whiteblock dp-player-area\" style=\"background-color: #").concat(player.color, ";\">\n                    <div class=\"label-wrapper\">\n                        <h2 style=\"color: #").concat(player.color, ";\">").concat(player.name, "</h2>\n                    </div>\n                    <div class=\"dp-player-area-section-wrapper\">\n                        <div class=\"label-wrapper vertical\">\n                            <h2 style=\"color: #").concat(player.color, ";\">").concat(_('Lead'), "</h2>\n                        </div>\n                        <div class=\"dp-lead-board dp-board\" data-color=\"#").concat(player.color, "\">\n                            <div id=\"dp-player-area-").concat(player.id, "-lead\" class=\"dp-lead-board-lead\"></div>\n                        </div>\n                    </div>\n                    <div class=\"dp-player-area-section-wrapper\">\n                        <div class=\"label-wrapper vertical\">\n                            <h2 style=\"color: #").concat(player.color, ";\">").concat(_('Kennel'), "</h2>\n                        </div>\n                        <div id=\"dp-player-area-").concat(player.id, "-kennel\" class=\"dp-player-area-kennel\"> \n                        </div>\n                    </div>\n                </div>");
+        return "<div id=\"player-table-".concat(player.id, "\" class=\"whiteblock dp-player-area\" style=\"background-color: #").concat(player.color, ";\">\n                    <div id=\"player-table-").concat(player.id, "-resources\" class=\"player-table-resources\">\n                        ").concat(['ball', 'stick', 'treat', 'toy'].map(function (resource) { return "<span><span class=\"dp-token-token small\" data-type=\"".concat(resource, "\"></span><span id=\"player-table-").concat(resource, "-counter-").concat(player.id, "\" style=\"vertical-align: middle; padding: 0 5px;\"></span></span>"); }).join(''), "\n                        ").concat(this.game.getPlayerId() == Number(player.id) ? "<a id=\"player-table-objective-button\" class=\"bgabutton bgabutton_gray\">".concat(_('Objective'), "</a>") : '', "\n                    </div>\n                    <div class=\"label-wrapper\">\n                        <h2 style=\"color: #").concat(player.color, ";\">").concat(player.name, "</h2>\n                    </div>\n                    <div class=\"dp-player-area-section-wrapper\">\n                        <div class=\"label-wrapper vertical\">\n                            <h2 style=\"color: #").concat(player.color, ";\">").concat(_('Lead'), "</h2>\n                        </div>\n                        <div class=\"dp-lead-board dp-board\" data-color=\"#").concat(player.color, "\">\n                            <div id=\"dp-player-area-").concat(player.id, "-lead\" class=\"dp-lead-board-lead\"></div>\n                        </div>\n                    </div>\n                    <div class=\"dp-player-area-section-wrapper\">\n                        <div class=\"label-wrapper vertical\">\n                            <h2 style=\"color: #").concat(player.color, ";\">").concat(_('Kennel'), "</h2>\n                        </div>\n                        <div id=\"dp-player-area-").concat(player.id, "-kennel\" class=\"dp-player-area-kennel\"> \n                        </div>\n                    </div>\n                </div>");
     };
     PlayerArea.prototype.createPlayerPanels = function (player) {
         dojo.place("<div id=\"dp-player-resources-".concat(player.id, "\" class=\"dp-player-resources\">\n                            <div id=\"dp-player-dummy-resources-").concat(player.id, "\" style=\"height: 0; width: 0; overflow: hidden;\"></div>\n                          </div>\n                          <div id=\"dp-player-token-wrapper-").concat(player.id, "\" class=\"dp-player-token-wrapper\"></div>\n                          <div id=\"dp-player-objective-card-").concat(player.id, "\"  class=\"dp-player-objective-card\"></div>"), "player_board_".concat(player.id));
@@ -3534,6 +3536,7 @@ var PlayerResources = /** @class */ (function () {
                         element.dataset.type = resource;
                     }
                 });
+                this_2.playerResourceStocks[playerId][resource].counter.addTarget($("player-table-".concat(resource, "-counter-").concat(player.id)));
             };
             var this_2 = this;
             for (var resource in resources) {
@@ -3710,11 +3713,21 @@ var RoundTracker = /** @class */ (function () {
                 break;
         }
     };
-    RoundTracker.prototype.setFocusToField = function () {
+    RoundTracker.prototype.setScoutFocus = function () {
+        this.resetFocus();
         $('dp-game-board-field-wrapper').style.order = 1;
+        $('dp-game-board-park-wrapper').style.order = 2;
+        $('dp-own-player-area').style.order = 3;
     };
-    RoundTracker.prototype.removeFocusToField = function () {
-        $('dp-game-board-field-wrapper').style.order = 12;
+    RoundTracker.prototype.setSwapFocus = function () {
+        this.resetFocus();
+        $('dp-own-player-area').style.order = 1;
+        $('dp-game-board-field-wrapper').style.order = 2;
+        $('dp-game-board-park-wrapper').style.order = 3;
+    };
+    RoundTracker.prototype.unsetFocus = function () {
+        this.resetFocus();
+        this.setFocus(this.toPhase(Number($(RoundTracker.elementId).dataset.phase)));
     };
     RoundTracker.prototype.toPhaseId = function (phase) {
         switch (phase) {
@@ -3727,6 +3740,18 @@ var RoundTracker = /** @class */ (function () {
                 return 3;
             case 'PHASE_HOME_TIME':
                 return 4;
+        }
+    };
+    RoundTracker.prototype.toPhase = function (phaseId) {
+        switch (phaseId) {
+            case 1:
+                return 'PHASE_RECRUITMENT_1';
+            case 2:
+                return 'PHASE_SELECTION';
+            case 3:
+                return 'PHASE_WALKING';
+            case 4:
+                return 'PHASE_HOME_TIME';
         }
     };
     RoundTracker.elementId = 'dp-round-tracker';
@@ -3919,6 +3944,7 @@ var DogPark = /** @class */ (function () {
         if (this.isCurrentPlayerActive()) {
             this.playerArea.setSelectionModeForKennel("single", this.getPlayerId(), args.dogsInKennel);
             this.dogField.setDogSelectionModeField('single');
+            this.roundTracker.setSwapFocus();
         }
     };
     DogPark.prototype.enteringActionScout = function (args) {
@@ -3926,6 +3952,7 @@ var DogPark = /** @class */ (function () {
         if (this.isCurrentPlayerActive() && args.scoutedDogCards && args.scoutedDogCards.length > 0) {
             this.dogField.setDogSelectionModeField('single');
             this.dogField.setDogSelectionModeScout('single');
+            this.roundTracker.setScoutFocus();
         }
     };
     DogPark.prototype.enteringActionMoveAutoWalker = function (args) {
@@ -3995,12 +4022,14 @@ var DogPark = /** @class */ (function () {
         if (this.isCurrentPlayerActive()) {
             this.playerArea.setSelectionModeForKennel('none', this.getPlayerId());
             this.dogField.setDogSelectionModeField('none');
+            this.roundTracker.unsetFocus();
         }
     };
     DogPark.prototype.leavingActionScout = function () {
         if (this.isCurrentPlayerActive()) {
             this.dogField.setDogSelectionModeScout('none');
             this.dogField.setDogSelectionModeField('none');
+            this.roundTracker.unsetFocus();
         }
     };
     DogPark.prototype.leavingActionMoveAutoWalker = function () {

@@ -62,9 +62,9 @@ interface DogParkPlayer extends Player {
     leadDogs: DogCard[],
     offerValue: number,
     resources: {stick: number, ball: number, treat: number, toy: number},
-    objectives: Card[],
+    objectives: ObjectiveCard[],
     selectedObjectiveCardId: number,
-    chosenObjective: Card,
+    chosenObjective: ObjectiveCard,
     orderNo: number
 }
 

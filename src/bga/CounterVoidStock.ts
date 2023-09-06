@@ -55,6 +55,7 @@ class CounterVoidStock<T> extends VoidStock<T> implements Counter{
         this.counter.addTarget(setting.counterId);
         this.counter.setValue(setting.initialCounterValue);
     }
+
     public create(nodeId: string) {}
     public getValue() {return this.counter.getValue()}
     public incValue (by: number) {this.counter.setValue(this.counter.getValue() + by)}

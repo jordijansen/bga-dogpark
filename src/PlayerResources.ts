@@ -21,6 +21,8 @@ class PlayerResources {
                         element.dataset.type = resource;
                     }
                 });
+
+                this.playerResourceStocks[playerId][resource].counter.addTarget($(`player-table-${resource}-counter-${player.id}`))
             }
         }
     }

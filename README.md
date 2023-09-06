@@ -8,8 +8,16 @@
 - Zombie Turn
 - Game Progression percentage
 - Stats
-- Game log
-- Player Aid
+
+Feedback:
+Show breed expert awards real-time, number of mini walkers
+Breed expert scrolling
+Remove scout cards, discard pile at the bottom
+Preference for board positioning, kennel and field position
+Swap + Collar
+Two resource spots one button
+
+
 
 
 # Done
@@ -28,6 +36,11 @@
   - DOG CARD
   - OBJECTIVE CARDS
   - FORECAST CARDS
+- Player Aid
+- GiveExtraTime
+- The purple lead bord is incorrect
+-  Tie mentioned text
+- Add resource counters to player boards as well, button for objective card
 
 
 Dog Card Abilities:

@@ -255,6 +255,7 @@ class DogPark implements DogParkGame {
         if ((this as any).isCurrentPlayerActive()) {
             this.playerArea.setSelectionModeForKennel("single", this.getPlayerId(), args.dogsInKennel);
             this.dogField.setDogSelectionModeField('single');
+            this.roundTracker.setSwapFocus();
         }
     }
 
@@ -263,6 +264,7 @@ class DogPark implements DogParkGame {
         if ((this as any).isCurrentPlayerActive() && args.scoutedDogCards && args.scoutedDogCards.length > 0) {
             this.dogField.setDogSelectionModeField('single');
             this.dogField.setDogSelectionModeScout('single');
+            this.roundTracker.setScoutFocus();
         }
     }
 
@@ -337,6 +339,7 @@ class DogPark implements DogParkGame {
         if ((this as any).isCurrentPlayerActive()) {
             this.playerArea.setSelectionModeForKennel('none', this.getPlayerId());
             this.dogField.setDogSelectionModeField('none');
+            this.roundTracker.unsetFocus();
         }
     }
 
@@ -344,6 +347,7 @@ class DogPark implements DogParkGame {
         if ((this as any).isCurrentPlayerActive()) {
             this.dogField.setDogSelectionModeScout('none');
             this.dogField.setDogSelectionModeField('none');
+            this.roundTracker.unsetFocus();
         }
     }
 

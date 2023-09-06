@@ -45,13 +45,26 @@ class RoundTracker {
         }
     }
 
-    public setFocusToField() {
+    public setScoutFocus() {
+        this.resetFocus();
         $('dp-game-board-field-wrapper').style.order = 1;
+        $('dp-game-board-park-wrapper').style.order = 2;
+        $('dp-own-player-area').style.order = 3;
     }
 
-    public removeFocusToField() {
-        $('dp-game-board-field-wrapper').style.order = 12;
+    public setSwapFocus() {
+        this.resetFocus();
+        $('dp-own-player-area').style.order = 1;
+        $('dp-game-board-field-wrapper').style.order = 2;
+        $('dp-game-board-park-wrapper').style.order = 3;
     }
+
+    public unsetFocus() {
+        this.resetFocus();
+        this.setFocus(this.toPhase(Number($(RoundTracker.elementId).dataset.phase)));
+    }
+
+
 
     private toPhaseId(phase: string) {
         switch (phase) {
@@ -65,6 +78,18 @@ class RoundTracker {
             case 'PHASE_HOME_TIME':
                 return 4;
         }
+    }
 
+    private toPhase(phaseId: number) {
+        switch (phaseId) {
+            case 1:
+                return 'PHASE_RECRUITMENT_1';
+            case 2:
+                return 'PHASE_SELECTION';
+            case 3:
+                return 'PHASE_WALKING';
+            case 4:
+                return 'PHASE_HOME_TIME';
+        }
     }
 }

@@ -346,7 +346,18 @@
   justify-content: center;
   flex-wrap: wrap;
   gap: 10px;
+  .player-table-resources {
+    position: absolute;
+    right: 10px;
+    display: flex;
+    .bgabutton {
+      margin-top: 0;
+      margin-bottom: 0;
+      margin-left: 5px;
+    }
+  }
   .dp-player-area {
+    position: relative;
     gap: 10px;
     display: flex;
     flex-direction: column;
@@ -439,7 +450,7 @@
     .dp-final-scoring-pad-tiebreaker-explanation {
       font-family: cursive;
       text-align: center;
-      font-size: 13px;
+      font-size: 12px;
     }
   }
 }

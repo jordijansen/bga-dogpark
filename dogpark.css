@@ -847,7 +847,18 @@ body > .card {
   flex-wrap: wrap;
   gap: 10px;
 }
+#dp-player-areas .player-table-resources, #dp-own-player-area .player-table-resources {
+  position: absolute;
+  right: 10px;
+  display: flex;
+}
+#dp-player-areas .player-table-resources .bgabutton, #dp-own-player-area .player-table-resources .bgabutton {
+  margin-top: 0;
+  margin-bottom: 0;
+  margin-left: 5px;
+}
 #dp-player-areas .dp-player-area, #dp-own-player-area .dp-player-area {
+  position: relative;
   gap: 10px;
   display: flex;
   flex-direction: column;
@@ -937,7 +948,7 @@ body > .card {
 #dp-final-scoring-pad-wrapper #dp-final-scoring-pad .dp-final-scoring-pad-tiebreaker-explanation {
   font-family: cursive;
   text-align: center;
-  font-size: 13px;
+  font-size: 12px;
 }
 
 .dp-token {

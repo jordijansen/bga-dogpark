@@ -62,6 +62,7 @@ trait StateTrait
 
         $firstPlayer = current($this->playerManager->getPlayerIdsInTurnOrder());
         $playerId = intval($firstPlayer['player_id']);
+        $this->giveExtraTime($playerId);
         $this->gamestate->changeActivePlayer($playerId);
         $this->gamestate->nextState("recruitmentOffer");
     }
@@ -78,6 +79,7 @@ trait StateTrait
             $this->gamestate->nextState("resolveOffers");
         } else {
             $this->activeNextPlayer();
+            $this->giveExtraTime($this->getActivePlayerId());
             $this->gamestate->nextState("nextPlayer");
         }
     }
@@ -151,6 +153,7 @@ trait StateTrait
                         $playerId = intval($player['player_id']);
                         if ($walker->typeArg == $playerId) {
                             $this->gamestate->changeActivePlayer($playerId);
+                            $this->giveExtraTime($playerId);
                             $this->gamestate->nextState("nextPlayer");
                             return;
                         }
@@ -162,6 +165,7 @@ trait StateTrait
                     $playerId = intval($player['player_id']);
                     if ($this->playerManager->getPlayerOfferValue($playerId) == 0) {
                         $this->playerManager->updatePlayerOfferValue($playerId, null);
+                        $this->giveExtraTime($playerId);
                         $this->gamestate->changeActivePlayer($playerId);
                         $this->gamestate->nextState("nextPlayer");
                         return;
@@ -190,6 +194,7 @@ trait StateTrait
             foreach ($playerIds as $playerId) {
                 $this->setGlobalVariable(GAIN_RESOURCES_NR_OF_RESOURCES .$playerId, 1);
                 $this->setGlobalVariable(GAIN_RESOURCES_RESOURCE_OPTIONS .$playerId, [RESOURCE_STICK, RESOURCE_BALL, RESOURCE_TREAT, RESOURCE_TOY]);
+                $this->giveExtraTime($playerId);
             }
 
             $this->setGlobalVariable(STATE_AFTER_GAIN_RESOURCES, ST_RECRUITMENT_END);
@@ -249,6 +254,11 @@ trait StateTrait
     {
         $this->gamestate->setAllPlayersMultiactive();
 
+        foreach ($this->playerManager->getPlayerIdsInTurnOrder() as $orderNo => $player) {
+            $playerId = intval($player['player_id']);
+            $this->giveExtraTime($playerId);
+        }
+
         //this is needed when starting private parallel states; players will be transitioned to initialprivate state defined in master state
         $this->gamestate->initializePrivateStateForAllActivePlayers();
     }
@@ -304,6 +314,7 @@ trait StateTrait
 
         $nextPlayerId = current($playersWithDogsOnLead);
         if (sizeof($playersWithDogsOnLead) > 0) {
+            $this->giveExtraTime($nextPlayerId);
             $this->gamestate->changeActivePlayer($nextPlayerId);
             $this->gamestate->nextState("playerTurn");
         } else {

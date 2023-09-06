@@ -55,8 +55,9 @@ class PlayerArea {
         }
     }
 
-    public moveObjectiveToPlayer(playerId: number, objectiveCard: Card) {
+    public moveObjectiveToPlayer(playerId: number, objectiveCard: ObjectiveCard) {
         if (objectiveCard) {
+            dojo.connect($('player-table-objective-button'), 'onclick', (event) => this.game.helpDialogManager.showObjectiveHelpDialog(event, objectiveCard))
             return this.playerObjective[playerId].addCard(objectiveCard);
         }
         return Promise.resolve(true);
@@ -158,6 +159,10 @@ class PlayerArea {
 
     private createPlayerArea(player: DogParkPlayer) {
         return `<div id="player-table-${player.id}" class="whiteblock dp-player-area" style="background-color: #${player.color};">
+                    <div id="player-table-${player.id}-resources" class="player-table-resources">
+                        ${['ball', 'stick', 'treat', 'toy'].map(resource => `<span><span class="dp-token-token small" data-type="${resource}"></span><span id="player-table-${resource}-counter-${player.id}" style="vertical-align: middle; padding: 0 5px;"></span></span>`).join('')}
+                        ${ this.game.getPlayerId() == Number(player.id) ? `<a id="player-table-objective-button" class="bgabutton bgabutton_gray">${_('Objective')}</a>` : ''}
+                    </div>
                     <div class="label-wrapper">
                         <h2 style="color: #${player.color};">${player.name}</h2>
                     </div>
