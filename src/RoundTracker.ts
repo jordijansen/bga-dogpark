@@ -24,6 +24,7 @@ class RoundTracker {
         $('dp-game-board-park-wrapper').style.order = 10;
         $('dp-game-board-field-wrapper').style.order = 11;
         $('dp-own-player-area').style.order = 12;
+        $('dp-game-board-field-scout-wrapper').style.order = 13;
 
     }
 
@@ -47,9 +48,10 @@ class RoundTracker {
 
     public setScoutFocus() {
         this.resetFocus();
-        $('dp-game-board-field-wrapper').style.order = 1;
-        $('dp-game-board-park-wrapper').style.order = 2;
-        $('dp-own-player-area').style.order = 3;
+        $('dp-game-board-field-scout-wrapper').style.order = 1;
+        $('dp-game-board-field-wrapper').style.order = 2;
+        $('dp-game-board-park-wrapper').style.order = 3;
+        $('dp-own-player-area').style.order = 4;
     }
 
     public setSwapFocus() {

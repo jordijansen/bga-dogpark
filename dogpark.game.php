@@ -233,6 +233,8 @@ class DogPark extends Table
 
             ];
         }
+        $result['discardPile'] = DogCard::fromArray($this->dogCards->getCardsInLocation(LOCATION_DISCARD));
+
 
         $result['scoreBreakdown'] = $this->getGlobalVariable(FINAL_SCORING_BREAKDOWN);
 

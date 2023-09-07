@@ -1,7 +1,7 @@
 class DogField {
     private dogStocks: {[slotId: number]: LineStock<DogCard>} = {}
     private walkerStocks: {[slotId: number]: LineStock<DogWalker>} = {}
-    private scoutedDogStock: LineStock<DogCard>;
+    public scoutedDogStock: LineStock<DogCard>;
     constructor(private game: DogParkGame) {}
 
     public setUp(gameData: DogParkGameData) {
@@ -79,7 +79,7 @@ class DogField {
     public discardDogFromField(fieldDog: DogCard) {
         for (const slotId in this.dogStocks) {
             if (this.dogStocks[slotId].contains(fieldDog)) {
-                this.dogStocks[slotId].removeCard(fieldDog);
+                this.game.dogCardManager.discardPile.addCard(fieldDog);
             }
         }
     }

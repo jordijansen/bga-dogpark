@@ -348,6 +348,7 @@ trait ActionTrait
         $this->actionManager->clear($playerId);
         $this->commandManager->clearCommands();
 
+        $this->deleteGlobalVariable(SCOUTED_CARDS);
         $this->setGlobalVariable(LAST_WALKED_WALKER_ID, $this->playerManager->getWalkerId($playerId));
 
         $this->gamestate->nextState("");

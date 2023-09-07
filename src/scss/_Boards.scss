@@ -11,7 +11,7 @@
 #dp-game-board-wrapper {
   display: flex;
   justify-content: center;
-  gap: 8px;
+  gap: 3px;
 
   #dp-game-board-main {
     width: 1000px;
@@ -54,6 +54,12 @@
       }
     }
 
+    #dp-game-board-field-scout-wrapper {
+      margin-bottom: 0;
+      margin-top: 0;
+      display: none;
+    }
+
     #dp-game-board-park-wrapper {
       position: relative;
 
@@ -61,11 +67,6 @@
         position: absolute;
         top: 20px;
         left: 20px;
-      }
-
-      #dp-game-board-field-scout-wrapper {
-        margin-bottom: 0;
-        display: none;
       }
 
       #dp-game-board-park {
@@ -297,7 +298,8 @@
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
-  gap: 10px;
+  gap: 5px;
+  margin-top: 5px;
   .player-table-resources {
     position: absolute;
     right: 10px;
@@ -313,6 +315,8 @@
     gap: 10px;
     display: flex;
     flex-direction: column;
+    margin-bottom: 0;
+    margin-top: 0;
     
     .dp-player-area-section-wrapper {
       display: flex;
@@ -450,5 +454,16 @@
         height: $mini-size-landscape-height;
       }
     }
+  }
+}
+
+#dp-last-row {
+  height: $blackjack-size-height + 50px;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+
+  #dp-dog-discard-pile {
+    margin-top: 40px;
   }
 }

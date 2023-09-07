@@ -5,6 +5,7 @@ class DogCardManager extends CardManager<DogCard> {
 
     public cardTokenVoidStocks: {[id: number]: VoidStock<Token>} = {}
     public cardTokenStocks: {[id: number]: LineStock<Token>} = {}
+    public discardPile: AllVisibleDeck<DogCard>;
 
     constructor(private dogParkGame: DogParkGame) {
         super(dogParkGame, {
@@ -44,6 +45,15 @@ class DogCardManager extends CardManager<DogCard> {
             cardWidth: DogCardManager.CARD_WIDTH,
             cardHeight: DogCardManager.CARD_HEIGHT,
         })
+    }
+
+    public setUp(data: DogParkGameData) {
+        dojo.place(`<div class="label-wrapper" style="margin-bottom: 16px;">
+                  <h2> ${_('Discard Pile')}</h2>
+                </div>
+                <div id="dp-dog-discard-pile"></div>`, $('dp-last-row'))
+        this.discardPile = new AllVisibleDeck<DogCard>(this, $("dp-dog-discard-pile"), {});
+        this.discardPile.addCards(data.discardPile.filter(dogCard => !data.field.scoutedDogs.map(dog => dog.id).includes(dogCard.id)));
     }
 
     public addResourceToDog(dogId: number, type: Token['type']) {

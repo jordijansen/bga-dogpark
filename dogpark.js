@@ -2504,6 +2504,11 @@ var DogCardManager = /** @class */ (function (_super) {
         _this.cardTokenStocks = {};
         return _this;
     }
+    DogCardManager.prototype.setUp = function (data) {
+        dojo.place("<div class=\"label-wrapper\" style=\"margin-bottom: 16px;\">\n                  <h2> ".concat(_('Discard Pile'), "</h2>\n                </div>\n                <div id=\"dp-dog-discard-pile\"></div>"), $('dp-last-row'));
+        this.discardPile = new AllVisibleDeck(this, $("dp-dog-discard-pile"), {});
+        this.discardPile.addCards(data.discardPile.filter(function (dogCard) { return !data.field.scoutedDogs.map(function (dog) { return dog.id; }).includes(dogCard.id); }));
+    };
     DogCardManager.prototype.addResourceToDog = function (dogId, type) {
         var token = this.dogParkGame.tokenManager.createToken(type);
         return this.cardTokenStocks[dogId].addCard(token);
@@ -2549,7 +2554,7 @@ var BreedExpertAwardManager = /** @class */ (function (_super) {
     }
     BreedExpertAwardManager.prototype.setUp = function (gameData) {
         var collapsed = Boolean(window.localStorage.getItem(BreedExpertAwardManager.SIDE_BAR_COLLAPSED_LOCAL_STORAGE_KEY));
-        dojo.place(" <div id=\"dp-game-board-side\" class=\"dp-board ".concat(collapsed ? 'hide-side-bar' : '', "\">\n            <div id=\"dp-game-board-breed-expert-awards\" class=\"dp-board\">\n                <div id=\"dp-game-board-breed-expert-awards-stock\">\n\n                </div>\n            </div>\n            <div id=\"dp-game-board-side-toggle-button\">").concat(_('Breed Expert'), "</div>\n        </div>"), $('pagesection_gameview'));
+        dojo.place(" <div id=\"dp-game-board-side\" class=\"dp-board ".concat(collapsed ? 'hide-side-bar' : '', "\">\n            <div id=\"dp-game-board-breed-expert-awards\" class=\"dp-board\">\n                <div id=\"dp-game-board-breed-expert-awards-stock\">\n\n                </div>\n            </div>\n            <div id=\"dp-game-board-side-toggle-button\"><i class=\"fa fa-trophy\" aria-hidden=\"true\"></i> ").concat(_('Breed Expert'), " <i class=\"fa fa-trophy\" aria-hidden=\"true\"></i></div>\n        </div>"), $('pagesection_gameview'));
         dojo.connect($('dp-game-board-side-toggle-button'), 'onclick', function () {
             dojo.toggleClass('dp-game-board-side', 'hide-side-bar');
             window.localStorage.setItem(BreedExpertAwardManager.SIDE_BAR_COLLAPSED_LOCAL_STORAGE_KEY, dojo.hasClass('dp-game-board-side', 'hide-side-bar') + '');
@@ -3309,7 +3314,7 @@ var DogField = /** @class */ (function () {
     DogField.prototype.discardDogFromField = function (fieldDog) {
         for (var slotId in this.dogStocks) {
             if (this.dogStocks[slotId].contains(fieldDog)) {
-                this.dogStocks[slotId].removeCard(fieldDog);
+                this.game.dogCardManager.discardPile.addCard(fieldDog);
             }
         }
     };
@@ -3715,6 +3720,7 @@ var RoundTracker = /** @class */ (function () {
         $('dp-game-board-park-wrapper').style.order = 10;
         $('dp-game-board-field-wrapper').style.order = 11;
         $('dp-own-player-area').style.order = 12;
+        $('dp-game-board-field-scout-wrapper').style.order = 13;
     };
     RoundTracker.prototype.setFocus = function (phase) {
         switch (phase) {
@@ -3734,9 +3740,10 @@ var RoundTracker = /** @class */ (function () {
     };
     RoundTracker.prototype.setScoutFocus = function () {
         this.resetFocus();
-        $('dp-game-board-field-wrapper').style.order = 1;
-        $('dp-game-board-park-wrapper').style.order = 2;
-        $('dp-own-player-area').style.order = 3;
+        $('dp-game-board-field-scout-wrapper').style.order = 1;
+        $('dp-game-board-field-wrapper').style.order = 2;
+        $('dp-game-board-park-wrapper').style.order = 3;
+        $('dp-own-player-area').style.order = 4;
     };
     RoundTracker.prototype.setSwapFocus = function () {
         this.resetFocus();
@@ -3823,6 +3830,7 @@ var DogPark = /** @class */ (function () {
         this.breedExpertAwardManager.setUp(gamedatas);
         this.forecastManager.setUp(gamedatas);
         this.finalScoringPad.setUp(gamedatas);
+        this.dogCardManager.setUp(gamedatas);
         this.zoomManager = new AutoZoomManager('dp-game', 'dp-zoom-level');
         this.animationManager = new AnimationManager(this, { duration: ANIMATION_MS });
         this.jumpToManager = new JumpToManager(this, {
@@ -4044,6 +4052,7 @@ var DogPark = /** @class */ (function () {
         }
     };
     DogPark.prototype.leavingActionScout = function () {
+        this.dogCardManager.discardPile.addCards(this.dogField.scoutedDogStock.getCards());
         if (this.isCurrentPlayerActive()) {
             this.dogField.setDogSelectionModeScout('none');
             this.dogField.setDogSelectionModeField('none');

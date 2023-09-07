@@ -95,6 +95,7 @@ class DogPark implements DogParkGame {
         this.breedExpertAwardManager.setUp(gamedatas);
         this.forecastManager.setUp(gamedatas);
         this.finalScoringPad.setUp(gamedatas);
+        this.dogCardManager.setUp(gamedatas);
 
         this.zoomManager = new AutoZoomManager('dp-game', 'dp-zoom-level')
         this.animationManager = new AnimationManager(this, {duration: ANIMATION_MS})
@@ -342,6 +343,7 @@ class DogPark implements DogParkGame {
     }
 
     private leavingActionScout() {
+        this.dogCardManager.discardPile.addCards(this.dogField.scoutedDogStock.getCards())
         if ((this as any).isCurrentPlayerActive()) {
             this.dogField.setDogSelectionModeScout('none');
             this.dogField.setDogSelectionModeField('none');

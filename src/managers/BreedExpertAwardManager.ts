@@ -31,7 +31,7 @@ class BreedExpertAwardManager extends CardManager<Card> {
 
                 </div>
             </div>
-            <div id="dp-game-board-side-toggle-button">${_('Breed Expert')}</div>
+            <div id="dp-game-board-side-toggle-button"><i class="fa fa-trophy" aria-hidden="true"></i> ${_('Breed Expert')} <i class="fa fa-trophy" aria-hidden="true"></i></div>
         </div>`, $('pagesection_gameview'))
 
         dojo.connect($('dp-game-board-side-toggle-button'), 'onclick', () => {
