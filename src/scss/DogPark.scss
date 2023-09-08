@@ -89,10 +89,9 @@ html, .mode_3d #game_play_area_background {
 
     .dp-player-token-wrapper {
       display: flex;
-      justify-content: center;
+      justify-content: space-evenly;
       margin-bottom: 8px;
-      gap: 8px;
-      align-items: center;
+      align-items: end;
     }
 
     .dp-player-objective-card {

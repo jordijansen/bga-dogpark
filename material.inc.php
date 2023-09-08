@@ -110,24 +110,24 @@ $this->PARK_LOCATIONS = [
 
 $this->LOCATION_BONUS_CARDS = [
     LOCATION_BONUS_PLENTIFUL => [
-        1 => [],
-        2 => [],
-        3 => [],
-        4 => [],
-        5 => [],
-        6 => [],
-        7 => [],
-        8 => [],
+        1 => [5 => [RESOURCE_STICK], 6 => [REPUTATION], 9 => [SWAP]],
+        2 => [6 => [REPUTATION], 8 => [RESOURCE_BALL], 12 => [REPUTATION]],
+        3 => [6 => [REPUTATION], 7 => [RESOURCE_BALL], 12 => [RESOURCE_STICK]],
+        4 => [5 => [RESOURCE_BALL], 6 => [SWAP]],
+        5 => [6 => [SWAP], 8 => [RESOURCE_STICK]],
+        6 => [6 => [SWAP], 11 => [RESOURCE_STICK], 14 => [RESOURCE_BALL]],
+        7 => [6 => [RESOURCE_TREAT], 11 => [REPUTATION, REPUTATION]],
+        8 => [6 => [RESOURCE_TOY], 10 => [SCOUT]],
     ],
     LOCATION_BONUS_REROUTED => [
-        9 => [5 => [BLOCK], 6 => [REPUTATION], 9 => [SWAP]],
+        9 =>  [5 => [BLOCK], 6 => [REPUTATION], 9 => [SWAP]],
         10 => [6 => [REPUTATION], 8 => [BLOCK], 12 => [REPUTATION]],
         11 => [6 => [BLOCK], 7 => [RESOURCE_BALL], 12 => [RESOURCE_STICK]],
         12 => [5 => [RESOURCE_BALL], 6 => [SWAP], 13 => [BLOCK]],
         13 => [6 => [SWAP], 8 => [RESOURCE_STICK], 15 => [BLOCK]],
         14 => [6 => [SWAP], 11 => [RESOURCE_STICK], 14 => [RESOURCE_BALL]],
         15 => [6 => [RESOURCE_TREAT], 11 => [REPUTATION], 12 => [BLOCK]],
-        16 => [6 => [RESOURCE_TOY], 10 => [SCOUT], 14 => [RESOURCE_TREAT]],
+        16 => [6 => [RESOURCE_TOY], 10 => [SCOUT], 14 => [BLOCK]],
     ]
 ];
 

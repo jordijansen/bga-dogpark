@@ -41,7 +41,7 @@ class DogPark implements DogParkGame {
     // Modules
     private dogField: DogField;
     public dogWalkPark: DogWalkPark;
-    private playerArea: PlayerArea;
+    public playerArea: PlayerArea;
     private roundTracker: RoundTracker;
     private playerResources: PlayerResources;
     private jumpToManager: JumpToManager;
@@ -432,10 +432,10 @@ class DogPark implements DogParkGame {
                         (this as any).addActionButton(`payReputationDeny`, _('Skip location bonuses'), () => this.additionalAction(additionalAction), null, null, buttonColor);
                         break;
                     case 'WALKING_GAIN_LOCATION_BONUS':
-                        (this as any).addActionButton(`gainLocationBonus${additionalAction.id}`, dojo.string.substitute(_('Gain location bonus ${resourceType}'), { resourceType: this.tokenIcon(additionalAction.additionalArgs['bonusType']) }), () => this.additionalAction(additionalAction), null, null, buttonColor);
+                        (this as any).addActionButton(`gainLocationBonus${additionalAction.id}`, dojo.string.substitute(_('Gain location bonus ${resourceType}'), { resourceType: this.tokenIcons(additionalAction.additionalArgs['bonusType'], additionalAction.additionalArgs['amount']) }), () => this.additionalAction(additionalAction), null, null, buttonColor);
                          break;
                     case 'WALKING_GAIN_LEAVING_THE_PARK_BONUS':
-                        (this as any).addActionButton(`gainLeavingPark${additionalAction.id}`, dojo.string.substitute(_('Gain leaving the park bonus ${resourceType}'), { resourceType: this.tokenIcons(additionalAction.additionalArgs['bonusType'], additionalAction.additionalArgs['amount']) }), () => this.additionalAction(additionalAction), null, null, buttonColor);
+                        (this as any).addActionButton(`gainLeavingPark${additionalAction.id}`, dojo.string.substitute(_('Gain leaving the park bonus ${resourceType}'), { resourceType: this.tokenIcons(additionalAction.additionalArgs['bonusType'], additionalAction.additionalArgs['amount'], additionalAction.additionalArgs['swapIncludesWalkedToken'] ? ['walked'] : []) }), () => this.additionalAction(additionalAction), null, null, buttonColor);
                         break;
                     case 'USE_DOG_ABILITY':
                         (this as any).addActionButton(`useDogAbility${additionalAction.id}`, dojo.string.substitute('<b>${dogName}</b>: ${abilityTitle}', { dogName: _(additionalAction.additionalArgs['dogName']), abilityTitle: _(additionalAction.additionalArgs['abilityTitle']) }), () => this.additionalAction(additionalAction), null, null, buttonColor);
@@ -686,7 +686,7 @@ class DogPark implements DogParkGame {
     private notif_dogRecruited(args: NotifDogRecruited) {
         this.setScore(args.playerId, args.score);
         this.playerArea.moveWalkerToPlayer(args.playerId, args.walker)
-        return this.playerArea.moveDogsToKennel(args.playerId, [args.dog])
+        return this.playerArea.moveDogsToKennel(args.playerId, [args.dog]).then(() => this.breedExpertAwardManager.updateBreedExpertAwardStandings())
     }
 
     private notif_dogOfferPlaced(args: NotifDogOfferPlaced) {
@@ -733,19 +733,20 @@ class DogPark implements DogParkGame {
     }
 
     private notif_playerGainsLocationBonusResource(args: NotifPlayerGainsLocationBonusResource) {
-        if (args.resource === 'reputation') {
+        if (args.resources.includes('reputation')) {
             this.setScore(args.playerId, args.score);
-        } else if (['ball', 'stick', 'treat', 'toy'].includes(args.resource)){
-            return this.playerResources.gainResourceFromLocation(args.playerId, args.locationId, args.resource);
+        } else {
+            return Promise.all(args.resources.filter(resource => ['ball', 'stick', 'treat', 'toy'].includes(resource))
+                .map(resource => this.playerResources.gainResourceFromLocation(args.playerId, args.locationId, resource)));
         }
         return Promise.resolve();
     }
 
     private async notif_undoPlayerGainsLocationBonusResource(args: NotifPlayerGainsLocationBonusResource) {
-        if (args.resource === 'reputation') {
+        if (args.resources.includes('reputation')) {
             this.setScore(args.playerId, args.score);
-        } else if (['ball', 'stick', 'treat', 'toy'].includes(args.resource)){
-            await this.playerResources.payResources(args.playerId, [args.resource]);
+        } else {
+            await this.playerResources.payResources(args.playerId, args.resources.filter(resource => ['ball', 'stick', 'treat', 'toy'].includes(resource)));
         }
     }
 
@@ -807,7 +808,7 @@ class DogPark implements DogParkGame {
         this.dogCardManager.removeAllResourcesFromDog(args.kennelDog.id);
         this.dogCardManager.addInitialResourcesToDog(args.fieldDog);
         this.dogField.addDogCardsToField([args.kennelDog]);
-        return this.playerArea.moveDogsToKennel(args.playerId,[args.fieldDog]);
+        return this.playerArea.moveDogsToKennel(args.playerId,[args.fieldDog]).then(() => this.breedExpertAwardManager.updateBreedExpertAwardStandings());
     }
 
     private notif_playerScoutReplaces(args: NotifPlayerScoutReplaces) {
@@ -889,12 +890,19 @@ class DogPark implements DogParkGame {
         return `<span class="dp-token-token small" data-type="${type}"></span>`
     }
 
-    public tokenIcons(type: string, nrOfIcons: number) {
+    public tokenIcons(type: string, nrOfIcons: number, additionalIcons?: string[]) {
         let tokens = [];
         for (let i = 0; i < nrOfIcons; i++) {
             tokens.push(this.tokenIcon(type));
         }
+        if (additionalIcons && additionalIcons.length > 0) {
+            additionalIcons.forEach(additionalIcon => tokens.push(this.tokenIcon(additionalIcon)))
+        }
         return tokens.join(' ');
+    }
+
+    public walkerIcon(color: string) {
+        return `<span class="dp-dog-walker" data-color="#${color}"></span>`
     }
 
     public updatePlayerOrdering() {

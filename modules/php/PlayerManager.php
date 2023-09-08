@@ -11,7 +11,14 @@ class PlayerManager extends APP_DbObject
 {
 
     public function setInitialResources() {
-        self::DbQuery("UPDATE extra_player SET player_sticks = 2, player_balls = 2, player_toys = 1, player_treats = 1");
+        $toy = 1;
+        $treat = 1;
+        if (DogPark::$instance->getGameStateValue(VARIANT_GENTLE_WALK_OPTION) == VARIANT_GENTLE_WALK_OPTION_INCLUDED) {
+            $toy = 2;
+            $treat = 2;
+        }
+
+        self::DbQuery("UPDATE extra_player SET player_sticks = 2, player_balls = 2, player_toys = $toy, player_treats = $treat");
     }
 
     public function setInitialPlayerOder() {

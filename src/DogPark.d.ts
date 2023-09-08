@@ -39,6 +39,7 @@ interface LocationBonus {
 }
 
 interface DogParkGame extends Game {
+    playerArea: PlayerArea;
     helpDialogManager: HelpDialogManager,
     locationBonusCardManager: LocationBonusCardManager;
     dogCardManager: DogCardManager;
@@ -54,6 +55,7 @@ interface DogParkGame extends Game {
     isReadOnly(): boolean;
     setTooltipToClass(className: string, html: string): void;
     formatWithIcons(description: string): string
+    walkerIcon(color: string): string;
 }
 
 interface DogParkPlayer extends Player {
@@ -189,7 +191,7 @@ interface NotifPlayerGainsResources {
 
 interface NotifPlayerGainsLocationBonusResource {
     playerId: number,
-    resource: string,
+    resources: string[],
     locationId: number,
     score: number
 }

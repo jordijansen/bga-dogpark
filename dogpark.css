@@ -951,6 +951,30 @@ body > .card {
 }
 #dp-game-board-side #dp-game-board-breed-expert-awards #dp-game-board-breed-expert-awards-stock .slot {
   height: 142px;
+  position: relative;
+}
+#dp-game-board-side #dp-game-board-breed-expert-awards #dp-game-board-breed-expert-awards-stock .slot .dp-game-board-breed-expert-awards-slot-standings {
+  position: absolute;
+  top: 0;
+  width: 195px;
+  height: 142px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+#dp-game-board-side #dp-game-board-breed-expert-awards #dp-game-board-breed-expert-awards-stock .slot .dp-game-board-breed-expert-awards-slot-standings .dp-game-board-breed-expert-awards-slot-standings-wrapper.not-eligible {
+  display: none;
+}
+#dp-game-board-side #dp-game-board-breed-expert-awards #dp-game-board-breed-expert-awards-stock .slot .dp-game-board-breed-expert-awards-slot-standings .dp-game-board-breed-expert-awards-slot-standings-wrapper .dp-dog-walker {
+  height: 53px;
+  width: 36px;
+  display: flex;
+  justify-content: center;
+  align-items: end;
+}
+#dp-game-board-side #dp-game-board-breed-expert-awards #dp-game-board-breed-expert-awards-stock .slot .dp-game-board-breed-expert-awards-slot-standings .dp-game-board-breed-expert-awards-slot-standings-wrapper .dp-dog-walker h1 {
+  color: white;
+  text-shadow: 2px 2px #000;
 }
 
 #dp-last-row {
@@ -1002,6 +1026,9 @@ body > .card {
 .dp-dog-walker {
   background-image: url("img/dogpark-walkers.png");
   background-size: 500% auto;
+  width: 45px;
+  height: 65px;
+  display: inline-block;
 }
 .dp-dog-walker[data-color="#c45f5f"] {
   background-position: 0% 0;
@@ -2319,10 +2346,9 @@ html .whiteblock, .mode_3d #game_play_area_background .whiteblock {
 }
 #player_boards .player-board .dp-player-token-wrapper {
   display: flex;
-  justify-content: center;
+  justify-content: space-evenly;
   margin-bottom: 8px;
-  gap: 8px;
-  align-items: center;
+  align-items: end;
 }
 #player_boards .player-board .dp-player-objective-card .blackjack-size-landscape {
   width: 230px;

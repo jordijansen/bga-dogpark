@@ -27,4 +27,12 @@ trait DebugTrait
         $result = DogPark::$instance->scoreManager->getScoreBreakDown();
         var_dump(json_encode($result));
     }
+
+    function test()
+    {
+        if ($this->getGameStateValue(VARIANT_GENTLE_WALK_OPTION) == VARIANT_GENTLE_WALK_OPTION_INCLUDED) {
+            var_dump(LOCATION_BONUS_PLENTIFUL);
+        }
+        return null;
+    }
 }

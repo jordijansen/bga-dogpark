@@ -257,7 +257,7 @@ trait ActionTrait
                 $this->actionManager->addAction($playerId, new AdditionalAction(WALKING_GAIN_LEAVING_THE_PARK_BONUS, (object) ["bonusType" => REPUTATION, "amount" => 2]));
             } else if ($locationId == 93) {
                 $action1 = new AdditionalAction(WALKING_GAIN_LEAVING_THE_PARK_BONUS, (object) ["bonusType" => REPUTATION, "amount" => 1]);
-                $action2 = new AdditionalAction(WALKING_GAIN_LEAVING_THE_PARK_BONUS, (object) ["bonusType" => SWAP, "leavingTheParkOtherActionId" => $action1->id, "amount" => 1]);
+                $action2 = new AdditionalAction(WALKING_GAIN_LEAVING_THE_PARK_BONUS, (object) ["bonusType" => SWAP, "swapIncludesWalkedToken" => true, "leavingTheParkOtherActionId" => $action1->id, "amount" => 1]);
                 $this->actionManager->addActions($playerId, [$action1, $action2]);
             }
         } else {

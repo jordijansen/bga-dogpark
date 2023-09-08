@@ -42,6 +42,9 @@
 .dp-dog-walker {
   background-image: url('img/dogpark-walkers.png');
   background-size: 500% auto;
+  width: 45px;
+  height: 65px;
+  display: inline-block;
 
   @each $player-color in $player-colors {
     &[data-color="#{$player-color}"] {

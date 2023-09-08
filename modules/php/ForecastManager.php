@@ -10,18 +10,20 @@ class ForecastManager
 
     public function fillForecast()
     {
-        DogPark::$instance->forecastCards->pickCardsForLocation(1, LOCATION_DECK, LOCATION_FORECAST, 1);
-
-        $forecastCardDrawn = $this->getForeCastCardForRound(1);
-        if ($forecastCardDrawn->typeArg == 11) {
-            // Forecast 11 card can not be used in the first round.
-            DogPark::$instance->forecastCards->moveCard($forecastCardDrawn->id, LOCATION_FORECAST, 2);
-            DogPark::$instance->forecastCards->pickCardsForLocation(1, LOCATION_DECK, LOCATION_FORECAST, 1);
-        } else {
-            DogPark::$instance->forecastCards->pickCardsForLocation(1, LOCATION_DECK, LOCATION_FORECAST, 2);
+        $cards = ForecastCard::fromArray(DogPark::$instance->forecastCards->getCardsInLocation(LOCATION_DECK));
+        if (DogPark::$instance->getGameStateValue(VARIANT_PREDICTABLE_FORECAST_OPTION) == VARIANT_PACKED_PARK_OPTION_INCLUDED) {
+            $cards = array_filter($cards, fn($card) => in_array($card->typeArg, [8, 9, 10, 11]));
         }
-        DogPark::$instance->forecastCards->pickCardsForLocation(1, LOCATION_DECK, LOCATION_FORECAST, 3);
-        DogPark::$instance->forecastCards->pickCardsForLocation(1, LOCATION_DECK, LOCATION_FORECAST, 4);
+
+        for ($i = 1; $i <= 4; $i++) {
+            $card = array_shift($cards);
+            if ($i == 1 && $card->typeArg == 11) { // CARD 11 CANT BE PLACED IN SPOT 1
+                $newCard = array_shift($cards);
+                $cards = [$card, ...$cards];
+                $card = $newCard;
+            }
+            DogPark::$instance->forecastCards->moveCard($card->id, LOCATION_FORECAST, $i);
+        }
     }
 
     /**

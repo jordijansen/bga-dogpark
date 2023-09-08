@@ -1,8 +1,8 @@
 class PlayerArea {
 
     private walkerStocks: {[playerId: number]: LineStock<DogWalker>} = {}
-    private kennelStocks: {[playerId: number]: LineStock<DogCard>} = {}
-    private leadStocks: {[playerId: number]: LineStock<DogCard>} = {}
+    public kennelStocks: {[playerId: number]: LineStock<DogCard>} = {}
+    public leadStocks: {[playerId: number]: LineStock<DogCard>} = {}
     private playerDials: {[playerId: number]: DogOfferDial} = {}
     private playerObjective: {[playerId: number]: LineStock<Card>} = {}
 
@@ -33,7 +33,7 @@ class PlayerArea {
             });
 
             const dogWalkerStockId = `dp-walker-rest-area-${player.id}`;
-
+            dojo.place(`<div id="${dogWalkerStockId}"></div>`, $(`dp-player-token-wrapper-${player.id}`))
             this.walkerStocks[Number(player.id)] = new LineStock<DogWalker>(this.game.dogWalkerManager, $(dogWalkerStockId), {center: false})
             this.moveWalkerToPlayer(Number(player.id), player.walker);
 
@@ -52,6 +52,25 @@ class PlayerArea {
             if (player.orderNo === 1) {
                 dojo.place(this.createFirsPlayerMarker(), $(`dp-player-token-wrapper-${player.id}`))
             }
+        }
+
+        for (const autoWalker of gameData.autoWalkers) {
+            dojo.place(`<div id="dp-player-area-${autoWalker.id}" class="whiteblock dp-player-area" style="background-color: #${autoWalker.color};">
+                            <div class="label-wrapper">
+                                <h2 style="color: #${autoWalker.color};">${autoWalker.name}</h2>
+                            </div>
+                            <div class="dp-player-area-section-wrapper">
+                                <div class="label-wrapper vertical">
+                                    <h2 style="color: #${autoWalker.color};">${_('Kennel')}</h2>
+                                </div>
+                                <div id="dp-player-area-${autoWalker.id}-kennel" class="dp-player-area-kennel">
+                                </div>
+                            </div>
+                        </div>`, "dp-player-areas")
+
+            const kennelStockId = `dp-player-area-${autoWalker.id}-kennel`;
+            this.kennelStocks[Number(autoWalker.id)] = new LineStock<DogCard>(this.game.dogCardManager, $(kennelStockId), {center: true})
+            this.moveDogsToKennel(Number(autoWalker.id), autoWalker.kennelDogs);
         }
     }
 
@@ -122,23 +141,10 @@ class PlayerArea {
                                             ${autoWalker.name}                    
                                         </div>
                                         <div class="player_board_content">
-                                            <div id="dp-player-token-wrapper-${autoWalker.id}" class="dp-player-token-wrapper"></div>
+                                            <div id="dp-player-token-wrapper-${autoWalker.id}" class="dp-player-token-wrapper"><div id="dp-walker-rest-area-${autoWalker.id}"></div></div>
                                         </div>
                                     </div>
                                 </div>`, `player_boards`);
-
-        dojo.place(`<div id="dp-player-area-${autoWalker.id}" class="whiteblock dp-player-area" style="background-color: #${autoWalker.color};">
-                            <div class="label-wrapper">
-                                <h2 style="color: #${autoWalker.color};">${autoWalker.name}</h2>
-                            </div>
-                            <div class="dp-player-area-section-wrapper">
-                                <div class="label-wrapper vertical">
-                                    <h2 style="color: #${autoWalker.color};">${_('Kennel')}</h2>
-                                </div>
-                                <div id="dp-player-area-${autoWalker.id}-kennel" class="dp-player-area-kennel">
-                                </div>
-                            </div>
-                        </div>`, "dp-player-areas")
 
         this.playerDials[Number(autoWalker.id)] = new DogOfferDial({
             elementId: `dp-game-board-offer-dial-${autoWalker.id}`,
@@ -149,12 +155,9 @@ class PlayerArea {
         });
 
         const dogWalkerStockId = `dp-walker-rest-area-${autoWalker.id}`;
+        dojo.place(`<div id="${dogWalkerStockId}"></div>`, $(`dp-player-token-wrapper-${autoWalker.id}`))
         this.walkerStocks[Number(autoWalker.id)] = new LineStock<DogWalker>(this.game.dogWalkerManager, $(dogWalkerStockId), {center: false})
         this.moveWalkerToPlayer(autoWalker.id, autoWalker.walker)
-
-        const kennelStockId = `dp-player-area-${autoWalker.id}-kennel`;
-        this.kennelStocks[Number(autoWalker.id)] = new LineStock<DogCard>(this.game.dogCardManager, $(kennelStockId), {center: true})
-        this.moveDogsToKennel(Number(autoWalker.id), autoWalker.kennelDogs);
     }
 
     private createPlayerArea(player: DogParkPlayer) {

@@ -154,7 +154,7 @@ class DogWalkPark extends APP_DbObject
     public function createLocationBonusActions($playerId, $locationId, $originActionId = null) {
         $locationBonuses = $this->getLocationBonuses($locationId);
         $extraLocationBonuses = $this->getExtraLocationBonuses($locationId);
-        DogPark::$instance->actionManager->addActions($playerId, array_map(fn($bonus) => new AdditionalAction(WALKING_GAIN_LOCATION_BONUS, (object) ["bonusType" => $bonus, "extraBonus" => false],in_array($bonus, [SWAP, SCOUT]), $bonus != SCOUT, $originActionId), $locationBonuses));
-        DogPark::$instance->actionManager->addActions($playerId, array_map(fn($bonus) => new AdditionalAction(WALKING_GAIN_LOCATION_BONUS, (object) ["bonusType" => $bonus, "extraBonus" => true], in_array($bonus, [SWAP, SCOUT]), $bonus != SCOUT, $originActionId), $extraLocationBonuses));
+        $bonuses = array_count_values([...$locationBonuses, ...$extraLocationBonuses]);
+        DogPark::$instance->actionManager->addActions($playerId, array_map(fn($bonus, $amount) => new AdditionalAction(WALKING_GAIN_LOCATION_BONUS, (object) ["bonusType" => $bonus, "amount" => $amount],in_array($bonus, [SWAP, SCOUT]), $bonus != SCOUT, $originActionId), array_keys($bonuses), array_values($bonuses)));
     }
 }

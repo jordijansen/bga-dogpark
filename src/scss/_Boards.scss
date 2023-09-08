@@ -452,6 +452,35 @@
 
       .slot {
         height: $mini-size-landscape-height;
+        position: relative;
+        .dp-game-board-breed-expert-awards-slot-standings {
+          position: absolute;
+          top: 0;
+          width: $mini-size-landscape-width;
+          height: $mini-size-landscape-height;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+
+          .dp-game-board-breed-expert-awards-slot-standings-wrapper {
+            &.not-eligible {
+              display: none;
+            }
+
+            .dp-dog-walker {
+              height: 53px;
+              width: 36px;
+              display: flex;
+              justify-content: center;
+              align-items: end;
+
+              h1 {
+                color:white;
+                text-shadow: 2px 2px #000;
+              }
+            }
+          }
+        }
       }
     }
   }

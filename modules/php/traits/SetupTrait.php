@@ -147,7 +147,15 @@ trait SetupTrait
     }
 
     private function determineLocationBonusCardsToUse() {
-        if ($this->getPlayersNumber() === 4) {
+        if ($this->getGameStateValue(VARIANT_PACKED_PARK_OPTION) == VARIANT_PACKED_PARK_OPTION_INCLUDED) {
+            return LOCATION_BONUS_REROUTED;
+        }
+
+        if ($this->getGameStateValue(VARIANT_GENTLE_WALK_OPTION) == VARIANT_GENTLE_WALK_OPTION_INCLUDED) {
+            return LOCATION_BONUS_PLENTIFUL;
+        }
+
+        if ($this->getPlayersNumber() >= 4) {
             return LOCATION_BONUS_PLENTIFUL;
         } else {
             return LOCATION_BONUS_REROUTED;

@@ -49,14 +49,16 @@ class DogOfferDial {
     private createDial() {
         let result = '';
         if (!this.settings.readOnly) {
-            result += `<div id="dp-offer-dial-controls-wrapper"><a id="dp-dial-button-decrease" class="bgabutton bgabutton_blue"><i class="fa fa-minus" aria-hidden="true"></i></a><div class="dp-dial-wrapper">`
+            result += `<div id="dp-offer-dial-controls-wrapper"><a id="dp-dial-button-decrease" class="bgabutton bgabutton_blue"><i class="fa fa-minus" aria-hidden="true"></i></a>`
         }
-        result += `<div id="${this.settings.elementId}" class="dp-dial side-front" data-color="#${this.settings.player.color}" data-value="${this._currentValue}">
-                    <div class="side-front-numbers"></div>
-                    <div class="side-front-overlay"><div id="dp-walker-rest-area-${this.settings.player.id}"></div></div>
-                </div>`
+        result += ` <div class="dp-dial-wrapper">
+                        <div id="${this.settings.elementId}" class="dp-dial side-front" data-color="#${this.settings.player.color}" data-value="${this._currentValue}">
+                            <div class="side-front-numbers"></div>
+                            <div class="side-front-overlay"></div>
+                        </div>
+                    </div>`
         if (!this.settings.readOnly) {
-            result += `</div><a id="dp-dial-button-increase" class="bgabutton bgabutton_blue"><i class="fa fa-plus" aria-hidden="true"></i></a></div>`
+            result += `<a id="dp-dial-button-increase" class="bgabutton bgabutton_blue"><i class="fa fa-plus" aria-hidden="true"></i></a></div>`
             result += `<a id="dp-dial-button-confirm" class="bgabutton bgabutton_blue">${_('Confirm')}</a>`
         }
         return result;

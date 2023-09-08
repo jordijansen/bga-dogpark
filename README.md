@@ -4,14 +4,11 @@
 - Solo Mode
   - Solo Mode Objectives
   - Solo Ratings shown as target
-- Variants & Options
+
+
 
 Feedback:
-Show breed expert awards real-time, number of mini walkers
-Remove scout cards, discard pile at the bottom
 Preference for board positioning, kennel and field position
-Swap + Collar
-Two resource spots one button
 
 
 
@@ -41,6 +38,14 @@ Two resource spots one button
 - Game Progression percentage
 - Stats
 - Breed expert scrolling
+- Remove scout cards, discard pile at the bottom
+- Two resource spots one button
+- Swap + Collar
+- Show breed expert awards real-time, number of mini walkers
+- Variants & Options
+
+
+
 
 
 

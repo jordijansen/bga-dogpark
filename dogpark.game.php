@@ -118,10 +118,12 @@ class DogPark extends Table
         //  the corresponding ID in gameoptions.inc.php.
         // Note: afterwards, you can get/set the global variables with getGameStateValue/setGameStateInitialValue/setGameStateValue
         parent::__construct();
-        
-        self::initGameStateLabels([
 
-        ]);
+        self::initGameStateLabels( array(
+            VARIANT_PACKED_PARK_OPTION => VARIANT_PACKED_PARK_OPTION_ID,
+            VARIANT_GENTLE_WALK_OPTION => VARIANT_GENTLE_WALK_OPTION_ID,
+            VARIANT_PREDICTABLE_FORECAST_OPTION => VARIANT_PREDICTABLE_FORECAST_OPTION_ID,
+        ));
 
         self::$instance = $this;
 
