@@ -30,6 +30,7 @@ const LOCATION_BONUS_REROUTED = 'rerouted';
 
 const OBJECTIVE_EXPERIENCED = 'experienced';
 const OBJECTIVE_STANDARD = 'standard';
+const OBJECTIVE_SOLO = 'solo';
 
 // PHASES
 const PHASE_SET_UP = 'PHASE_SET_UP';

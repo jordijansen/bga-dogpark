@@ -37,6 +37,14 @@ class FinalScoringPad {
     }
 
     public showPad(scoreBreakdown: FinalScoringBreakdown, animate: boolean) {
+        if (Object.keys(scoreBreakdown).length == 1) {
+            const playerScore =  scoreBreakdown[Object.keys(scoreBreakdown)[0]];
+            dojo.place(`<div class="dp-solo-rating dp-board">
+                                <h1>${dojo.string.substitute(_('Solo Rating: ${soloStarRating} <i class="fa fa-star" aria-hidden="true"></i>'), { soloStarRating: playerScore.soloStarRating })}</h1>
+                                ${SoloRatings.getSoloRatingsTable()}
+                             </div>`, $(this.elementId))
+        }
+
         dojo.place(this.createPad(scoreBreakdown, animate), $(this.elementId))
         if (animate) {
             const elementsToReveal = document.getElementById('dp-final-scoring-pad').querySelectorAll('.reveal-score-value') as NodeListOf<HTMLElement>;
@@ -54,6 +62,7 @@ class FinalScoringPad {
                 }, 500);
             })
         }
+
         return Promise.resolve('');
     }
 

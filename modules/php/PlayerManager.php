@@ -77,19 +77,28 @@ class PlayerManager extends APP_DbObject
     }
 
     public function dealObjectiveCardsToPlayers() {
-        $experiencedObjectiveCards = DogPark::$instance->objectiveCards->getCardsOfTypeInLocation(OBJECTIVE_EXPERIENCED, null, LOCATION_DECK);
-        $standardObjectiveCards = DogPark::$instance->objectiveCards->getCardsOfTypeInLocation(OBJECTIVE_STANDARD, null, LOCATION_DECK);
-
-        $players = DogPark::$instance->loadPlayersBasicInfos();
-        foreach ($players as $playerId => $player) {
-            $experiencedObjective = ObjectiveCard::from(array_shift($experiencedObjectiveCards));
-            if ($experiencedObjective->id == 1 && DogPark::$instance->getPlayersNumber() < 4) {
-                // Experienced Objective card should only be used in a 4 player game (or 5 in expansion??)
-                $experiencedObjective = ObjectiveCard::from(array_shift($experiencedObjectiveCards));
+        if (DogPark::$instance->getPlayersNumber() == 1) {
+            $soloObjectiveCards = ObjectiveCard::fromArray(DogPark::$instance->objectiveCards->getCardsOfTypeInLocation(OBJECTIVE_SOLO, null, LOCATION_DECK));
+            $soloObjectiveCardIds = array_map(fn($card) => $card->id, $soloObjectiveCards);
+            $players = DogPark::$instance->loadPlayersBasicInfos();
+            foreach ($players as $playerId => $player) {
+                DogPark::$instance->objectiveCards->moveCards($soloObjectiveCardIds, LOCATION_PLAYER, $playerId);
             }
-            $standardObjective = ObjectiveCard::from(array_shift($standardObjectiveCards));
-            $cardIds = [$experiencedObjective->id, $standardObjective->id];
-            DogPark::$instance->objectiveCards->moveCards($cardIds, LOCATION_PLAYER, $playerId);
+        } else {
+            $experiencedObjectiveCards = DogPark::$instance->objectiveCards->getCardsOfTypeInLocation(OBJECTIVE_EXPERIENCED, null, LOCATION_DECK);
+            $standardObjectiveCards = DogPark::$instance->objectiveCards->getCardsOfTypeInLocation(OBJECTIVE_STANDARD, null, LOCATION_DECK);
+
+            $players = DogPark::$instance->loadPlayersBasicInfos();
+            foreach ($players as $playerId => $player) {
+                $experiencedObjective = ObjectiveCard::from(array_shift($experiencedObjectiveCards));
+                if ($experiencedObjective->id == 1 && DogPark::$instance->getPlayersNumber() < 4) {
+                    // Experienced Objective card should only be used in a 4 player game (or 5 in expansion??)
+                    $experiencedObjective = ObjectiveCard::from(array_shift($experiencedObjectiveCards));
+                }
+                $standardObjective = ObjectiveCard::from(array_shift($standardObjectiveCards));
+                $cardIds = [$experiencedObjective->id, $standardObjective->id];
+                DogPark::$instance->objectiveCards->moveCards($cardIds, LOCATION_PLAYER, $playerId);
+            }
         }
     }
 

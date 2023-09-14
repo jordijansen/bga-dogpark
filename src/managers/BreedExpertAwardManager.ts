@@ -27,12 +27,14 @@ class BreedExpertAwardManager extends CardManager<Card> {
     public setUp(gameData: DogParkGameData) {
         const collapsed = window.localStorage.getItem(BreedExpertAwardManager.SIDE_BAR_COLLAPSED_LOCAL_STORAGE_KEY) === 'true';
         dojo.place(` <div id="dp-game-board-side" class="dp-board ${Boolean(collapsed) ? 'hide-side-bar' : ''}">
-            <div id="dp-game-board-breed-expert-awards" class="dp-board">
-                <div id="dp-game-board-breed-expert-awards-stock">
-
+            <div id="dp-game-board-side-flex-wrapper">
+                <div id="dp-game-board-breed-expert-awards" class="dp-board">
+                    <div id="dp-game-board-breed-expert-awards-stock">
+    
+                    </div>
                 </div>
+                <div id="dp-game-board-side-toggle-button"><i class="fa fa-trophy" aria-hidden="true"></i> ${_('Breed Expert')} <i class="fa fa-trophy" aria-hidden="true"></i></div>
             </div>
-            <div id="dp-game-board-side-toggle-button"><i class="fa fa-trophy" aria-hidden="true"></i> ${_('Breed Expert')} <i class="fa fa-trophy" aria-hidden="true"></i></div>
         </div>`, $('pagesection_gameview'))
 
         dojo.connect($('dp-game-board-side-toggle-button'), 'onclick', () => {

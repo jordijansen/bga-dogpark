@@ -94,6 +94,10 @@ trait UtilsTrait
         return $this->getCollectionFromDB("SELECT * FROM player");
     }
 
+    function getPlayerIds() {
+        return array_keys($this->getCollectionFromDB("SELECT player_id FROM player"));
+    }
+
     function getPlayerNo($playerId) {
         return $this->getUniqueValueFromDB("SELECT player_no FROM player WHERE player_id = $playerId");
     }
@@ -102,8 +106,8 @@ trait UtilsTrait
         return intval($this->getUniqueValueFromDB("SELECT player_score FROM player WHERE player_id = $playerId"));
     }
 
-    function updatePlayerScoreAndAux(int $playerId, int $playerScore, int $playerScoreAux = 0) {
-        if ($playerScore < 0) {
+    function updatePlayerScoreAndAux(int $playerId, int $playerScore, int $playerScoreAux = 0, bool $allowNegative = false) {
+        if ($playerScore < 0 && !$allowNegative) {
             $playerScore = 0;
         }
         $this->DbQuery("UPDATE player SET player_score = ".$playerScore.", player_score_aux = ".$playerScoreAux." WHERE player_id = ". $playerId);

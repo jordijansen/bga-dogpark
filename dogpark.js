@@ -2555,7 +2555,7 @@ var BreedExpertAwardManager = /** @class */ (function (_super) {
     }
     BreedExpertAwardManager.prototype.setUp = function (gameData) {
         var collapsed = window.localStorage.getItem(BreedExpertAwardManager.SIDE_BAR_COLLAPSED_LOCAL_STORAGE_KEY) === 'true';
-        dojo.place(" <div id=\"dp-game-board-side\" class=\"dp-board ".concat(Boolean(collapsed) ? 'hide-side-bar' : '', "\">\n            <div id=\"dp-game-board-breed-expert-awards\" class=\"dp-board\">\n                <div id=\"dp-game-board-breed-expert-awards-stock\">\n\n                </div>\n            </div>\n            <div id=\"dp-game-board-side-toggle-button\"><i class=\"fa fa-trophy\" aria-hidden=\"true\"></i> ").concat(_('Breed Expert'), " <i class=\"fa fa-trophy\" aria-hidden=\"true\"></i></div>\n        </div>"), $('pagesection_gameview'));
+        dojo.place(" <div id=\"dp-game-board-side\" class=\"dp-board ".concat(Boolean(collapsed) ? 'hide-side-bar' : '', "\">\n            <div id=\"dp-game-board-side-flex-wrapper\">\n                <div id=\"dp-game-board-breed-expert-awards\" class=\"dp-board\">\n                    <div id=\"dp-game-board-breed-expert-awards-stock\">\n    \n                    </div>\n                </div>\n                <div id=\"dp-game-board-side-toggle-button\"><i class=\"fa fa-trophy\" aria-hidden=\"true\"></i> ").concat(_('Breed Expert'), " <i class=\"fa fa-trophy\" aria-hidden=\"true\"></i></div>\n            </div>\n        </div>"), $('pagesection_gameview'));
         dojo.connect($('dp-game-board-side-toggle-button'), 'onclick', function () {
             dojo.toggleClass('dp-game-board-side', 'hide-side-bar');
             window.localStorage.setItem(BreedExpertAwardManager.SIDE_BAR_COLLAPSED_LOCAL_STORAGE_KEY, String(dojo.hasClass('dp-game-board-side', 'hide-side-bar')));
@@ -2631,7 +2631,7 @@ var ObjectiveCardManager = /** @class */ (function (_super) {
                 if (_this.isCardVisible(card)) {
                     var helpButtonElement = document.createElement("div");
                     helpButtonElement.classList.add('dp-help-button-wrapper');
-                    helpButtonElement.classList.add('position-top-right');
+                    helpButtonElement.classList.add(card.typeArg >= 20 ? 'position-bottom-right' : 'position-top-right');
                     helpButtonElement.innerHTML = "<i id=\"dp-help-objective-".concat(card.id, "\" class=\"dp-help-button fa fa-question-circle\"  aria-hidden=\"true\"></i>");
                     div.appendChild(helpButtonElement);
                     dojo.connect($("dp-help-objective-".concat(card.id)), 'onclick', function (event) { return _this.dogParkGame.helpDialogManager.showObjectiveHelpDialog(event, card); });
@@ -3017,7 +3017,7 @@ var ChooseObjectives = /** @class */ (function () {
     ChooseObjectives.prototype.enter = function () {
         dojo.place('<div id="dp-choose-objectives-stock"></div>', $(this.elementId));
         if (!this.stock) {
-            this.stock = new LineStock(this.game.objectiveCardManager, $('dp-choose-objectives-stock'), { gap: '25px' });
+            this.stock = new LineStock(this.game.objectiveCardManager, $('dp-choose-objectives-stock'), { gap: '25px', sort: function (a, b) { return a.typeArg - b.typeArg; } });
         }
         var player = this.game.getPlayer(this.game.getPlayerId());
         this.stock.addCards(player.objectives);
@@ -3161,6 +3161,10 @@ var FinalScoringPad = /** @class */ (function () {
         }
     };
     FinalScoringPad.prototype.showPad = function (scoreBreakdown, animate) {
+        if (Object.keys(scoreBreakdown).length == 1) {
+            var playerScore = scoreBreakdown[Object.keys(scoreBreakdown)[0]];
+            dojo.place("<div class=\"dp-solo-rating dp-board\">\n                                <h1>".concat(dojo.string.substitute(_('Solo Rating: ${soloStarRating} <i class="fa fa-star" aria-hidden="true"></i>'), { soloStarRating: playerScore.soloStarRating }), "</h1>\n                                ").concat(SoloRatings.getSoloRatingsTable(), "\n                             </div>"), $(this.elementId));
+        }
         dojo.place(this.createPad(scoreBreakdown, animate), $(this.elementId));
         if (animate) {
             var elementsToReveal_1 = document.getElementById('dp-final-scoring-pad').querySelectorAll('.reveal-score-value');
@@ -3276,6 +3280,24 @@ var GainResources = /** @class */ (function () {
         this.updateUi();
     };
     return GainResources;
+}());
+var SoloRatings = /** @class */ (function () {
+    function SoloRatings(elementId) {
+        this.elementId = elementId;
+        dojo.place("<div id=\"dp-solo-ratings-wrapper\">\n                            <h3>".concat(_('Solo Ratings'), "</h3>\n                            <p>").concat(_('To calculate your rating, add any star value from your objective card to the star value below, depending on your total score.'), "</p>\n                            <table>\n                                <thead><th>").concat(_('Total Score'), "</th><th>").concat(_('Star Value'), "</th></thead>\n                                <tbody>\n                                    <tr><td>&#x2264; 40</td><td>-</td></tr>\n                                    <tr><td>41-47</td><td><i class=\"fa fa-star\" aria-hidden=\"true\"></i></td></tr>\n                                    <tr><td>48-54</td><td><i class=\"fa fa-star\" aria-hidden=\"true\"></i><i class=\"fa fa-star\" aria-hidden=\"true\"></i></td></tr>\n                                    <tr><td>55-61</td><td><i class=\"fa fa-star\" aria-hidden=\"true\"></i><i class=\"fa fa-star\" aria-hidden=\"true\"></i><i class=\"fa fa-star\" aria-hidden=\"true\"></i></td></tr>\n                                    <tr><td>&#x2265; 62</td><td><i class=\"fa fa-star\" aria-hidden=\"true\"></i><i class=\"fa fa-star\" aria-hidden=\"true\"></i><i class=\"fa fa-star\" aria-hidden=\"true\"></i><i class=\"fa fa-star\" aria-hidden=\"true\"></i></td></tr>\n                                </tbody>\n                            </table>\n                            <p><a id=\"dp-solo-ratings-dialog-button\" class=\"bgabutton bgabutton_gray\">").concat(_('Compare Your Rating'), "</a></p>\n                         </div>"), $(elementId));
+        dojo.connect($('dp-solo-ratings-dialog-button'), 'onclick', function (event) {
+            dojo.stopEvent(event);
+            var dialog = new ebg.popindialog();
+            dialog.create('dp-solo-ratings-dialog');
+            dialog.setTitle("".concat(_('Solo Ratings')));
+            dialog.setContent(SoloRatings.getSoloRatingsTable());
+            dialog.show();
+        });
+    }
+    SoloRatings.getSoloRatingsTable = function () {
+        return "      <div id=\"dp-solo-ratings-wrapper\">\n                            <table>\n                                <thead><th>".concat(_('Stars'), "</th><th>").concat(_('Your Rating'), "</th></thead>\n                                <tbody>\n                                    <tr><td>0-1 <i class=\"fa fa-star\" aria-hidden=\"true\"></i></td><td>").concat(_("Let's go again"), "</td></tr>\n                                    <tr><td>2 <i class=\"fa fa-star\" aria-hidden=\"true\"></i></td><td>").concat(_("Better luck next time"), "</td></tr>\n                                    <tr><td>3 <i class=\"fa fa-star\" aria-hidden=\"true\"></i></td><td>").concat(_("More training required"), "</td></tr>\n                                    <tr><td>4 <i class=\"fa fa-star\" aria-hidden=\"true\"></i></td><td>").concat(_("Still an underdog"), "</td></tr>\n                                    <tr><td>5 <i class=\"fa fa-star\" aria-hidden=\"true\"></i></td><td>").concat(_("Middle of the pack"), "</td></tr>\n                                    <tr><td>6 <i class=\"fa fa-star\" aria-hidden=\"true\"></i></td><td>").concat(_("Not to be sniffed at"), "</td></tr>\n                                    <tr><td>7 <i class=\"fa fa-star\" aria-hidden=\"true\"></i></td><td>").concat(_("Rising star"), "</td></tr>\n                                    <tr><td>8 <i class=\"fa fa-star\" aria-hidden=\"true\"></i></td><td>").concat(_("Top dog"), "</td></tr>\n                                    <tr><td>9 <i class=\"fa fa-star\" aria-hidden=\"true\"></i></td><td>").concat(_("Super walker"), "</td></tr>\n                                    <tr><td>10 <i class=\"fa fa-star\" aria-hidden=\"true\"></i></td><td>").concat(_("Best in show"), "</td></tr>\n                                </tbody>\n                            </table>\n                         </div>\n            ");
+    };
+    return SoloRatings;
 }());
 var DogField = /** @class */ (function () {
     function DogField(game) {
@@ -3561,7 +3583,7 @@ var PlayerArea = /** @class */ (function () {
         }));
     };
     PlayerArea.prototype.initAutoWalkers = function (autoWalker) {
-        dojo.place("<div id=\"overall_auto_walker_".concat(autoWalker.id, "_board\" class=\"player-board\" style=\"height: auto;\">\n                                    <div class=\"player_board_inner\">\n                                        <div class=\"player-name\" id=\"player_name_").concat(autoWalker.id, "\" style=\"color: #").concat(autoWalker.color, "\">\n                                            ").concat(autoWalker.name, "                    \n                                        </div>\n                                        <div class=\"player_board_content\">\n                                            <div id=\"dp-player-token-wrapper-").concat(autoWalker.id, "\" class=\"dp-player-token-wrapper\"><div id=\"dp-walker-rest-area-").concat(autoWalker.id, "\"></div></div>\n                                        </div>\n                                    </div>\n                                </div>"), "player_boards");
+        dojo.place("<div id=\"overall_auto_walker_".concat(autoWalker.id, "_board\" class=\"player-board\" style=\"height: auto;\">\n                                    <div class=\"player_board_inner\">\n                                        <div class=\"player-name\" id=\"player_name_").concat(autoWalker.id, "\" style=\"color: #").concat(autoWalker.color, "\">\n                                            ").concat(autoWalker.name, "                    \n                                        </div>\n                                        <div class=\"player_board_content\">\n                                            <div id=\"dp-player-token-wrapper-").concat(autoWalker.id, "\" class=\"dp-player-token-wrapper\"></div>\n                                        </div>\n                                    </div>\n                                </div>"), "player_boards");
         this.playerDials[Number(autoWalker.id)] = new DogOfferDial({
             elementId: "dp-game-board-offer-dial-".concat(autoWalker.id),
             parentId: "dp-player-token-wrapper-".concat(autoWalker.id),
@@ -4654,6 +4676,10 @@ var DogPark = /** @class */ (function () {
         this.gamedatas.autoWalkers.forEach(function (autoWalker) {
             _this.playerArea.initAutoWalkers(autoWalker);
         });
+        if (Object.keys(this.gamedatas.players).length === 1) {
+            dojo.place("<div id=\"dp-solo-ratings-panel\" class=\"player-board\" style=\"height: auto;\"></div>", "player_boards", 'first');
+            new SoloRatings('dp-solo-ratings-panel');
+        }
     };
     DogPark.prototype.formatWithIcons = function (description) {
         var _this = this;

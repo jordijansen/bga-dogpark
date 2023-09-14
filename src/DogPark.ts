@@ -910,6 +910,11 @@ class DogPark implements DogParkGame {
         this.gamedatas.autoWalkers.forEach(autoWalker => {
             this.playerArea.initAutoWalkers(autoWalker);
         });
+
+        if (Object.keys(this.gamedatas.players).length === 1) {
+            dojo.place(`<div id="dp-solo-ratings-panel" class="player-board" style="height: auto;"></div>`, `player_boards`, 'first');
+            new SoloRatings('dp-solo-ratings-panel')
+        }
     }
 
     public formatWithIcons(description) {

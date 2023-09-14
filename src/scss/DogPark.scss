@@ -141,6 +141,14 @@ html, .mode_3d #game_play_area_background {
     }
   }
 
+  &.position-bottom-right {
+    bottom: 5px;
+    right: 5px;
+    .dp-help-button {
+      border-radius: 5px;
+    }
+  }
+
   .dp-help-button {
     height: 35px;
     width: 35px;
@@ -196,3 +204,27 @@ html, .mode_3d #game_play_area_background {
   max-width: 600px;
 }
 
+#dp-solo-ratings-wrapper {
+  text-align: center;
+
+  .fa-star {
+    color: #c6cca1;
+  }
+
+  table {
+    width: 100%;
+    background-color: white;
+  }
+
+  table, td {
+    border: 2px solid black;
+    td {
+      padding: 2px 5px;
+    }
+    th {
+      font-weight: bold;
+      width: 50%;
+      text-align: center;
+    }
+  }
+}

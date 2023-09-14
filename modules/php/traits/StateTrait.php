@@ -610,6 +610,105 @@ trait StateTrait
     // FINAL SCORING
     //////////////////////////////////
     function stFinalScoring() {
+        // Award Breed Expert
+        $breedExpertAwardResults = $this->breedExpertAwardManager->getExpertAwardsWinners();
+        foreach ($breedExpertAwardResults as $playerId => $breedExpertCards) {
+            if (intval($playerId) > 2) {
+                $this->setStat(sizeof($breedExpertCards), PLAYER_BREED_EXPERT_WON, $playerId);
+            }
+            foreach ($breedExpertCards as $breedExpertCard) {
+                $this->notifyAllPlayers('playerWinsBreedExpert', clienttranslate('${player_name} wins ${breed} Breed Expert and gains ${reputation} reputation'),[
+                    'playerId' => $playerId,
+                    'player_name' => $this->getPlayerName($playerId),
+                    'breed' => $breedExpertCard->type,
+                    'reputation' => $breedExpertCard->reputation,
+                ]);
+            }
+        }
+
+        $soloObjectiveAchieved = true;
+        // If this is a solo game, we need to check if the objectives are met
+        if ($this->getPlayersNumber() == 1) {
+            $playerId = current($this->getPlayerIds());
+            $objectiveCard = current(ObjectiveCard::fromArray($this->objectiveCards->getCardsInLocation(LOCATION_SELECTED, $playerId)));
+            $playerDogs = DogCard::fromArray($this->dogCards->getCardsInLocation(LOCATION_PLAYER, $playerId));
+
+            $walkedCount = 0;
+            foreach ($playerDogs as $dog) {
+                $walkedCount = $walkedCount + $dog->resourcesOnCard[WALKED];
+            }
+
+            $resources = $this->playerManager->getResources($playerId);
+            $totalResources = 0;
+            foreach ($resources as $resource => $count) {
+                $totalResources = $totalResources + $count;
+            }
+
+            $breedExpertsAwardsWon = 0;
+            $breedExpertsAwardsWonOutright = 0;
+            if (array_key_exists($playerId, $breedExpertAwardResults)) {
+                $breedExpertsAwardsWon = sizeof($breedExpertAwardResults[$playerId]);
+                $autoWalkers = $this->getAutoWalkers();
+                foreach ($breedExpertAwardResults[$playerId] as $breedExpertCard) {
+                    $wonOutright = true;
+                    foreach ($autoWalkers as $autoWalker) {
+                        foreach ($breedExpertAwardResults[$autoWalker->id] as $autoWalkerBreedExpertCard) {
+                            if ($autoWalkerBreedExpertCard->id == $breedExpertCard->id) {
+                                $wonOutright = false;
+                            }
+                        }
+                    }
+
+                    if ($wonOutright) {
+                        $breedExpertsAwardsWonOutright = $breedExpertsAwardsWonOutright + 1;
+                    }
+                }
+            }
+
+
+            if ($objectiveCard->typeArg == 20) {
+                if ($totalResources < 4) {
+                    $soloObjectiveAchieved = false;
+                }
+                if ($walkedCount < 8) {
+                    $soloObjectiveAchieved = false;
+                }
+                if ($breedExpertsAwardsWon < 3) {
+                    $soloObjectiveAchieved = false;
+                }
+            } else if ($objectiveCard->typeArg == 21) {
+                if ($resources[RESOURCE_STICK] < 1 || $resources[RESOURCE_BALL] < 1 || $resources[RESOURCE_TOY] < 1 || $resources[RESOURCE_TREAT] < 1) {
+                    $soloObjectiveAchieved = false;
+                }
+                if ($walkedCount < 9) {
+                    $soloObjectiveAchieved = false;
+                }
+                if ($breedExpertsAwardsWon < 3 || $breedExpertsAwardsWonOutright < 1) {
+                    $soloObjectiveAchieved = false;
+                }
+            } if ($objectiveCard->typeArg == 22) {
+                if ($totalResources < 8) {
+                    $soloObjectiveAchieved = false;
+                }
+                if ($walkedCount < 9) {
+                    $soloObjectiveAchieved = false;
+                }
+                if ($breedExpertsAwardsWon < 3 || $breedExpertsAwardsWonOutright < 2) {
+                    $soloObjectiveAchieved = false;
+                }
+            } else if ($objectiveCard->typeArg == 23) {
+                if ($resources[RESOURCE_STICK] < 2 || $resources[RESOURCE_BALL] < 2 || $resources[RESOURCE_TOY] < 2 || $resources[RESOURCE_TREAT] < 2) {
+                    $soloObjectiveAchieved = false;
+                }
+                if ($walkedCount < 10) {
+                    $soloObjectiveAchieved = false;
+                }
+                if ($breedExpertsAwardsWon < 3 || $breedExpertsAwardsWonOutright < 3) {
+                    $soloObjectiveAchieved = false;
+                }
+            }
+        }
+
         // Assign resources to dogs
         $playerIdsInOrder = $this->playerManager->getPlayerIdsInTurnOrder();
         foreach ($playerIdsInOrder as $playerOrderNo => $player) {
@@ -654,21 +753,7 @@ trait StateTrait
             }
         }
 
-        // Award Breed Expert
-        $breedExpertAwardResults = $this->breedExpertAwardManager->getExpertAwardsWinners();
-        foreach ($breedExpertAwardResults as $playerId => $breedExpertCards) {
-            if (intval($playerId) > 2) {
-                $this->setStat(sizeof($breedExpertCards), PLAYER_BREED_EXPERT_WON, $playerId);
-            }
-            foreach ($breedExpertCards as $breedExpertCard) {
-                $this->notifyAllPlayers('playerWinsBreedExpert', clienttranslate('${player_name} wins ${breed} Breed Expert and gains ${reputation} reputation'),[
-                    'playerId' => $playerId,
-                    'player_name' => $this->getPlayerName($playerId),
-                    'breed' => $breedExpertCard->type,
-                    'reputation' => $breedExpertCard->reputation,
-                ]);
-            }
-        }
+
 
         if ($this->getPlayersNumber() > 1) {
             // Reveal Objective Cards
@@ -679,21 +764,28 @@ trait StateTrait
             ]);
         }
 
-        $scoreBreakDown = $this->scoreManager->getScoreBreakDown($breedExpertAwardResults);
+        $scoreBreakDown = $this->scoreManager->getScoreBreakDown($breedExpertAwardResults, $soloObjectiveAchieved);
         $this->setGlobalVariable(FINAL_SCORING_BREAKDOWN, $scoreBreakDown);
         $this->notifyAllPlayers('finalScoringRevealed', '',[
             'scoreBreakDown' => $scoreBreakDown,
         ]);
 
         foreach ($scoreBreakDown as $playerId => $scores) {
-            $this->updatePlayerScoreAndAux($playerId, $scores['score'], $scores['scoreAux']);
+            $score = $scores['score'];
+            if ($this->getPlayersNumber() == 1) {
+                if ($soloObjectiveAchieved) {
+                    $scores['soloStarRating'] = $this->scoreManager->getSoloStarValue($playerId, $score);
+                } else {
+                    $score = -$score;
+                }
+            }
+            $this->updatePlayerScoreAndAux($playerId, $score, $scores['scoreAux'], true);
 
             $this->setStat($scores['parkBoardScore'], PLAYER_PARK_BOARD_REPUTATION, $playerId);
             $this->setStat($scores['dogFinalScoringScore'], PLAYER_DOGS_FINAL_SCORING_REPUTATION, $playerId);
             $this->setStat($scores['breedExpertAwardScore'], PLAYER_BREED_EXPERT_REPUTATION, $playerId);
             $this->setStat($scores['objectiveCardScore'], PLAYER_OBJECTIVE_CARD_REPUTATION, $playerId);
             $this->setStat($scores['remainingResourcesScore'], PLAYER_REMAINING_RESOURCES_REPUTATION, $playerId);
-
         }
 
         $this->gamestate->nextState("");

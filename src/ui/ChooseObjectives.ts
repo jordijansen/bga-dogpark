@@ -9,7 +9,7 @@ class ChooseObjectives {
         dojo.place('<div id="dp-choose-objectives-stock"></div>', $(this.elementId))
 
         if (!this.stock) {
-            this.stock = new LineStock<Card>(this.game.objectiveCardManager, $('dp-choose-objectives-stock'), {gap: '25px'});
+            this.stock = new LineStock<Card>(this.game.objectiveCardManager, $('dp-choose-objectives-stock'), {gap: '25px', sort: (a, b) => a.typeArg - b.typeArg});
         }
 
         const player = this.game.getPlayer(this.game.getPlayerId());

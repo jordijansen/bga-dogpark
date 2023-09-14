@@ -141,7 +141,7 @@ class PlayerArea {
                                             ${autoWalker.name}                    
                                         </div>
                                         <div class="player_board_content">
-                                            <div id="dp-player-token-wrapper-${autoWalker.id}" class="dp-player-token-wrapper"><div id="dp-walker-rest-area-${autoWalker.id}"></div></div>
+                                            <div id="dp-player-token-wrapper-${autoWalker.id}" class="dp-player-token-wrapper"></div>
                                         </div>
                                     </div>
                                 </div>`, `player_boards`);

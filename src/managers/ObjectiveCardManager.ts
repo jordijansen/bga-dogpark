@@ -12,7 +12,7 @@ class ObjectiveCardManager extends CardManager<ObjectiveCard> {
                 if (this.isCardVisible(card)) {
                     const helpButtonElement = document.createElement("div");
                     helpButtonElement.classList.add('dp-help-button-wrapper')
-                    helpButtonElement.classList.add('position-top-right')
+                    helpButtonElement.classList.add(card.typeArg >= 20 ? 'position-bottom-right' : 'position-top-right')
                     helpButtonElement.innerHTML = `<i id="dp-help-objective-${card.id}" class="dp-help-button fa fa-question-circle"  aria-hidden="true"></i>`
                     div.appendChild(helpButtonElement);
 

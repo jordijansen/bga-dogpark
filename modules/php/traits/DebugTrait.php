@@ -23,11 +23,6 @@ trait DebugTrait
         }
     }
 
-    function finalScoring() {
-        $result = DogPark::$instance->scoreManager->getScoreBreakDown();
-        var_dump(json_encode($result));
-    }
-
     function test()
     {
         if ($this->getGameStateValue(VARIANT_GENTLE_WALK_OPTION) == VARIANT_GENTLE_WALK_OPTION_INCLUDED) {

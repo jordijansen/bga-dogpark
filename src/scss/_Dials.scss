@@ -1,4 +1,5 @@
 @use "sass:list";
+@use 'sass:math';
 
 @import 'Variables';
 
@@ -16,7 +17,7 @@
 }
 
 .dp-dial-wrapper {
-  height: $offer-dial-size / 2;
+  height: math.div($offer-dial-size, 2);
   overflow: hidden;
   position: relative;
 }

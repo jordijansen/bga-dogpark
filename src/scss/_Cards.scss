@@ -79,23 +79,30 @@
 }
 
 .objective-art {
-  background-image: url("img/dogpark-multiplayer-objectives.jpg");
-  background-size: 400% auto;
 
   &.objective-art-background {
+    background-image: url("img/dogpark-multiplayer-objectives.jpg");
+    background-size: 400% auto;
     background-position: 0 0;
   }
 
   @for $row from 0 through 2 {
     @for $column from 0 through 3 {
       $id: ($row * 4) + ($column + 1) - 1;
-      @if $id > 0 {
+      @if $id > 0 and $id <= 10 {
         &.objective-art-#{$id} {
+          background-image: url("img/dogpark-multiplayer-objectives.jpg");
+          background-size: 400% auto;
           background-position: #{$column * math.div(100%, 3)} #{$row * math.div(100%, 2)};
         }
       }
     }
   }
+
+  &.objective-art-20 { background-image: url("img/dogpark-solo-objectives.jpg"); background-size: 400% auto; background-position: 0 0; }
+  &.objective-art-21 { background-image: url("img/dogpark-solo-objectives.jpg"); background-size: 400% auto; background-position: 33.3333333% 0; }
+  &.objective-art-22 { background-image: url("img/dogpark-solo-objectives.jpg"); background-size: 400% auto; background-position: 66.6666666% 0; }
+  &.objective-art-23 { background-image: url("img/dogpark-solo-objectives.jpg"); background-size: 400% auto; background-position: 100% 0; }
 }
 
 .breed-expert-art {
@@ -224,4 +231,5 @@
     float: right;
     align-items: center;
 }
+
 

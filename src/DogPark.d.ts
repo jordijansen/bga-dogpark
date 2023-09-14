@@ -91,7 +91,8 @@ interface FinalScoringBreakdown {
         parkBoardScore: number,
         remainingResourcesScore: number,
         score: number,
-        scoreAux: number
+        scoreAux: number,
+        soloStarRating: number
     }
 }
 

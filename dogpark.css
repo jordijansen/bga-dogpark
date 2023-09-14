@@ -870,6 +870,23 @@ body > .card {
 #dp-final-scoring-pad-wrapper {
   display: flex;
   justify-content: center;
+  flex-direction: column;
+  align-items: center;
+}
+#dp-final-scoring-pad-wrapper .dp-solo-rating {
+  background-color: white;
+  display: flex;
+  width: 800px;
+  padding: 5px 0;
+  text-align: center;
+  align-items: center;
+  flex-direction: column;
+}
+#dp-final-scoring-pad-wrapper .dp-solo-rating table {
+  width: 400px;
+}
+#dp-final-scoring-pad-wrapper .dp-solo-rating .fa-star {
+  color: #c6cca1;
 }
 #dp-final-scoring-pad-wrapper #dp-final-scoring-pad {
   background-image: url("img/dogpark-score-pad.jpg");
@@ -916,12 +933,22 @@ body > .card {
   top: 150px;
   left: -10px;
   transition: left 0.5s ease-in-out;
-  z-index: 1;
+  height: calc(100% - 150px);
+  overflow-y: scroll;
+  z-index: 11;
+  -ms-overflow-style: none; /* Internet Explorer 10+ */
+  scrollbar-width: none; /* Firefox */
+}
+#dp-game-board-side #dp-game-board-side-flex-wrapper {
   align-items: center;
   display: flex;
+  width: 350px;
+}
+#dp-game-board-side::-webkit-scrollbar {
+  display: none; /* Safari and Chrome */
 }
 #dp-game-board-side.hide-side-bar {
-  left: -327px;
+  left: -322px;
 }
 #dp-game-board-side #dp-game-board-side-toggle-button {
   display: block !important;
@@ -941,12 +968,11 @@ body > .card {
 }
 #dp-game-board-side #dp-game-board-breed-expert-awards {
   width: 322px;
-  height: 1202px;
+  height: 1058px;
   background-image: url("img/dogpark-board-objectives.jpg");
   background-size: cover;
 }
 #dp-game-board-side #dp-game-board-breed-expert-awards #dp-game-board-breed-expert-awards-stock {
-  padding-top: 120px;
   padding-right: 50px;
 }
 #dp-game-board-side #dp-game-board-breed-expert-awards #dp-game-board-breed-expert-awards-stock .slot {
@@ -1108,7 +1134,7 @@ body > .card {
   background-position: 100% 0;
 }
 
-.fa.fa-star {
+.player_score .fa.fa-star {
   vertical-align: bottom;
   background-image: url("img/dogpark-tokens.png");
   background-size: 1100% auto;
@@ -1116,7 +1142,7 @@ body > .card {
   height: 19px;
   background-position: 10% 0;
 }
-.fa.fa-star:before {
+.player_score .fa.fa-star:before {
   content: unset;
 }
 
@@ -1998,45 +2024,80 @@ body > .card {
   background-position: 100% 100%;
 }
 
-.objective-art {
+.objective-art.objective-art-background {
   background-image: url("img/dogpark-multiplayer-objectives.jpg");
   background-size: 400% auto;
-}
-.objective-art.objective-art-background {
   background-position: 0 0;
 }
 .objective-art.objective-art-1 {
+  background-image: url("img/dogpark-multiplayer-objectives.jpg");
+  background-size: 400% auto;
   background-position: 33.3333333333% 0%;
 }
 .objective-art.objective-art-2 {
+  background-image: url("img/dogpark-multiplayer-objectives.jpg");
+  background-size: 400% auto;
   background-position: 66.6666666667% 0%;
 }
 .objective-art.objective-art-3 {
+  background-image: url("img/dogpark-multiplayer-objectives.jpg");
+  background-size: 400% auto;
   background-position: 100% 0%;
 }
 .objective-art.objective-art-4 {
+  background-image: url("img/dogpark-multiplayer-objectives.jpg");
+  background-size: 400% auto;
   background-position: 0% 50%;
 }
 .objective-art.objective-art-5 {
+  background-image: url("img/dogpark-multiplayer-objectives.jpg");
+  background-size: 400% auto;
   background-position: 33.3333333333% 50%;
 }
 .objective-art.objective-art-6 {
+  background-image: url("img/dogpark-multiplayer-objectives.jpg");
+  background-size: 400% auto;
   background-position: 66.6666666667% 50%;
 }
 .objective-art.objective-art-7 {
+  background-image: url("img/dogpark-multiplayer-objectives.jpg");
+  background-size: 400% auto;
   background-position: 100% 50%;
 }
 .objective-art.objective-art-8 {
+  background-image: url("img/dogpark-multiplayer-objectives.jpg");
+  background-size: 400% auto;
   background-position: 0% 100%;
 }
 .objective-art.objective-art-9 {
+  background-image: url("img/dogpark-multiplayer-objectives.jpg");
+  background-size: 400% auto;
   background-position: 33.3333333333% 100%;
 }
 .objective-art.objective-art-10 {
+  background-image: url("img/dogpark-multiplayer-objectives.jpg");
+  background-size: 400% auto;
   background-position: 66.6666666667% 100%;
 }
-.objective-art.objective-art-11 {
-  background-position: 100% 100%;
+.objective-art.objective-art-20 {
+  background-image: url("img/dogpark-solo-objectives.jpg");
+  background-size: 400% auto;
+  background-position: 0 0;
+}
+.objective-art.objective-art-21 {
+  background-image: url("img/dogpark-solo-objectives.jpg");
+  background-size: 400% auto;
+  background-position: 33.3333333% 0;
+}
+.objective-art.objective-art-22 {
+  background-image: url("img/dogpark-solo-objectives.jpg");
+  background-size: 400% auto;
+  background-position: 66.6666666% 0;
+}
+.objective-art.objective-art-23 {
+  background-image: url("img/dogpark-solo-objectives.jpg");
+  background-size: 400% auto;
+  background-position: 100% 0;
 }
 
 .breed-expert-art {
@@ -2387,6 +2448,13 @@ html .whiteblock, .mode_3d #game_play_area_background .whiteblock {
 .dp-help-button-wrapper.position-top-right .dp-help-button {
   border-radius: 5px;
 }
+.dp-help-button-wrapper.position-bottom-right {
+  bottom: 5px;
+  right: 5px;
+}
+.dp-help-button-wrapper.position-bottom-right .dp-help-button {
+  border-radius: 5px;
+}
 .dp-help-button-wrapper .dp-help-button {
   height: 35px;
   width: 35px;
@@ -2437,6 +2505,28 @@ html .whiteblock, .mode_3d #game_play_area_background .whiteblock {
 #help-dialog-content {
   width: unset;
   max-width: 600px;
+}
+
+#dp-solo-ratings-wrapper {
+  text-align: center;
+}
+#dp-solo-ratings-wrapper .fa-star {
+  color: #c6cca1;
+}
+#dp-solo-ratings-wrapper table {
+  width: 100%;
+  background-color: white;
+}
+#dp-solo-ratings-wrapper table, #dp-solo-ratings-wrapper td {
+  border: 2px solid black;
+}
+#dp-solo-ratings-wrapper table td, #dp-solo-ratings-wrapper td td {
+  padding: 2px 5px;
+}
+#dp-solo-ratings-wrapper table th, #dp-solo-ratings-wrapper td th {
+  font-weight: bold;
+  width: 50%;
+  text-align: center;
 }
 
 /*# sourceMappingURL=dogpark.css.map */

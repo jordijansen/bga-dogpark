@@ -59,6 +59,7 @@
     "src/ui/ExchangeResources.ts",
     "src/ui/FinalScoringPad.ts",
     "src/ui/GainResources.ts",
+    "src/ui/SoloRatings.ts",
     "src/DogField.ts",
     "src/DogWalkPark.ts",
     "src/PlayerArea.ts",

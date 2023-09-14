@@ -8,17 +8,46 @@ class ScoreManager
 {
     public function __construct() {}
 
-    public function getScoreBreakDown($breedExpertAwardResults)
+    public function getSoloStarValue($playerId, $score): int
+    {
+        $objectiveCard = current(ObjectiveCard::fromArray(DogPark::$instance->objectiveCards->getCardsInLocation(LOCATION_SELECTED, $playerId)));
+        $stars = 0;
+        switch ($objectiveCard->typeArg) {
+            case 21:
+                $stars = 2;
+                break;
+            case 22:
+                $stars = 4;
+                break;
+            case 23:
+                $stars = 6;
+                break;
+        }
+
+        if ($score >= 41 && $score <= 47) {
+            $stars += 1;
+        } else if ($score >= 48 && $score <= 54) {
+            $stars += 2;
+        } else if ($score >= 55 && $score <= 61) {
+            $stars += 3;
+        } else if ($score >= 62) {
+            $stars += 4;
+        }
+
+        return $stars;
+    }
+
+    public function getScoreBreakDown($breedExpertAwardResults, $soloObjectiveAchieved)
     {
         $result = [];
         $players = DogPark::$instance->loadPlayersBasicInfos();
         foreach ($players as $playerId => $player) {
-            $result[$playerId] = $this->getPlayerScoreBreakDown($playerId, $breedExpertAwardResults);
+            $result[$playerId] = $this->getPlayerScoreBreakDown($playerId, $breedExpertAwardResults, $soloObjectiveAchieved);
         }
         return $result;
     }
 
-    private function getPlayerScoreBreakDown($playerId, $breedExpertAwardResults) {
+    private function getPlayerScoreBreakDown($playerId, $breedExpertAwardResults, $soloObjectiveAchieved) {
         $result = [];
         $result['dogFinalScoring'] = $this->getPlayerDogFinalScore($playerId);
 
@@ -30,10 +59,18 @@ class ScoreManager
 
         $result['score'] = $result['parkBoardScore'] + $result['dogFinalScoringScore'] + $result['breedExpertAwardScore'] + $result['objectiveCardScore'] + $result['remainingResourcesScore'];
         $result['scoreAux'] = 0;
-        foreach ($breedExpertAwardResults[$playerId] as $breedExpertCard) {
-            // Highest value breedExpertAward is tiebreaker
-            if ($breedExpertCard->reputation > $result['scoreAux']) {
-                $result['scoreAux'] = $breedExpertCard->reputation;
+        $result['soloStarRating'] = 0;
+
+        if (DogPark::$instance->getPlayersNumber() == 1 && $soloObjectiveAchieved) {
+            $result['soloStarRating'] = $this->getSoloStarValue($playerId, $result['score']);
+        }
+
+        if (array_key_exists($playerId, $breedExpertAwardResults)) {
+            foreach ($breedExpertAwardResults[$playerId] as $breedExpertCard) {
+                // Highest value breedExpertAward is tiebreaker
+                if ($breedExpertCard->reputation > $result['scoreAux']) {
+                    $result['scoreAux'] = $breedExpertCard->reputation;
+                }
             }
         }
         return $result;
@@ -79,9 +116,11 @@ class ScoreManager
     private function getPlayerBreedExpertAwardScore($playerId, $breedExpertAwardResults)
     {
         $score = 0;
-        $playerAwards = $breedExpertAwardResults[$playerId];
-        foreach ($playerAwards as $playerAward) {
-            $score += $playerAward->reputation;
+        if (array_key_exists($playerId, $breedExpertAwardResults)) {
+            $playerAwards = $breedExpertAwardResults[$playerId];
+            foreach ($playerAwards as $playerAward) {
+                $score += $playerAward->reputation;
+            }
         }
         return $score;
     }
@@ -138,6 +177,9 @@ class ScoreManager
         } else if ($objectiveCard->typeArg == 10) {
             $walkedDogs = array_filter($playerDogs, function ($dog) { return $dog->resourcesOnCard[WALKED] >= 1;});
             return sizeof($walkedDogs) >= 6 ? 3 : 0;
+        } else if ($objectiveCard->typeArg >= 20) {
+            // SOLO CARDS
+            return 0;
         }
 
         throw new BgaUserException('Scoring Card not implemented');

@@ -52,8 +52,9 @@ $this->RESOURCES = [
 ];
 
 $this->OBJECTIVE_CARD_TYPES = [
-  OBJECTIVE_STANDARD => clienttranslate('standard'),
-  OBJECTIVE_EXPERIENCED => clienttranslate('experienced')
+    OBJECTIVE_STANDARD => clienttranslate('standard'),
+    OBJECTIVE_EXPERIENCED => clienttranslate('experienced'),
+    OBJECTIVE_SOLO => clienttranslate('solo')
 ];
 
 $this->BREED_EXPERT_CARDS = [
@@ -142,4 +143,9 @@ $this->OBJECTIVE_CARDS = [
     8 =>    ['type' => OBJECTIVE_STANDARD, 'name' => clienttranslate('Kennel Diversity'), 'description' => clienttranslate('During <b>FINAL SCORING</b>, gain 3 <icon-reputation> if you have at least 1 Dog of 4 breed categories in your Kennel, e.g. 1 GUNDOG, 1 HOUND, 1 TERRIER ,and 1 PASTORAL Dog. <i>You may only score this objective once.</i>')],
     9 =>    ['type' => OBJECTIVE_STANDARD, 'name' => clienttranslate('Capable Collector'), 'description' => clienttranslate('During <b>FINAL SCORING</b>, gain 3 <icon-reputation> if you have won at least 2 Breed Expert awards (4 player game) or 3 Breed Expert awards (2 and 3 player game). <i>Any awards where the victory is shared will still count towards this objective.</i>')],
     10 =>   ['type' => OBJECTIVE_STANDARD, 'name' => clienttranslate('Walked Kennel'), 'description' => clienttranslate('During <b>FINAL SCORING</b>, gain 3 <icon-reputation> if you have <icon-walked> on at least 6 different Dogs.')],
+
+    20 =>   ['type' => OBJECTIVE_SOLO, 'name' => clienttranslate('Novice Solo Objective'), 'description' => clienttranslate('To win the solo game, you must complete the requirements on this objective.<p><b>Stars:</b> 0</p><p><b>Requirements:</b></p> <p>4 <icon-all-resources></p><p>8 <icon-walked></p><p>Win at least 3 Breed Expert awards.</p>')],
+    21 =>   ['type' => OBJECTIVE_SOLO, 'name' => clienttranslate('Intermediate Solo Objective'), 'description' => clienttranslate('To win the solo game, you must complete the requirements on this objective.<p><b>Stars:</b> 2</p><p><b>Requirements:</b></p> <p>1 <icon-stick> 1 <icon-ball> 1 <icon-toy> 1 <icon-treat></p><p>9 <icon-walked></p><p>Win at least 3 Breed Expert awards, 1 outright</p>')],
+    22 =>   ['type' => OBJECTIVE_SOLO, 'name' => clienttranslate('Expert Solo Objective'), 'description' => clienttranslate('To win the solo game, you must complete the requirements on this objective.<p><b>Stars:</b> 4</p><p><b>Requirements:</b></p> <p>8 <icon-all-resources></p><p>9 <icon-walked></p><p>Win at least 3 Breed Expert awards, 2 outright</p>')],
+    23 =>   ['type' => OBJECTIVE_SOLO, 'name' => clienttranslate('Legend Solo Objective'), 'description' => clienttranslate('To win the solo game, you must complete the requirements on this objective.<p><b>Stars:</b> 6</p><p><b>Requirements:</b></p> <p>2 <icon-stick> 2 <icon-ball> 2 <icon-toy> 2 <icon-treat></p><p>10 <icon-walked></p><p>Win at least 3 Breed Expert awards, 3 outright</p>')],
 ];

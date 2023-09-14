@@ -99,14 +99,16 @@
 
 }
 
-.fa.fa-star {
-  vertical-align: bottom;
-  background-image: url('img/dogpark-tokens.png');
-  background-size: 1100% auto;
-  width: 22.16px;
-  height: 19px;
-  background-position: 10% 0;
-  &:before {
-    content: unset;
+.player_score {
+  .fa.fa-star {
+    vertical-align: bottom;
+    background-image: url('img/dogpark-tokens.png');
+    background-size: 1100% auto;
+    width: 22.16px;
+    height: 19px;
+    background-position: 10% 0;
+    &:before {
+      content: unset;
+    }
   }
 }
