@@ -842,12 +842,12 @@ class DogPark implements DogParkGame {
     private notif_activateForecastCard(args: NotifActivateForecastCard) {
         const promises = [];
         if (args.gainedResources) {
-            promises.push(this.playerResources.gainResourcesFromForecastCard(args.playerId, args.forecastCard, args.gainedResources));
+            promises.push(this.playerResources.gainResourcesFromForecastCard(args.playerId, args.forecastCard, args.gainedResources.filter(resource => resource !== 'reputation')));
         }
         if (args.lostResources) {
-            promises.push(this.playerResources.payResources(args.playerId, args.lostResources));
+            promises.push(this.playerResources.payResources(args.playerId, args.lostResources.filter(resource => resource !== 'reputation')));
         }
-        if (args.score) {
+        if (args.score || args.score === 0) {
             this.setScore(args.playerId, args.score);
         }
 

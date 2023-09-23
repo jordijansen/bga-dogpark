@@ -120,10 +120,15 @@ trait StateTrait
                         if ($newOffer > $currentHighestOffer) {
                             $highestBid = $walker;
                         } else if ($newOffer == $currentHighestOffer) {
-                            // If there is a tie in the offers, compare position in walkerQueue
                             $currentHighestLocation = $this->playerManager->getPlayerOfferValue($highestBid->locationArg);
                             $newLocation = $this->playerManager->getPlayerOfferValue($walker->locationArg);
-                            if ($newLocation > $currentHighestLocation) {
+
+                            if ($highestBid->id <= 2 && $walker->id > 2) {
+                                $highestBid = $walker; // The highest bid is held by the auto walker, assign the other player walker
+                            } else if ($highestBid->id > 2 && $walker->id <= 2) {
+                                // The equal bid is held by the player, do nothing
+                            } else if ($newLocation > $currentHighestLocation) {
+                                // If there is a tie in the offers, compare position in walkerQueue
                                 $highestBid = $walker;
                             }
                         }

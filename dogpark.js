@@ -4592,12 +4592,12 @@ var DogPark = /** @class */ (function () {
     DogPark.prototype.notif_activateForecastCard = function (args) {
         var promises = [];
         if (args.gainedResources) {
-            promises.push(this.playerResources.gainResourcesFromForecastCard(args.playerId, args.forecastCard, args.gainedResources));
+            promises.push(this.playerResources.gainResourcesFromForecastCard(args.playerId, args.forecastCard, args.gainedResources.filter(function (resource) { return resource !== 'reputation'; })));
         }
         if (args.lostResources) {
-            promises.push(this.playerResources.payResources(args.playerId, args.lostResources));
+            promises.push(this.playerResources.payResources(args.playerId, args.lostResources.filter(function (resource) { return resource !== 'reputation'; })));
         }
-        if (args.score) {
+        if (args.score || args.score === 0) {
             this.setScore(args.playerId, args.score);
         }
         if (args.playerId == this.getPlayerId()) {

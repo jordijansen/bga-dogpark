@@ -22,6 +22,12 @@
 @import 'Cards';
 @import 'Dials';
 
+@media screen and (max-device-width: 480px){
+  body{
+    -webkit-text-size-adjust: 100%;
+  }
+}
+
 .bga-cards_selectable-card {
   .card-side {
     outline: 6px rgba(80, 200, 255, 0.75) solid;

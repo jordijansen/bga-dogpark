@@ -33,13 +33,15 @@ class ActivateForecastCardCommand extends BaseCommand
         }
 
         if (sizeof($this->resources) > 0) {
-            DogPark::$instance->playerManager->gainResources($this->playerId, $this->resources);
-            if ($this->actionId != null && DogPark::$instance->getGlobalVariable(CURRENT_PHASE) == PHASE_WALKING) {
-                foreach ($this->resources as $resource) {
-                    DogPark::$instance->dogManager->createWalkingAdditionalActionsForDogsOnLead($this->playerId, $resource, $this->actionId);
+            foreach ($this->resources as $resource) {
+                if ($resource !== REPUTATION) {
+                    DogPark::$instance->playerManager->gainResources($this->playerId, [$resource]);
+                } else {
+                    DogPark::$instance->updatePlayerScore($this->playerId, DogPark::$instance->getPlayerScore($this->playerId) + 1);
                 }
             }
         }
+
         if ($this->reputation > 0) {
             DogPark::$instance->updatePlayerScore($this->playerId, DogPark::$instance->getPlayerScore($this->playerId) + $this->reputation);
         }
@@ -61,11 +63,18 @@ class ActivateForecastCardCommand extends BaseCommand
         }
 
         if (sizeof($this->resources) > 0) {
-            DogPark::$instance->playerManager->payResources($this->playerId, $this->resources);
+            foreach ($this->resources as $resource) {
+                if ($resource !== REPUTATION) {
+                    DogPark::$instance->playerManager->payResources($this->playerId, [$resource]);
+                } else {
+                    DogPark::$instance->updatePlayerScore($this->playerId, DogPark::$instance->getPlayerScore($this->playerId) - 1);
+                }
+            }
             if ($this->actionId != null && DogPark::$instance->getGlobalVariable(CURRENT_PHASE) == PHASE_WALKING) {
                 DogPark::$instance->dogManager->undoWalkingAdditionalActionForDogsOnLead($this->playerId, $this->actionId);
             }
         }
+
         if ($this->reputation > 0) {
             DogPark::$instance->updatePlayerScore($this->playerId, DogPark::$instance->getPlayerScore($this->playerId) - $this->reputation);
         }
