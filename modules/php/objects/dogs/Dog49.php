@@ -12,7 +12,7 @@ class Dog49 extends DogCard {
         parent::__construct($dbCard);
         $this->name = clienttranslate('Griffon Fauve De Bretagne');
         $this->breeds = [BREED_HOUND];
-        $this->costs = [RESOURCE_BALL];
+        $this->costs = [RESOURCE_BALL => 1];
         $this->craftyResource = RESOURCE_STICK;
         $this->ability = $this->getAbility();
         $this->abilityTitle = $this->getAbilityTitle();

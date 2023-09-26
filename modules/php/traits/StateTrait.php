@@ -123,9 +123,9 @@ trait StateTrait
                             $currentHighestLocation = $this->playerManager->getPlayerOfferValue($highestBid->locationArg);
                             $newLocation = $this->playerManager->getPlayerOfferValue($walker->locationArg);
 
-                            if ($highestBid->id <= 2 && $walker->id > 2) {
+                            if ($highestBid->typeArg <= 2 && $walker->typeArg > 2) {
                                 $highestBid = $walker; // The highest bid is held by the auto walker, assign the other player walker
-                            } else if ($highestBid->id > 2 && $walker->id <= 2) {
+                            } else if ($highestBid->typeArg > 2 && $walker->typeArg <= 2) {
                                 // The equal bid is held by the player, do nothing
                             } else if ($newLocation > $currentHighestLocation) {
                                 // If there is a tie in the offers, compare position in walkerQueue
