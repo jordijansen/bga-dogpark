@@ -37,10 +37,12 @@ class BreedExpertAwardManager extends CardManager<Card> {
             </div>
         </div>`, $('pagesection_gameview'))
 
-        dojo.connect($('dp-game-board-side-toggle-button'), 'onclick', () => {
-            dojo.toggleClass('dp-game-board-side', 'hide-side-bar');
-            window.localStorage.setItem(BreedExpertAwardManager.SIDE_BAR_COLLAPSED_LOCAL_STORAGE_KEY, String(dojo.hasClass('dp-game-board-side', 'hide-side-bar')))
-        });
+        if (!collapsed) {
+            $('bga-jump-to_controls').style.left = '340px';
+        }
+
+        dojo.connect($('dp-game-board-breed-expert-awards'), 'onclick', () => this.toggleSideBar());
+        dojo.connect($('dp-game-board-side-toggle-button'), 'onclick', () => this.toggleSideBar());
 
         this.slotsIds = [
             `dp-game-board-breed-expert-awards-slot-1`,
@@ -66,6 +68,16 @@ class BreedExpertAwardManager extends CardManager<Card> {
         })
 
         this.updateBreedExpertAwardStandings();
+    }
+
+    private toggleSideBar() {
+        dojo.toggleClass('dp-game-board-side', 'hide-side-bar');
+        window.localStorage.setItem(BreedExpertAwardManager.SIDE_BAR_COLLAPSED_LOCAL_STORAGE_KEY, String(dojo.hasClass('dp-game-board-side', 'hide-side-bar')))
+        if (!dojo.hasClass('dp-game-board-side', 'hide-side-bar')) {
+            $('bga-jump-to_controls').style.left = '340px';
+        } else {
+            $('bga-jump-to_controls').style.left = '';
+        }
     }
 
     public updateBreedExpertAwardStandings() {

@@ -24,16 +24,27 @@ trait UtilsTrait
         if ($nrOfPlayers <= 2) {
             $nrOfAutoWalkers = $nrOfPlayers == 1 ? 2 : 1;
             for ($i = 1; $i <= $nrOfAutoWalkers; $i++) {
-                $autoWalkers[$i] = new AutoWalker($i, array_shift($unusedPlayerColors));
+                $autoWalkers[$i] = new AutoWalker($i, array_shift($unusedPlayerColors), $this->getGlobalVariable(WALKER_LAST_DIE_ROLL_ .$i));
             }
         }
         return $autoWalkers;
     }
 
-    function getNextAutoWalkerDiceValue() {
+    function getNextAutoWalkerDiceValue(AutoWalker $autoWalker) {
         $diceValues = [1, 2, 2, 3, 3, 4];
-        $index = bga_rand(1, 6);
-        return $diceValues[$index - 1];
+        $side = bga_rand(1, 6);
+        $value = $diceValues[$side - 1];
+
+        $this->setGlobalVariable(WALKER_LAST_DIE_ROLL_ .$autoWalker->id, $side);
+
+        $this->notifyAllPlayers('autoWalkerDieRolled', clienttranslate('${name} rolls ${value}'),[
+            'walkerId' => $autoWalker->id,
+            'name' => $autoWalker->name,
+            'value' => $value,
+            'side' => $side
+        ]);
+
+        return $value;
     }
 
     //////////////////////////////////////////////////////////////////////////////

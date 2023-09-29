@@ -229,6 +229,7 @@ class DogPark extends Table
                 'id' => $autoWalker->id,
                 'name' => $autoWalker->name,
                 'color' => $autoWalker->color,
+                'lastDieRoll' => $autoWalker->lastDieRoll,
                 'walker' => $this->playerManager->getWalker($autoWalker->id),
                 'kennelDogs' => DogCard::fromArray($this->dogCards->getCardsInLocation(LOCATION_PLAYER, $autoWalker->id)),
                 'offerValue' => $offerValueRevealed ? $this->playerManager->getPlayerOfferValue($autoWalker->id) : 0

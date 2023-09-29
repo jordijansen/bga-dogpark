@@ -439,7 +439,6 @@
   overflow-y: scroll;
   z-index: 11;
 
-
   #dp-game-board-side-flex-wrapper {
     align-items: center;
     display: flex;
@@ -462,12 +461,13 @@
     color: white;
     font-size: large;
     text-align: center;
-    cursor: pointer;
     writing-mode: vertical-rl;
     text-orientation: upright;
     text-transform: uppercase;
     padding: 5px;
     margin-top: 10px;
+    cursor: pointer;
+
   }
 
   #dp-game-board-side-toggle-button {
@@ -478,6 +478,7 @@
     height: 1058px;
     background-image: url("img/dogpark-board-objectives.jpg");
     background-size: cover;
+    cursor: pointer;
 
     #dp-game-board-breed-expert-awards-stock {
       padding-right: 50px;

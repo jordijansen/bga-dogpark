@@ -47,6 +47,9 @@ class DogPark implements DogParkGame {
     private jumpToManager: JumpToManager;
     private helpManager: HelpManager;
 
+    private alwaysFixTopActions: boolean;
+    private alwaysFixTopActionsMaximum: number;
+
     constructor() {
         // Init Managers
         this.dogCardManager = new DogCardManager(this);
@@ -81,6 +84,8 @@ class DogPark implements DogParkGame {
     */
 
     public setup(gamedatas: DogParkGameData) {
+        this.setAlwaysFixTopActions();
+
         log( "Starting game setup" );
         log('gamedatas', gamedatas);
 
@@ -92,7 +97,6 @@ class DogPark implements DogParkGame {
         this.playerArea.setUp(gamedatas);
         this.roundTracker.setUp(gamedatas);
         this.playerResources.setUp(gamedatas);
-        this.breedExpertAwardManager.setUp(gamedatas);
         this.forecastManager.setUp(gamedatas);
         this.finalScoringPad.setUp(gamedatas);
         this.dogCardManager.setUp(gamedatas);
@@ -131,6 +135,8 @@ class DogPark implements DogParkGame {
                 })
             ],
         });
+
+        this.breedExpertAwardManager.setUp(gamedatas);
 
         dojo.place('<div id="custom-actions"></div>', $('maintitlebar_content'), 'last')
 
@@ -546,6 +552,14 @@ class DogPark implements DogParkGame {
     //// Utility methods
     ///////////////////////////////////////////////////
 
+    public delay = async (ms: number) => {
+        if (this.animationManager.animationsActive()) {
+            await new Promise(resolve => setTimeout(resolve, ms))
+        } else {
+            await Promise.resolve();
+        }
+    }
+
     private disableActionButtons() {
         const buttons = document.querySelectorAll('.action-button')
         buttons.forEach(button => {
@@ -607,6 +621,37 @@ class DogPark implements DogParkGame {
         return playerIndex > 0 ? [...players.slice(playerIndex), ...players.slice(0, playerIndex)] : players;
     }
 
+    public setAlwaysFixTopActions(alwaysFixed = true, maximum = 30) {
+        this.alwaysFixTopActions = alwaysFixed;
+        this.alwaysFixTopActionsMaximum = maximum;
+        this.adaptStatusBar();
+    }
+
+    public adaptStatusBar() {
+        (this as any).inherited(arguments);
+
+        if (this.alwaysFixTopActions) {
+            const afterTitleElem = document.getElementById('after-page-title');
+            const titleElem = document.getElementById('page-title');
+            //@ts-ignore
+            let zoom = getComputedStyle(titleElem).zoom;
+            if (!zoom) {
+                zoom = 1;
+            }
+
+            const titleRect = afterTitleElem.getBoundingClientRect();
+            if (titleRect.top < 0 && (titleElem.offsetHeight < (window.innerHeight * this.alwaysFixTopActionsMaximum / 100))) {
+                const afterTitleRect = afterTitleElem.getBoundingClientRect();
+                titleElem.classList.add('fixed-page-title');
+                titleElem.style.width = ((afterTitleRect.width - 10) / zoom) + 'px';
+                afterTitleElem.style.height = titleRect.height + 'px';
+            } else {
+                titleElem.classList.remove('fixed-page-title');
+                titleElem.style.width = 'auto';
+                afterTitleElem.style.height = '0px';
+            }
+        }
+    }
     ///////////////////////////////////////////////////
     //// Reaction to cometD notifications
 
@@ -653,7 +698,8 @@ class DogPark implements DogParkGame {
             ['activateForecastCard', undefined],
             ['playerAssignsResources', undefined],
             ['revealObjectiveCards', undefined],
-            ['finalScoringRevealed', undefined]
+            ['finalScoringRevealed', undefined],
+            ['autoWalkerDieRolled', 1]
             // ['shortTime', 1],
             // ['fixedTime', 1000]
         ];
@@ -872,6 +918,14 @@ class DogPark implements DogParkGame {
         return this.finalScoringPad.showPad(args.scoreBreakDown, true).then(() => {
             Object.keys(args.scoreBreakDown).forEach(playerId => this.setScore(Number(playerId), args.scoreBreakDown[playerId]['score']))
         });
+    }
+
+    private notif_autoWalkerDieRolled(args: NotifAutoWalkerDieRolled) {
+        const dieElement = $(`dp-autowalker-die-${args.walkerId}`);
+        if (dieElement) {
+            dieElement.dataset['value'] = 7 - args.side;
+            this.delay(500).then(() => dieElement.dataset['value'] = args.side)
+        }
     }
 
     public format_string_recursive(log: string, args: any) {

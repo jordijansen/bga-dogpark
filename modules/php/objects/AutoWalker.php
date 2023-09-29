@@ -9,12 +9,14 @@ class AutoWalker
     public int $id;
     public string $name;
     public string $color;
+    public ?int $lastDieRoll;
 
-    public function __construct($id, $color)
+    public function __construct($id, $color, $lastDieRoll)
     {
         $this->id = $id;
         $this->name = "Autowalker #$id";
         $this->color = $color;
+        $this->lastDieRoll = $lastDieRoll;
     }
 
     public function takeRecruitmentTurn()
@@ -31,7 +33,7 @@ class AutoWalker
                 if (sizeof($autoWalkersInField) == 0) {
                     $locationArgForWalker = sizeof(DogPark::$instance->dogWalkers->getCardsInLocation('field_'.$suitableDog->locationArg)) + 1;
                     DogPark::$instance->dogWalkers->moveAllCardsInLocation(LOCATION_PLAYER, 'field_'.$suitableDog->locationArg, $this->id, $locationArgForWalker);
-                    DogPark::$instance->playerManager->updatePlayerOfferValue($this->id, DogPark::$instance->getNextAutoWalkerDiceValue());
+                    DogPark::$instance->playerManager->updatePlayerOfferValue($this->id, DogPark::$instance->getNextAutoWalkerDiceValue($this));
 
                     DogPark::$instance->notifyAllPlayers('dogOfferPlaced', clienttranslate('${name} places an offer on <b>${dogName}</b>'),[
                         'i18n' => ['dogName'],
@@ -45,14 +47,12 @@ class AutoWalker
                 }
             }
         }
-
-
     }
 
     public function takeWalkingTurn()
     {
         $walker = DogPark::$instance->playerManager->getWalker($this->id);
-        $steps = DogPark::$instance->getNextAutoWalkerDiceValue();
+        $steps = DogPark::$instance->getNextAutoWalkerDiceValue($this);
         $possibleLocations = DogPark::$instance->dogWalkPark->getNextLocations($walker->locationArg, 0, $steps, [], true);
         if (sizeof($possibleLocations) == 1) {
             $this->moveWalkerToLocation($walker->id, current($possibleLocations), $steps);

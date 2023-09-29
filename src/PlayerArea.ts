@@ -142,6 +142,16 @@ class PlayerArea {
                                         </div>
                                         <div class="player_board_content">
                                             <div id="dp-player-token-wrapper-${autoWalker.id}" class="dp-player-token-wrapper"></div>
+                                            <div style="display: flex; justify-content: center">
+                                                <div id="dp-autowalker-die-${autoWalker.id}" class="dp-dice" data-value="${autoWalker.lastDieRoll}">
+                                                    <div class="side" data-side="1"></div>
+                                                    <div class="side" data-side="2"></div>
+                                                    <div class="side" data-side="3"></div>
+                                                    <div class="side" data-side="4"></div>
+                                                    <div class="side" data-side="5"></div>
+                                                    <div class="side" data-side="6"></div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>`, `player_boards`);

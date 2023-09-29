@@ -2554,12 +2554,14 @@ var BreedExpertAwardManager = /** @class */ (function (_super) {
         return _this;
     }
     BreedExpertAwardManager.prototype.setUp = function (gameData) {
+        var _this = this;
         var collapsed = window.localStorage.getItem(BreedExpertAwardManager.SIDE_BAR_COLLAPSED_LOCAL_STORAGE_KEY) === 'true';
         dojo.place(" <div id=\"dp-game-board-side\" class=\"dp-board ".concat(Boolean(collapsed) ? 'hide-side-bar' : '', "\">\n            <div id=\"dp-game-board-side-flex-wrapper\">\n                <div id=\"dp-game-board-breed-expert-awards\" class=\"dp-board\">\n                    <div id=\"dp-game-board-breed-expert-awards-stock\">\n    \n                    </div>\n                </div>\n                <div id=\"dp-game-board-side-toggle-button\"><i class=\"fa fa-trophy\" aria-hidden=\"true\"></i> ").concat(_('Breed Expert'), " <i class=\"fa fa-trophy\" aria-hidden=\"true\"></i></div>\n            </div>\n        </div>"), $('pagesection_gameview'));
-        dojo.connect($('dp-game-board-side-toggle-button'), 'onclick', function () {
-            dojo.toggleClass('dp-game-board-side', 'hide-side-bar');
-            window.localStorage.setItem(BreedExpertAwardManager.SIDE_BAR_COLLAPSED_LOCAL_STORAGE_KEY, String(dojo.hasClass('dp-game-board-side', 'hide-side-bar')));
-        });
+        if (!collapsed) {
+            $('bga-jump-to_controls').style.left = '340px';
+        }
+        dojo.connect($('dp-game-board-breed-expert-awards'), 'onclick', function () { return _this.toggleSideBar(); });
+        dojo.connect($('dp-game-board-side-toggle-button'), 'onclick', function () { return _this.toggleSideBar(); });
         this.slotsIds = [
             "dp-game-board-breed-expert-awards-slot-1",
             "dp-game-board-breed-expert-awards-slot-2",
@@ -2581,6 +2583,16 @@ var BreedExpertAwardManager = /** @class */ (function (_super) {
             dojo.place(html, dojo.query("[data-slot-id=\"".concat(slotId, "\"]"))[0]);
         });
         this.updateBreedExpertAwardStandings();
+    };
+    BreedExpertAwardManager.prototype.toggleSideBar = function () {
+        dojo.toggleClass('dp-game-board-side', 'hide-side-bar');
+        window.localStorage.setItem(BreedExpertAwardManager.SIDE_BAR_COLLAPSED_LOCAL_STORAGE_KEY, String(dojo.hasClass('dp-game-board-side', 'hide-side-bar')));
+        if (!dojo.hasClass('dp-game-board-side', 'hide-side-bar')) {
+            $('bga-jump-to_controls').style.left = '340px';
+        }
+        else {
+            $('bga-jump-to_controls').style.left = '';
+        }
     };
     BreedExpertAwardManager.prototype.updateBreedExpertAwardStandings = function () {
         var _a, _b;
@@ -3583,7 +3595,7 @@ var PlayerArea = /** @class */ (function () {
         }));
     };
     PlayerArea.prototype.initAutoWalkers = function (autoWalker) {
-        dojo.place("<div id=\"overall_auto_walker_".concat(autoWalker.id, "_board\" class=\"player-board\" style=\"height: auto;\">\n                                    <div class=\"player_board_inner\">\n                                        <div class=\"player-name\" id=\"player_name_").concat(autoWalker.id, "\" style=\"color: #").concat(autoWalker.color, "\">\n                                            ").concat(autoWalker.name, "                    \n                                        </div>\n                                        <div class=\"player_board_content\">\n                                            <div id=\"dp-player-token-wrapper-").concat(autoWalker.id, "\" class=\"dp-player-token-wrapper\"></div>\n                                        </div>\n                                    </div>\n                                </div>"), "player_boards");
+        dojo.place("<div id=\"overall_auto_walker_".concat(autoWalker.id, "_board\" class=\"player-board\" style=\"height: auto;\">\n                                    <div class=\"player_board_inner\">\n                                        <div class=\"player-name\" id=\"player_name_").concat(autoWalker.id, "\" style=\"color: #").concat(autoWalker.color, "\">\n                                            ").concat(autoWalker.name, "                    \n                                        </div>\n                                        <div class=\"player_board_content\">\n                                            <div id=\"dp-player-token-wrapper-").concat(autoWalker.id, "\" class=\"dp-player-token-wrapper\"></div>\n                                            <div style=\"display: flex; justify-content: center\">\n                                                <div id=\"dp-autowalker-die-").concat(autoWalker.id, "\" class=\"dp-dice\" data-value=\"").concat(autoWalker.lastDieRoll, "\">\n                                                    <div class=\"side\" data-side=\"1\"></div>\n                                                    <div class=\"side\" data-side=\"2\"></div>\n                                                    <div class=\"side\" data-side=\"3\"></div>\n                                                    <div class=\"side\" data-side=\"4\"></div>\n                                                    <div class=\"side\" data-side=\"5\"></div>\n                                                    <div class=\"side\" data-side=\"6\"></div>\n                                                </div>\n                                            </div>\n                                        </div>\n                                    </div>\n                                </div>"), "player_boards");
         this.playerDials[Number(autoWalker.id)] = new DogOfferDial({
             elementId: "dp-game-board-offer-dial-".concat(autoWalker.id),
             parentId: "dp-player-token-wrapper-".concat(autoWalker.id),
@@ -3858,6 +3870,27 @@ var TOOLTIP_DELAY = document.body.classList.contains('touch-device') ? 1500 : un
 var LOCAL_STORAGE_ZOOM_KEY = 'dogpark-zoom';
 var DogPark = /** @class */ (function () {
     function DogPark() {
+        var _this = this;
+        ///////////////////////////////////////////////////
+        //// Utility methods
+        ///////////////////////////////////////////////////
+        this.delay = function (ms) { return __awaiter(_this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        if (!this.animationManager.animationsActive()) return [3 /*break*/, 2];
+                        return [4 /*yield*/, new Promise(function (resolve) { return setTimeout(resolve, ms); })];
+                    case 1:
+                        _a.sent();
+                        return [3 /*break*/, 4];
+                    case 2: return [4 /*yield*/, Promise.resolve()];
+                    case 3:
+                        _a.sent();
+                        _a.label = 4;
+                    case 4: return [2 /*return*/];
+                }
+            });
+        }); };
         // Init Managers
         this.dogCardManager = new DogCardManager(this);
         this.dogWalkerManager = new DogWalkerManager(this);
@@ -3887,6 +3920,7 @@ var DogPark = /** @class */ (function () {
         "gamedatas" argument contains all datas retrieved by your "getAllDatas" PHP method.
     */
     DogPark.prototype.setup = function (gamedatas) {
+        this.setAlwaysFixTopActions();
         log("Starting game setup");
         log('gamedatas', gamedatas);
         // Setup modules
@@ -3896,7 +3930,6 @@ var DogPark = /** @class */ (function () {
         this.playerArea.setUp(gamedatas);
         this.roundTracker.setUp(gamedatas);
         this.playerResources.setUp(gamedatas);
-        this.breedExpertAwardManager.setUp(gamedatas);
         this.forecastManager.setUp(gamedatas);
         this.finalScoringPad.setUp(gamedatas);
         this.dogCardManager.setUp(gamedatas);
@@ -3924,6 +3957,7 @@ var DogPark = /** @class */ (function () {
                 })
             ],
         });
+        this.breedExpertAwardManager.setUp(gamedatas);
         dojo.place('<div id="custom-actions"></div>', $('maintitlebar_content'), 'last');
         this.setupNotifications();
         log("Ending game setup");
@@ -4311,9 +4345,6 @@ var DogPark = /** @class */ (function () {
     DogPark.prototype.undoAll = function () {
         this.takeNoLockAction('undoAll');
     };
-    ///////////////////////////////////////////////////
-    //// Utility methods
-    ///////////////////////////////////////////////////
     DogPark.prototype.disableActionButtons = function () {
         var buttons = document.querySelectorAll('.action-button');
         buttons.forEach(function (button) {
@@ -4371,6 +4402,37 @@ var DogPark = /** @class */ (function () {
         var playerIndex = result.findIndex(function (player) { return Number(player.id) === Number(_this.getPlayerId()); });
         return playerIndex > 0 ? __spreadArray(__spreadArray([], players.slice(playerIndex), true), players.slice(0, playerIndex), true) : players;
     };
+    DogPark.prototype.setAlwaysFixTopActions = function (alwaysFixed, maximum) {
+        if (alwaysFixed === void 0) { alwaysFixed = true; }
+        if (maximum === void 0) { maximum = 30; }
+        this.alwaysFixTopActions = alwaysFixed;
+        this.alwaysFixTopActionsMaximum = maximum;
+        this.adaptStatusBar();
+    };
+    DogPark.prototype.adaptStatusBar = function () {
+        this.inherited(arguments);
+        if (this.alwaysFixTopActions) {
+            var afterTitleElem = document.getElementById('after-page-title');
+            var titleElem = document.getElementById('page-title');
+            //@ts-ignore
+            var zoom = getComputedStyle(titleElem).zoom;
+            if (!zoom) {
+                zoom = 1;
+            }
+            var titleRect = afterTitleElem.getBoundingClientRect();
+            if (titleRect.top < 0 && (titleElem.offsetHeight < (window.innerHeight * this.alwaysFixTopActionsMaximum / 100))) {
+                var afterTitleRect = afterTitleElem.getBoundingClientRect();
+                titleElem.classList.add('fixed-page-title');
+                titleElem.style.width = ((afterTitleRect.width - 10) / zoom) + 'px';
+                afterTitleElem.style.height = titleRect.height + 'px';
+            }
+            else {
+                titleElem.classList.remove('fixed-page-title');
+                titleElem.style.width = 'auto';
+                afterTitleElem.style.height = '0px';
+            }
+        }
+    };
     ///////////////////////////////////////////////////
     //// Reaction to cometD notifications
     /*
@@ -4416,7 +4478,8 @@ var DogPark = /** @class */ (function () {
             ['activateForecastCard', undefined],
             ['playerAssignsResources', undefined],
             ['revealObjectiveCards', undefined],
-            ['finalScoringRevealed', undefined]
+            ['finalScoringRevealed', undefined],
+            ['autoWalkerDieRolled', 1]
             // ['shortTime', 1],
             // ['fixedTime', 1000]
         ];
@@ -4640,6 +4703,13 @@ var DogPark = /** @class */ (function () {
         return this.finalScoringPad.showPad(args.scoreBreakDown, true).then(function () {
             Object.keys(args.scoreBreakDown).forEach(function (playerId) { return _this.setScore(Number(playerId), args.scoreBreakDown[playerId]['score']); });
         });
+    };
+    DogPark.prototype.notif_autoWalkerDieRolled = function (args) {
+        var dieElement = $("dp-autowalker-die-".concat(args.walkerId));
+        if (dieElement) {
+            dieElement.dataset['value'] = 7 - args.side;
+            this.delay(500).then(function () { return dieElement.dataset['value'] = args.side; });
+        }
     };
     DogPark.prototype.format_string_recursive = function (log, args) {
         try {

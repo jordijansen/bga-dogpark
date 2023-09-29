@@ -31,7 +31,8 @@ interface AutoWalker {
     name: string,
     color: string,
     offerValue: number,
-    walker: DogWalker
+    walker: DogWalker,
+    lastDieRoll?: number
 }
 
 interface LocationBonus {
@@ -294,6 +295,11 @@ interface NotifRevealObjectiveCards {
 
 interface NotifFinalScoringRevealed {
     scoreBreakDown: FinalScoringBreakdown
+}
+
+interface NotifAutoWalkerDieRolled {
+    walkerId: number,
+    side: number
 }
 
 
