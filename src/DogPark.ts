@@ -103,23 +103,7 @@ class DogPark implements DogParkGame {
 
         this.zoomManager = new AutoZoomManager('dp-game', 'dp-zoom-level')
         this.animationManager = new AnimationManager(this, {duration: ANIMATION_MS})
-        // this.jumpToManager = new JumpToManager(this, {
-        //     localStorageFoldedKey: 'dogpark-jumpto-folded',
-        //     entryClasses: 'round-point',
-        //     topEntries: [
-        //         new JumpToEntry(_('Forecast'), 'dp-round-tracker', { 'color': 'darkgray' }),
-        //         new JumpToEntry(_('Park'), 'dp-game-board-park-wrapper', { 'color': 'darkgray' }),
-        //         new JumpToEntry(_('Field'), 'dp-game-board-field-wrapper', { 'color': 'darkgray' }),
-        //     ],
-        //     playersEntries: [
-        //         ...this.getOrderedPlayers(Object.values(gamedatas.players)).map(player => new JumpToEntry(player.name, `player-table-${player.id}`, {
-        //             'color': '#'+player.color,
-        //             'colorback': player.color_back ? '#'+player.color_back : null,
-        //             'id': player.id,
-        //         })),
-        //         ...this.gamedatas.autoWalkers.map(autoWalker => {return new JumpToEntry(autoWalker.name, `dp-player-area-${autoWalker.id}`, {'color': '#'+autoWalker.color})})
-        //     ]
-        // });
+
         this.helpManager = new HelpManager(this, {
             buttons: [
                 new BgaHelpPopinButton({
@@ -137,6 +121,7 @@ class DogPark implements DogParkGame {
         });
 
         this.breedExpertAwardManager.setUp(gamedatas);
+        this.tokenManager.setUp();
 
         dojo.place('<div id="custom-actions"></div>', $('maintitlebar_content'), 'last')
 
@@ -943,7 +928,7 @@ class DogPark implements DogParkGame {
     }
 
     public tokenIcon(type: string) {
-        return `<span class="dp-token-token small" data-type="${type}"></span>`
+        return `<span class="dp-token-token dp-token-${type} small" data-type="${type}"></span>`
     }
 
     public tokenIcons(type: string, nrOfIcons: number, additionalIcons?: string[]) {

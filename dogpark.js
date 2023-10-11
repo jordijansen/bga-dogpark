@@ -2745,6 +2745,7 @@ var TokenManager = /** @class */ (function (_super) {
             setupDiv: function (token, div) {
                 div.classList.add('dp-card-token');
                 div.classList.add('dp-token-token');
+                div.classList.add("dp-token-".concat(token.type));
                 div.classList.add('small');
                 div.dataset.type = token.type;
             },
@@ -2757,6 +2758,17 @@ var TokenManager = /** @class */ (function (_super) {
         _this.idSequence = 0;
         return _this;
     }
+    TokenManager.prototype.setUp = function () {
+        var swapHtml = "<p>".concat(_('Swap: You may exchange 1 Dog from your Kennel with a Dog in the Field'), "</p>");
+        var swapPlusWalkedHtml = "<p>".concat(_('Choose between 1 reputation or Swap.'), "</p>") + swapHtml + "<p>".concat(_('The new Dog also receives a walked token.'), "</p>");
+        var scoutHtml = "<p>".concat(_('Scout: You may reveal the top two cards of the deck. You may replace a Dog in the Field with 1 of the Dogs drawn. Unselected cards are discarded.'), "</p>");
+        this.dogParkGame.addTooltipHtmlToClass("dp-token-swap", swapHtml, TOOLTIP_DELAY);
+        this.dogParkGame.addTooltipHtmlToClass("dp-token-scout", scoutHtml, TOOLTIP_DELAY);
+        this.dogParkGame.addTooltipHtml("dp-walk-spot-6", scoutHtml, TOOLTIP_DELAY);
+        this.dogParkGame.addTooltipHtml("dp-walk-spot-9", scoutHtml, TOOLTIP_DELAY);
+        this.dogParkGame.addTooltipHtml("dp-walk-spot-10", swapHtml, TOOLTIP_DELAY);
+        this.dogParkGame.addTooltipHtml("dp-walk-spot-93", swapPlusWalkedHtml, TOOLTIP_DELAY);
+    };
     TokenManager.prototype.createToken = function (type) {
         return { id: this.idSequence++, type: type };
     };
@@ -3926,23 +3938,6 @@ var DogPark = /** @class */ (function () {
         this.dogCardManager.setUp(gamedatas);
         this.zoomManager = new AutoZoomManager('dp-game', 'dp-zoom-level');
         this.animationManager = new AnimationManager(this, { duration: ANIMATION_MS });
-        // this.jumpToManager = new JumpToManager(this, {
-        //     localStorageFoldedKey: 'dogpark-jumpto-folded',
-        //     entryClasses: 'round-point',
-        //     topEntries: [
-        //         new JumpToEntry(_('Forecast'), 'dp-round-tracker', { 'color': 'darkgray' }),
-        //         new JumpToEntry(_('Park'), 'dp-game-board-park-wrapper', { 'color': 'darkgray' }),
-        //         new JumpToEntry(_('Field'), 'dp-game-board-field-wrapper', { 'color': 'darkgray' }),
-        //     ],
-        //     playersEntries: [
-        //         ...this.getOrderedPlayers(Object.values(gamedatas.players)).map(player => new JumpToEntry(player.name, `player-table-${player.id}`, {
-        //             'color': '#'+player.color,
-        //             'colorback': player.color_back ? '#'+player.color_back : null,
-        //             'id': player.id,
-        //         })),
-        //         ...this.gamedatas.autoWalkers.map(autoWalker => {return new JumpToEntry(autoWalker.name, `dp-player-area-${autoWalker.id}`, {'color': '#'+autoWalker.color})})
-        //     ]
-        // });
         this.helpManager = new HelpManager(this, {
             buttons: [
                 new BgaHelpPopinButton({
@@ -3952,6 +3947,7 @@ var DogPark = /** @class */ (function () {
             ],
         });
         this.breedExpertAwardManager.setUp(gamedatas);
+        this.tokenManager.setUp();
         dojo.place('<div id="custom-actions"></div>', $('maintitlebar_content'), 'last');
         this.setupNotifications();
         log("Ending game setup");
@@ -4720,7 +4716,7 @@ var DogPark = /** @class */ (function () {
         return this.inherited(arguments);
     };
     DogPark.prototype.tokenIcon = function (type) {
-        return "<span class=\"dp-token-token small\" data-type=\"".concat(type, "\"></span>");
+        return "<span class=\"dp-token-token dp-token-".concat(type, " small\" data-type=\"").concat(type, "\"></span>");
     };
     DogPark.prototype.tokenIcons = function (type, nrOfIcons, additionalIcons) {
         var _this = this;

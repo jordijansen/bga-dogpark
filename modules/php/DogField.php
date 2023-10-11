@@ -65,7 +65,7 @@ class DogField
      */
     public function getWalkersInField(string $location): array
     {
-        return DogWalker::fromArray(DogPark::$instance->dogWalkers->getCardsInLocation($location));
+        return DogWalker::fromArray(DogPark::$instance->dogWalkers->getCardsInLocation($location, null, 'card_location_arg'));
     }
 
 }
