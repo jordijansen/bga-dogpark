@@ -928,14 +928,18 @@ body > .card {
   font-size: 12px;
 }
 
+#overall-content {
+  overflow: unset;
+}
+
 #dp-game-board-side {
-  position: fixed;
-  top: 150px;
-  left: -10px;
-  transition: left 0.5s ease-in-out;
-  height: calc(100% - 150px);
+  position: sticky;
+  top: 160px;
+  margin-left: -2px;
+  transition: margin-left 0.5s ease-in-out;
   overflow-y: scroll;
   z-index: 11;
+  width: 350px;
   -ms-overflow-style: none; /* Internet Explorer 10+ */
   scrollbar-width: none; /* Firefox */
 }
@@ -948,7 +952,7 @@ body > .card {
   display: none; /* Safari and Chrome */
 }
 #dp-game-board-side.hide-side-bar {
-  left: -322px;
+  margin-left: -322px;
 }
 #dp-game-board-side #dp-game-board-side-toggle-button {
   display: block !important;
@@ -2459,6 +2463,7 @@ body > .card {
 #dp-game {
   display: flex;
   flex-direction: column;
+  margin-top: -1050px;
 }
 
 html, .mode_3d #game_play_area_background {
@@ -2593,10 +2598,7 @@ html .whiteblock, .mode_3d #game_play_area_background .whiteblock {
 }
 
 #bga-jump-to_controls {
-  left: 28px;
-  top: 504px !important;
-  margin-top: 0 !important;
-  transition: left 0.5s ease-in-out;
+  top: 53vh;
 }
 
 #help-dialog-content {

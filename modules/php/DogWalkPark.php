@@ -58,6 +58,7 @@ class DogWalkPark extends APP_DbObject
         $query .= ";";
 
         self::DbQuery($query);
+        return $locationCard;
     }
 
     /**

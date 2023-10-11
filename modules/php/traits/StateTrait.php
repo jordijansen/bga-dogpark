@@ -110,6 +110,7 @@ trait StateTrait
         foreach ($dogCards as $dogCard) {
             $walkersField = $dogCard->location. '_' .$dogCard->locationArg;
             $walkersInField = $this->dogField->getWalkersInField($walkersField);
+            var_dump($walkersInField);
             if (sizeof($walkersInField) > 0) {
                 $highestBid = null;
                 foreach ($walkersInField as $walker) {
@@ -562,10 +563,8 @@ trait StateTrait
             ]);
 
             // 2. Tokens from this round’s Location Bonus card are returned to the general supply. A new Location Bonus card is revealed and new tokens are placed accordingly.
-            $this->dogWalkPark->drawLocationBonusCardAndFillPark();
+            $locationBonusCard = $this->dogWalkPark->drawLocationBonusCardAndFillPark();
             $locationBonuses = $this->dogWalkPark->getAllLocationBonuses();
-            $locationBonusCards = $this->dogWalkPark->getLocationBonusCards();
-            $locationBonusCard = end($locationBonusCards);
 
             $this->notifyAllPlayers('newLocationBonusCardDrawn', clienttranslate('The park is replenished with new bonuses'), [
                 'locationBonuses' => $locationBonuses,

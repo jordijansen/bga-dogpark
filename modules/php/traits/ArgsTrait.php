@@ -152,17 +152,20 @@ trait ArgsTrait
 
     function argActionGainResources(): array
     {
-        $playerId = intval($this->getCurrentPlayerId());
 
-        $nrOfResourcesToGain = intval($this->getGlobalVariable(GAIN_RESOURCES_NR_OF_RESOURCES .$playerId));
-        $resourceOptions = $this->getGlobalVariable(GAIN_RESOURCES_RESOURCE_OPTIONS .$playerId);
+        $result = [];
+        $playerIds = $this->getPlayerIds();
 
-        return [
-            'playerId' => $playerId,
-            'nrOfResourcesToGain' => $nrOfResourcesToGain,
-            'resourceOptions' => $resourceOptions,
-            'canCancel' => false
-        ];
+        foreach ($playerIds as $playerId) {
+            $result[$playerId] = [
+                'playerId' => $playerId,
+                'nrOfResourcesToGain' => intval($this->getGlobalVariable(GAIN_RESOURCES_NR_OF_RESOURCES .$playerId)),
+                'resourceOptions' => $this->getGlobalVariable(GAIN_RESOURCES_RESOURCE_OPTIONS .$playerId),
+                'canCancel' => false,
+            ];
+        }
+
+        return $result;
     }
     
 }

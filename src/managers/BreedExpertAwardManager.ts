@@ -35,11 +35,7 @@ class BreedExpertAwardManager extends CardManager<Card> {
                 </div>
                 <div id="dp-game-board-side-toggle-button"><i class="fa fa-trophy" aria-hidden="true"></i> ${_('Breed Expert')} <i class="fa fa-trophy" aria-hidden="true"></i></div>
             </div>
-        </div>`, $('pagesection_gameview'))
-
-        if (!collapsed) {
-            $('bga-jump-to_controls').style.left = '340px';
-        }
+        </div>`, $('bga-zoom-wrapper'), 'first')
 
         dojo.connect($('dp-game-board-breed-expert-awards'), 'onclick', () => this.toggleSideBar());
         dojo.connect($('dp-game-board-side-toggle-button'), 'onclick', () => this.toggleSideBar());
@@ -73,11 +69,6 @@ class BreedExpertAwardManager extends CardManager<Card> {
     private toggleSideBar() {
         dojo.toggleClass('dp-game-board-side', 'hide-side-bar');
         window.localStorage.setItem(BreedExpertAwardManager.SIDE_BAR_COLLAPSED_LOCAL_STORAGE_KEY, String(dojo.hasClass('dp-game-board-side', 'hide-side-bar')))
-        if (!dojo.hasClass('dp-game-board-side', 'hide-side-bar')) {
-            $('bga-jump-to_controls').style.left = '340px';
-        } else {
-            $('bga-jump-to_controls').style.left = '';
-        }
     }
 
     public updateBreedExpertAwardStandings() {

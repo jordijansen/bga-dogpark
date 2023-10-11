@@ -2556,10 +2556,7 @@ var BreedExpertAwardManager = /** @class */ (function (_super) {
     BreedExpertAwardManager.prototype.setUp = function (gameData) {
         var _this = this;
         var collapsed = window.localStorage.getItem(BreedExpertAwardManager.SIDE_BAR_COLLAPSED_LOCAL_STORAGE_KEY) === 'true';
-        dojo.place(" <div id=\"dp-game-board-side\" class=\"dp-board ".concat(Boolean(collapsed) ? 'hide-side-bar' : '', "\">\n            <div id=\"dp-game-board-side-flex-wrapper\">\n                <div id=\"dp-game-board-breed-expert-awards\" class=\"dp-board\">\n                    <div id=\"dp-game-board-breed-expert-awards-stock\">\n    \n                    </div>\n                </div>\n                <div id=\"dp-game-board-side-toggle-button\"><i class=\"fa fa-trophy\" aria-hidden=\"true\"></i> ").concat(_('Breed Expert'), " <i class=\"fa fa-trophy\" aria-hidden=\"true\"></i></div>\n            </div>\n        </div>"), $('pagesection_gameview'));
-        if (!collapsed) {
-            $('bga-jump-to_controls').style.left = '340px';
-        }
+        dojo.place(" <div id=\"dp-game-board-side\" class=\"dp-board ".concat(Boolean(collapsed) ? 'hide-side-bar' : '', "\">\n            <div id=\"dp-game-board-side-flex-wrapper\">\n                <div id=\"dp-game-board-breed-expert-awards\" class=\"dp-board\">\n                    <div id=\"dp-game-board-breed-expert-awards-stock\">\n    \n                    </div>\n                </div>\n                <div id=\"dp-game-board-side-toggle-button\"><i class=\"fa fa-trophy\" aria-hidden=\"true\"></i> ").concat(_('Breed Expert'), " <i class=\"fa fa-trophy\" aria-hidden=\"true\"></i></div>\n            </div>\n        </div>"), $('bga-zoom-wrapper'), 'first');
         dojo.connect($('dp-game-board-breed-expert-awards'), 'onclick', function () { return _this.toggleSideBar(); });
         dojo.connect($('dp-game-board-side-toggle-button'), 'onclick', function () { return _this.toggleSideBar(); });
         this.slotsIds = [
@@ -2587,12 +2584,6 @@ var BreedExpertAwardManager = /** @class */ (function (_super) {
     BreedExpertAwardManager.prototype.toggleSideBar = function () {
         dojo.toggleClass('dp-game-board-side', 'hide-side-bar');
         window.localStorage.setItem(BreedExpertAwardManager.SIDE_BAR_COLLAPSED_LOCAL_STORAGE_KEY, String(dojo.hasClass('dp-game-board-side', 'hide-side-bar')));
-        if (!dojo.hasClass('dp-game-board-side', 'hide-side-bar')) {
-            $('bga-jump-to_controls').style.left = '340px';
-        }
-        else {
-            $('bga-jump-to_controls').style.left = '';
-        }
     };
     BreedExpertAwardManager.prototype.updateBreedExpertAwardStandings = function () {
         var _a, _b;
@@ -3432,7 +3423,7 @@ var DogWalkPark = /** @class */ (function () {
         }
         this.moveWalkers(gameData.park.walkers);
         // Park Bonuses
-        this.locationBonusCardPile = new Deck(this.game.locationBonusCardManager, $('dp-game-board-park-location-card-deck'), { thicknesses: [1] });
+        this.locationBonusCardPile = new AllVisibleDeck(this.game.locationBonusCardManager, $('dp-game-board-park-location-card-deck'), {});
         gameData.park.locationBonusCards.forEach(function (card) { return _this.addLocationBonusCard(card); });
         this.addExtraLocationBonuses(gameData.park.extraLocationBonuses);
     };
@@ -3935,20 +3926,23 @@ var DogPark = /** @class */ (function () {
         this.dogCardManager.setUp(gamedatas);
         this.zoomManager = new AutoZoomManager('dp-game', 'dp-zoom-level');
         this.animationManager = new AnimationManager(this, { duration: ANIMATION_MS });
-        this.jumpToManager = new JumpToManager(this, {
-            localStorageFoldedKey: 'dogpark-jumpto-folded',
-            entryClasses: 'round-point',
-            topEntries: [
-                new JumpToEntry(_('Forecast'), 'dp-round-tracker', { 'color': 'darkgray' }),
-                new JumpToEntry(_('Park'), 'dp-game-board-park-wrapper', { 'color': 'darkgray' }),
-                new JumpToEntry(_('Field'), 'dp-game-board-field-wrapper', { 'color': 'darkgray' }),
-            ],
-            playersEntries: __spreadArray(__spreadArray([], this.getOrderedPlayers(Object.values(gamedatas.players)).map(function (player) { return new JumpToEntry(player.name, "player-table-".concat(player.id), {
-                'color': '#' + player.color,
-                'colorback': player.color_back ? '#' + player.color_back : null,
-                'id': player.id,
-            }); }), true), this.gamedatas.autoWalkers.map(function (autoWalker) { return new JumpToEntry(autoWalker.name, "dp-player-area-".concat(autoWalker.id), { 'color': '#' + autoWalker.color }); }), true)
-        });
+        // this.jumpToManager = new JumpToManager(this, {
+        //     localStorageFoldedKey: 'dogpark-jumpto-folded',
+        //     entryClasses: 'round-point',
+        //     topEntries: [
+        //         new JumpToEntry(_('Forecast'), 'dp-round-tracker', { 'color': 'darkgray' }),
+        //         new JumpToEntry(_('Park'), 'dp-game-board-park-wrapper', { 'color': 'darkgray' }),
+        //         new JumpToEntry(_('Field'), 'dp-game-board-field-wrapper', { 'color': 'darkgray' }),
+        //     ],
+        //     playersEntries: [
+        //         ...this.getOrderedPlayers(Object.values(gamedatas.players)).map(player => new JumpToEntry(player.name, `player-table-${player.id}`, {
+        //             'color': '#'+player.color,
+        //             'colorback': player.color_back ? '#'+player.color_back : null,
+        //             'id': player.id,
+        //         })),
+        //         ...this.gamedatas.autoWalkers.map(autoWalker => {return new JumpToEntry(autoWalker.name, `dp-player-area-${autoWalker.id}`, {'color': '#'+autoWalker.color})})
+        //     ]
+        // });
         this.helpManager = new HelpManager(this, {
             buttons: [
                 new BgaHelpPopinButton({
@@ -4001,8 +3995,10 @@ var DogPark = /** @class */ (function () {
                 this.enteringActionCrafty(args.args);
                 break;
             case 'actionGainResourcesPrivate':
-            case 'actionGainResources':
                 this.enteringGainResources(args.args);
+                break;
+            case 'actionGainResources':
+                this.enteringGainResources(args.args[this.getPlayerId()]);
                 break;
         }
     };

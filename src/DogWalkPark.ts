@@ -20,7 +20,7 @@ class DogWalkPark {
     private element: HTMLElement;
     private walkerSpots: {[spotId: number]: LineStock<DogWalker>} = {}
     public resourceSpots: {[spotId: number]: LineStock<Token>} = {}
-    private locationBonusCardPile: Deck<Card>;
+    private locationBonusCardPile: AllVisibleDeck<Card>;
     private possibleParkLocationIds: number[] = [];
     private clickHandlers: any[] = [];
 
@@ -53,7 +53,7 @@ class DogWalkPark {
 
 
         // Park Bonuses
-        this.locationBonusCardPile = new Deck(this.game.locationBonusCardManager, $('dp-game-board-park-location-card-deck'), { thicknesses: [1]})
+        this.locationBonusCardPile = new AllVisibleDeck(this.game.locationBonusCardManager, $('dp-game-board-park-location-card-deck'), {})
         gameData.park.locationBonusCards.forEach(card => this.addLocationBonusCard(card))
         this.addExtraLocationBonuses(gameData.park.extraLocationBonuses);
     }

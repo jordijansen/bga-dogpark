@@ -429,15 +429,17 @@
     }
   }
 }
-
+#overall-content {
+  overflow: unset;
+}
 #dp-game-board-side {
-  position: fixed;
-  top: 150px;
-  left: -10px;
-  transition: left 0.5s ease-in-out;
-  height: calc(100% - 150px);
+  position: sticky;
+  top: 160px;
+  margin-left: -2px;
+  transition: margin-left 0.5s ease-in-out;
   overflow-y: scroll;
   z-index: 11;
+  width: 350px;
 
   #dp-game-board-side-flex-wrapper {
     align-items: center;
@@ -452,7 +454,7 @@
   }
 
   &.hide-side-bar {
-    left: -322px;
+    margin-left: -322px;
   }
 
   #dp-game-board-side-toggle-button {

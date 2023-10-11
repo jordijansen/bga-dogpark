@@ -25,6 +25,7 @@
     Please REMOVE this comment before publishing your game on BGA
 -->
 <div id="dp-game">
+    <div id="dp-game-wrapper">
     <div id="dp-choose-objectives"></div>
     <div id="dp-final-scoring-pad-wrapper"></div>
     <div id="dp-game-board-wrapper">
@@ -52,6 +53,7 @@
     <div id="dp-player-areas">
     </div>
     <div id="dp-last-row" class="whiteblock">
+    </div>
     </div>
 </div>
 

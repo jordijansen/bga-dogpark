@@ -91,8 +91,8 @@ class PlayerManager extends APP_DbObject
             $players = DogPark::$instance->loadPlayersBasicInfos();
             foreach ($players as $playerId => $player) {
                 $experiencedObjective = ObjectiveCard::from(array_shift($experiencedObjectiveCards));
-                if ($experiencedObjective->type == 1 && DogPark::$instance->getPlayersNumber() < 4) {
-                    // Experienced Objective card should only be used in a 4 player game (or 5 in expansion??)
+                if ($experiencedObjective->typeArg == 1 && DogPark::$instance->getPlayersNumber() < 4) {
+                    // Experienced Objective card 1 should only be used in a 4 player game (or 5 in expansion??)
                     $experiencedObjective = ObjectiveCard::from(array_shift($experiencedObjectiveCards));
                 }
                 $standardObjective = ObjectiveCard::from(array_shift($standardObjectiveCards));

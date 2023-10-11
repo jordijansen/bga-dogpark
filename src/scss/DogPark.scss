@@ -45,6 +45,7 @@
 #dp-game {
   display: flex;
   flex-direction: column;
+  margin-top: -1050px;
 }
 
 html, .mode_3d #game_play_area_background {
@@ -201,10 +202,7 @@ html, .mode_3d #game_play_area_background {
 }
 
 #bga-jump-to_controls {
-  left: 28px;
-  top: 504px !important;
-  margin-top: 0 !important;
-  transition: left 0.5s ease-in-out;
+  top: 53vh;
 }
 #help-dialog-content {
   width: unset;
