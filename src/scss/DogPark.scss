@@ -45,7 +45,8 @@
 #dp-game {
   display: flex;
   flex-direction: column;
-  margin-top: -1050px;
+  position: absolute;
+  top: 0;
 }
 
 html, .mode_3d #game_play_area_background {

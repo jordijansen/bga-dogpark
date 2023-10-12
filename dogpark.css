@@ -943,6 +943,11 @@ body > .card {
   -ms-overflow-style: none; /* Internet Explorer 10+ */
   scrollbar-width: none; /* Firefox */
 }
+@media (max-height: 1227px) {
+  #dp-game-board-side {
+    max-height: 1058px;
+  }
+}
 #dp-game-board-side #dp-game-board-side-flex-wrapper {
   align-items: center;
   display: flex;
@@ -2463,7 +2468,8 @@ body > .card {
 #dp-game {
   display: flex;
   flex-direction: column;
-  margin-top: -1050px;
+  position: absolute;
+  top: 0;
 }
 
 html, .mode_3d #game_play_area_background {

@@ -441,6 +441,11 @@
   z-index: 11;
   width: 350px;
 
+  @media (max-height: 1227px) {
+    max-height: 1058px;
+  }
+
+
   #dp-game-board-side-flex-wrapper {
     align-items: center;
     display: flex;

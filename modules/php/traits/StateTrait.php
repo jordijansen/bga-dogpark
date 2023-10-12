@@ -110,7 +110,6 @@ trait StateTrait
         foreach ($dogCards as $dogCard) {
             $walkersField = $dogCard->location. '_' .$dogCard->locationArg;
             $walkersInField = $this->dogField->getWalkersInField($walkersField);
-            var_dump($walkersInField);
             if (sizeof($walkersInField) > 0) {
                 $highestBid = null;
                 foreach ($walkersInField as $walker) {
