@@ -2210,8 +2210,8 @@ var getZoomLevels = function (maxZoomLevels) {
     var zoomLevels = [];
     if (maxZoomLevels > 1) {
         var maxZoomLevelsAbove1 = maxZoomLevels - 1;
-        var increments = (maxZoomLevelsAbove1 / 3);
-        zoomLevels = [(increments) + 1, increments + increments + 1, increments + increments + increments + 1];
+        var increments = (maxZoomLevelsAbove1 / 6);
+        zoomLevels = [(increments) + 1, (increments * 2) + 1, (increments * 3) + 1, (increments * 4) + 1, (increments * 5) + 1, (increments * 6) + 1];
     }
     zoomLevels = __spreadArray(__spreadArray([], zoomLevels, true), [1, 0.8, 0.6], false);
     return zoomLevels.sort();
@@ -2227,13 +2227,19 @@ var AutoZoomManager = /** @class */ (function (_super) {
         var zoomLevels = getZoomLevels(determineMaxZoomLevel());
         return _super.call(this, {
             element: document.getElementById(elementId),
-            smooth: true,
+            smooth: false,
             zoomLevels: zoomLevels,
             defaultZoom: 1,
             localStorageZoomKey: localStorageKey,
             zoomControls: {
                 color: 'black',
                 position: 'top-right'
+            },
+            onZoomChange: function (zoom) {
+                var sideBoard = $('dp-game-board-side-zoom-wrapper');
+                if (sideBoard && zoom > 0) {
+                    sideBoard.style.transform = "scale(".concat(zoom - 0.2, ")");
+                }
             }
         }) || this;
     }
@@ -2556,9 +2562,8 @@ var BreedExpertAwardManager = /** @class */ (function (_super) {
     BreedExpertAwardManager.prototype.setUp = function (gameData) {
         var _this = this;
         var collapsed = window.localStorage.getItem(BreedExpertAwardManager.SIDE_BAR_COLLAPSED_LOCAL_STORAGE_KEY) === 'true';
-        dojo.place(" <div id=\"dp-game-board-side\" class=\"dp-board ".concat(Boolean(collapsed) ? 'hide-side-bar' : '', "\">\n            <div id=\"dp-game-board-side-flex-wrapper\">\n                <div id=\"dp-game-board-breed-expert-awards\" class=\"dp-board\">\n                    <div id=\"dp-game-board-breed-expert-awards-stock\">\n    \n                    </div>\n                </div>\n                <div id=\"dp-game-board-side-toggle-button\"><i class=\"fa fa-trophy\" aria-hidden=\"true\"></i> ").concat(_('Breed Expert'), " <i class=\"fa fa-trophy\" aria-hidden=\"true\"></i></div>\n            </div>\n        </div>"), $('bga-zoom-wrapper'), 'first');
-        dojo.connect($('dp-game-board-breed-expert-awards'), 'onclick', function () { return _this.toggleSideBar(); });
-        dojo.connect($('dp-game-board-side-toggle-button'), 'onclick', function () { return _this.toggleSideBar(); });
+        dojo.place("<div id=\"dp-game-board-side-zoom-wrapper\">\n                            <div id=\"dp-game-board-side-wrapper\" class=\"".concat(Boolean(collapsed) ? 'hide-side-bar' : '', "\">\n                                <div id=\"dp-game-board-side\">\n                                    <div id=\"dp-game-board-breed-expert-awards\" class=\"dp-board\">\n                                        <div id=\"dp-game-board-breed-expert-awards-stock\">\n                           \n                                        </div>\n                                    </div>\n                                </div>\n                                <div id=\"dp-game-board-side-toggle-button\"><i class=\"fa fa-trophy\" aria-hidden=\"true\"></i> ").concat(_('Breed Expert'), " <i class=\"fa fa-trophy\" aria-hidden=\"true\"></i></div>\n                            </div>\n                        </div>"), $('bga-zoom-wrapper'), 'first');
+        dojo.connect($('dp-game-board-side-zoom-wrapper'), 'onclick', function () { return _this.toggleSideBar(); });
         this.slotsIds = [
             "dp-game-board-breed-expert-awards-slot-1",
             "dp-game-board-breed-expert-awards-slot-2",
@@ -2582,8 +2587,9 @@ var BreedExpertAwardManager = /** @class */ (function (_super) {
         this.updateBreedExpertAwardStandings();
     };
     BreedExpertAwardManager.prototype.toggleSideBar = function () {
-        dojo.toggleClass('dp-game-board-side', 'hide-side-bar');
-        window.localStorage.setItem(BreedExpertAwardManager.SIDE_BAR_COLLAPSED_LOCAL_STORAGE_KEY, String(dojo.hasClass('dp-game-board-side', 'hide-side-bar')));
+        console.log('LOLOLOLOL');
+        dojo.toggleClass('dp-game-board-side-wrapper', 'hide-side-bar');
+        window.localStorage.setItem(BreedExpertAwardManager.SIDE_BAR_COLLAPSED_LOCAL_STORAGE_KEY, String(dojo.hasClass('dp-game-board-side-wrapper', 'hide-side-bar')));
     };
     BreedExpertAwardManager.prototype.updateBreedExpertAwardStandings = function () {
         var _a, _b;

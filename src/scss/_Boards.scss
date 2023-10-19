@@ -432,34 +432,30 @@
 #overall-content {
   overflow: unset;
 }
-#dp-game-board-side {
+
+#dp-game-board-side-zoom-wrapper {
+  transform: scale(0.8);
+  z-index: 1;
+  transform-origin: top left;
+  width: 350px;
   position: sticky;
   top: 160px;
-  margin-left: -2px;
+}
+
+#dp-game-board-side-wrapper {
+  margin-left: -30px;
   transition: margin-left 0.5s ease-in-out;
-  overflow-y: scroll;
   z-index: 11;
   width: 350px;
+  display: flex;
+  align-items: center;
 
-  @media (max-height: 1227px) {
-    max-height: 1058px;
-  }
-
-
-  #dp-game-board-side-flex-wrapper {
-    align-items: center;
-    display: flex;
-    width: 350px;
-  }
-
-  -ms-overflow-style: none;  /* Internet Explorer 10+ */
-  scrollbar-width: none;  /* Firefox */
-  &::-webkit-scrollbar {
-    display: none;  /* Safari and Chrome */
-  }
 
   &.hide-side-bar {
-    margin-left: -322px;
+    margin-left: -312px;
+    #dp-game-board-side-toggle-button {
+      opacity: 0.5;
+    }
   }
 
   #dp-game-board-side-toggle-button {
@@ -472,51 +468,64 @@
     text-orientation: upright;
     text-transform: uppercase;
     padding: 5px;
-    margin-top: 10px;
     cursor: pointer;
-
+    height: 350px;
+    border-radius: 0 10px 10px 0;
+    transition: left 0.5s ease-in-out;
   }
 
-  #dp-game-board-side-toggle-button {
-    display: none;
-  }
-  #dp-game-board-breed-expert-awards {
-    width: 322px;
-    height: 1058px;
-    background-image: url("img/dogpark-board-objectives.jpg");
-    background-size: cover;
-    cursor: pointer;
+  #dp-game-board-side {
+    overflow-y: scroll;
+    max-height: calc(100vh - 160px);
+    width: 305px;
+    border-radius: 0 10px 10px 0;
 
-    #dp-game-board-breed-expert-awards-stock {
-      padding-right: 50px;
+    -ms-overflow-style: none; /* Internet Explorer 10+ */
+    scrollbar-width: none; /* Firefox */
+    &::-webkit-scrollbar {
+      display: none; /* Safari and Chrome */
+    }
 
-      .slot {
-        height: $mini-size-landscape-height;
-        position: relative;
-        .dp-game-board-breed-expert-awards-slot-standings {
-          position: absolute;
-          top: 0;
-          width: $mini-size-landscape-width;
+    #dp-game-board-breed-expert-awards {
+      width: 322px;
+      height: 1058px;
+      background-image: url("img/dogpark-board-objectives.jpg");
+      background-size: cover;
+      cursor: pointer;
+      border-radius: 0;
+
+      #dp-game-board-breed-expert-awards-stock {
+        padding-right: 50px;
+
+        .slot {
           height: $mini-size-landscape-height;
-          display: flex;
-          justify-content: center;
-          align-items: center;
+          position: relative;
 
-          .dp-game-board-breed-expert-awards-slot-standings-wrapper {
-            &.not-eligible {
-              display: none;
-            }
+          .dp-game-board-breed-expert-awards-slot-standings {
+            position: absolute;
+            top: 0;
+            width: $mini-size-landscape-width;
+            height: $mini-size-landscape-height;
+            display: flex;
+            justify-content: center;
+            align-items: center;
 
-            .dp-dog-walker {
-              height: 53px;
-              width: 36px;
-              display: flex;
-              justify-content: center;
-              align-items: end;
+            .dp-game-board-breed-expert-awards-slot-standings-wrapper {
+              &.not-eligible {
+                display: none;
+              }
 
-              h1 {
-                color:white;
-                text-shadow: 2px 2px #000;
+              .dp-dog-walker {
+                height: 53px;
+                width: 36px;
+                display: flex;
+                justify-content: center;
+                align-items: end;
+
+                h1 {
+                  color: white;
+                  text-shadow: 2px 2px #000;
+                }
               }
             }
           }

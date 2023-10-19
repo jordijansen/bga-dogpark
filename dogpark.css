@@ -932,34 +932,30 @@ body > .card {
   overflow: unset;
 }
 
-#dp-game-board-side {
+#dp-game-board-side-zoom-wrapper {
+  transform: scale(0.8);
+  z-index: 1;
+  transform-origin: top left;
+  width: 350px;
   position: sticky;
   top: 160px;
-  margin-left: -2px;
+}
+
+#dp-game-board-side-wrapper {
+  margin-left: -30px;
   transition: margin-left 0.5s ease-in-out;
-  overflow-y: scroll;
   z-index: 11;
   width: 350px;
-  -ms-overflow-style: none; /* Internet Explorer 10+ */
-  scrollbar-width: none; /* Firefox */
-}
-@media (max-height: 1227px) {
-  #dp-game-board-side {
-    max-height: 1058px;
-  }
-}
-#dp-game-board-side #dp-game-board-side-flex-wrapper {
-  align-items: center;
   display: flex;
-  width: 350px;
+  align-items: center;
 }
-#dp-game-board-side::-webkit-scrollbar {
-  display: none; /* Safari and Chrome */
+#dp-game-board-side-wrapper.hide-side-bar {
+  margin-left: -312px;
 }
-#dp-game-board-side.hide-side-bar {
-  margin-left: -322px;
+#dp-game-board-side-wrapper.hide-side-bar #dp-game-board-side-toggle-button {
+  opacity: 0.5;
 }
-#dp-game-board-side #dp-game-board-side-toggle-button {
+#dp-game-board-side-wrapper #dp-game-board-side-toggle-button {
   display: block !important;
   background: black;
   color: white;
@@ -969,27 +965,38 @@ body > .card {
   text-orientation: upright;
   text-transform: uppercase;
   padding: 5px;
-  margin-top: 10px;
   cursor: pointer;
+  height: 350px;
+  border-radius: 0 10px 10px 0;
+  transition: left 0.5s ease-in-out;
 }
-#dp-game-board-side #dp-game-board-side-toggle-button {
-  display: none;
+#dp-game-board-side-wrapper #dp-game-board-side {
+  overflow-y: scroll;
+  max-height: calc(100vh - 160px);
+  width: 305px;
+  border-radius: 0 10px 10px 0;
+  -ms-overflow-style: none; /* Internet Explorer 10+ */
+  scrollbar-width: none; /* Firefox */
 }
-#dp-game-board-side #dp-game-board-breed-expert-awards {
+#dp-game-board-side-wrapper #dp-game-board-side::-webkit-scrollbar {
+  display: none; /* Safari and Chrome */
+}
+#dp-game-board-side-wrapper #dp-game-board-side #dp-game-board-breed-expert-awards {
   width: 322px;
   height: 1058px;
   background-image: url("img/dogpark-board-objectives.jpg");
   background-size: cover;
   cursor: pointer;
+  border-radius: 0;
 }
-#dp-game-board-side #dp-game-board-breed-expert-awards #dp-game-board-breed-expert-awards-stock {
+#dp-game-board-side-wrapper #dp-game-board-side #dp-game-board-breed-expert-awards #dp-game-board-breed-expert-awards-stock {
   padding-right: 50px;
 }
-#dp-game-board-side #dp-game-board-breed-expert-awards #dp-game-board-breed-expert-awards-stock .slot {
+#dp-game-board-side-wrapper #dp-game-board-side #dp-game-board-breed-expert-awards #dp-game-board-breed-expert-awards-stock .slot {
   height: 142px;
   position: relative;
 }
-#dp-game-board-side #dp-game-board-breed-expert-awards #dp-game-board-breed-expert-awards-stock .slot .dp-game-board-breed-expert-awards-slot-standings {
+#dp-game-board-side-wrapper #dp-game-board-side #dp-game-board-breed-expert-awards #dp-game-board-breed-expert-awards-stock .slot .dp-game-board-breed-expert-awards-slot-standings {
   position: absolute;
   top: 0;
   width: 195px;
@@ -998,17 +1005,17 @@ body > .card {
   justify-content: center;
   align-items: center;
 }
-#dp-game-board-side #dp-game-board-breed-expert-awards #dp-game-board-breed-expert-awards-stock .slot .dp-game-board-breed-expert-awards-slot-standings .dp-game-board-breed-expert-awards-slot-standings-wrapper.not-eligible {
+#dp-game-board-side-wrapper #dp-game-board-side #dp-game-board-breed-expert-awards #dp-game-board-breed-expert-awards-stock .slot .dp-game-board-breed-expert-awards-slot-standings .dp-game-board-breed-expert-awards-slot-standings-wrapper.not-eligible {
   display: none;
 }
-#dp-game-board-side #dp-game-board-breed-expert-awards #dp-game-board-breed-expert-awards-stock .slot .dp-game-board-breed-expert-awards-slot-standings .dp-game-board-breed-expert-awards-slot-standings-wrapper .dp-dog-walker {
+#dp-game-board-side-wrapper #dp-game-board-side #dp-game-board-breed-expert-awards #dp-game-board-breed-expert-awards-stock .slot .dp-game-board-breed-expert-awards-slot-standings .dp-game-board-breed-expert-awards-slot-standings-wrapper .dp-dog-walker {
   height: 53px;
   width: 36px;
   display: flex;
   justify-content: center;
   align-items: end;
 }
-#dp-game-board-side #dp-game-board-breed-expert-awards #dp-game-board-breed-expert-awards-stock .slot .dp-game-board-breed-expert-awards-slot-standings .dp-game-board-breed-expert-awards-slot-standings-wrapper .dp-dog-walker h1 {
+#dp-game-board-side-wrapper #dp-game-board-side #dp-game-board-breed-expert-awards #dp-game-board-breed-expert-awards-stock .slot .dp-game-board-breed-expert-awards-slot-standings .dp-game-board-breed-expert-awards-slot-standings-wrapper .dp-dog-walker h1 {
   color: white;
   text-shadow: 2px 2px #000;
 }
