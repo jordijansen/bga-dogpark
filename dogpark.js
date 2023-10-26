@@ -2587,7 +2587,6 @@ var BreedExpertAwardManager = /** @class */ (function (_super) {
         this.updateBreedExpertAwardStandings();
     };
     BreedExpertAwardManager.prototype.toggleSideBar = function () {
-        console.log('LOLOLOLOL');
         dojo.toggleClass('dp-game-board-side-wrapper', 'hide-side-bar');
         window.localStorage.setItem(BreedExpertAwardManager.SIDE_BAR_COLLAPSED_LOCAL_STORAGE_KEY, String(dojo.hasClass('dp-game-board-side-wrapper', 'hide-side-bar')));
     };

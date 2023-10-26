@@ -437,7 +437,7 @@
   transform: scale(0.8);
   z-index: 1;
   transform-origin: top left;
-  width: 350px;
+  width: 0px;
   position: sticky;
   top: 160px;
 }
@@ -452,7 +452,7 @@
 
 
   &.hide-side-bar {
-    margin-left: -312px;
+    margin-left: -305px;
     #dp-game-board-side-toggle-button {
       opacity: 0.5;
     }
@@ -464,7 +464,8 @@
     color: white;
     font-size: large;
     text-align: center;
-    writing-mode: vertical-rl;
+    font-weight: bold;
+    writing-mode: vertical-lr;
     text-orientation: upright;
     text-transform: uppercase;
     padding: 5px;
