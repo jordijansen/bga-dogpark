@@ -18,6 +18,7 @@ use commands\ScoutCommand;
 use commands\SocialButterflyDogAbilityCommand;
 use commands\SwapCommand;
 use commands\EagerDogAbilityCommand;
+use DogPark;
 use objects\DogCard;
 use objects\DogWalker;
 use objects\ObjectiveCard;
@@ -68,7 +69,7 @@ trait ActionTrait
         }
 
         if (!isset($dogId)) {
-            throw new BgaUserException(clienttranslate("You must select a Dog Card to take"));
+            throw new BgaUserException(DogPark::totranslate("You must select a Dog Card to take"));
         }
         $dog = DogCard::from($this->dogCards->getCard($dogId));
         if ($dog->location != LOCATION_FIELD) {
@@ -118,7 +119,7 @@ trait ActionTrait
         $activePlayerId = $this->getActivePlayerId();
 
         if (!isset($dogId)) {
-            throw new BgaUserException(clienttranslate("You must select a Dog Card to take"));
+            throw new BgaUserException(DogPark::totranslate("You must select a Dog Card to take"));
         }
 
         $dogCard = DogCard::from($this->dogCards->getCard($dogId));

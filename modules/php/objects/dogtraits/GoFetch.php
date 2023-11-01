@@ -2,6 +2,8 @@
 
 namespace objects\dogtraits;
 
+use DogPark;
+
 trait GoFetch
 {
     public string $goFetchResource;
@@ -13,11 +15,11 @@ trait GoFetch
     }
     protected function getAbilityTitle() : string
     {
-        return _('Go Fetch!');
+        return DogPark::totranslate('Go Fetch!');
     }
 
     protected function getAbilityText() : string
     {
-        return sprintf(_("When <b>WALKING</b> this dog, whenever you gain 1 or more <icon-%s>, gain <icon-%s>. Activates once per movement."), $this->goFetchResource, $this->goFetchBonusResource);
+        return sprintf(DogPark::totranslate("When <b>WALKING</b> this dog, whenever you gain 1 or more <icon-%s>, gain <icon-%s>. Activates once per movement."), $this->goFetchResource, $this->goFetchBonusResource);
     }
 }

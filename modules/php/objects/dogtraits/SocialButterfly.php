@@ -2,6 +2,8 @@
 
 namespace objects\dogtraits;
 
+use DogPark;
+
 trait SocialButterfly
 {
     protected function getAbility() : string
@@ -10,12 +12,12 @@ trait SocialButterfly
     }
     protected function getAbilityTitle() : string
     {
-        return _('Social Butterfly');
+        return DogPark::totranslate('Social Butterfly');
     }
 
     protected function getAbilityText() : string
     {
-        return _("When <b>WALKING</b> this dog, if you land on an occupied location, do not pay 1 <icon-reputation> to gain the location reward.");
+        return DogPark::totranslate("When <b>WALKING</b> this dog, if you land on an occupied location, do not pay 1 <icon-reputation> to gain the location reward.");
     }
 
     public function isAbilityOptional() : bool

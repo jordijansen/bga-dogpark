@@ -33,6 +33,7 @@ class ScoutCommand extends BaseCommand
         $scoutDog = DogCard::from(DogPark::$instance->dogCards->getCard($this->scoutDogId));
 
         DogPark::$instance->notifyAllPlayers('playerScoutReplaces', clienttranslate('${player_name} scouts and replaces <b>${fieldDogName}</b> with <b>${scoutDogName}</b>'),[
+            'i18n' => ['scoutDogName', 'fieldDogName'],
             'playerId' => $this->playerId,
             'player_name' => DogPark::$instance->getPlayerName($this->playerId),
             'scoutDog' => $scoutDog,
@@ -57,6 +58,7 @@ class ScoutCommand extends BaseCommand
         $scoutDog = DogCard::from(DogPark::$instance->dogCards->getCard($this->fieldDogId));
 
         DogPark::$instance->notifyAllPlayers('undoPlayerScoutReplaces', clienttranslate('Undo: <s>${player_name} scouts and replaces <b>${fieldDogName}</b> with <b>${scoutDogName}</b></s>'),[
+            'i18n' => ['scoutDogName', 'fieldDogName'],
             'playerId' => $this->playerId,
             'player_name' => DogPark::$instance->getPlayerName($this->playerId),
             'scoutDog' => $scoutDog,

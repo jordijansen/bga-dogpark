@@ -2,6 +2,8 @@
 
 namespace objects\dogtraits;
 
+use DogPark;
+
 trait StickChaser
 {
     public int $maxResources = 6;
@@ -12,11 +14,11 @@ trait StickChaser
 
     protected function getAbilityTitle() : string
     {
-        return _('Stick Chaser');
+        return DogPark::totranslate('Stick Chaser');
     }
 
     protected function getAbilityText() : string
     {
-        return _('During <b>FINAL SCORING</b>, gain 1 <icon-reputation> for each leftover <icon-stick> assigned to this dog. Max. 6 <icon-reputation>.');
+        return DogPark::totranslate('During <b>FINAL SCORING</b>, gain 1 <icon-reputation> for each leftover <icon-stick> assigned to this dog. Max. 6 <icon-reputation>.');
     }
 }

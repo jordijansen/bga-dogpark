@@ -2,6 +2,8 @@
 
 namespace objects\dogtraits;
 
+use DogPark;
+
 trait Sociable
 {
     protected function getAbility() : string
@@ -11,11 +13,11 @@ trait Sociable
 
     protected function getAbilityTitle() : string
     {
-        return _('Sociable');
+        return DogPark::totranslate('Sociable');
     }
 
     protected function getAbilityText() : string
     {
-        return _('During <b>FINAL SCORING</b>, gain 1 <icon-reputation> for each breed category represented in your Kennel.');
+        return DogPark::totranslate('During <b>FINAL SCORING</b>, gain 1 <icon-reputation> for each breed category represented in your Kennel.');
     }
 }

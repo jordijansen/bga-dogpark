@@ -272,6 +272,10 @@ class DogPark extends Table
         return $gameProgression;
     }
 
+    public static function totranslate($text) {
+        return self::_($text);
+    }
+
 
 //////////////////////////////////////////////////////////////////////////////
 //////////// Utility functions

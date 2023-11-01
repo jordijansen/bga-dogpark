@@ -2,6 +2,8 @@
 
 namespace objects\dogtraits;
 
+use DogPark;
+
 trait SearchAndRescue
 {
     protected function getAbility() : string
@@ -11,12 +13,12 @@ trait SearchAndRescue
 
     protected function getAbilityTitle() : string
     {
-        return _('Search and Rescue');
+        return DogPark::totranslate('Search and Rescue');
     }
 
     protected function getAbilityText() : string
     {
-        return _("When <b>WALKING</b> this dog, whenever you <icon-scout>, you may immediately <icon-swap>.");
+        return DogPark::totranslate("When <b>WALKING</b> this dog, whenever you <icon-scout>, you may immediately <icon-swap>.");
     }
 
     public function isAbilityOptional() : bool

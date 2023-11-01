@@ -2,6 +2,8 @@
 
 namespace objects\dogtraits;
 
+use DogPark;
+
 trait BallHog
 {
     public int $maxResources = 6;
@@ -12,11 +14,11 @@ trait BallHog
 
     protected function getAbilityTitle() : string
     {
-        return _('Ball Hog');
+        return DogPark::totranslate('Ball Hog');
     }
 
     protected function getAbilityText() : string
     {
-        return _('During <b>FINAL SCORING</b>, gain 1 <icon-reputation> for each leftover <icon-ball> assigned to this dog. Max. 6 <icon-reputation>.');
+        return DogPark::totranslate('During <b>FINAL SCORING</b>, gain 1 <icon-reputation> for each leftover <icon-ball> assigned to this dog. Max. 6 <icon-reputation>.');
     }
 }

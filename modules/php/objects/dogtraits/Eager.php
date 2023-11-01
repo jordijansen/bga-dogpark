@@ -2,6 +2,8 @@
 
 namespace objects\dogtraits;
 
+use DogPark;
+
 trait Eager
 {
     public string $eagerResource;
@@ -12,12 +14,12 @@ trait Eager
     }
     protected function getAbilityTitle() : string
     {
-        return _('Eager');
+        return DogPark::totranslate('Eager');
     }
 
     protected function getAbilityText() : string
     {
-        return sprintf(_("During <b>SELECTION</b>, when you place this dog on the Lead, gain <icon-%s>."), $this->eagerResource);
+        return sprintf(DogPark::totranslate("During <b>SELECTION</b>, when you place this dog on the Lead, gain <icon-%s>."), $this->eagerResource);
     }
 
 }

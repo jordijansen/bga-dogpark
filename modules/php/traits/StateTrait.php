@@ -743,6 +743,7 @@ trait StateTrait
                         $this->playerManager->payResources($playerId, $resources);
                         $this->dogManager->addResources($dogInKennel->id, $resourceToAdd, $nrOfResourcesToAdd);
                         $this->notifyAllPlayers('playerAssignsResources', clienttranslate('${player_name} assigns ${nrOfResourcesAdded} ${resourceType} to <b>${dogName}</b>'),[
+                            'i18n' => ['dogName'],
                             'playerId' => $playerId,
                             'player_name' => $this->getPlayerName($playerId),
                             'dogName' => $dogInKennel->name,

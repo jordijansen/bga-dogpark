@@ -62,6 +62,7 @@ trait ArgsTrait
         $freeDogsOnLead = $freeDogsOnLead != null ? $freeDogsOnLead : 0;
 
         return [
+            'i18n' => ['dogName'],
             "playerId" => $playerId,
             "dog" => $dog,
             "dogName" => $dog->name,

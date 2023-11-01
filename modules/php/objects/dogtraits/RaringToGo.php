@@ -2,6 +2,8 @@
 
 namespace objects\dogtraits;
 
+use DogPark;
+
 trait RaringToGo
 {
     protected function getAbility() : string
@@ -11,11 +13,11 @@ trait RaringToGo
 
     protected function getAbilityTitle() : string
     {
-        return _('Raring to Go');
+        return DogPark::totranslate('Raring to Go');
     }
 
     protected function getAbilityText() : string
     {
-        return _('During <b>FINAL SCORING</b>, gain 2 <icon-reputation> for each <icon-walked> on this dog.');
+        return DogPark::totranslate('During <b>FINAL SCORING</b>, gain 2 <icon-reputation> for each <icon-walked> on this dog.');
     }
 }

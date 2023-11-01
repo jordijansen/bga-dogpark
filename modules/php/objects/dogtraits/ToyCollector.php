@@ -2,6 +2,8 @@
 
 namespace objects\dogtraits;
 
+use DogPark;
+
 trait ToyCollector
 {
     public int $maxResources = 3;
@@ -12,11 +14,11 @@ trait ToyCollector
 
     protected function getAbilityTitle() : string
     {
-        return _('Toy Collector');
+        return DogPark::totranslate('Toy Collector');
     }
 
     protected function getAbilityText() : string
     {
-        return _('During <b>FINAL SCORING</b>, gain 2 <icon-reputation> for each leftover <icon-toy> assigned to this dog. Max. 6 <icon-reputation>.');
+        return DogPark::totranslate('During <b>FINAL SCORING</b>, gain 2 <icon-reputation> for each leftover <icon-toy> assigned to this dog. Max. 6 <icon-reputation>.');
     }
 }

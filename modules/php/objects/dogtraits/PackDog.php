@@ -2,6 +2,8 @@
 
 namespace objects\dogtraits;
 
+use DogPark;
+
 trait PackDog
 {
     protected function getAbility() : string
@@ -11,11 +13,11 @@ trait PackDog
 
     protected function getAbilityTitle() : string
     {
-        return _('Pack Dog');
+        return DogPark::totranslate('Pack Dog');
     }
 
     protected function getAbilityText() : string
     {
-        return sprintf(_("During <b>FINAL SCORING</b>, gain 2 <icon-reputation> for each ^%s^ in your Kennel."), current($this->breeds));
+        return sprintf(DogPark::totranslate("During <b>FINAL SCORING</b>, gain 2 <icon-reputation> for each ^%s^ in your Kennel."), current($this->breeds));
     }
 }

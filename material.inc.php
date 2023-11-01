@@ -35,13 +35,13 @@ $this->card_types = array(
 require_once(__DIR__.'/modules/php/Constants.inc.php');
 
 $this->BREEDS = [
-    BREED_GUNDOG     => clienttranslate('gundog'),
-    BREED_HOUND      => clienttranslate('hound'),
-    BREED_PASTORAL   => clienttranslate('pastoral'),
-    BREED_TERRIER    => clienttranslate('terrier'),
-    BREED_TOY        => clienttranslate('toy'),
-    BREED_UTILITY    => clienttranslate('utility'),
-    BREED_WORKING    => clienttranslate('working')
+    BREED_GUNDOG     => clienttranslate('Gundog'),
+    BREED_HOUND      => clienttranslate('Hound'),
+    BREED_PASTORAL   => clienttranslate('Pastoral'),
+    BREED_TERRIER    => clienttranslate('Terrier'),
+    BREED_TOY        => clienttranslate('Toy'),
+    BREED_UTILITY    => clienttranslate('Utility'),
+    BREED_WORKING    => clienttranslate('Working')
 ];
 
 $this->RESOURCES = [

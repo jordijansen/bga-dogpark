@@ -2,6 +2,8 @@
 
 namespace objects\dogtraits;
 
+use DogPark;
+
 trait Obedient
 {
     public string $obedientResource;
@@ -12,11 +14,11 @@ trait Obedient
     }
     protected function getAbilityTitle() : string
     {
-        return _('Obedient');
+        return DogPark::totranslate('Obedient');
     }
 
     protected function getAbilityText() : string
     {
-        return sprintf(_("When <b>WALKING</b> this dog, whenever you gain 1 or more <icon-%s>, gain 1 <icon-reputation>. Activates once per movement."), $this->obedientResource);
+        return sprintf(DogPark::totranslate("When <b>WALKING</b> this dog, whenever you gain 1 or more <icon-%s>, gain 1 <icon-reputation>. Activates once per movement."), $this->obedientResource);
     }
 }
