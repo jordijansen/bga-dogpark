@@ -365,6 +365,7 @@ trait StateTrait
             $this->dogWalkers->moveCard($lastWalker->id, LOCATION_PARK, 94);
 
             $this->notifyAllPlayers('playerLeavesThePark', clienttranslate('${player_name} leaves the park and loses ${resource}'),[
+                'i18n' => ['resource'],
                 'playerId' => $playerId,
                 'player_name' => $this->getPlayerName($playerId),
                 'resource' => 'reputation',
@@ -621,6 +622,7 @@ trait StateTrait
             }
             foreach ($breedExpertCards as $breedExpertCard) {
                 $this->notifyAllPlayers('playerWinsBreedExpert', clienttranslate('${player_name} wins ${breed} Breed Expert and gains ${reputation} reputation'),[
+                    'i18n' => ['breed'],
                     'playerId' => $playerId,
                     'player_name' => $this->getPlayerName($playerId),
                     'breed' => $breedExpertCard->type,
@@ -743,7 +745,7 @@ trait StateTrait
                         $this->playerManager->payResources($playerId, $resources);
                         $this->dogManager->addResources($dogInKennel->id, $resourceToAdd, $nrOfResourcesToAdd);
                         $this->notifyAllPlayers('playerAssignsResources', clienttranslate('${player_name} assigns ${nrOfResourcesAdded} ${resourceType} to <b>${dogName}</b>'),[
-                            'i18n' => ['dogName'],
+                            'i18n' => ['dogName', 'resourceType'],
                             'playerId' => $playerId,
                             'player_name' => $this->getPlayerName($playerId),
                             'dogName' => $dogInKennel->name,

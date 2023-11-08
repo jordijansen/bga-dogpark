@@ -2819,7 +2819,7 @@ var HelpDialogManager = /** @class */ (function () {
         html += "<div class=\"dog-card-art dog-card-art-".concat(card.typeArg, "\"></div>");
         html += "</div>";
         html += "<div class=\"dp-help-dialog-content-right\">";
-        html += "<p>".concat(dojo.string.substitute(_('<b>Breed(s)</b>: ${breeds}'), { breeds: card.breeds.map(function (breed) { return _(breed).toUpperCase(); }).join(', ') }), "</p>");
+        html += "<p>".concat(dojo.string.substitute(_('<b>Breed(s)</b>: ${breeds}'), { breeds: card.breeds.map(function (breed) { return _(breed.charAt(0).toUpperCase() + breed.slice(1)); }).join(', ') }), "</p>");
         html += "<p>".concat(dojo.string.substitute(_('<b>Walking cost</b>: ${cost}'), { cost: this.dogParkGame.formatWithIcons(Object.entries(card.costs).map(function (_a) {
                 var resource = _a[0], quantity = _a[1];
                 var result = [];
@@ -2828,8 +2828,8 @@ var HelpDialogManager = /** @class */ (function () {
                 }
                 return result.join(' ');
             }).join('')) }), "</p>");
-        html += "<p><b>".concat(_(card.abilityTitle), "</b></p>");
-        html += "<p>".concat(this.dogParkGame.formatWithIcons(_(card.abilityText)), "</p>");
+        html += "<p><b>".concat(card.abilityTitle, "</b></p>");
+        html += "<p>".concat(this.dogParkGame.formatWithIcons(card.abilityText), "</p>");
         html += "</div>";
         html += "</div>";
         this.showDialog(event, card.name, html);
@@ -2854,6 +2854,45 @@ var HelpDialogManager = /** @class */ (function () {
         html += "</div>";
         html += "</div>";
         this.showDialog(event, dojo.string.substitute(_('Round ${roundNumber} Forecast Card'), { roundNumber: card.locationArg }), html);
+    };
+    HelpDialogManager.prototype.getPlayerAidHtml = function () {
+        var html = '';
+        html += "<h2>".concat(_('Icons'), "</h2>");
+        html += "<h3>".concat(_('Resources'), "</h3>");
+        html += "<div class=\"dp-player-aid-resource-wrapper\">";
+        html += "<div class=\"dp-player-aid-resource\">".concat(this.dogParkGame.tokenIcon('stick'), " - ").concat(_('stick'), "</div>");
+        html += "<div class=\"dp-player-aid-resource\">".concat(this.dogParkGame.tokenIcon('ball'), " - ").concat(_('ball'), "</div>");
+        html += "<div class=\"dp-player-aid-resource\">".concat(this.dogParkGame.tokenIcon('treat'), " - ").concat(_('treat'), "</div>");
+        html += "<div class=\"dp-player-aid-resource\">".concat(this.dogParkGame.tokenIcon('toy'), " - ").concat(_('toy'), "</div>");
+        html += "<div class=\"dp-player-aid-resource\">".concat(this.dogParkGame.tokenIcon('all-resources'), " - ").concat(_('any resource'), "</div>");
+        html += "<div class=\"dp-player-aid-resource\">".concat(this.dogParkGame.tokenIcon('walked'), " - ").concat(_('walked'), "</div>");
+        html += "<div class=\"dp-player-aid-resource\">".concat(this.dogParkGame.tokenIcon('reputation'), " - ").concat(_('reputation'), "</div>");
+        html += "</div>";
+        html += "<h3>".concat(_('Actions'), "</h3>");
+        html += "<p>".concat(this.dogParkGame.tokenIcon('swap'), " - ").concat(_('Swap: You may exchange 1 Dog from your Kennel with a Dog in the Field.'), "</p>");
+        html += "<p>".concat(this.dogParkGame.tokenIcon('scout'), " - ").concat(_('Scout: You may reveal the top two cards of the deck. You may replace a Dog in the Field with 1 of the Dogs drawn. Unselected cards are removed from the game.'), "</p>");
+        html += "<h2>".concat(_('Game Round'), "</h2>");
+        html += "<p>".concat(_('Dog Park is played over 4 rounds, and each round is split into 4 phases.'), "</p>");
+        html += "<h3>".concat(_('Phase 1: Recruitment'), "</h3>");
+        html += "<p>".concat(this.dogParkGame.formatWithIcons(_('Over 2 rounds of Offers, use your <icon-reputation> to Offer on Dogs in the Field and add them to your Kennel.')), "</p>");
+        html += "<h3>".concat(_('Phase 2: Selection'), "</h3>");
+        html += "<p>".concat(this.dogParkGame.formatWithIcons(_('Prepare to walk up to 3 Dogs by paying their walking costs, placing them on your Lead. Dogs placed on your lead gain a <icon-walked> token.')), "</p>");
+        html += "<p>".concat(this.dogParkGame.formatWithIcons(_('<strong>Remember!</strong> If needed you may use <icon-all-resources> + <icon-all-resources> =  <icon-all-resources>')), "</p>");
+        html += "<h3>".concat(_('Phase 3: Walking'), "</h3>");
+        html += "<p>".concat(_('Take turns to move your Walker through the Park. You immediately claim the Leaving Bonus when you leave the park.'), "</p>");
+        html += "<h3>".concat(_('Phase 4: Home Time'), "</h3>");
+        html += "<p>".concat(this.dogParkGame.formatWithIcons(_('You gain 2 <icon-reputation> for each Dog on your Lead.')), "</p>");
+        html += "<p>".concat(this.dogParkGame.formatWithIcons(_('You lose 1 <icon-reputation> for each Dog in your kennel without a <icon-walked>.')), "</p>");
+        html += "<p>".concat(_('Finally the Forecast card is flipped and new Location Bonuses are added to the park. The First Walker token is passed clockwise and a new round begins.'), "</p>");
+        html += "<h2>".concat(_('Final Scoring'), "</h2>");
+        html += "<p>".concat(_('Your final score is calculated by adding the following items together:'), "</p>");
+        html += "<p>+ ".concat(this.dogParkGame.formatWithIcons(_('<icon-reputation> gained during the game')), "</p>");
+        html += "<p>+ ".concat(this.dogParkGame.formatWithIcons(_('<icon-reputation> from dogs with <strong>FINAL SCORING</strong> abilities')), "</p>");
+        html += "<p>+ ".concat(this.dogParkGame.formatWithIcons(_('<icon-reputation> from won <strong>Breed Expert</strong> awards')), "</p>");
+        html += "<p>+ ".concat(this.dogParkGame.formatWithIcons(_('<icon-reputation> from your completed <strong>Objective card</strong>')), "</p>");
+        html += "<p>+ ".concat(this.dogParkGame.formatWithIcons(_('Every <strong>5 remaining resources</strong> = <icon-reputation>')), "</p>");
+        html += "<p>".concat(this.dogParkGame.formatWithIcons(_('The player with the most <icon-reputation> wins. If there is a tie, the player who won the highest valued Breed Expert award wins. If players are still tied, they share the victory.')), "</p>");
+        return html;
     };
     HelpDialogManager.prototype.showDialog = function (event, title, html) {
         dojo.stopEvent(event);
@@ -3947,7 +3986,7 @@ var DogPark = /** @class */ (function () {
             buttons: [
                 new BgaHelpPopinButton({
                     title: _("Player Aid"),
-                    html: "\n                        <div class=\"player-aid-wrapper\">\n                            <div class=\"player-aid-art player-aid-art-1\"></div>\n                            <div class=\"player-aid-art player-aid-art-2\"></div>\n                            <div class=\"player-aid-art player-aid-art-3\"></div>\n                            <div class=\"player-aid-art player-aid-art-4\"></div>\n                        </div>\n                    ",
+                    html: this.helpDialogManager.getPlayerAidHtml(),
                 })
             ],
         });

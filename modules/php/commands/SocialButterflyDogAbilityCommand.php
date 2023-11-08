@@ -28,7 +28,7 @@ class SocialButterflyDogAbilityCommand extends BaseCommand
         DogPark::$instance->dogWalkPark->createLocationBonusActions($this->playerId, $locationId, $this->actionId);
 
         DogPark::$instance->notifyAllPlayers('activateDogAbility', clienttranslate('${player_name} activates <b>${dogName}: ${abilityTitle}</b>'),[
-            'i18n' => ['dogName'],
+            'i18n' => ['dogName', 'abilityTitle'],
             'playerId' => $this->playerId,
             'player_name' => DogPark::$instance->getPlayerName($this->playerId),
             'dog' => $dog,
@@ -48,7 +48,7 @@ class SocialButterflyDogAbilityCommand extends BaseCommand
         DogPark::$instance->dogManager->undoWalkingAdditionalActionForDogsOnLead($this->playerId, $this->actionId);
 
         DogPark::$instance->notifyAllPlayers('activateDogAbility', clienttranslate('Undo: <s>${player_name} activates <b>${dogName}: ${abilityTitle}</b></s>'),[
-            'i18n' => ['dogName'],
+            'i18n' => ['dogName', 'abilityTitle'],
             'playerId' => $this->playerId,
             'player_name' => DogPark::$instance->getPlayerName($this->playerId),
             'dog' => $dog,

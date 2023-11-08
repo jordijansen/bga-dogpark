@@ -2188,28 +2188,12 @@ body > .card {
   background-position: 100% 100%;
 }
 
-.player-aid-wrapper {
+.dp-player-aid-resource-wrapper {
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
 }
-.player-aid-wrapper .player-aid-art {
-  background-image: url("img/dogpark-player-aid-cards.jpg");
-  background-size: 400% auto;
-  width: 292px;
-  height: 399px;
-}
-.player-aid-wrapper .player-aid-art.player-aid-art-1 {
-  background-position: 0 0;
-}
-.player-aid-wrapper .player-aid-art.player-aid-art-2 {
-  background-position: 33.3333333333% 0;
-}
-.player-aid-wrapper .player-aid-art.player-aid-art-3 {
-  background-position: 66.6666666666% 0;
-}
-.player-aid-wrapper .player-aid-art.player-aid-art-4 {
-  background-position: 100% 0;
+.dp-player-aid-resource-wrapper .dp-player-aid-resource {
+  width: 50%;
 }
 
 .blackjack-size-portrait {

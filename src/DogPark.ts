@@ -108,14 +108,7 @@ class DogPark implements DogParkGame {
             buttons: [
                 new BgaHelpPopinButton({
                     title: _("Player Aid"),
-                    html: `
-                        <div class="player-aid-wrapper">
-                            <div class="player-aid-art player-aid-art-1"></div>
-                            <div class="player-aid-art player-aid-art-2"></div>
-                            <div class="player-aid-art player-aid-art-3"></div>
-                            <div class="player-aid-art player-aid-art-4"></div>
-                        </div>
-                    `,
+                    html: this.helpDialogManager.getPlayerAidHtml(),
                 })
             ],
         });

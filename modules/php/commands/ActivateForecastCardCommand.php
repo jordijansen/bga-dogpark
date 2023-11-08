@@ -46,10 +46,23 @@ class ActivateForecastCardCommand extends BaseCommand
             DogPark::$instance->updatePlayerScore($this->playerId, DogPark::$instance->getPlayerScore($this->playerId) + $this->reputation);
         }
 
+        $logs = [];
+        $args = [];
+        $i = 0;
+        foreach ($this->resources as $resource) {
+            $logs[] = '${res'. $i . '}';
+            $args['res' . $i] = $resource;
+            $args['i18n'][] = 'res' . $i;
+        }
         DogPark::$instance->notifyAllPlayers('activateForecastCard', $this->doLogMessage, [
+            'i18n' => ['resourcesLog'],
             'playerId' => $this->playerId,
             'player_name' => DogPark::$instance->getPlayerName($this->playerId),
             'forecastCard' => DogPark::$instance->forecastManager->getCurrentForecastCard(),
+            'resourcesLog' => [
+                'log' => implode(',', $logs),
+                'args' => $args
+            ],
             'gainedResources' => $this->resources,
             'gainedReputation' => $this->reputation,
             'score' => DogPark::$instance->getPlayerScore($this->playerId)
@@ -79,11 +92,23 @@ class ActivateForecastCardCommand extends BaseCommand
             DogPark::$instance->updatePlayerScore($this->playerId, DogPark::$instance->getPlayerScore($this->playerId) - $this->reputation);
         }
 
-
+        $logs = [];
+        $args = [];
+        $i = 0;
+        foreach ($this->resources as $resource) {
+            $logs[] = '${res'. $i . '}';
+            $args['res' . $i] = $resource;
+            $args['i18n'][] = 'res' . $i;
+        }
         DogPark::$instance->notifyAllPlayers('activateForecastCard', $this->undoLogMessage, [
+            'i18n' => ['resourcesLog'],
             'playerId' => $this->playerId,
             'player_name' => DogPark::$instance->getPlayerName($this->playerId),
             'forecastCard' => DogPark::$instance->forecastManager->getCurrentForecastCard(),
+            'resourcesLog' => [
+                'log' => implode(',', $logs),
+                'args' => $args
+            ],
             'lostResources' => $this->resources,
             'lostReputation' => $this->reputation,
             'score' => DogPark::$instance->getPlayerScore($this->playerId)

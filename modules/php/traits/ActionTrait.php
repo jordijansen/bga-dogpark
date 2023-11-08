@@ -453,18 +453,18 @@ trait ActionTrait
         $forecastCard = $this->forecastManager->getCurrentForecastCard();
         if ($forecastCard->typeArg == 1) {
             $actionId = $this->getGlobalVariable(CURRENT_ACTION_ID .$playerId);
-            $this->commandManager->addCommand($playerId, new ActivateForecastCardCommand($playerId, $actionId, $resources, 0, clienttranslate('${player_name} activates the current round Forecast Card gaining ${gainedResources}'), clienttranslate('Undo: <s>${player_name} activates the current round Forecast Card gaining ${lostResources}<s>')));
+            $this->commandManager->addCommand($playerId, new ActivateForecastCardCommand($playerId, $actionId, $resources, 0, clienttranslate('${player_name} activates the current round Forecast Card gaining ${resourcesLog}'), clienttranslate('Undo: <s>${player_name} activates the current round Forecast Card gaining ${resourcesLog}<s>')));
             $this->gamestate->setPrivateState($playerId, ST_SELECTION_PLACE_DOG_ON_LEAD);
         } else if ($forecastCard->typeArg == 2) {
-            $this->commandManager->addCommand($playerId, new ActivateForecastCardCommand($playerId, null, $resources, 0, clienttranslate('${player_name} activates the current round Forecast Card gaining ${gainedResources}'), clienttranslate('Undo: <s>${player_name} activates the current round Forecast Card gaining ${lostResources}<s>')));
+            $this->commandManager->addCommand($playerId, new ActivateForecastCardCommand($playerId, null, $resources, 0, clienttranslate('${player_name} activates the current round Forecast Card gaining ${resourcesLog}'), clienttranslate('Undo: <s>${player_name} activates the current round Forecast Card gaining ${resourcesLog}<s>')));
             $this->gamestate->setPlayerNonMultiactive($playerId, 'homeTime');
         } else if ($forecastCard->typeArg == 4) {
-            $this->commandManager->addCommand($playerId, new ActivateForecastCardCommand($playerId, null, $resources, $reputationToGain, clienttranslate('${player_name} activates the current round Forecast Card gaining ${gainedResources} and ${gainedReputation} reputation'), clienttranslate('Undo: <s>${player_name} activates the current round Forecast Card gaining ${lostResources} and ${lostReputation} reputation<s>')));
+            $this->commandManager->addCommand($playerId, new ActivateForecastCardCommand($playerId, null, $resources, $reputationToGain, clienttranslate('${player_name} activates the current round Forecast Card gaining ${resourcesLog} and ${gainedReputation} reputation'), clienttranslate('Undo: <s>${player_name} activates the current round Forecast Card gaining ${resourcesLog} and ${lostReputation} reputation<s>')));
             $this->gamestate->setPlayerNonMultiactive($playerId, 'homeTime');
         } else if ($forecastCard->typeArg == 7) {
             $currentPhase = $this->getGlobalVariable(CURRENT_PHASE);
-            $doLogMessage = clienttranslate('${player_name} activates the current round Forecast Card gaining ${gainedResources} and ${gainedReputation} reputation');
-            $undoLogMessage = clienttranslate('Undo: <s>${player_name} activates the current round Forecast Card gaining ${lostResources} and ${lostReputation} reputation<s>');
+            $doLogMessage = clienttranslate('${player_name} activates the current round Forecast Card gaining ${resourcesLog} and ${gainedReputation} reputation');
+            $undoLogMessage = clienttranslate('Undo: <s>${player_name} activates the current round Forecast Card gaining ${resourcesLog} and ${lostReputation} reputation<s>');
 
             if ($currentPhase == PHASE_RECRUITMENT_1 || $currentPhase == PHASE_RECRUITMENT_2) {
                 $this->commandManager->addCommand($playerId, new ActivateForecastCardCommand($playerId, null, $resources, 1, $doLogMessage, $undoLogMessage));

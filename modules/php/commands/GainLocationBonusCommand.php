@@ -38,9 +38,22 @@ class GainLocationBonusCommand extends BaseCommand
 
         DogPark::$instance->dogManager->createWalkingAdditionalActionsForDogsOnLead($this->playerId, $bonusType, $this->originActionId);
 
-        DogPark::$instance->notifyAllPlayers('playerGainsLocationBonusResource', clienttranslate('Location Bonus: ${player_name} gains ${resources}'),[
+        $logs = [];
+        $args = [];
+        $i = 0;
+        foreach ($resources as $resource) {
+            $logs[] = '${res'. $i . '}';
+            $args['res' . $i] = $resource;
+            $args['i18n'][] = 'res' . $i;
+        }
+        DogPark::$instance->notifyAllPlayers('playerGainsLocationBonusResource', clienttranslate('Location Bonus: ${player_name} gains ${resourcesLog}'),[
+            'i18n' => ['resourcesLog'],
             'playerId' => $this->playerId,
             'player_name' => DogPark::$instance->getPlayerName($this->playerId),
+            'resourcesLog' => [
+                'log' => implode(',', $logs),
+                'args' => $args
+            ],
             'resources' => $resources,
             'locationId' => $locationId,
             'score' => DogPark::$instance->getPlayerScore($this->playerId)
@@ -68,9 +81,22 @@ class GainLocationBonusCommand extends BaseCommand
 
         DogPark::$instance->dogManager->undoWalkingAdditionalActionForDogsOnLead($this->playerId, $this->originActionId);
 
-        DogPark::$instance->notifyAllPlayers('undoPlayerGainsLocationBonusResource', clienttranslate('Undo: <s>Location Bonus: ${player_name} gains ${resources}</s>'),[
+        $logs = [];
+        $args = [];
+        $i = 0;
+        foreach ($resources as $resource) {
+            $logs[] = '${res'. $i . '}';
+            $args['res' . $i] = $resource;
+            $args['i18n'][] = 'res' . $i;
+        }
+        DogPark::$instance->notifyAllPlayers('undoPlayerGainsLocationBonusResource', clienttranslate('Undo: <s>Location Bonus: ${player_name} gains ${resourcesLog}</s>'),[
+            'i18n' => ['resourcesLog'],
             'playerId' => $this->playerId,
             'player_name' => DogPark::$instance->getPlayerName($this->playerId),
+            'resourcesLog' => [
+                'log' => implode(',', $logs),
+                'args' => $args
+            ],
             'resources' => $resources,
             'locationId' => $locationId,
             'score' => DogPark::$instance->getPlayerScore($this->playerId)

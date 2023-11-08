@@ -56,6 +56,7 @@ interface DogParkGame extends Game {
     isReadOnly(): boolean;
     setTooltipToClass(className: string, html: string): void;
     formatWithIcons(description: string): string
+    tokenIcon(resource: string): string
     walkerIcon(color: string): string;
 }
 

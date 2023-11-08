@@ -30,9 +30,11 @@ class GainLeavingTheParkBonusCommand extends BaseCommand
             throw new BgaUserException("Not supported yet");
         }
 
-        DogPark::$instance->notifyAllPlayers('playerLeavesThePark', clienttranslate('${player_name} leaves the park and gains ${resource}'),[
+        DogPark::$instance->notifyAllPlayers('playerLeavesThePark', clienttranslate('${player_name} leaves the park and gains ${resourceLog}'),[
+            'i18n' => ['resourceLog'],
             'playerId' => $this->playerId,
             'player_name' => DogPark::$instance->getPlayerName($this->playerId),
+            'resourceLog' => $bonusType,
             'resource' => $bonusType,
             'locationId' => $locationId,
             'score' => DogPark::$instance->getPlayerScore($this->playerId)
@@ -59,9 +61,11 @@ class GainLeavingTheParkBonusCommand extends BaseCommand
             throw new BgaUserException("Not supported yet");
         }
 
-        DogPark::$instance->notifyAllPlayers('playerLeavesThePark', clienttranslate('Undo: <s>${player_name} leaves the park and gains ${resource}</s>'),[
+        DogPark::$instance->notifyAllPlayers('playerLeavesThePark', clienttranslate('Undo: <s>${player_name} leaves the park and gains ${resourceLog}</s>'),[
+            'i18n' => ['resourceLog'],
             'playerId' => $this->playerId,
             'player_name' => DogPark::$instance->getPlayerName($this->playerId),
+            'resourceLog' => $bonusType,
             'resource' => $bonusType,
             'locationId' => $locationId,
             'score' => DogPark::$instance->getPlayerScore($this->playerId)

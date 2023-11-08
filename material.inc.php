@@ -49,6 +49,14 @@ $this->RESOURCES = [
     RESOURCE_BALL   => clienttranslate('ball'),
     RESOURCE_TREAT  => clienttranslate('treat'),
     RESOURCE_TOY    => clienttranslate('toy'),
+
+];
+
+$this->SPECIAL_ICONS = [
+    SWAP => clienttranslate('swap'),
+    SCOUT => clienttranslate('scout'),
+    WALKED => clienttranslate('walked'),
+    REPUTATION => clienttranslate('reputation')
 ];
 
 $this->OBJECTIVE_CARD_TYPES = [
