@@ -19,7 +19,7 @@ class HelpDialogManager {
                 }
                 return result.join(' ');
             }).join('')) })}</p>`
-        html += `<p><b>${card.abilityTitle}</b></p>`
+        html += `<p><b>${_(card.abilityTitle)}</b></p>`
         html += `<p>${this.dogParkGame.formatWithIcons(card.abilityText)}</p>`
         html += `</div>`
         html += `</div>`

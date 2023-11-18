@@ -13,7 +13,7 @@ trait Sociable
 
     protected function getAbilityTitle() : string
     {
-        return DogPark::totranslate('Sociable');
+        return DogPark::$instance->ABILITIES[$this->getAbility()];
     }
 
     protected function getAbilityText() : string

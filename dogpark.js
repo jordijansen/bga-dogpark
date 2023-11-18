@@ -2828,7 +2828,7 @@ var HelpDialogManager = /** @class */ (function () {
                 }
                 return result.join(' ');
             }).join('')) }), "</p>");
-        html += "<p><b>".concat(card.abilityTitle, "</b></p>");
+        html += "<p><b>".concat(_(card.abilityTitle), "</b></p>");
         html += "<p>".concat(this.dogParkGame.formatWithIcons(card.abilityText), "</p>");
         html += "</div>";
         html += "</div>";
@@ -4284,7 +4284,7 @@ var DogPark = /** @class */ (function () {
                         _this.addActionButton("gainLeavingPark".concat(additionalAction.id), dojo.string.substitute(_('Gain leaving the park bonus ${resourceType}'), { resourceType: _this.tokenIcons(additionalAction.additionalArgs['bonusType'], additionalAction.additionalArgs['amount'], additionalAction.additionalArgs['swapIncludesWalkedToken'] ? ['walked'] : []) }), function () { return _this.additionalAction(additionalAction); }, null, null, buttonColor);
                         break;
                     case 'USE_DOG_ABILITY':
-                        _this.addActionButton("useDogAbility".concat(additionalAction.id), dojo.string.substitute('<b>${dogName}</b>: ${abilityTitle}', { dogName: _(additionalAction.additionalArgs['dogName']), abilityTitle: _(additionalAction.additionalArgs['abilityTitle']) }), function () { return _this.additionalAction(additionalAction); }, null, null, buttonColor);
+                        _this.addActionButton("useDogAbility".concat(additionalAction.id), dojo.string.substitute('<b>${dogName}</b>: <i>${abilityTitle}</i>', { dogName: _(additionalAction.additionalArgs['dogName']), abilityTitle: _(additionalAction.additionalArgs['abilityTitle']) }), function () { return _this.additionalAction(additionalAction); }, null, null, buttonColor);
                         break;
                     case 'USE_FORECAST_ABILITY':
                         _this.addActionButton("useForecastAbility".concat(additionalAction.id), _('Use Forecast Card'), function () { return _this.additionalAction(additionalAction); }, null, null, buttonColor);
@@ -4776,6 +4776,9 @@ var DogPark = /** @class */ (function () {
     DogPark.prototype.walkerIcon = function (color) {
         return "<span class=\"dp-dog-walker\" data-color=\"#".concat(color, "\"></span>");
     };
+    DogPark.prototype.breedIcon = function (breed) {
+        return "<span>".concat(_(breed.charAt(0).toUpperCase() + breed.slice(1)), "</span>");
+    };
     DogPark.prototype.updatePlayerOrdering = function () {
         var _this = this;
         this.inherited(arguments);
@@ -4797,6 +4800,13 @@ var DogPark = /** @class */ (function () {
                 tag = originalTag.replace('<', '');
                 tag = tag.replace('>', '');
                 var resultTag = _this.tokenIcon(tag.replace('icon-', ''));
+                description = description.replace(originalTag, resultTag);
+            }
+            else if (originalTag.includes('breed-')) {
+                var tag = '';
+                tag = originalTag.replace('<', '');
+                tag = tag.replace('>', '');
+                var resultTag = _this.breedIcon(tag.replace('breed-', ''));
                 description = description.replace(originalTag, resultTag);
             }
         });

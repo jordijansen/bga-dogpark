@@ -12,7 +12,7 @@ trait SocialButterfly
     }
     protected function getAbilityTitle() : string
     {
-        return DogPark::totranslate('Social Butterfly');
+        return DogPark::$instance->ABILITIES[$this->getAbility()];
     }
 
     protected function getAbilityText() : string

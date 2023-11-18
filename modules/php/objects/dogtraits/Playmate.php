@@ -14,7 +14,7 @@ trait Playmate
     }
     protected function getAbilityTitle() : string
     {
-        return DogPark::totranslate('Playmate');
+        return DogPark::$instance->ABILITIES[$this->getAbility()];
     }
 
     protected function getAbilityText() : string

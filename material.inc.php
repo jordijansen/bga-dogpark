@@ -49,7 +49,23 @@ $this->RESOURCES = [
     RESOURCE_BALL   => clienttranslate('ball'),
     RESOURCE_TREAT  => clienttranslate('treat'),
     RESOURCE_TOY    => clienttranslate('toy'),
+];
 
+$this->ABILITIES = [
+    EAGER => clienttranslate('Eager'),
+    CRAFTY => clienttranslate('Crafty'),
+    GO_FETCH => clienttranslate('Go Fetch!'),
+    OBEDIENT => clienttranslate('Obedient'),
+    PLAYMATE => clienttranslate('Playmate'),
+    SOCIAL_BUTTERFLY => clienttranslate('Social Butterfly'),
+    SEARCH_AND_RESCUE => clienttranslate('Search and Rescue'),
+    PACK_DOG => clienttranslate('Pack Dog'),
+    RARING_TO_GO => clienttranslate('Raring to Go'),
+    SOCIABLE => clienttranslate('Sociable'),
+    BALL_HOG => clienttranslate('Ball Hog'),
+    STICK_CHASER => clienttranslate('Stick Chaser'),
+    TOY_COLLECTOR => clienttranslate('Toy Collector'),
+    TREAT_LOVER => clienttranslate('Treat Lover'),
 ];
 
 $this->SPECIAL_ICONS = [

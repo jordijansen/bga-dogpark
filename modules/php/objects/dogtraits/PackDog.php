@@ -13,11 +13,11 @@ trait PackDog
 
     protected function getAbilityTitle() : string
     {
-        return DogPark::totranslate('Pack Dog');
+        return DogPark::$instance->ABILITIES[$this->getAbility()];
     }
 
     protected function getAbilityText() : string
     {
-        return sprintf(DogPark::totranslate("During <b>FINAL SCORING</b>, gain 2 <icon-reputation> for each ^%s^ in your Kennel."), current($this->breeds));
+        return sprintf(DogPark::totranslate("During <b>FINAL SCORING</b>, gain 2 <icon-reputation> for each <breed-%s> dog in your Kennel."), current($this->breeds));
     }
 }

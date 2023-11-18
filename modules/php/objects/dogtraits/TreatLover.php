@@ -14,7 +14,7 @@ trait TreatLover
 
     protected function getAbilityTitle() : string
     {
-        return DogPark::totranslate('Treat Lover');
+        return DogPark::$instance->ABILITIES[$this->getAbility()];
     }
 
     protected function getAbilityText() : string

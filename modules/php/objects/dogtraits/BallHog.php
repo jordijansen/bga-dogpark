@@ -14,7 +14,7 @@ trait BallHog
 
     protected function getAbilityTitle() : string
     {
-        return DogPark::totranslate('Ball Hog');
+        return DogPark::$instance->ABILITIES[$this->getAbility()];
     }
 
     protected function getAbilityText() : string

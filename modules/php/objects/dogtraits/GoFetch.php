@@ -15,7 +15,7 @@ trait GoFetch
     }
     protected function getAbilityTitle() : string
     {
-        return DogPark::totranslate('Go Fetch!');
+        return DogPark::$instance->ABILITIES[$this->getAbility()];
     }
 
     protected function getAbilityText() : string

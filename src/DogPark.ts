@@ -424,7 +424,7 @@ class DogPark implements DogParkGame {
                         (this as any).addActionButton(`gainLeavingPark${additionalAction.id}`, dojo.string.substitute(_('Gain leaving the park bonus ${resourceType}'), { resourceType: this.tokenIcons(additionalAction.additionalArgs['bonusType'], additionalAction.additionalArgs['amount'], additionalAction.additionalArgs['swapIncludesWalkedToken'] ? ['walked'] : []) }), () => this.additionalAction(additionalAction), null, null, buttonColor);
                         break;
                     case 'USE_DOG_ABILITY':
-                        (this as any).addActionButton(`useDogAbility${additionalAction.id}`, dojo.string.substitute('<b>${dogName}</b>: ${abilityTitle}', { dogName: _(additionalAction.additionalArgs['dogName']), abilityTitle: _(additionalAction.additionalArgs['abilityTitle']) }), () => this.additionalAction(additionalAction), null, null, buttonColor);
+                        (this as any).addActionButton(`useDogAbility${additionalAction.id}`, dojo.string.substitute('<b>${dogName}</b>: <i>${abilityTitle}</i>', { dogName: _(additionalAction.additionalArgs['dogName']), abilityTitle: _(additionalAction.additionalArgs['abilityTitle']) }), () => this.additionalAction(additionalAction), null, null, buttonColor);
                         break;
                     case 'USE_FORECAST_ABILITY':
                         (this as any).addActionButton(`useForecastAbility${additionalAction.id}`, _('Use Forecast Card'), () => this.additionalAction(additionalAction), null, null, buttonColor);
@@ -939,6 +939,10 @@ class DogPark implements DogParkGame {
         return `<span class="dp-dog-walker" data-color="#${color}"></span>`
     }
 
+    public breedIcon(breed: string) {
+        return `<span>${_(breed.charAt(0).toUpperCase() + breed.slice(1))}</span>`
+    }
+
     public updatePlayerOrdering() {
         (this as any).inherited(arguments);
         this.gamedatas.autoWalkers.forEach(autoWalker => {
@@ -960,6 +964,12 @@ class DogPark implements DogParkGame {
                 tag = originalTag.replace('<', '')
                 tag = tag.replace('>', '');
                 const resultTag = this.tokenIcon(tag.replace('icon-', ''));
+                description = description.replace(originalTag, resultTag)
+            } else if (originalTag.includes('breed-')) {
+                let tag = '';
+                tag = originalTag.replace('<', '')
+                tag = tag.replace('>', '');
+                const resultTag = this.breedIcon(tag.replace('breed-', ''));
                 description = description.replace(originalTag, resultTag)
             }
         })

@@ -14,7 +14,7 @@ trait Obedient
     }
     protected function getAbilityTitle() : string
     {
-        return DogPark::totranslate('Obedient');
+        return DogPark::$instance->ABILITIES[$this->getAbility()];
     }
 
     protected function getAbilityText() : string

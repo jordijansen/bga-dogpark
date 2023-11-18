@@ -14,7 +14,7 @@ trait Eager
     }
     protected function getAbilityTitle() : string
     {
-        return DogPark::totranslate('Eager');
+        return DogPark::$instance->ABILITIES[$this->getAbility()];
     }
 
     protected function getAbilityText() : string

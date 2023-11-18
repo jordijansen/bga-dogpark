@@ -14,7 +14,7 @@ trait StickChaser
 
     protected function getAbilityTitle() : string
     {
-        return DogPark::totranslate('Stick Chaser');
+        return DogPark::$instance->ABILITIES[$this->getAbility()];
     }
 
     protected function getAbilityText() : string

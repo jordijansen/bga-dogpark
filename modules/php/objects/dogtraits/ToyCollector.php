@@ -14,7 +14,7 @@ trait ToyCollector
 
     protected function getAbilityTitle() : string
     {
-        return DogPark::totranslate('Toy Collector');
+        return DogPark::$instance->ABILITIES[$this->getAbility()];
     }
 
     protected function getAbilityText() : string

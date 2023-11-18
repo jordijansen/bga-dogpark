@@ -13,7 +13,7 @@ trait RaringToGo
 
     protected function getAbilityTitle() : string
     {
-        return DogPark::totranslate('Raring to Go');
+        return DogPark::$instance->ABILITIES[$this->getAbility()];
     }
 
     protected function getAbilityText() : string

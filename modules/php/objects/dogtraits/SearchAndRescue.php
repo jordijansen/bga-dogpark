@@ -13,7 +13,7 @@ trait SearchAndRescue
 
     protected function getAbilityTitle() : string
     {
-        return DogPark::totranslate('Search and Rescue');
+        return DogPark::$instance->ABILITIES[$this->getAbility()];
     }
 
     protected function getAbilityText() : string
