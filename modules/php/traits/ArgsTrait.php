@@ -48,7 +48,7 @@ trait ArgsTrait
             "canCancelMoves" => DogPark::$instance->commandManager->hasCommands($playerId),
             "playerId" => $playerId,
             "maxNumberOfDogs" => DogPark::$instance->forecastManager->getCurrentRoundMaxNumberOfDogsForSelection(),
-            "numberOfDogsOnlead" => sizeof(DogPark::$instance->dogCards->getCardsInLocation(LOCATION_LEAD, $playerId)),
+            "numberOfDogsOnlead" => DogPark::$instance->dogCards->countCardInLocation(LOCATION_LEAD, $playerId),
             "dogs" => DogPark::$instance->dogManager->getDogsForSelection($playerId, $freeDogsOnLead > 0),
             "additionalActions" => $this->actionManager->getActions($playerId, true)
         ];
