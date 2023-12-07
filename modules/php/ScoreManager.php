@@ -182,6 +182,6 @@ class ScoreManager
             return 0;
         }
 
-        throw new BgaUserException('Scoring Card not implemented');
+        return 0;
     }
 }
