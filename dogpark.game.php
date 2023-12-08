@@ -50,6 +50,7 @@ require_once('modules/php/commands/ObedientDogAbilityCommand.php');
 require_once('modules/php/commands/PlaymateDogAbilityCommand.php');
 require_once('modules/php/commands/SocialButterflyDogAbilityCommand.php');
 require_once('modules/php/commands/ActivateForecastCardCommand.php');
+require_once('modules/php/commands/WellTrainedDogAbilityCommand.php');
 
 require_once('modules/php/objects/Card.php');
 require_once('modules/php/objects/BreedExpertCard.php');
@@ -123,6 +124,8 @@ class DogPark extends Table
             VARIANT_PACKED_PARK_OPTION => VARIANT_PACKED_PARK_OPTION_ID,
             VARIANT_GENTLE_WALK_OPTION => VARIANT_GENTLE_WALK_OPTION_ID,
             VARIANT_PREDICTABLE_FORECAST_OPTION => VARIANT_PREDICTABLE_FORECAST_OPTION_ID,
+
+            EXP_EUROPEAN => EXPANSION_EUROPEAN_DOGS_OPTION_ID
         ));
 
         self::$instance = $this;

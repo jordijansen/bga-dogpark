@@ -5,6 +5,7 @@
  */
 
 const BASE_GAME = 'BASE_GAME';
+const EXP_EUROPEAN = 'EXP_EUROPEAN';
 
 const BREED_GUNDOG      = 'gundog';
 const BREED_HOUND       = 'hound';
@@ -43,6 +44,10 @@ const PHASE_HOME_TIME = 'PHASE_HOME_TIME';
 /**
  * Options
  */
+
+const EXPANSION_EUROPEAN_DOGS_OPTION_ID = 101;
+const EXPANSION_EUROPEAN_DOGS_OPTION_EXCLUDED = 0;
+const EXPANSION_EUROPEAN_DOGS_OPTION_INCLUDED = 1;
 
 const VARIANT_PACKED_PARK_OPTION_ID = 110;
 const VARIANT_PACKED_PARK_OPTION = 'variant_packed_park';
@@ -206,13 +211,11 @@ const USE_FORECAST_ABILITY = 'USE_FORECAST_ABILITY';
  */
 const EAGER = 'eager';
 const CRAFTY = 'crafty';
-
 const GO_FETCH = 'gofetch';
 const OBEDIENT = 'obedient';
 const PLAYMATE = 'playmate';
 const SOCIAL_BUTTERFLY = 'socialbutterfly';
 const SEARCH_AND_RESCUE = 'searchandrescue';
-
 const PACK_DOG = 'packdog';
 const RARING_TO_GO = 'raringtogo';
 const SOCIABLE = 'sociable';
@@ -220,6 +223,9 @@ const BALL_HOG = 'ballhog';
 const STICK_CHASER = 'stickchaser';
 const TOY_COLLECTOR = 'toycollector';
 const TREAT_LOVER = 'treatlover';
+// EUROPEAN DOGS
+const LONE_WOLF = 'lonewolf';
+const WELL_TRAINED = 'welltrained';
 
 const SELECTION_ABILITIES = [EAGER, CRAFTY];
 const WALKING_ABILITIES = [GO_FETCH];

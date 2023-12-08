@@ -1,19 +1,20 @@
-for i in {001..163}
+for i in {301..301}
 do
     echo """<?php
 namespace objects\dogs;
 
 use objects\DogCard;
+use objects\dogtraits\TreatLover;
 
 class Dog${i} extends DogCard {
-
+    use TreatLover;
     public function __construct(\$dbCard)
     {
         parent::__construct(\$dbCard);
-        \$this->name = '';
-        \$this->breeds = [];
-        \$this->costs = [];
-        \$this->ability = $this->getAbility();
+        \$this->name = clienttranslate('Russian Black Terrier');
+        \$this->breeds = [BREED_WORKING];
+        \$this->costs = [RESOURCE_STICK => 2];
+        \$this->ability = \$this->getAbility();
         \$this->abilityTitle = \$this->getAbilityTitle();
         \$this->abilityText = \$this->getAbilityText();
     }

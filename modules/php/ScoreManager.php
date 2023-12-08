@@ -108,6 +108,10 @@ class ScoreManager
                 $result[$scoringDog->id] = $scoringDog->resourcesOnCard[RESOURCE_TOY] * 2;
             } else if ($scoringDog->ability == TREAT_LOVER) {
                 $result[$scoringDog->id] = $scoringDog->resourcesOnCard[RESOURCE_TREAT] * 2;
+            } else if ($scoringDog->ability == LONE_WOLF) {
+                $loneWolfBreed = current($scoringDog->breeds);
+                $otherDogsWithSameBreed = array_filter($playerDogs, fn($dog) => in_array($loneWolfBreed, $dog->breeds) && $dog->id !== $scoringDog->id);
+                $result[$scoringDog->id] = sizeof($otherDogsWithSameBreed) === 0 ? 3 : 0;
             }
         }
         return $result;

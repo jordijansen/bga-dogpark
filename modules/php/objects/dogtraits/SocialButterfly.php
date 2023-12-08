@@ -10,11 +10,6 @@ trait SocialButterfly
     {
         return SOCIAL_BUTTERFLY;
     }
-    protected function getAbilityTitle() : string
-    {
-        return DogPark::$instance->ABILITIES[$this->getAbility()];
-    }
-
     protected function getAbilityText() : string
     {
         return DogPark::totranslate("When <b>WALKING</b> this dog, if you land on an occupied location, do not pay 1 <icon-reputation> to gain the location reward.");

@@ -28,6 +28,20 @@ require_once(__DIR__.'/modules/php/Constants.inc.php');
 
 $game_options = [
 
+    EXPANSION_EUROPEAN_DOGS_OPTION_ID => [
+        'name' => totranslate('Expansion: European Dogs'),
+        'values' => [
+            EXPANSION_EUROPEAN_DOGS_OPTION_EXCLUDED => [
+                'default' => true,
+                'name' => 'disabled',
+            ],
+            EXPANSION_EUROPEAN_DOGS_OPTION_INCLUDED => [
+                'name' => 'enabled',
+                'description' => totranslate("It's time to take some of Europe's finest dogs for a walk. The European Dogs expansion includes 29 cards with 2 new abilities: Lone Wolf and Well Trained."),
+            ]
+        ],
+    ],
+
     VARIANT_PACKED_PARK_OPTION_ID => [
         'name' => totranslate('Variant: Packed Park'),
         'values' => [

@@ -77,7 +77,8 @@ class DogManager extends APP_DbObject
             if (!in_array($dog->id, $usedDogIds)) {
                 if (($dog->ability == GO_FETCH && $dog->goFetchResource == $resourceGained) ||
                     ($dog->ability == OBEDIENT && $dog->obedientResource == $resourceGained) ||
-                    ($dog->ability == PLAYMATE && $dog->playmateResource == $resourceGained)) {
+                    ($dog->ability == PLAYMATE && $dog->playmateResource == $resourceGained) ||
+                    ($dog->ability == WELL_TRAINED && in_array($resourceGained, [SWAP, SCOUT]))) {
                     DogPark::$instance->actionManager->addAction($playerId, new AdditionalAction(USE_DOG_ABILITY, (object) [
                         "dogId" => $dog->id,
                         "dogName" => $dog->name,

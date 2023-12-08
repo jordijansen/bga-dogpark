@@ -56,6 +56,20 @@
       }
     }
   }
+
+  // EURO DOGS
+  @for $row from 0 through 3 {
+    @for $column from 0 through 8 {
+      $id: ($row * 9) + ($column + 1) + 200;
+      @if $id <= 229 {
+        &.dog-card-art-#{$id} {
+          background-image: url("img/dogpark-dog-cards-euro.jpg");
+          background-size: 900% auto;
+          background-position: #{$column * math.div(100%, 8)} #{$row * math.div(100%, 3)};
+        }
+      }
+    }
+  }
 }
 
 .location-bonus-art {
@@ -262,10 +276,10 @@
     background-size: 600% auto;
     &[data-side="1"] { transform: translateZ(1.364em);}
     &[data-side="2"] { transform: rotateX(-180deg) translateZ(1.364em);}
-    &[data-side="3"] { transform: rotateY(-90deg) translateZ(1.364em);}
-    &[data-side="4"] { transform: rotateX(90deg) translateZ(1.364em);}
-    &[data-side="5"] { transform: rotateX(-90deg) translateZ(1.364em);}
-    &[data-side="6"] {  transform: rotateY(90deg) translateZ(1.364em);}
+    &[data-side="3"] { transform: rotateY(-90.1deg) translateZ(1.364em);}
+    &[data-side="4"] { transform: rotateX(90.1deg) translateZ(1.364em);}
+    &[data-side="5"] { transform: rotateX(-90.1deg) translateZ(1.364em);}
+    &[data-side="6"] {  transform: rotateY(90.1deg) translateZ(1.364em);}
     &[data-side="1"] { background-position: 0 0;}
     &[data-side="2"] { background-position: 20% 0;}
     &[data-side="3"] { background-position: 40% 0;}

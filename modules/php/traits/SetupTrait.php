@@ -80,8 +80,14 @@ trait SetupTrait
     private function createDogCards() {
         $cards = array();
         // Load BASE_GAME dogs
-        for($i = 1; $i < 163; $i++) {
+        for($i = 1; $i <= 163; $i++) {
             $cards[] = array( 'type' => BASE_GAME, 'type_arg' => $i, 'nbr' => 1);
+        }
+
+        if ($this->isExpansionActive(EXP_EUROPEAN)) {
+            for($i = 201; $i <= 229; $i++) {
+                $cards[] = array( 'type' => EXP_EUROPEAN, 'type_arg' => $i, 'nbr' => 1);
+            }
         }
 
         $this->dogCards->createCards($cards, LOCATION_DECK);

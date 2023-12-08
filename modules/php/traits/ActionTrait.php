@@ -18,6 +18,7 @@ use commands\ScoutCommand;
 use commands\SocialButterflyDogAbilityCommand;
 use commands\SwapCommand;
 use commands\EagerDogAbilityCommand;
+use commands\WellTrainedDogAbilityCommand;
 use DogPark;
 use objects\DogCard;
 use objects\DogWalker;
@@ -323,6 +324,8 @@ trait ActionTrait
                 $this->setGlobalVariable(STATE_AFTER_SWAP, ST_WALKING_MOVE_WALKER_AFTER);
                 $this->setGlobalVariable(CURRENT_ACTION_ID, $actionId);
                 $this->gamestate->jumpToState(ST_ACTION_SWAP);
+            } else if ($dog->ability == WELL_TRAINED) {
+                $this->commandManager->addCommand($playerId, new WellTrainedDogAbilityCommand($playerId, $actionId));
             }
         } else if ($action->type == USE_FORECAST_ABILITY) {
             $forecastCardType = $action->additionalArgs->forecastCardTypeArg;

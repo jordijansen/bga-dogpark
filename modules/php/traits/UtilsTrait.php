@@ -47,6 +47,10 @@ trait UtilsTrait
         return $value;
     }
 
+    function isExpansionActive($expansion) {
+        return intval($this->getGameStateValue($expansion)) === 1;
+    }
+
     //////////////////////////////////////////////////////////////////////////////
     //////////// Generic Utility functions
     ////////////

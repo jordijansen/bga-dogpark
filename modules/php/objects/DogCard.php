@@ -19,8 +19,15 @@ include("dogtraits/StickChaser.php");
 include("dogtraits/ToyCollector.php");
 include("dogtraits/TreatLover.php");
 
+include("dogtraits/LoneWolf.php");
+include("dogtraits/WellTrained.php");
 
 for($i = 1; $i<=163;$i++)
+{
+    include("dogs/Dog{$i}.php");
+}
+
+for($i = 201; $i<=229;$i++)
 {
     include("dogs/Dog{$i}.php");
 }
@@ -73,7 +80,7 @@ class DogCard extends Card {
 
     protected function getAbilityTitle() : string
     {
-        return '';
+        return DogPark::$instance->ABILITIES[$this->getAbility()];
     }
 
     protected function getAbilityText() : string

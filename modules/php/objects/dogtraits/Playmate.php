@@ -12,11 +12,6 @@ trait Playmate
     {
         return PLAYMATE;
     }
-    protected function getAbilityTitle() : string
-    {
-        return DogPark::$instance->ABILITIES[$this->getAbility()];
-    }
-
     protected function getAbilityText() : string
     {
         return sprintf(DogPark::totranslate("When <b>WALKING</b> this dog, whenever you gain 1 or more <icon-%s>, you may <icon-swap>. Activates once per movement."), $this->playmateResource);

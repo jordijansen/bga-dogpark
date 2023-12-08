@@ -12,10 +12,6 @@ trait Eager
     {
         return EAGER;
     }
-    protected function getAbilityTitle() : string
-    {
-        return DogPark::$instance->ABILITIES[$this->getAbility()];
-    }
 
     protected function getAbilityText() : string
     {

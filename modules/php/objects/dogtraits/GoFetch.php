@@ -13,10 +13,6 @@ trait GoFetch
     {
         return GO_FETCH;
     }
-    protected function getAbilityTitle() : string
-    {
-        return DogPark::$instance->ABILITIES[$this->getAbility()];
-    }
 
     protected function getAbilityText() : string
     {
