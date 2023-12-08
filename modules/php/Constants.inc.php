@@ -6,6 +6,7 @@
 
 const BASE_GAME = 'BASE_GAME';
 const EXP_EUROPEAN = 'EXP_EUROPEAN';
+const EXP_FAMOUS = 'EXP_FAMOUS';
 
 const BREED_GUNDOG      = 'gundog';
 const BREED_HOUND       = 'hound';
@@ -46,8 +47,9 @@ const PHASE_HOME_TIME = 'PHASE_HOME_TIME';
  */
 
 const EXPANSION_EUROPEAN_DOGS_OPTION_ID = 101;
-const EXPANSION_EUROPEAN_DOGS_OPTION_EXCLUDED = 0;
-const EXPANSION_EUROPEAN_DOGS_OPTION_INCLUDED = 1;
+const EXPANSION_FAMOUS_DOGS_OPTION_ID = 102;
+const EXPANSION_EXCLUDED = 0;
+const EXPANSION_INCLUDED = 1;
 
 const VARIANT_PACKED_PARK_OPTION_ID = 110;
 const VARIANT_PACKED_PARK_OPTION = 'variant_packed_park';
@@ -226,9 +228,12 @@ const TREAT_LOVER = 'treatlover';
 // EUROPEAN DOGS
 const LONE_WOLF = 'lonewolf';
 const WELL_TRAINED = 'welltrained';
+// FAMOUS DOGS
+const HOARDER = 'hoarder';
+const SHOW_OFF = 'showoff';
+const SLOWPOKE = 'slowpoke';
 
-const SELECTION_ABILITIES = [EAGER, CRAFTY];
-const WALKING_ABILITIES = [GO_FETCH];
+const SELECTION_ABILITIES = [EAGER, CRAFTY, SHOW_OFF];
 
 /**
  * Stats

@@ -68,7 +68,11 @@ $this->ABILITIES = [
     TREAT_LOVER => clienttranslate('Treat Lover'),
     // EUROPEAN
     LONE_WOLF => clienttranslate('Lone Wolf'),
-    WELL_TRAINED => clienttranslate('Well Trained')
+    WELL_TRAINED => clienttranslate('Well Trained'),
+    // FAMOUS
+    HOARDER => clienttranslate('Hoarder'),
+    SHOW_OFF => clienttranslate('Show-off'),
+    SLOWPOKE => clienttranslate('Slowpoke'),
 ];
 
 $this->SPECIAL_ICONS = [

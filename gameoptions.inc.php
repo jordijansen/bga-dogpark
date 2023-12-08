@@ -31,16 +31,33 @@ $game_options = [
     EXPANSION_EUROPEAN_DOGS_OPTION_ID => [
         'name' => totranslate('Expansion: European Dogs'),
         'values' => [
-            EXPANSION_EUROPEAN_DOGS_OPTION_EXCLUDED => [
+            EXPANSION_EXCLUDED => [
                 'default' => true,
                 'name' => 'disabled',
             ],
-            EXPANSION_EUROPEAN_DOGS_OPTION_INCLUDED => [
+            EXPANSION_INCLUDED => [
                 'name' => 'enabled',
+                'tmdisplay' => totranslate('Expansion: European Dogs'),
                 'description' => totranslate("It's time to take some of Europe's finest dogs for a walk. The European Dogs expansion includes 29 cards with 2 new abilities: Lone Wolf and Well Trained."),
             ]
         ],
     ],
+
+    EXPANSION_FAMOUS_DOGS_OPTION_ID => [
+        'name' => totranslate('Expansion: Famous Dogs'),
+        'values' => [
+            EXPANSION_EXCLUDED => [
+                'default' => true,
+                'name' => 'disabled',
+            ],
+            EXPANSION_INCLUDED => [
+                'name' => 'enabled',
+                'tmdisplay' => totranslate('Expansion: Famous Dogs'),
+                'description' => totranslate("The dogs of page, stage, and screen have come to Dog Park. The Famous Dogs expansion includes 29 dog cards with 3 new abilities: Hoarder, Show Off, and Slowpoke."),
+            ]
+        ],
+    ],
+
 
     VARIANT_PACKED_PARK_OPTION_ID => [
         'name' => totranslate('Variant: Packed Park'),
@@ -51,6 +68,7 @@ $game_options = [
             ],
             VARIANT_PACKED_PARK_OPTION_INCLUDED => [
                 'name' => 'enabled',
+                'tmdisplay' => totranslate('Variant: Packed Park'),
                 'description' => totranslate('In this variant, you will use the Rerouted Park Location Bonus card deck making resources more scarce.'),
             ]
         ],
@@ -76,6 +94,7 @@ $game_options = [
             ],
             VARIANT_GENTLE_WALK_OPTION_INCLUDED => [
                 'name' => 'enabled',
+                'tmdisplay' => totranslate('Variant: Gentle Walk'),
                 'description' => totranslate('Recommended for younger or less confident players. In this variant, you will use the Plentiful Park Location Bonus card deck making resources more plentiful. Each player starts with an additional Toy and Treat.'),
             ]
         ],
@@ -96,6 +115,7 @@ $game_options = [
             ],
             VARIANT_PREDICTABLE_FORECAST_OPTION_INCLUDED => [
                 'name' => 'enabled',
+                'tmdisplay' => totranslate('Variant: Predictable Forecast'),
                 'description' => totranslate('In this variant, you will use Forecast cards 8, 9, 10 and 11. These are still placed in random Forecast locations.'),
             ]
         ]

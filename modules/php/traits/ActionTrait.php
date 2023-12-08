@@ -15,6 +15,7 @@ use commands\PayReputationForLocationCommand;
 use commands\PlaceDogOnLeadCommand;
 use commands\PlaymateDogAbilityCommand;
 use commands\ScoutCommand;
+use commands\ShowOffDogAbilityCommand;
 use commands\SocialButterflyDogAbilityCommand;
 use commands\SwapCommand;
 use commands\EagerDogAbilityCommand;
@@ -326,6 +327,8 @@ trait ActionTrait
                 $this->gamestate->jumpToState(ST_ACTION_SWAP);
             } else if ($dog->ability == WELL_TRAINED) {
                 $this->commandManager->addCommand($playerId, new WellTrainedDogAbilityCommand($playerId, $actionId));
+            } else if ($dog->ability == SHOW_OFF) {
+                $this->commandManager->addCommand($playerId, new ShowOffDogAbilityCommand($playerId, $actionId));
             }
         } else if ($action->type == USE_FORECAST_ABILITY) {
             $forecastCardType = $action->additionalArgs->forecastCardTypeArg;

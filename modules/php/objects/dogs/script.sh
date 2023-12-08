@@ -1,4 +1,4 @@
-for i in {301..301}
+for i in {301..329}
 do
     echo """<?php
 namespace objects\dogs;
@@ -14,6 +14,7 @@ class Dog${i} extends DogCard {
         \$this->name = clienttranslate('Russian Black Terrier');
         \$this->breeds = [BREED_WORKING];
         \$this->costs = [RESOURCE_STICK => 2];
+        \$this->eagerResource = RESOURCE_TOY;
         \$this->ability = \$this->getAbility();
         \$this->abilityTitle = \$this->getAbilityTitle();
         \$this->abilityText = \$this->getAbilityText();

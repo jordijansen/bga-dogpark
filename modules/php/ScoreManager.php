@@ -112,6 +112,8 @@ class ScoreManager
                 $loneWolfBreed = current($scoringDog->breeds);
                 $otherDogsWithSameBreed = array_filter($playerDogs, fn($dog) => in_array($loneWolfBreed, $dog->breeds) && $dog->id !== $scoringDog->id);
                 $result[$scoringDog->id] = sizeof($otherDogsWithSameBreed) === 0 ? 3 : 0;
+            } else if ($scoringDog->ability == HOARDER) {
+                $result[$scoringDog->id] = intval(array_sum(array_values($scoringDog->resourcesOnCard))) / 2;
             }
         }
         return $result;

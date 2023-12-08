@@ -22,12 +22,21 @@ include("dogtraits/TreatLover.php");
 include("dogtraits/LoneWolf.php");
 include("dogtraits/WellTrained.php");
 
+include("dogtraits/Hoarder.php");
+include("dogtraits/ShowOff.php");
+include("dogtraits/Slowpoke.php");
+
 for($i = 1; $i<=163;$i++)
 {
     include("dogs/Dog{$i}.php");
 }
 
 for($i = 201; $i<=229;$i++)
+{
+    include("dogs/Dog{$i}.php");
+}
+
+for($i = 301; $i<=329;$i++)
 {
     include("dogs/Dog{$i}.php");
 }

@@ -364,6 +364,24 @@ trait StateTrait
             }
             $this->dogWalkers->moveCard($lastWalker->id, LOCATION_PARK, 94);
 
+            $dogsOnLead = DogCard::fromArray($this->dogCards->getCardsInLocation(LOCATION_LEAD, $playerId));
+            foreach ($dogsOnLead as $dog) {
+                if ($dog->ability === SLOWPOKE) {
+                    $score = $this->getPlayerScore($playerId);
+                    $this->updatePlayerScore($playerId, $score + 2);
+
+                    $this->notifyAllPlayers('activateDogAbility', clienttranslate('${player_name} activates <b>${dogName}: ${abilityTitle}</b>'),[
+                        'i18n' => ['dogName', 'abilityTitle'],
+                        'playerId' => $playerId,
+                        'player_name' => $this->getPlayerName($playerId),
+                        'dog' => $dog,
+                        'dogName' => $dog->name,
+                        'abilityTitle' => $dog->abilityTitle,
+                        'score' => $this->getPlayerScore($playerId)
+                    ]);
+                }
+            }
+
             $this->notifyAllPlayers('playerLeavesThePark', clienttranslate('${player_name} leaves the park and loses ${resource}'),[
                 'i18n' => ['resource'],
                 'playerId' => $playerId,
@@ -751,6 +769,44 @@ trait StateTrait
                             'dogName' => $dogInKennel->name,
                             'nrOfResourcesAdded' => sizeof($resources),
                             'resourceType' => $resourceToAdd,
+                            'resourcesAdded' => $resources,
+                            'dog' => DogCard::from($this->dogCards->getCard($dogInKennel->id))
+                        ]);
+                    }
+                }
+            }
+
+            foreach ($dogsInKennel as $dogInKennel) {
+                if ($dogInKennel->ability == HOARDER) {
+                    $playerResources = $this->playerManager->getResources($playerId);
+                    $totalResourceSum = array_sum(array_values($playerResources));
+                    $nrOfResourcesToAdd = min($totalResourceSum, $dogInKennel->maxResources);
+                    if ($nrOfResourcesToAdd > 0 && ($nrOfResourcesToAdd % 2) > 0) {
+                        $nrOfResourcesToAdd = $nrOfResourcesToAdd - 1;
+                    }
+
+                    $result = array_map(fn($resourceType, $resourceCount) => array_map(fn($i) => $resourceType, range(1, $resourceCount)), array_keys($playerResources), array_values($playerResources));
+                    $playerResourcesFlat = [];
+                    array_walk_recursive($result, function($a) use (&$playerResourcesFlat) { $playerResourcesFlat[] = $a; });
+
+                    $resources = [];
+                    for ($i = 0; $i < $nrOfResourcesToAdd; $i++) {
+                        $resources[] = array_pop($playerResourcesFlat);
+                    }
+
+                    if (sizeof($resources) > 0) {
+                        $this->playerManager->payResources($playerId, $resources);
+                        $resourceCountValues = array_count_values($resources);
+                        foreach ($resourceCountValues as $resource => $count) {
+                            $this->dogManager->addResources($dogInKennel->id, $resource, $count);
+                        }
+
+                        $this->notifyAllPlayers('playerAssignsResources', clienttranslate('${player_name} assigns ${nrOfResourcesAdded} resources to <b>${dogName}</b>'),[
+                            'i18n' => ['dogName'],
+                            'playerId' => $playerId,
+                            'player_name' => $this->getPlayerName($playerId),
+                            'dogName' => $dogInKennel->name,
+                            'nrOfResourcesAdded' => sizeof($resources),
                             'resourcesAdded' => $resources,
                             'dog' => DogCard::from($this->dogCards->getCard($dogInKennel->id))
                         ]);

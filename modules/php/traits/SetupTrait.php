@@ -90,6 +90,12 @@ trait SetupTrait
             }
         }
 
+        if ($this->isExpansionActive(EXP_FAMOUS)) {
+            for($i = 301; $i <= 329; $i++) {
+                $cards[] = array( 'type' => EXP_FAMOUS, 'type_arg' => $i, 'nbr' => 1);
+            }
+        }
+
         $this->dogCards->createCards($cards, LOCATION_DECK);
         $this->dogCards->shuffle(LOCATION_DECK);
     }

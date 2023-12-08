@@ -2,21 +2,17 @@
 namespace objects\dogs;
 
 use objects\DogCard;
-use objects\dogtraits\Hoarder;
-use objects\dogtraits\Obedient;
 use objects\dogtraits\ShowOff;
-use objects\dogtraits\Slowpoke;
+use objects\dogtraits\TreatLover;
 
-class Dog151 extends DogCard {
-
-    use Slowpoke;
+class Dog329 extends DogCard {
+    use ShowOff;
     public function __construct($dbCard)
     {
         parent::__construct($dbCard);
-        $this->name = clienttranslate('Bullmastiff');
+        $this->name = clienttranslate('Neapolitan Mastiff');
         $this->breeds = [BREED_WORKING];
-        $this->costs = [RESOURCE_STICK => 1, RESOURCE_TREAT => 2];
-        $this->obedientResource = RESOURCE_STICK;
+        $this->costs = [RESOURCE_STICK => 2];
         $this->ability = $this->getAbility();
         $this->abilityTitle = $this->getAbilityTitle();
         $this->abilityText = $this->getAbilityText();
