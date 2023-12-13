@@ -60,6 +60,8 @@ trait ArgsTrait
         $dog = DogCard::from($this->dogCards->getCard($dogId));
         $freeDogsOnLead = $this->getGlobalVariable(FREE_DOG_ON_LEAD .$playerId);
         $freeDogsOnLead = $freeDogsOnLead != null ? $freeDogsOnLead : 0;
+        $nextDogCosts1Resource = $this->getGlobalVariable(NEXT_DOG_COSTS_1_RESOURCE .$playerId);
+        $nextDogCosts1Resource = $nextDogCosts1Resource != null && boolval($nextDogCosts1Resource);
 
         return [
             'i18n' => ['dogName'],
@@ -69,7 +71,8 @@ trait ArgsTrait
             "maxNumberOfDogs" => DogPark::$instance->forecastManager->getCurrentRoundMaxNumberOfDogsForSelection(),
             "numberOfDogsOnlead" => sizeof(DogPark::$instance->dogCards->getCardsInLocation(LOCATION_LEAD, $playerId)),
             "resources" => DogPark::$instance->playerManager->getResources($playerId),
-            "freeDogsOnLead" => $freeDogsOnLead
+            "freeDogsOnLead" => $freeDogsOnLead,
+            "nextDogCosts1Resource" => $nextDogCosts1Resource
         ];
     }
 
@@ -167,6 +170,13 @@ trait ArgsTrait
         }
 
         return $result;
+    }
+
+    function argActionGlobetrotter(): array
+    {
+        return [
+            "possibleParkLocationIds" => array_values($this->dogWalkPark->getPossibleParkLocationsWithWalkers($this->playerManager->getWalkerId($this->getActivePlayerId()), 3))
+        ];
     }
     
 }

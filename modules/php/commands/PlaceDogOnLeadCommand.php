@@ -16,14 +16,16 @@ class PlaceDogOnLeadCommand extends BaseCommand
     private $resources;
     private string $originActionId;
     private bool $isFreePlacement;
+    private ?bool $isCostReducedTo1Resource = false;
 
-    public function __construct(int $playerId, int $dogId, array $resources, bool $isFreePlacement)
+    public function __construct(int $playerId, int $dogId, array $resources, bool $isFreePlacement, bool $isCostReducedTo1Resource)
     {
         $this->playerId = $playerId;
         $this->dogId = $dogId;
         $this->resources = $resources;
         $this->isFreePlacement = $isFreePlacement;
         $this->originActionId = AdditionalAction::newId();
+        $this->isCostReducedTo1Resource = $isCostReducedTo1Resource;
     }
 
     public function do()
@@ -80,6 +82,12 @@ class PlaceDogOnLeadCommand extends BaseCommand
                 "abilityTitle" => $dog->abilityTitle
             ], $dog->isAbilityOptional(), true, $this->originActionId));
         }
+
+
+        DogPark::$instance->deleteGlobalVariable(NEXT_DOG_COSTS_1_RESOURCE. $this->playerId);
+        if ($dog->ability == FRIENDLY) {
+            DogPark::$instance->setGlobalVariable(NEXT_DOG_COSTS_1_RESOURCE. $this->playerId, true);
+        }
     }
 
     public function undo()
@@ -131,5 +139,12 @@ class PlaceDogOnLeadCommand extends BaseCommand
         ]);
 
         DogPark::$instance->actionManager->removeActionsForOriginActionId($this->playerId, $this->originActionId);
+
+        if ($dog->ability == FRIENDLY) {
+            DogPark::$instance->deleteGlobalVariable(NEXT_DOG_COSTS_1_RESOURCE .$this->playerId);
+        }
+        if ($this->isCostReducedTo1Resource) {
+            DogPark::$instance->setGlobalVariable(NEXT_DOG_COSTS_1_RESOURCE. $this->playerId, true);
+        }
     }
 }

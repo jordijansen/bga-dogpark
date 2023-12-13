@@ -2958,11 +2958,12 @@ var DogOfferDial = /** @class */ (function () {
     return DogOfferDial;
 }());
 var DogPayCosts = /** @class */ (function () {
-    function DogPayCosts(elementId, resources, dog, canBePlacedForFree, onCancel, onConfirm) {
+    function DogPayCosts(elementId, resources, dog, canBePlacedForFree, canBePlacedFor1Resource, onCancel, onConfirm) {
         this.elementId = elementId;
         this.resources = resources;
         this.dog = dog;
         this.canBePlacedForFree = canBePlacedForFree;
+        this.canBePlacedFor1Resource = canBePlacedFor1Resource;
         this.onCancel = onCancel;
         this.onConfirm = onConfirm;
         this.remainingResources = { stick: 0, ball: 0, treat: 0, toy: 0 };
@@ -2976,19 +2977,25 @@ var DogPayCosts = /** @class */ (function () {
         var _this = this;
         this.remainingResources = __assign({}, this.resources);
         this.selectedPayment = [];
-        Object.entries(this.dog.costs).forEach(function (_a) {
-            var resource = _a[0], cost = _a[1];
-            for (var i = 0; i < cost; i++) {
-                if (_this.remainingResources[resource] >= 1) {
-                    _this.remainingResources[resource] -= 1;
-                    _this.selectedPayment.push({ resource: resource, payUsing: [resource] });
+        if (this.canBePlacedFor1Resource) {
+            this.initiallyMissingResources = true;
+            this.selectedPayment.push({ payUsing: ["placeholder"] });
+        }
+        else {
+            Object.entries(this.dog.costs).forEach(function (_a) {
+                var resource = _a[0], cost = _a[1];
+                for (var i = 0; i < cost; i++) {
+                    if (_this.remainingResources[resource] >= 1) {
+                        _this.remainingResources[resource] -= 1;
+                        _this.selectedPayment.push({ resource: resource, payUsing: [resource] });
+                    }
+                    else {
+                        _this.initiallyMissingResources = true;
+                        _this.selectedPayment.push({ resource: resource, payUsing: ["placeholder", "placeholder"] });
+                    }
                 }
-                else {
-                    _this.initiallyMissingResources = true;
-                    _this.selectedPayment.push({ resource: resource, payUsing: ["placeholder", "placeholder"] });
-                }
-            }
-        });
+            });
+        }
     };
     DogPayCosts.prototype.updateUi = function () {
         var _this = this;
@@ -3017,9 +3024,16 @@ var DogPayCosts = /** @class */ (function () {
         }
     };
     DogPayCosts.prototype.createCostRows = function () {
+        var _this = this;
         var result = "<div class=\"dp-dog-cost-pay-row\">".concat(_('Cost'), "<i class=\"fa fa-long-arrow-right\" aria-hidden=\"true\"></i>").concat(_('Pay using'), "</div>");
+        if (this.canBePlacedFor1Resource) {
+            result = "<i>".concat(_('Friendly: cost reduced to 1 resource of your choice'), "</i>");
+        }
         this.selectedPayment.forEach(function (costRow) {
-            result += "<div class=\"dp-dog-cost-pay-row\"><span class=\"dp-token-token\" data-type=\"".concat(costRow.resource, "\"></span><i class=\"fa fa-long-arrow-right\" aria-hidden=\"true\"></i>");
+            result += "<div class=\"dp-dog-cost-pay-row\">";
+            if (!_this.canBePlacedFor1Resource) {
+                result += "<span class=\"dp-token-token\" data-type=\"".concat(costRow.resource, "\"></span><i class=\"fa fa-long-arrow-right\" aria-hidden=\"true\"></i>");
+            }
             costRow.payUsing.forEach(function (selectedResource) {
                 result += "<span class=\"dp-token-token\" data-type=\"".concat(selectedResource, "\"></span>");
             });
@@ -4040,6 +4054,9 @@ var DogPark = /** @class */ (function () {
             case 'actionGainResources':
                 this.enteringGainResources(args.args[this.getPlayerId()]);
                 break;
+            case 'actionGlobetrotter':
+                this.enteringGlobetrotter(args.args);
+                break;
         }
     };
     DogPark.prototype.enteringChooseObjectives = function () {
@@ -4090,7 +4107,7 @@ var DogPark = /** @class */ (function () {
     DogPark.prototype.enteringSelectionPlaceDogOnLeadSelectResources = function (args) {
         var _this = this;
         if (this.isCurrentPlayerActive()) {
-            new DogPayCosts("custom-actions", args.resources, args.dog, args.freeDogsOnLead > 0, function () {
+            new DogPayCosts("custom-actions", args.resources, args.dog, args.freeDogsOnLead > 0, args.nextDogCosts1Resource, function () {
                 dojo.empty('custom-actions');
                 _this.takeNoLockAction('placeDogOnLeadCancel');
             }, function (resources, isFreePlacement) {
@@ -4150,6 +4167,12 @@ var DogPark = /** @class */ (function () {
             });
         }
     };
+    DogPark.prototype.enteringGlobetrotter = function (args) {
+        var _this = this;
+        if (this.isCurrentPlayerActive()) {
+            this.dogWalkPark.enterWalkerSpotsSelection(args.possibleParkLocationIds, function (locationId) { _this.takeAction('confirmGlobetrotter', { locationId: locationId }); });
+        }
+    };
     DogPark.prototype.onLeavingState = function (stateName) {
         log('Leaving state: ' + stateName);
         switch (stateName) {
@@ -4173,12 +4196,20 @@ var DogPark = /** @class */ (function () {
             case 'actionMoveAutoWalker':
                 this.leavingActionMoveAutoWalker();
                 break;
+            case 'actionGlobetrotter':
+                this.leavingActionGlobetrotter();
+                break;
         }
     };
     DogPark.prototype.leavingSelectionPlaceDogOnLead = function () {
         this.playerArea.setSelectionModeForKennel('none', this.getPlayerId());
     };
     DogPark.prototype.leavingWalkingMoveWalker = function () {
+        if (this.isCurrentPlayerActive()) {
+            this.dogWalkPark.exitWalkerSpotsSelection();
+        }
+    };
+    DogPark.prototype.leavingActionGlobetrotter = function () {
         if (this.isCurrentPlayerActive()) {
             this.dogWalkPark.exitWalkerSpotsSelection();
         }

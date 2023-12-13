@@ -8,6 +8,7 @@ class DogPayCosts {
                 private resources: {stick: number, ball: number, treat: number, toy: number},
                 private dog: DogCard,
                 private canBePlacedForFree: boolean,
+                private canBePlacedFor1Resource: boolean,
                 private onCancel: () => void,
                 private onConfirm: (resources: string[], isFreePlacement: boolean) => void) {
         dojo.place('<div id="dp-dog-cost-pay-wrapper"></div>', $(this.elementId))
@@ -20,17 +21,22 @@ class DogPayCosts {
         this.remainingResources = {...this.resources};
         this.selectedPayment = [];
 
-        Object.entries(this.dog.costs).forEach(([resource, cost]) => {
-            for (let i = 0; i < cost; i++) {
-                if (this.remainingResources[resource] >= 1) {
-                    this.remainingResources[resource] -= 1;
-                    this.selectedPayment.push({resource: resource, payUsing: [resource]});
-                } else {
-                    this.initiallyMissingResources = true;
-                    this.selectedPayment.push({resource: resource, payUsing: ["placeholder", "placeholder"]});
+        if (this.canBePlacedFor1Resource) {
+            this.initiallyMissingResources = true;
+            this.selectedPayment.push({payUsing: ["placeholder"]});
+        } else {
+            Object.entries(this.dog.costs).forEach(([resource, cost]) => {
+                for (let i = 0; i < cost; i++) {
+                    if (this.remainingResources[resource] >= 1) {
+                        this.remainingResources[resource] -= 1;
+                        this.selectedPayment.push({resource: resource, payUsing: [resource]});
+                    } else {
+                        this.initiallyMissingResources = true;
+                        this.selectedPayment.push({resource: resource, payUsing: ["placeholder", "placeholder"]});
+                    }
                 }
-            }
-        })
+            })
+        }
     }
 
     private updateUi() {
@@ -61,8 +67,15 @@ class DogPayCosts {
 
     private createCostRows() {
         let result = `<div class="dp-dog-cost-pay-row">${_('Cost')}<i class="fa fa-long-arrow-right" aria-hidden="true"></i>${_('Pay using')}</div>`;
+        if (this.canBePlacedFor1Resource) {
+            result = `<i>${_('Friendly: cost reduced to 1 resource of your choice')}</i>`
+        }
+
         this.selectedPayment.forEach((costRow) => {
-            result += `<div class="dp-dog-cost-pay-row"><span class="dp-token-token" data-type="${costRow.resource}"></span><i class="fa fa-long-arrow-right" aria-hidden="true"></i>`
+            result += `<div class="dp-dog-cost-pay-row">`;
+            if (!this.canBePlacedFor1Resource) {
+                result += `<span class="dp-token-token" data-type="${costRow.resource}"></span><i class="fa fa-long-arrow-right" aria-hidden="true"></i>`
+            }
             costRow.payUsing.forEach(selectedResource => {
                 result += `<span class="dp-token-token" data-type="${selectedResource}"></span>`;
             })

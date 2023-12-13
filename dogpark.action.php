@@ -244,6 +244,17 @@ class action_dogpark extends APP_GameAction
         self::ajaxResponse();
     }
 
+
+    public function confirmGlobetrotter()
+    {
+        self::setAjaxMode();
+
+        $locationId = self::getArg("locationId", AT_posint, true);
+        $this->game->confirmGlobetrotter($locationId);
+
+        self::ajaxResponse();
+    }
+
     public function undoLast()
     {
         self::setAjaxMode();

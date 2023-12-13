@@ -96,6 +96,12 @@ trait SetupTrait
             }
         }
 
+        if ($this->isExpansionActive(EXP_WORLD)) {
+            for($i = 401; $i <= 429; $i++) {
+                $cards[] = array( 'type' => EXP_WORLD, 'type_arg' => $i, 'nbr' => 1);
+            }
+        }
+
         $this->dogCards->createCards($cards, LOCATION_DECK);
         $this->dogCards->shuffle(LOCATION_DECK);
     }

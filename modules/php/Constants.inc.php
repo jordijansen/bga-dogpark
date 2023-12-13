@@ -7,6 +7,7 @@
 const BASE_GAME = 'BASE_GAME';
 const EXP_EUROPEAN = 'EXP_EUROPEAN';
 const EXP_FAMOUS = 'EXP_FAMOUS';
+const EXP_WORLD = 'EXP_WORLD';
 
 const BREED_GUNDOG      = 'gundog';
 const BREED_HOUND       = 'hound';
@@ -48,6 +49,7 @@ const PHASE_HOME_TIME = 'PHASE_HOME_TIME';
 
 const EXPANSION_EUROPEAN_DOGS_OPTION_ID = 101;
 const EXPANSION_FAMOUS_DOGS_OPTION_ID = 102;
+const EXPANSION_WORLD_DOGS_OPTION_ID = 103;
 const EXPANSION_EXCLUDED = 0;
 const EXPANSION_INCLUDED = 1;
 
@@ -104,6 +106,7 @@ const ST_ACTION_MOVE_AUTO_WALKER = 83;
 const ST_ACTION_CRAFTY = 84;
 const ST_ACTION_GAIN_RESOURCES_PRIVATE = 85;
 const ST_ACTION_GAIN_RESOURCES = 86;
+const ST_ACTION_GLOBETROTTER = 87;
 
 const ST_FINAL_SCORING = 95;
 const ST_CATCH_STATE = 96;
@@ -136,6 +139,8 @@ const ACT_CANCEL = 'cancel';
 const ACT_CRAFTY_CONFIRM = 'craftyConfirm';
 
 const ACT_GAIN_RESOURCES_CONFIRM = 'gainResourcesConfirm';
+
+const ACT_GLOBETROTTER_CONFIRM = 'globetrotterConfirm';
 
 /**
  * Locations
@@ -197,6 +202,8 @@ const GAIN_RESOURCES_PLAYER_IDS = 'GAIN_RESOURCES_PLAYER_IDS';
 
 const WALKER_LAST_DIE_ROLL_ = 'WALKER_LAST_DIE_ROLL_';
 
+const NEXT_DOG_COSTS_1_RESOURCE = 'NEXT_DOG_COSTS_1_RESOURCE';
+
 /**
  * Additional Actions
  */
@@ -232,6 +239,10 @@ const WELL_TRAINED = 'welltrained';
 const HOARDER = 'hoarder';
 const SHOW_OFF = 'showoff';
 const SLOWPOKE = 'slowpoke';
+// DOGS OF THE WORLD
+const FRIENDLY = 'friendly';
+const FUSSPOT = 'fusspot';
+const GLOBETROTTER = 'globetrotter';
 
 const SELECTION_ABILITIES = [EAGER, CRAFTY, SHOW_OFF];
 

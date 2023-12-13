@@ -168,6 +168,9 @@ class DogPark implements DogParkGame {
             case 'actionGainResources':
                 this.enteringGainResources(args.args[this.getPlayerId()]);
                 break;
+            case 'actionGlobetrotter':
+                this.enteringGlobetrotter(args.args as ActionGlobetrotterArgs);
+                break;
 
         }
     }
@@ -220,7 +223,7 @@ class DogPark implements DogParkGame {
 
     private enteringSelectionPlaceDogOnLeadSelectResources(args: SelectionPlaceDogOnLeadSelectResourcesArgs) {
         if ((this as any).isCurrentPlayerActive()) {
-            new DogPayCosts("custom-actions", args.resources, args.dog, args.freeDogsOnLead > 0, () => {
+            new DogPayCosts("custom-actions", args.resources, args.dog, args.freeDogsOnLead > 0, args.nextDogCosts1Resource, () => {
                 dojo.empty('custom-actions');
                 this.takeNoLockAction('placeDogOnLeadCancel')
             }, (resources, isFreePlacement) => {
@@ -283,6 +286,12 @@ class DogPark implements DogParkGame {
         }
     }
 
+    private enteringGlobetrotter(args: WalkingMoveWalkerArgs) {
+        if ((this as any).isCurrentPlayerActive()) {
+            this.dogWalkPark.enterWalkerSpotsSelection(args.possibleParkLocationIds, (locationId)=> {this.takeAction('confirmGlobetrotter', {locationId})});
+        }
+    }
+
     public onLeavingState(stateName: string) {
         log( 'Leaving state: '+stateName );
 
@@ -307,6 +316,9 @@ class DogPark implements DogParkGame {
             case 'actionMoveAutoWalker':
                 this.leavingActionMoveAutoWalker();
                 break;
+            case 'actionGlobetrotter':
+                this.leavingActionGlobetrotter();
+                break;
         }
     }
 
@@ -315,6 +327,12 @@ class DogPark implements DogParkGame {
     }
 
     private leavingWalkingMoveWalker() {
+        if ((this as any).isCurrentPlayerActive()) {
+            this.dogWalkPark.exitWalkerSpotsSelection()
+        }
+    }
+
+    private leavingActionGlobetrotter() {
         if ((this as any).isCurrentPlayerActive()) {
             this.dogWalkPark.exitWalkerSpotsSelection()
         }

@@ -114,6 +114,14 @@ class ScoreManager
                 $result[$scoringDog->id] = sizeof($otherDogsWithSameBreed) === 0 ? 3 : 0;
             } else if ($scoringDog->ability == HOARDER) {
                 $result[$scoringDog->id] = intval(array_sum(array_values($scoringDog->resourcesOnCard))) / 2;
+            } else if ($scoringDog->ability == FUSSPOT) {
+                $fusspotBreed = current($scoringDog->breeds);
+                $otherDogsWithSameBreed = array_filter($playerDogs, fn($dog) => in_array($fusspotBreed, $dog->breeds) && $dog->id !== $scoringDog->id);
+                if (sizeof($otherDogsWithSameBreed) > 0 && $scoringDog->resourcesOnCard[WALKED] > 0 && $scoringDog->resourcesOnCard[$scoringDog->fusspotResource] > 0) {
+                    $result[$scoringDog->id] = 4;
+                } else {
+                    $result[$scoringDog->id] = 0;
+                }
             }
         }
         return $result;

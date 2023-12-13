@@ -184,7 +184,10 @@ trait ActionTrait
             throw new BgaUserException("You can't add any more dogs");
         }
 
-        $command = new PlaceDogOnLeadCommand($playerId, $dogId, $resources, $isFreePlacement);
+        $nextDogCosts1Resource = $this->getGlobalVariable(NEXT_DOG_COSTS_1_RESOURCE .$playerId);
+        $nextDogCosts1Resource = $nextDogCosts1Resource != null && boolval($nextDogCosts1Resource);
+
+        $command = new PlaceDogOnLeadCommand($playerId, $dogId, $resources, $isFreePlacement, $nextDogCosts1Resource);
         $this->commandManager->addCommand($playerId, $command);
 
         $this->gamestate->setPrivateState($playerId, ST_SELECTION_PLACE_DOG_ON_LEAD);
@@ -220,8 +223,7 @@ trait ActionTrait
         $this->gamestate->initializePrivateState($this->getCurrentPlayerId());
     }
 
-    function moveWalker($locationId) {
-        $this->checkAction(ACT_MOVE_WALKER);
+    function moveWalker($locationId, $isGlobetrotter = false) {
 
         $playerId = $this->getActivePlayerId();
         $walker = DogWalker::from($this->dogWalkers->getCard($this->playerManager->getWalkerId($playerId)));
@@ -229,19 +231,22 @@ trait ActionTrait
             throw new BgaUserException('Walker not in park!');
         }
 
-        $possibleParkLocations = $this->dogWalkPark->getPossibleParkLocationIds($walker->id);
-        if (!in_array($locationId, $possibleParkLocations)) {
-            throw new BgaUserException('Location not allowed!');
+        if (!$isGlobetrotter) {
+            $this->checkAction(ACT_MOVE_WALKER);
+            $possibleParkLocations = $this->dogWalkPark->getPossibleParkLocationIds($walker->id);
+            if (!in_array($locationId, $possibleParkLocations)) {
+                throw new BgaUserException('Location not allowed!');
+            }
+            $this->commandManager->addCommand($playerId, new MoveWalkerCommand($playerId, $walker->id, $walker->locationArg, $locationId));
         }
 
-        $otherWalkersInLocation = DogWalker::fromArray($this->dogWalkers->getCardsInLocation(LOCATION_PARK, $locationId));
-
-        $this->commandManager->addCommand($playerId, new MoveWalkerCommand($playerId, $walker->id, $walker->locationArg, $locationId));
+        $otherWalkersInLocation = array_filter(DogWalker::fromArray($this->dogWalkers->getCardsInLocation(LOCATION_PARK, $locationId)), fn($dogWalker) => $dogWalker->id !== $walker->id);
 
         $this->actionManager->clear($playerId);
+
         if (sizeof($otherWalkersInLocation) > 0) {
             $firstSocialButterflyDog = $this->dogManager->getFirstDogOnLeadWithAbility($playerId, SOCIAL_BUTTERFLY);
-            if ($firstSocialButterflyDog != null) {
+            if ($firstSocialButterflyDog != null && !$isGlobetrotter) {
                 $this->actionManager->addAction($playerId, new AdditionalAction(USE_DOG_ABILITY, (object) [
                     "dogId" => $firstSocialButterflyDog->id,
                     "dogName" => $firstSocialButterflyDog->name,
@@ -249,9 +254,11 @@ trait ActionTrait
                 ], $firstSocialButterflyDog->isAbilityOptional(), true));
             } else {
                 if ($this->getPlayerScore($playerId) > 0) {
-                    $this->actionManager->addAction($playerId, new AdditionalAction(WALKING_PAY_REPUTATION_ACCEPT, (object) ["accepted" => true]));
+                    $this->actionManager->addAction($playerId, new AdditionalAction(WALKING_PAY_REPUTATION_ACCEPT, (object) ["accepted" => true, "locationId" => $locationId, "isGlobetrotter" => $isGlobetrotter ]));
                 }
-                $this->actionManager->addAction($playerId, new AdditionalAction(WALKING_PAY_REPUTATION_DENY, (object) ["accepted" => false]));
+                if (!$isGlobetrotter) {
+                    $this->actionManager->addAction($playerId, new AdditionalAction(WALKING_PAY_REPUTATION_DENY, (object) ["accepted" => false, "locationId" => $locationId, "isGlobetrotter" => $isGlobetrotter]));
+                }
             }
         } else if ($locationId > 90) {
             if ($locationId == 91) {
@@ -267,7 +274,21 @@ trait ActionTrait
             $this->dogWalkPark->createLocationBonusActions($playerId, $locationId);
         }
 
-        $this->gamestate->nextState("");
+        $continue = true;
+        if (!$isGlobetrotter) {
+            $firstGlobetrotterDog = $this->dogManager->getFirstDogOnLeadWithAbility($playerId, GLOBETROTTER);
+            if ($firstGlobetrotterDog != null && $locationId < 90) {
+                $possibleGlobetrotterLocations = $this->dogWalkPark->getPossibleParkLocationsWithWalkers($walker->id, 3);
+                if (sizeof($possibleGlobetrotterLocations) > 1) {
+                    $this->gamestate->jumpToState(ST_ACTION_GLOBETROTTER);
+                    $continue = false;
+                }
+            }
+        }
+
+        if ($continue) {
+            $this->gamestate->nextState("");
+        }
     }
 
     function additionalAction($actionId) {
@@ -329,6 +350,8 @@ trait ActionTrait
                 $this->commandManager->addCommand($playerId, new WellTrainedDogAbilityCommand($playerId, $actionId));
             } else if ($dog->ability == SHOW_OFF) {
                 $this->commandManager->addCommand($playerId, new ShowOffDogAbilityCommand($playerId, $actionId));
+            } else if ($dog->ability == GLOBETROTTER) {
+                $this->gamestate->jumpToState(ST_ACTION_GLOBETROTTER);
             }
         } else if ($action->type == USE_FORECAST_ABILITY) {
             $forecastCardType = $action->additionalArgs->forecastCardTypeArg;
@@ -495,6 +518,12 @@ trait ActionTrait
         if ($this->gamestate->state()['name'] == 'selectionActions') {
             $this->gamestate->setPrivateState($playerId, ST_SELECTION_PLACE_DOG_ON_LEAD);
         }
+    }
+
+    function confirmGlobetrotter($locationId) {
+        $this->checkAction(ACT_GLOBETROTTER_CONFIRM);
+
+        $this->moveWalker($locationId, true);
     }
 
 

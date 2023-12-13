@@ -118,7 +118,8 @@ interface SelectionPlaceDogOnLeadArgs {
 interface SelectionPlaceDogOnLeadSelectResourcesArgs {
     dog: DogCard,
     resources: {stick: number, ball: number, treat: number, toy: number},
-    freeDogsOnLead: number
+    freeDogsOnLead: number,
+    nextDogCosts1Resource: boolean
 }
 
 interface WalkingMoveWalkerArgs {
@@ -147,6 +148,10 @@ interface ActionCraftyArgs {
     action: AdditionalAction,
     dog: DogCard,
     resources: {stick: number, ball: number, treat: number, toy: number}
+}
+
+interface ActionGlobetrotterArgs {
+    possibleParkLocationIds: number[]
 }
 
 

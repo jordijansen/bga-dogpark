@@ -1,13 +1,13 @@
-for i in {301..329}
+for i in {401..429}
 do
     echo """<?php
 namespace objects\dogs;
 
 use objects\DogCard;
-use objects\dogtraits\TreatLover;
+use objects\dogtraits\Eager;
 
 class Dog${i} extends DogCard {
-    use TreatLover;
+    use Eager;
     public function __construct(\$dbCard)
     {
         parent::__construct(\$dbCard);

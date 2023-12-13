@@ -73,6 +73,10 @@ $this->ABILITIES = [
     HOARDER => clienttranslate('Hoarder'),
     SHOW_OFF => clienttranslate('Show-off'),
     SLOWPOKE => clienttranslate('Slowpoke'),
+    // WORLD
+    FRIENDLY => clienttranslate('Friendly'),
+    FUSSPOT => clienttranslate('Fusspot'),
+    GLOBETROTTER => clienttranslate('Globetrotter'),
 ];
 
 $this->SPECIAL_ICONS = [

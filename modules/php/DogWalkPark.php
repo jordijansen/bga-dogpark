@@ -103,6 +103,18 @@ class DogWalkPark extends APP_DbObject
         return $this->getNextLocations($walker->locationArg, 0, 4, []);
     }
 
+    public function getPossibleParkLocationsWithWalkers(int $walkerId, int $depth)
+    {
+        $walker = DogWalker::from(DogPark::$instance->dogWalkers->getCard($walkerId));
+        if ($walker->location != LOCATION_PARK) {
+            throw new BgaUserException('Walker is not in park for player');
+        }
+
+        $locations = $this->getNextLocations($walker->locationArg, 0, $depth, []);
+        $locations = [...$locations, $walker->locationArg];
+        return array_filter($locations, fn($locationId) => sizeof(DogWalker::fromArray(DogPark::$instance->dogWalkers->getCardsInLocation(LOCATION_PARK, $locationId))) > 0);
+    }
+
     public function getNextLocations(int $locationId, int $currentDepth, int $maxDepth, array $result, bool $exact = false) {
         $location = DogPark::$instance->PARK_LOCATIONS[$locationId];
         if ($currentDepth == $maxDepth) {

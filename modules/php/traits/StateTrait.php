@@ -738,6 +738,31 @@ trait StateTrait
             $playerId = intval($player['player_id']);
 
             $dogsInKennel = DogCard::fromArray($this->dogCards->getCardsInLocation(LOCATION_PLAYER, $playerId));
+            // We check these abilities first because they award the most points
+            foreach ($dogsInKennel as $dogInKennel) {
+                if ($dogInKennel->ability == FUSSPOT) {
+                    $fusspotBreed = current($dogInKennel->breeds);
+                    $otherDogsWithSameBreed = array_filter($dogsInKennel, fn($dog) => in_array($fusspotBreed, $dog->breeds) && $dog->id !== $dogInKennel->id);
+                    if (sizeof($otherDogsWithSameBreed) > 0 && $dogInKennel->resourcesOnCard['walked'] > 0) {
+                        $playerResources = $this->playerManager->getResources($playerId);
+                        if($playerResources[$dogInKennel->fusspotResource] > 0) {
+                            $this->playerManager->payResources($playerId, [$dogInKennel->fusspotResource]);
+                            $this->dogManager->addResources($dogInKennel->id, $dogInKennel->fusspotResource, 1);
+                            $this->notifyAllPlayers('playerAssignsResources', clienttranslate('${player_name} assigns ${nrOfResourcesAdded} ${resourceType} to <b>${dogName}</b>'),[
+                                'i18n' => ['dogName', 'resourceType'],
+                                'playerId' => $playerId,
+                                'player_name' => $this->getPlayerName($playerId),
+                                'dogName' => $dogInKennel->name,
+                                'nrOfResourcesAdded' => 1,
+                                'resourceType' => $dogInKennel->fusspotResource,
+                                'resourcesAdded' => [$dogInKennel->fusspotResource],
+                                'dog' => DogCard::from($this->dogCards->getCard($dogInKennel->id))
+                            ]);
+                        }
+                    }
+                }
+            }
+
             foreach ($dogsInKennel as $dogInKennel) {
                 $resourceToAdd = null;
                 if ($dogInKennel->ability == STICK_CHASER) {
@@ -776,6 +801,7 @@ trait StateTrait
                 }
             }
 
+            // These abilities sould be checked last since they award the least points.
             foreach ($dogsInKennel as $dogInKennel) {
                 if ($dogInKennel->ability == HOARDER) {
                     $playerResources = $this->playerManager->getResources($playerId);

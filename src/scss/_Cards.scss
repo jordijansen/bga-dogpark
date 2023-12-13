@@ -84,6 +84,20 @@
       }
     }
   }
+
+  // WORLD DOGS
+  @for $row from 0 through 3 {
+    @for $column from 0 through 8 {
+      $id: ($row * 9) + ($column + 1) + 400;
+      @if $id <= 429 {
+        &.dog-card-art-#{$id} {
+          background-image: url("img/dogpark-dog-cards-world.jpg");
+          background-size: 900% auto;
+          background-position: #{$column * math.div(100%, 8)} #{$row * math.div(100%, 3)};
+        }
+      }
+    }
+  }
 }
 
 .location-bonus-art {

@@ -417,7 +417,21 @@ $actionStates = [
             'recruitment' => ST_RECRUITMENT_END,
             'homeTime' => ST_HOME_TIME
         ]
-    ]
+    ],
+    ST_ACTION_GLOBETROTTER => [
+        "name" => "actionGlobetrotter",
+        "description" => clienttranslate('Globetrotter: ${actplayer} must choose a park location'),
+        "descriptionmyturn" => clienttranslate('Globetrotter: ${you} must choose a park location'),
+        "args" => "argActionGlobetrotter",
+        "type" => "activeplayer",
+        "possibleactions" => [
+            ACT_GLOBETROTTER_CONFIRM,
+            ACT_CANCEL
+        ],
+        "transitions" => [
+           "" => ST_WALKING_MOVE_WALKER_AFTER
+        ],
+    ],
 ];
 
 //////////////////////////////////

@@ -28,36 +28,53 @@ require_once(__DIR__.'/modules/php/Constants.inc.php');
 
 $game_options = [
 
-    EXPANSION_EUROPEAN_DOGS_OPTION_ID => [
-        'name' => totranslate('Expansion: European Dogs'),
-        'values' => [
-            EXPANSION_EXCLUDED => [
-                'default' => true,
-                'name' => 'disabled',
-            ],
-            EXPANSION_INCLUDED => [
-                'name' => 'enabled',
-                'tmdisplay' => totranslate('Expansion: European Dogs'),
-                'description' => totranslate("It's time to take some of Europe's finest dogs for a walk. The European Dogs expansion includes 29 cards with 2 new abilities: Lone Wolf and Well Trained."),
-            ]
-        ],
-    ],
-
-    EXPANSION_FAMOUS_DOGS_OPTION_ID => [
-        'name' => totranslate('Expansion: Famous Dogs'),
-        'values' => [
-            EXPANSION_EXCLUDED => [
-                'default' => true,
-                'name' => 'disabled',
-            ],
-            EXPANSION_INCLUDED => [
-                'name' => 'enabled',
-                'tmdisplay' => totranslate('Expansion: Famous Dogs'),
-                'description' => totranslate("The dogs of page, stage, and screen have come to Dog Park. The Famous Dogs expansion includes 29 dog cards with 3 new abilities: Hoarder, Show Off, and Slowpoke."),
-            ]
-        ],
-    ],
-
+//    EXPANSION_EUROPEAN_DOGS_OPTION_ID => [
+//        'name' => totranslate('Expansion: European Dogs'),
+//        'values' => [
+//            EXPANSION_EXCLUDED => [
+//                'default' => true,
+//                'name' => 'disabled',
+//            ],
+//            EXPANSION_INCLUDED => [
+//                'name' => 'enabled',
+//                'alpha' => true,
+//                'tmdisplay' => totranslate('Expansion: European Dogs'),
+//                'description' => totranslate("It's time to take some of Europe's finest dogs for a walk. The European Dogs expansion includes 29 cards with 2 new abilities: Lone Wolf and Well Trained."),
+//            ]
+//        ],
+//    ],
+//
+//    EXPANSION_FAMOUS_DOGS_OPTION_ID => [
+//        'name' => totranslate('Expansion: Famous Dogs'),
+//        'values' => [
+//            EXPANSION_EXCLUDED => [
+//                'default' => true,
+//                'name' => 'disabled',
+//            ],
+//            EXPANSION_INCLUDED => [
+//                'name' => 'enabled',
+//                'alpha' => true,
+//                'tmdisplay' => totranslate('Expansion: Famous Dogs'),
+//                'description' => totranslate("The dogs of page, stage, and screen have come to Dog Park. The Famous Dogs expansion includes 29 dog cards with 3 new abilities: Hoarder, Show Off, and Slowpoke."),
+//            ]
+//        ],
+//    ],
+//
+//    EXPANSION_WORLD_DOGS_OPTION_ID => [
+//        'name' => totranslate('Expansion: Dogs of the World'),
+//        'values' => [
+//            EXPANSION_EXCLUDED => [
+//                'default' => true,
+//                'name' => 'disabled',
+//            ],
+//            EXPANSION_INCLUDED => [
+//                'name' => 'enabled',
+//                'alpha' => true,
+//                'tmdisplay' => totranslate('Expansion: Dogs of the World'),
+//                'description' => totranslate("Dogs from Kennel Clubs across the world are coming to Dog Park! This expansion includes 29 cards and 3 new abilities: Friendly, Fusspot, and Globetrotter."),
+//            ]
+//        ],
+//    ],
 
     VARIANT_PACKED_PARK_OPTION_ID => [
         'name' => totranslate('Variant: Packed Park'),

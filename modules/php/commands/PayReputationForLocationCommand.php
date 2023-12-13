@@ -21,6 +21,9 @@ class PayReputationForLocationCommand extends BaseCommand
         $action = DogPark::$instance->actionManager->getAction($this->playerId, $this->actionId);
         $accepted = $action->additionalArgs->accepted;
         $locationId = DogPark::$instance->playerManager->getWalker($this->playerId)->locationArg;
+        if (property_exists($action->additionalArgs, 'locationId')) {
+            $locationId = $action->additionalArgs->locationId;
+        }
 
         if ($accepted) {
             $playerScore = DogPark::$instance->getPlayerScore($this->playerId);
@@ -53,6 +56,15 @@ class PayReputationForLocationCommand extends BaseCommand
     {
         $action = DogPark::$instance->actionManager->getAction($this->playerId, $this->actionId);
         $accepted = $action->additionalArgs->accepted;
+
+        $locationId = DogPark::$instance->playerManager->getWalker($this->playerId)->locationArg;
+        if (property_exists($action->additionalArgs, 'locationId')) {
+            $locationId = $action->additionalArgs->locationId;
+        }
+        $isGlobetrotter = false;
+        if (property_exists($action->additionalArgs, 'isGlobetrotter')) {
+            $isGlobetrotter = $action->additionalArgs->isGlobetrotter;
+        }
         if ($accepted) {
             $playerScore = DogPark::$instance->getPlayerScore($this->playerId);
             DogPark::$instance->updatePlayerScore($this->playerId, $playerScore + 1);
@@ -74,8 +86,10 @@ class PayReputationForLocationCommand extends BaseCommand
         }
 
         if (DogPark::$instance->getPlayerScore($this->playerId) > 0) {
-            DogPark::$instance->actionManager->addAction($this->playerId, new AdditionalAction(WALKING_PAY_REPUTATION_ACCEPT, (object) ["accepted" => true]));
+            DogPark::$instance->actionManager->addAction($this->playerId, new AdditionalAction(WALKING_PAY_REPUTATION_ACCEPT, (object) ["accepted" => true, "locationId" => $locationId, "isGlobetrotter" => $isGlobetrotter]));
         }
-        DogPark::$instance->actionManager->addAction($this->playerId, new AdditionalAction(WALKING_PAY_REPUTATION_DENY, (object) ["accepted" => false]));
+        if (!$isGlobetrotter) {
+            DogPark::$instance->actionManager->addAction($this->playerId, new AdditionalAction(WALKING_PAY_REPUTATION_DENY, (object) ["accepted" => false, "locationId" => $locationId, "isGlobetrotter" => $isGlobetrotter]));
+        }
     }
 }
