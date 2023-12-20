@@ -63,13 +63,6 @@
     }
   }
 
-
-
-  &.side-back {
-    background-image: url("img/dogpark-dials-back.png");
-    background-size: 500% auto;
-  }
-
   @each $player-color in $player-colors {
     &[data-color="#{$player-color}"] {
      .side-front-overlay {

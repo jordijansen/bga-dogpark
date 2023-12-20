@@ -424,8 +424,9 @@ trait ActionTrait
         }
 
         $this->commandManager->addCommand($playerId, new ScoutCommand($playerId, $fieldDogId, $scoutDogId));
+        $this->commandManager->addCommand($playerId, new EndScoutCommand($playerId, $this->getGlobalVariable(CURRENT_ACTION_ID)));
 
-        $this->gamestate->jumpToState(ST_ACTION_SCOUT);
+        $this->gamestate->jumpToState(intval($this->getGlobalVariable(STATE_AFTER_SCOUT)));
     }
 
     function endScout() {

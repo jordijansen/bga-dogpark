@@ -4096,12 +4096,14 @@ var DogPark = /** @class */ (function () {
     DogPark.prototype.enteringSelectionPlaceDogOnLead = function (args) {
         var _this = this;
         if (this.isCurrentPlayerActive()) {
-            this.playerArea.setSelectionModeForKennel('single', this.getPlayerId(), Object.values(args.dogs), function (selection) {
-                if (selection.length === 1) {
-                    _this.playerArea.setSelectionModeForKennel('none', _this.getPlayerId());
-                    _this.takeNoLockAction("placeDogOnLead", { dogId: selection[0].id });
-                }
-            });
+            if (args.numberOfDogsOnlead < args.maxNumberOfDogs) {
+                this.playerArea.setSelectionModeForKennel('single', this.getPlayerId(), Object.values(args.dogs), function (selection) {
+                    if (selection.length === 1) {
+                        _this.playerArea.setSelectionModeForKennel('none', _this.getPlayerId());
+                        _this.takeNoLockAction("placeDogOnLead", { dogId: selection[0].id });
+                    }
+                });
+            }
         }
     };
     DogPark.prototype.enteringSelectionPlaceDogOnLeadSelectResources = function (args) {

@@ -2,14 +2,12 @@
 namespace objects\dogs;
 
 use objects\DogCard;
-use objects\dogtraits\Hoarder;
 use objects\dogtraits\Obedient;
-use objects\dogtraits\ShowOff;
 use objects\dogtraits\Slowpoke;
 
 class Dog151 extends DogCard {
 
-    use Slowpoke;
+    use Obedient;
     public function __construct($dbCard)
     {
         parent::__construct($dbCard);

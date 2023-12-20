@@ -212,12 +212,14 @@ class DogPark implements DogParkGame {
 
     private enteringSelectionPlaceDogOnLead(args: SelectionPlaceDogOnLeadArgs) {
         if ((this as any).isCurrentPlayerActive()) {
-            this.playerArea.setSelectionModeForKennel('single', this.getPlayerId(), Object.values(args.dogs), (selection) => {
-                if (selection.length === 1) {
-                    this.playerArea.setSelectionModeForKennel('none', this.getPlayerId());
-                    (this as any).takeNoLockAction("placeDogOnLead", {dogId: selection[0].id});
-                }
-            });
+            if (args.numberOfDogsOnlead < args.maxNumberOfDogs) {
+                this.playerArea.setSelectionModeForKennel('single', this.getPlayerId(), Object.values(args.dogs), (selection) => {
+                    if (selection.length === 1) {
+                        this.playerArea.setSelectionModeForKennel('none', this.getPlayerId());
+                        (this as any).takeNoLockAction("placeDogOnLead", {dogId: selection[0].id});
+                    }
+                });
+            }
         }
     }
 

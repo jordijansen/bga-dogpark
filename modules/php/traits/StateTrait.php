@@ -153,27 +153,47 @@ trait StateTrait
         if (sizeof($dogsInField) > 0) {
             if (sizeof($walkersStillInField) > 0) {
                 foreach ($playerIdsInOrder as $playerOrderNo => $player) {
+                    $dogsInField = $this->dogField->getDogCards();
                     // There are sill walkers in the field, so players that offered to low get a change to choose a dog (for 1 reputation) in turn order
                     foreach ($walkersStillInField as $walker) {
                         $playerId = intval($player['player_id']);
                         if ($walker->typeArg == $playerId) {
-                            $this->gamestate->changeActivePlayer($playerId);
-                            $this->giveExtraTime($playerId);
-                            $this->gamestate->nextState("nextPlayer");
-                            return;
+                            if (sizeof($dogsInField) === 1) {
+                                $leftOverDog = current($this->dogField->getDogCards());
+                                $this->dogWalkers->moveCard($walker->id, LOCATION_PLAYER, $playerId);
+                                $this->dogManager->recruitDog($playerId, $leftOverDog->id, 1, $walker->id);
+                            } else {
+                                $this->gamestate->changeActivePlayer($playerId);
+                                $this->giveExtraTime($playerId);
+                                $this->gamestate->nextState("nextPlayer");
+                                return;
+                            }
                         }
                     }
                 }
             } else {
+                // Lastly all players that couldn't offer (insufficient reputation) get a change to choose a dog
+                $nrOfDogsNeededAfterRecruit = (intval($this->getGlobalVariable(CURRENT_ROUND)) - 1) * 2;
+                $nrOfDogsNeededAfterRecruit = $nrOfDogsNeededAfterRecruit + ($this->getGlobalVariable(CURRENT_PHASE) === PHASE_RECRUITMENT_1 ? 1 : 2);
+
                 foreach ($playerIdsInOrder as $playerOrderNo => $player) {
-                    // Lastly all players that couldn't offer (insufficient reputation) get a change to choose a dog
+                    $dogsInField = $this->dogField->getDogCards();
                     $playerId = intval($player['player_id']);
-                    if ($this->playerManager->getPlayerOfferValue($playerId) == 0) {
+                    $nrOfDogsInKennel = sizeof(DogCard::fromArray($this->dogCards->getCardsInLocation(LOCATION_PLAYER, $playerId)));
+                    if ($nrOfDogsInKennel < $nrOfDogsNeededAfterRecruit) {
                         $this->playerManager->updatePlayerOfferValue($playerId, null);
-                        $this->giveExtraTime($playerId);
-                        $this->gamestate->changeActivePlayer($playerId);
-                        $this->gamestate->nextState("nextPlayer");
-                        return;
+
+                        if (sizeof($dogsInField) === 1) {
+                            $leftOverDog = current($this->dogField->getDogCards());
+                            $walker = $this->playerManager->getWalker($playerId);
+                            $this->dogWalkers->moveCard($walker->id, LOCATION_PLAYER, $playerId);
+                            $this->dogManager->recruitDog($playerId, $leftOverDog->id, 0, $walker->id);
+                        } else {
+                            $this->giveExtraTime($playerId);
+                            $this->gamestate->changeActivePlayer($playerId);
+                            $this->gamestate->nextState("nextPlayer");
+                            return;
+                        }
                     }
                 }
             }

@@ -121,6 +121,9 @@ class DogPark extends Table
         // Note: afterwards, you can get/set the global variables with getGameStateValue/setGameStateInitialValue/setGameStateValue
         parent::__construct();
 
+        // EXPERIMENTAL to avoid deadlocks.  This locks the global table early in the game constructor.
+        $this->bSelectGlobalsForUpdate = true;
+
         self::initGameStateLabels( array(
             VARIANT_PACKED_PARK_OPTION => VARIANT_PACKED_PARK_OPTION_ID,
             VARIANT_GENTLE_WALK_OPTION => VARIANT_GENTLE_WALK_OPTION_ID,

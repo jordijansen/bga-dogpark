@@ -65,15 +65,19 @@ class PlayerManager extends APP_DbObject
     }
 
     function updatePlayerOfferValue(int $playerId, $offerValue) {
-        if ($offerValue == null) {
+        if ($offerValue === null) {
             $this->DbQuery("UPDATE extra_player SET player_offer_value = null WHERE player_id = ". $playerId);
         } else {
             $this->DbQuery("UPDATE extra_player SET player_offer_value = ".$offerValue." WHERE player_id = ". $playerId);
         }
     }
 
-    function getPlayerOfferValue(int $playerId) {
-        return intval($this->getUniqueValueFromDB("SELECT player_offer_value FROM extra_player WHERE player_id = $playerId"));
+    function getPlayerOfferValue(int $playerId, bool $asIntValue = true) {
+        $value = $this->getUniqueValueFromDB("SELECT player_offer_value FROM extra_player WHERE player_id = $playerId");
+        if ($asIntValue) {
+            return intval($value);
+        }
+        return $value;
     }
 
     public function dealObjectiveCardsToPlayers() {
