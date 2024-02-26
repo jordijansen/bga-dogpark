@@ -826,14 +826,17 @@ trait StateTrait
                 if ($dogInKennel->ability == HOARDER) {
                     $playerResources = $this->playerManager->getResources($playerId);
                     $totalResourceSum = array_sum(array_values($playerResources));
-                    $nrOfResourcesToAdd = min($totalResourceSum, $dogInKennel->maxResources);
+                    $nrOfResourcesToAdd = min($totalResourceSum, 12);
                     if ($nrOfResourcesToAdd > 0 && ($nrOfResourcesToAdd % 2) > 0) {
                         $nrOfResourcesToAdd = $nrOfResourcesToAdd - 1;
                     }
 
-                    $result = array_map(fn($resourceType, $resourceCount) => array_map(fn($i) => $resourceType, range(1, $resourceCount)), array_keys($playerResources), array_values($playerResources));
                     $playerResourcesFlat = [];
-                    array_walk_recursive($result, function($a) use (&$playerResourcesFlat) { $playerResourcesFlat[] = $a; });
+                    foreach ($playerResources as $resource => $count) {
+                        for ($i = 0; $i < intval($count); $i++) {
+                            $playerResourcesFlat[] = $resource;
+                        }
+                    }
 
                     $resources = [];
                     for ($i = 0; $i < $nrOfResourcesToAdd; $i++) {
