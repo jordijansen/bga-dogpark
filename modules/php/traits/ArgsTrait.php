@@ -44,12 +44,15 @@ trait ArgsTrait
         $freeDogsOnLead = $this->getGlobalVariable(FREE_DOG_ON_LEAD .$playerId);
         $freeDogsOnLead = $freeDogsOnLead != null ? $freeDogsOnLead : 0;
 
+        $nextDogCosts1Resource = $this->getGlobalVariable(NEXT_DOG_COSTS_1_RESOURCE .$playerId);
+        $nextDogCosts1Resource = $nextDogCosts1Resource != null && boolval($nextDogCosts1Resource);
+
         return [
             "canCancelMoves" => DogPark::$instance->commandManager->hasCommands($playerId),
             "playerId" => $playerId,
             "maxNumberOfDogs" => DogPark::$instance->forecastManager->getCurrentRoundMaxNumberOfDogsForSelection(),
             "numberOfDogsOnlead" => intval(DogPark::$instance->dogCards->countCardInLocation(LOCATION_LEAD, $playerId)),
-            "dogs" => DogPark::$instance->dogManager->getDogsForSelection($playerId, $freeDogsOnLead > 0),
+            "dogs" => DogPark::$instance->dogManager->getDogsForSelection($playerId, $freeDogsOnLead > 0, $nextDogCosts1Resource),
             "additionalActions" => $this->actionManager->getActions($playerId, true)
         ];
     }

@@ -57,22 +57,20 @@ $game_options = [
             ]
         ],
     ],
-//
-//    EXPANSION_WORLD_DOGS_OPTION_ID => [
-//        'name' => totranslate('Expansion: Dogs of the World'),
-//        'values' => [
-//            EXPANSION_EXCLUDED => [
-//                'default' => true,
-//                'name' => 'disabled',
-//            ],
-//            EXPANSION_INCLUDED => [
-//                'name' => 'enabled',
-//                'alpha' => true,
-//                'tmdisplay' => totranslate('Expansion: Dogs of the World'),
-//                'description' => totranslate("Dogs from Kennel Clubs across the world are coming to Dog Park! This expansion includes 29 cards and 3 new abilities: Friendly, Fusspot, and Globetrotter."),
-//            ]
-//        ],
-//    ],
+    EXPANSION_WORLD_DOGS_OPTION_ID => [
+        'name' => totranslate('Expansion: Dogs of the World'),
+        'values' => [
+            EXPANSION_EXCLUDED => [
+                'default' => true,
+                'name' => 'disabled',
+            ],
+            EXPANSION_INCLUDED => [
+                'name' => 'enabled',
+                'tmdisplay' => totranslate('Expansion: Dogs of the World'),
+                'description' => totranslate("Dogs from Kennel Clubs across the world are coming to Dog Park! This expansion includes 29 cards and 3 new abilities: Friendly, Fusspot, and Globetrotter."),
+            ]
+        ],
+    ],
 
     VARIANT_PACKED_PARK_OPTION_ID => [
         'name' => totranslate('Variant: Packed Park'),

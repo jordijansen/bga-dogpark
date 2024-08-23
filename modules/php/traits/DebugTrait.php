@@ -14,7 +14,7 @@ trait DebugTrait
     }
 
     function placeInKennel($dogTypeId) {
-        $cards = $this->dogCards->getCardsOfTypeInLocation(EXP_FAMOUS, $dogTypeId, LOCATION_DECK);
+        $cards = $this->dogCards->getCardsOfTypeInLocation(EXP_WORLD, $dogTypeId, LOCATION_DECK);
         if (sizeof($cards) == 1) {
             $dog = current(DogCard::fromArray($cards));
             $this->dogCards->moveCard($dog->id, LOCATION_PLAYER, $this->getCurrentPlayerId());

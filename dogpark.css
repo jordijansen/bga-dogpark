@@ -2842,10 +2842,6 @@ body > .card {
 .dp-dial.side-front .side-front-overlay .dp-dog-walker-token {
   margin-bottom: 10px;
 }
-.dp-dial.side-back {
-  background-image: url("img/dogpark-dials-back.png");
-  background-size: 500% auto;
-}
 .dp-dial[data-color="#c45f5f"] .side-front-overlay {
   background-position: 0% 0;
 }
@@ -2882,6 +2878,11 @@ body > .card {
     -webkit-text-size-adjust: 100%;
   }
 }
+#page-content,
+#right-side-first-part {
+  zoom: 1 !important;
+}
+
 .bga-cards_selectable-card .card-side {
   outline: 6px rgba(80, 200, 255, 0.75) solid;
   cursor: pointer;

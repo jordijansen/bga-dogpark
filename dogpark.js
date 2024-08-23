@@ -2206,15 +2206,24 @@ var determineMaxZoomLevel = function () {
     var rowWidth = determineBoardWidth();
     return contentWidth / rowWidth;
 };
-var getZoomLevels = function (maxZoomLevels) {
+var getZoomLevels = function (maxZoomLevel) {
     var zoomLevels = [];
-    if (maxZoomLevels > 1) {
-        var maxZoomLevelsAbove1 = maxZoomLevels - 1;
-        var increments = (maxZoomLevelsAbove1 / 6);
-        zoomLevels = [(increments) + 1, (increments * 2) + 1, (increments * 3) + 1, (increments * 4) + 1, (increments * 5) + 1, (increments * 6) + 1];
+    var increments = 0.05;
+    if (maxZoomLevel > 1) {
+        var maxZoomLevelsAbove1 = maxZoomLevel - 1;
+        increments = (maxZoomLevelsAbove1 / 9);
+        zoomLevels = [];
+        for (var i = 1; i <= 9; i++) {
+            zoomLevels.push((increments * i) + 1);
+        }
     }
-    zoomLevels = __spreadArray(__spreadArray([], zoomLevels, true), [1, 0.8, 0.6], false);
-    return zoomLevels.sort();
+    for (var i = 1; i <= 9; i++) {
+        zoomLevels.push(1 - (increments * i));
+    }
+    zoomLevels = __spreadArray(__spreadArray([], zoomLevels, true), [1, maxZoomLevel], false);
+    zoomLevels = zoomLevels.sort();
+    zoomLevels = zoomLevels.filter(function (zoomLevel) { return (zoomLevel <= maxZoomLevel) && (zoomLevel > 0.3); });
+    return zoomLevels;
 };
 var AutoZoomManager = /** @class */ (function (_super) {
     __extends(AutoZoomManager, _super);
@@ -3967,6 +3976,8 @@ var DogPark = /** @class */ (function () {
         this.playerResources = new PlayerResources(this);
         this.roundTracker = new RoundTracker(this);
         this.finalScoringPad = new FinalScoringPad(this, 'dp-final-scoring-pad-wrapper');
+        // @ts-ignore
+        this.default_viewport = 'width=1000';
     }
     /*
         setup:

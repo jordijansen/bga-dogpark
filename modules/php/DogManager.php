@@ -46,13 +46,15 @@ class DogManager extends APP_DbObject
         DogPark::$instance->dogCards->moveCard($dogId, LOCATION_PLAYER, $playerId);
     }
 
-    public function getDogsForSelection($playerId, $hasFreeDogsOnLead = false)
+    public function getDogsForSelection($playerId, $hasFreeDogsOnLead = false, $nextDogCosts1Resource = false)
     {
         $allDogs = DogCard::fromArray(DogPark::$instance->dogCards->getCardsInLocation(LOCATION_PLAYER, $playerId));
         $dogsForSelection = [];
         $resources = DogPark::$instance->playerManager->getResources($playerId);
         foreach ($allDogs as $dog) {
             if ($hasFreeDogsOnLead) {
+                $dogsForSelection[$dog->id] = $dog;
+            } else if ($nextDogCosts1Resource && array_sum(array_values($resources)) > 0) {
                 $dogsForSelection[$dog->id] = $dog;
             } else {
                 $resourcesForDog = $resources;

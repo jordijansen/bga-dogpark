@@ -10,15 +10,24 @@ const determineMaxZoomLevel = () => {
     return contentWidth / rowWidth;
 }
 
-const getZoomLevels = (maxZoomLevels: number) => {
+const getZoomLevels = (maxZoomLevel: number) => {
     let zoomLevels = [];
-    if (maxZoomLevels > 1) {
-        const maxZoomLevelsAbove1 = maxZoomLevels - 1;
-        const increments = (maxZoomLevelsAbove1 / 6)
-        zoomLevels = [ (increments) + 1, (increments * 2) + 1, (increments * 3) + 1, (increments * 4) + 1, (increments * 5) + 1, (increments * 6) + 1]
+    let increments = 0.05;
+    if (maxZoomLevel > 1) {
+        const maxZoomLevelsAbove1 = maxZoomLevel - 1;
+        increments = (maxZoomLevelsAbove1 / 9)
+        zoomLevels = [];
+        for (let i = 1; i <= 9; i++) {
+            zoomLevels.push((increments * i) + 1);
+        }
     }
-    zoomLevels = [...zoomLevels, 1, 0.8, 0.6];
-    return zoomLevels.sort();
+    for (let i = 1; i <= 9; i++) {
+        zoomLevels.push(1 - (increments * i));
+    }
+    zoomLevels = [...zoomLevels, 1, maxZoomLevel];
+    zoomLevels = zoomLevels.sort();
+    zoomLevels = zoomLevels.filter(zoomLevel => (zoomLevel <= maxZoomLevel) && (zoomLevel > 0.3))
+    return zoomLevels;
 }
 
 class AutoZoomManager extends ZoomManager {

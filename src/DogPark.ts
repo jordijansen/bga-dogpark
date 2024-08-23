@@ -68,6 +68,9 @@ class DogPark implements DogParkGame {
         this.roundTracker = new RoundTracker(this);
 
         this.finalScoringPad = new FinalScoringPad(this, 'dp-final-scoring-pad-wrapper')
+
+        // @ts-ignore
+        this.default_viewport = 'width=1000';
     }
 
     /*

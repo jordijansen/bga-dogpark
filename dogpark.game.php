@@ -282,7 +282,7 @@ class DogPark extends Table
     }
 
     public static function totranslate($text) {
-        return self::_($text);
+        return DogPark::$instance->_($text);
     }
 
 
